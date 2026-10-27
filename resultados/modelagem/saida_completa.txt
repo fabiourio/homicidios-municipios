@@ -1,0 +1,181 @@
+== RLS ==
+            Estimate Std. Error   t value      Pr(>|t|)
+(Intercept) 120.5076  4.0948269  29.42923 4.618495e-177
+log_rend    -14.2785  0.5824584 -24.51420 4.105025e-126
+R2: 0.09741472 
+
+== Box-Cox: lambda 0.36 IC95 0.34 0.37 
+Diag bruto: 0.8778573 124.6794  | sqrt: 0.9944448 230.969 
+
+== VIF com colinearidade ==
+       log_rend      pct_pobres         alfabet           desig         desocup      pct_urbana        log_dens       pct_negra       pct_h1529  amazonia_legal faixa_fronteira       pct_indet 
+          18.17           12.44            5.92            2.22            1.72            1.96            2.01            4.15            1.75            2.83            1.35            1.15 
+         regiao 
+           2.26 
+cor(rend,pobres)= -0.9039464  cor(rend,alf)= 0.8490907 
+cor(X,X^2) sem centrar= 0.9995113  centrado= -0.004854114 
+
+== ANOVA blocos (SQ extras / F parcial) ==
+Analysis of Variance Table
+
+Model 1: ys ~ rend_c + rend_c2 + desig + desocup
+Model 2: ys ~ rend_c + rend_c2 + desig + desocup + pct_urbana + log_dens + 
+    pct_negra + pct_h1529
+Model 3: ys ~ rend_c + rend_c2 + desig + desocup + pct_urbana + log_dens + 
+    pct_negra + pct_h1529 + amazonia_legal + faixa_fronteira + 
+    pct_indet
+Model 4: ys ~ rend_c + rend_c2 + desig + desocup + pct_urbana + log_dens + 
+    pct_negra + pct_h1529 + amazonia_legal + faixa_fronteira + 
+    pct_indet + regiao
+Model 5: ys ~ rend_c + rend_c2 + desig + desocup + pct_urbana + log_dens + 
+    pct_negra + pct_h1529 + amazonia_legal + faixa_fronteira + 
+    pct_indet + regiao + rend_c:regiao
+  Res.Df   RSS Df Sum of Sq        F  Pr(>F)    
+1   5565 21782                                  
+2   5561 19926  4    1856.3 150.7686 < 2e-16 ***
+3   5558 18917  3    1008.8 109.2412 < 2e-16 ***
+4   5554 17121  4    1796.0 145.8655 < 2e-16 ***
+5   5550 17084  4      37.8   3.0699 0.01546 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+F parcial quadrático: 176.2522 
+
+== Comparação ==
+            modelo  p     R2    R2a   AIC   BIC PRESS      Cp
+1 A socioeconômico  4 0.1623 0.1617 23415 23455 21825 1516.54
+2   B + demografia  8 0.2337 0.2326 22927 22993 19999  921.46
+3     C + contexto 11 0.2725 0.2710 22643 22729 19003  599.74
+4       D + região 15 0.3415 0.3397 22096 22208 17228   24.28
+5    E + interação 19 0.3430 0.3407 22091 22231 17218   20.00
+
+BIC (todos subconjuntos) p = 12 : rend_c rend_c2 desig pct_urbana log_dens pct_negra amazonia_legal pct_indet regiaoCO regiaoN regiaoNE regiaoS 
+Stepwise: regiao pct_urbana pct_negra log_dens rend_c2 desig pct_indet rend_c amazonia_legal pct_h1529 faixa_fronteira desocup regiao:rend_c 
+
+== Modelo final MQO ==
+
+Call:
+lm(formula = ys ~ rend_c + rend_c2 + desig + desocup + pct_urbana + 
+    log_dens + pct_negra + pct_h1529 + amazonia_legal + faixa_fronteira + 
+    pct_indet + regiao, data = d)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.0893 -1.0472  0.0367  1.1126 12.6230 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -3.656908   0.334959 -10.917  < 2e-16 ***
+rend_c          -0.717176   0.141874  -5.055 4.44e-07 ***
+rend_c2         -2.174534   0.163794 -13.276  < 2e-16 ***
+desig            2.126265   0.224538   9.470  < 2e-16 ***
+desocup         -0.016059   0.007490  -2.144  0.03206 *  
+pct_urbana       0.016555   0.001626  10.180  < 2e-16 ***
+log_dens         0.282921   0.022704  12.461  < 2e-16 ***
+pct_negra        0.027178   0.002063  13.177  < 2e-16 ***
+pct_h1529        0.057359   0.020540   2.793  0.00525 ** 
+amazonia_legal   0.323926   0.113392   2.857  0.00430 ** 
+faixa_fronteira  0.199545   0.088859   2.246  0.02477 *  
+pct_indet       -0.020012   0.002922  -6.848 8.28e-12 ***
+regiaoCO         1.671277   0.107530  15.542  < 2e-16 ***
+regiaoN          1.433760   0.156720   9.149  < 2e-16 ***
+regiaoNE         1.448706   0.095050  15.242  < 2e-16 ***
+regiaoS          1.433158   0.089993  15.925  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.756 on 5554 degrees of freedom
+Multiple R-squared:  0.3415,	Adjusted R-squared:  0.3397 
+F-statistic:   192 on 15 and 5554 DF,  p-value: < 2.2e-16
+
+VIF final:
+                     GVIF Df GVIF^(1/(2*Df))
+rend_c           5.966930  1        2.442730
+rend_c2          1.532545  1        1.237960
+desig            1.545672  1        1.243251
+desocup          1.687386  1        1.298994
+pct_urbana       1.937160  1        1.391819
+log_dens         1.952107  1        1.397178
+pct_negra        3.955561  1        1.988859
+pct_h1529        1.733054  1        1.316455
+amazonia_legal   2.773687  1        1.665439
+faixa_fronteira  1.347093  1        1.160643
+pct_indet        1.151046  1        1.072868
+regiao          19.954067  4        1.453798
+
+SW final 0.9937434 
+
+	studentized Breusch-Pagan test
+
+data:  final
+BP = 220.76, df = 15, p-value < 2.2e-16
+
+
+	studentized Breusch-Pagan test
+
+data:  final
+BP = 288.27, df = 1, p-value < 2.2e-16
+
+outliers |e*|>=4: 3 
+
+	Moran I test under randomisation
+
+data:  gd$ys  
+weights: lw  n reduced by no-neighbour observations
+  
+
+Moran I statistic standard deviate = 57.066, p-value < 2.2e-16
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     4.562273e-01     -1.796300e-04      6.396681e-05 
+
+
+	Moran I test under randomisation
+
+data:  gd$e  
+weights: lw  n reduced by no-neighbour observations
+  
+
+Moran I statistic standard deviate = 31.918, p-value < 2.2e-16
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+     0.2550781760     -0.0001796300      0.0000639581 
+
+
+== MQP == var fun 1.733373 9897.987  LM OLS 288.2735  LM WLS 21.12253 
+
+Call:
+lm(formula = formula(final), data = d, weights = w)
+
+Weighted Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.0443 -0.6734 -0.0377  0.6004  6.6419 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     -2.571493   0.320221  -8.030 1.18e-15 ***
+rend_c          -0.678116   0.132637  -5.113 3.28e-07 ***
+rend_c2         -2.015169   0.146823 -13.725  < 2e-16 ***
+desig            1.773251   0.206246   8.598  < 2e-16 ***
+desocup         -0.017348   0.007270  -2.386   0.0170 *  
+pct_urbana       0.017539   0.001580  11.102  < 2e-16 ***
+log_dens         0.229665   0.020291  11.319  < 2e-16 ***
+pct_negra        0.029532   0.001948  15.162  < 2e-16 ***
+pct_h1529        0.009904   0.020263   0.489   0.6250    
+amazonia_legal   0.248348   0.102146   2.431   0.0151 *  
+faixa_fronteira  0.202823   0.085262   2.379   0.0174 *  
+pct_indet       -0.021934   0.002890  -7.590 3.73e-14 ***
+regiaoCO         1.545987   0.101634  15.211  < 2e-16 ***
+regiaoN          1.489094   0.143932  10.346  < 2e-16 ***
+regiaoNE         1.481125   0.087696  16.889  < 2e-16 ***
+regiaoS          1.395986   0.083942  16.630  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.9914 on 5554 degrees of freedom
+Multiple R-squared:  0.366,	Adjusted R-squared:  0.3643 
+F-statistic: 213.7 on 15 and 5554 DF,  p-value: < 2.2e-16
+
+pico renda 944.1802 
+valid n 657 rho 0.6982383 0.8679456 mae 9.611964 6.936891 
