@@ -1,12 +1,12 @@
 \section{Sua parte: análise exploratória}
-\textbf{Mensagem principal:} a taxa é assimétrica (o log corrige), varia muito entre regiões e estados, e nenhum fator sozinho a explica; renda, \% pobres e alfabetização medem quase o mesmo, então só a renda entra no modelo.
+\textbf{Mensagem principal:} a taxa é assimétrica à direita (o que pede uma transformação), varia muito entre regiões e estados, e nenhum fator sozinho a explica; renda, \% pobres e alfabetização medem quase o mesmo, então só a renda entra no modelo.
 
 \subsection{O que enfatizar}
 \begin{itemize}
 \item Daqui em diante, tudo usa os \nMunEsc{} municípios do escopo (no mapa, os de fora aparecem em cinza).
-\item \textbf{Resumo:} na taxa, a média (\nTaxaMedia) fica acima da mediana (\nTaxaMediana); a densidade é muito assimétrica e por isso entra em log.
-\item \textbf{Assimetria:} cauda longa à direita (assimetria \nAssimTaxa); no log fica quase simétrica (\nAssimLn). Isso antecipa a transformação do modelo.
-\item \textbf{Variação entre regiões (mapa e boxplots no mesmo slide):} Norte e Nordeste acima de Sudeste e Sul; Amazônia Legal com mediana \nMedAma{} contra \nMedForaAma; na faixa de fronteira, \nMedFront{} contra \nMedForaFront. Daí o estado no modelo, e a Amazônia Legal sai por ficar redundante.
+\item \textbf{Resumo:} as variáveis têm escalas e dispersões bem diferentes; a densidade é muito assimétrica e por isso entra em log.
+\item \textbf{Assimetria (histograma da taxa):} metade dos municípios fica entre \nTaxaQuartilUm{} e \nTaxaQuartilTres, mas há uma cauda longa à direita (assimetria \nAssimTaxa, positiva), que puxa a média (\nTaxaMedia) para cima da mediana (\nTaxaMediana). Isso antecipa a transformação do modelo.
+\item \textbf{Variação entre regiões (mapa e boxplot no mesmo slide):} Norte e Nordeste acima de Sudeste e Sul. Daí o estado no modelo; a Amazônia Legal sai por ficar redundante com ele.
 \item \textbf{Correlações:} a maior com o log da taxa é a de \nCorMaxVar{} (\nCorMax). Na matriz, renda, \% pobres e alfabetização se repetem (até \nCorTrio{} entre si): multicolinearidade, VIF da renda \nVIFrenda.
 \end{itemize}
 
@@ -15,7 +15,7 @@
 \item[Correlação alta com \% preta ou parda quer dizer que a cor causa violência?] Não. É associação: reflete desigualdade racial e a concentração da vitimização na população negra, como mostram o Atlas da Violência e a literatura.
 \item[Por que o log e não a raiz?] Quem decide é o Box-Cox, no slide do Luiz Felipe; aqui só mostramos que a taxa original é assimétrica.
 \item[Tirar \% pobres e alfabetização não perde informação?] Pouca: elas repetem a renda; mantê-las deixaria os coeficientes instáveis e com sinais trocados.
-\item[A fronteira não importa?] Nos boxplots as medianas são \nMedFront{} (fronteira) e \nMedForaFront{} (demais), e no modelo ela não é significativa; a seleção de variáveis vai decidir se fica.
+\item[A fronteira não importa?] No modelo ela não é significativa: com o estado no modelo, boa parte do efeito regional já é captada; a seleção de variáveis vai decidir se ela fica.
 \end{description}
 
 \subsection{Transição}

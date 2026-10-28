@@ -116,33 +116,21 @@ freq <- bind_rows(
 write.csv(freq, "resultados/eda/frequencias.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# E1. Distribuição da resposta: taxa x ln(taxa) (avalia a assimetria)
+# E1. Distribuição da resposta: histograma da taxa (avalia a assimetria)
 # -----------------------------------------------------------------------------
-e1 <- bind_rows(data.frame(escala = "Taxa (Y)", v = d$taxa),
-                data.frame(escala = "ln Taxa (ln Y)", v = d$ln_taxa))
-e1$escala <- factor(e1$escala, levels = c("Taxa (Y)", "ln Taxa (ln Y)"))
-p <- ggplot(e1, aes(v)) +
+p <- ggplot(d, aes(taxa)) +
   geom_histogram(bins = 40, fill = AZUL, colour = FUNDO, linewidth = .2) +
-  facet_wrap(~escala, scales = "free") +
-  labs(x = NULL, y = "Nº de municípios") + th
+  labs(x = "Taxa de homicídios (por 100 mil hab./ano)", y = "Nº de municípios") + th
 ggsave("resultados/eda/e1_hist_resposta.png", p, width = 4.8, height = 3.0, dpi = 250)
 
 # -----------------------------------------------------------------------------
-# E3. Boxplots de ln(taxa) por região, Amazônia Legal e fronteira
+# E3. Boxplots de ln(taxa) por região
 # -----------------------------------------------------------------------------
-e3 <- bind_rows(
-  data.frame(grupo = "Região", nivel = as.character(d$regiao), v = d$ln_taxa),
-  data.frame(grupo = "Amazônia Legal", nivel = ifelse(d$amazonia_legal == 1, "Sim", "Não"), v = d$ln_taxa),
-  data.frame(grupo = "Faixa de fronteira", nivel = ifelse(d$faixa_fronteira == 1, "Sim", "Não"), v = d$ln_taxa))
-e3$nivel <- factor(e3$nivel, levels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul", "Não", "Sim"))
-e3$grupo <- factor(e3$grupo, levels = c("Região", "Amazônia Legal", "Faixa de fronteira"))
-p <- ggplot(e3, aes(nivel, v)) +
+p <- ggplot(d, aes(regiao, ln_taxa)) +
   geom_boxplot(fill = CLARO, colour = AZUL, outlier.size = .4, outlier.alpha = .3, width = .6) +
   stat_summary(fun = mean, geom = "point", colour = VERMELHO, size = 1.6) +
-  facet_grid(~grupo, scales = "free_x", space = "free_x") +
-  labs(x = NULL, y = "ln Taxa de homicídios") + th +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))
-ggsave("resultados/eda/e3_box_regiao.png", p, width = 6.4, height = 2.7, dpi = 220)
+  labs(x = NULL, y = "ln Taxa de homicídios") + th
+ggsave("resultados/eda/e3_box_regiao.png", p, width = 4.8, height = 2.7, dpi = 220)
 
 # -----------------------------------------------------------------------------
 # E4. Histogramas das explicativas numéricas (assimetria e bimodalidade)

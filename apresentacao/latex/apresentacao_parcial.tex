@@ -173,26 +173,8 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \item \textbf{Desenho observacional e ecológico:} associações entre municípios; sem interpretação causal nem individual (falácia ecológica)
 \item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios
 \item \textbf{Denominador:} a população prisional é recenseada no município do presídio
-\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso
+\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os \textbf{\nMunEsc{} municípios com \nPopMin{} mil hab. ou mais} (\nPctPopEsc\% da população)
 \end{itemize}
-\end{frame}
-
-% -----------------------------------------------------------------------------
-\begin{frame}{Escopo: municípios com \nPopMin{} mil habitantes ou mais}
-\begin{columns}[c]
-\column{0.58\textwidth}
-\footnotesize
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{4pt}
-\input{tabelas/porte.tex}
-\fonte{SIM/DATASUS (2021--2023); IBGE, Censo 2022. Elaboração própria.}
-\column{0.40\textwidth}
-\begin{itemize}\small
-\item Oscilação: erro relativo esperado da contagem, $1/\sqrt{\mathrm{E}[H_i]}$
-\item Abaixo de 5 mil hab.: mediana de \nPorteHomMenor{} homicídio em 3 anos
-\item Escopo: \textbf{\nMunEsc{} municípios}, \textbf{\nPctPopEsc\%} da população, nenhuma taxa nula
-\end{itemize}
-\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -220,9 +202,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \fonte{SIM/DATASUS; IBGE. \nMunEsc{} municípios do escopo. Elaboração própria.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item Média \nTaxaMedia; mediana \nTaxaMediana{} por 100 mil
-\item Coeficiente de assimetria: \nAssimTaxa{} em $Y$ e \nAssimLn{} em $\ln Y$
-\item Assimetria à direita sugere transformar a resposta
+\item Cauda longa à direita: poucos municípios com taxas muito altas
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -239,8 +219,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \vspace{0.3em}
 \begin{itemize}\footnotesize
 \item Norte e Nordeste acima de Sudeste e Sul
-\item Mediana na Amazônia Legal: \nMedAma, contra \nMedForaAma; na faixa de fronteira: \nMedFront, contra \nMedForaFront
-\item No modelo: estado (UF) como variável categórica; a Amazônia Legal sai, redundante com a UF
+\item No modelo: estado (UF) como variável categórica
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -261,17 +240,9 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Correlação entre as explicativas}
-\begin{columns}[c]
-\column{0.6\textwidth}
-\includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{e8_pares.png}
+\centering
+\includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{e8_pares.png}
 \fonte{SIM/DATASUS; IBGE. Elaboração própria.}
-\column{0.38\textwidth}
-\begin{itemize}\small
-\item Renda, \% pobres e alfabetização: $|r|$ até \nCorTrio{} entre si
-\item As três medem quase o mesmo: VIF da renda \nVIFrenda{} com as três no modelo
-\item No modelo fica só a renda; \% pobres e alfabetização saem
-\end{itemize}
-\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------

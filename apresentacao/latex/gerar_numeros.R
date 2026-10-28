@@ -26,7 +26,6 @@ reg <- tapply(d_eda$hom, d_eda$regiao, sum) / tapply(d_eda$exposure, d_eda$regia
 reg_br <- tapply(br$hom, br$regiao, sum) / tapply(br$exposure, br$regiao, sum) * 1e5   # todos os municípios
 # Taxa mundial de homicídios em 2021: UNODC, Global Study on Homicide 2023 (único número externo, com fonte no slide)
 TAXA_MUNDO_UNODC <- 5.8
-med_ama <- tapply(d_eda$taxa, d_eda$amazonia_legal, median)
 cv <- eda$cv
 e <- c(
   municipios_br = nrow(br), hom_br = sum(br$hom), taxa_br = eda$taxa_br, pop_min = eda$POP_MIN,
@@ -38,14 +37,11 @@ e <- c(
   hom_ano = sum(br$hom) / 3, taxa_mundo = TAXA_MUNDO_UNODC, razao_mundo = eda$taxa_br / TAXA_MUNDO_UNODC,
   taxa_n_br = reg_br[["N"]], taxa_ne_br = reg_br[["NE"]], taxa_co_br = reg_br[["CO"]],
   taxa_se_br = reg_br[["SE"]], taxa_s_br = reg_br[["S"]],
-  mediana_amazonia = med_ama[["1"]], mediana_fora_amazonia = med_ama[["0"]],
   cor_renda_pobres = R["ln Renda", "% pobres"], cor_renda_alfabet = R["ln Renda", "Alfabetização"],
   renda_decil_pico = eda$med_faixa$renda[which.max(eda$med_faixa$med)],
   porte_hom_mediana_menor5mil = porte$hom_mediana_3anos[1], porte_oscilacao_menor5mil = porte$oscilacao[1],
   porte_cor2024_menor5mil = porte$cor_2024[1], porte_cor2024_maior100mil = porte$cor_2024[6],
-  porte_oscilacao_20a50mil = porte$oscilacao[4], porte_zero_20a50mil = porte$pct_zero[4],
-  mediana_fronteira = median(d_eda$taxa[d_eda$faixa_fronteira == 1]),
-  mediana_fora_fronteira = median(d_eda$taxa[d_eda$faixa_fronteira == 0]))
+  porte_oscilacao_20a50mil = porte$oscilacao[4], porte_zero_20a50mil = porte$pct_zero[4])
 
 m <- with(mod, c(
     n = nrow(d), lambda = lambda, lambda_ic_inf = unname(lambda_ic[1]), lambda_ic_sup = unname(lambda_ic[2]),
@@ -94,6 +90,7 @@ confere(min(e[["taxa_n_br"]], e[["taxa_ne_br"]]) > max(e[["taxa_se_br"]], e[["ta
 med_reg <- tapply(d_eda$taxa, d_eda$regiao, median)
 confere(min(med_reg[c("Norte", "Nordeste")]) > max(med_reg[c("Sudeste", "Sul")]), "boxplot: Norte e Nordeste acima de Sudeste e Sul no escopo")
 confere(e[["taxa_media"]] > e[["taxa_mediana"]], "taxa: média acima da mediana")
+confere(e[["assim_taxa"]] > 0, "taxa: assimetria à direita (coeficiente positivo)")
 confere(mean(d_eda$dens) > 3 * median(d_eda$dens), "densidade: média muito acima da mediana")
 confere(m[["n"]] == e[["municipios_escopo"]], "exploratória e modelo no mesmo escopo")
 confere(e[["porte_zero_20a50mil"]] == 0, "a partir de 20 mil hab. nenhum município tem taxa zero")
@@ -120,13 +117,12 @@ mac <- c(
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
   PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), ZerosBR = fmt(e[["zeros_br"]], 0),
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
+  TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
   AssimTaxa = fmt(e[["assim_taxa"]], 2), AssimLn = fmt(e[["assim_ln_taxa"]], 2),
   TaxaNE = fmt(e[["taxa_nordeste"]]), TaxaSE = fmt(e[["taxa_sudeste"]]),
   HomAno = fmt(e[["hom_ano"]], 0), TaxaMundo = fmt(e[["taxa_mundo"]]), RazaoMundo = fmt(e[["razao_mundo"]]),
   TaxaNbr = fmt(e[["taxa_n_br"]]), TaxaNEbr = fmt(e[["taxa_ne_br"]]), TaxaCObr = fmt(e[["taxa_co_br"]]),
   TaxaSEbr = fmt(e[["taxa_se_br"]]), TaxaSbr = fmt(e[["taxa_s_br"]]),
-  MedAma = fmt(e[["mediana_amazonia"]]), MedForaAma = fmt(e[["mediana_fora_amazonia"]]),
-  MedFront = fmt(e[["mediana_fronteira"]]), MedForaFront = fmt(e[["mediana_fora_fronteira"]]),
   CorMax = fmt(abs(r_resp[[var_max]]), 2), CorMaxVar = gsub("%", "\\\\%", var_max),
   CorTrio = fmt(max(abs(c(e[["cor_renda_pobres"]], e[["cor_renda_alfabet"]]))), 2),
   RendaDecilPico = fmt(e[["renda_decil_pico"]], 0),
