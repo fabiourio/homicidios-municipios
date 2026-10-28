@@ -86,6 +86,7 @@ sw_ok <- m[["sw"]] >= 0.97
 r_resp <- R["ln Taxa", colnames(R) != "ln Taxa"]
 var_max <- names(which.max(abs(r_resp)))
 
+outl <- paste(fmt(m[["n_outliers"]], 0), if (m[["n_outliers"]] == 1) "outlier" else "outliers")
 mac <- c(
   MunBR = fmt(e[["municipios_br"]], 0), HomBR = fmt(e[["hom_br"]], 0), TaxaBR = fmt(e[["taxa_br"]]),
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
@@ -107,7 +108,7 @@ mac <- c(
   Pico = fmt(m[["pico_renda"]], 0), BP = fmt(m[["bp"]], 0), DW = fmt(m[["dw"]], 2), DWp = fmt(m[["dw_p"]], 2),
   SW = fmt(m[["sw"]], 2), Nout = fmt(m[["n_outliers"]], 0),
   IconeSW = if (sw_ok) "\\ok" else "\\nao", TextoSW = if (sw_ok) "Normalidade razoável" else "Normalidade violada",
-  IconeOut = "\\ok", TextoOut = paste0("Só ", fmt(m[["n_outliers"]], 0), " outliers"),
+  IconeOut = "\\ok", TextoOut = paste0("Só ", outl), NoutTxt = outl,
   IconeDW = if (dw_ok) "\\ok" else "\\nao", TextoDW = if (dw_ok) "Vizinhos independentes" else "Vizinhos parecidos",
   IconeBP = if (bp_ok) "\\ok" else "\\nao", TextoBP = if (bp_ok) "Variância constante" else "Variância não constante")
 mac <- sub("^-", "$-$", mac)
