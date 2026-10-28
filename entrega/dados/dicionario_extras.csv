@@ -1,0 +1,4 @@
+"coluna","descricao"
+"abandono_em","Taxa de abandono no ensino médio, %, 2022 (INEP, tx_rend_municipios_2022, coluna 3_CAT_MED, localização Total e rede Total); NA = sem ensino médio"
+"distorcao_em","Taxa de distorção idade-série no ensino médio, %, 2022 (INEP, TDI_MUNICIPIOS_2022, coluna MED_CAT_0, localização Total e rede Total); NA = sem ensino médio"
+"pct_migr_10anos","Pessoas que residiam há menos de 10 anos no município / pop x 100, Censo 2022 (SIDRA 10158 var. 13338)"

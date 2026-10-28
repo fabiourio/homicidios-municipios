@@ -25,6 +25,7 @@ dir.create("resultados/eda", recursive = TRUE, showWarnings = FALSE)
 # Leitura
 # -----------------------------------------------------------------------------
 br <- read.csv("dados/base_analitica.csv")
+br <- merge(br, read.csv("dados/variaveis_extras.csv"), by = "cod_ibge")    # educação (INEP) e migração
 str(br)
 
 POP_MIN <- 20000                                   # escopo: municípios com 20 mil hab. ou mais
@@ -92,7 +93,9 @@ rot <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per cap
          desig = "Desigualdade (média/mediana)", pct_pobres = "% pobres (14+)",
          desocup = "Desocupação (%)", alfabet = "Alfabetização (%)", pct_urbana = "% urbana",
          dens = "Densidade (hab/km²)", pct_negra = "% preta ou parda", pct_h1529 = "% homens 15–29",
-         pct_indet = "% intenção indeterminada", pop = "População")
+         pct_indet = "% intenção indeterminada", freq_15a17 = "Frequência escolar 15–17 (%)",
+         abandono_em = "Abandono no ensino médio (%)", distorcao_em = "Distorção idade-série EM (%)",
+         pct_migr_10anos = "Migração recente (%)", pop = "População")
 
 # -----------------------------------------------------------------------------
 # 3. Tabelas-resumo: numéricas (média, quartis, assimetria) e categóricas (frequências)
@@ -145,7 +148,8 @@ ggsave("resultados/eda/e3_box_regiao.png", p, width = 6.4, height = 2.7, dpi = 2
 # E4. Histogramas das explicativas numéricas (assimetria e bimodalidade)
 # -----------------------------------------------------------------------------
 xs <- c("rend_pc_media", "desig", "pct_pobres", "desocup", "alfabet",
-        "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet")
+        "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet",
+        "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")
 rot4 <- c(rot, log_dens = "ln Densidade")
 e4 <- d %>% select(all_of(xs)) %>% pivot_longer(everything()) %>%
   mutate(var = factor(rot4[name], levels = rot4[xs]))
@@ -160,7 +164,8 @@ ggsave("resultados/eda/e4_hist_explicativas.png", p, width = 7, height = 3.2, dp
 # -----------------------------------------------------------------------------
 cv <- c(log_rend = "ln Renda", desig = "Desigualdade", pct_pobres = "% pobres", desocup = "Desocupação",
         alfabet = "Alfabetização", pct_urbana = "% urbana", log_dens = "ln Densidade",
-        pct_negra = "% preta/parda", pct_h1529 = "% homens 15–29", pct_indet = "% indeterminada")
+        pct_negra = "% preta/parda", pct_h1529 = "% homens 15–29", pct_indet = "% indeterminada",
+        freq_15a17 = "Freq. escolar 15–17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração recente")
 R <- cor(d[, c("ln_taxa", names(cv))])
 dimnames(R) <- list(c("ln Taxa", cv), c("ln Taxa", cv))
 write.csv(round(R, 3), "resultados/eda/correlacao.csv")
@@ -175,7 +180,7 @@ p <- ggplot(e5, aes(r, var, fill = grupo)) + geom_col(width = .7) +
   scale_fill_manual(values = c(`renda, pobreza e alfabetização` = VERMELHO, demais = AZUL), name = NULL) +
   scale_x_continuous(limits = c(-.6, .6)) +
   labs(x = "Correlação com ln(taxa)", y = NULL) + th + theme(legend.position = "bottom")
-ggsave("resultados/eda/e5_correlacao.png", p, width = 4.8, height = 3.4, dpi = 250)
+ggsave("resultados/eda/e5_correlacao.png", p, width = 4.8, height = 4.0, dpi = 250)
 
 # -----------------------------------------------------------------------------
 # E6. Dispersão: ln(taxa) x cada explicativa, com reta de mínimos quadrados

@@ -96,23 +96,27 @@
 % -----------------------------------------------------------------------------
 \begin{frame}{2 · Base de dados}
 \begin{columns}[T]
-\column{0.49\textwidth}
+\column{0.32\textwidth}
 \textbf{\color{navy}SIM / DATASUS}
 \begin{itemize}\small
-\item Registro de óbitos do Ministério da Saúde
+\item Registro de óbitos
 \item Homicídios por município de residência
-\item tabnet.datasus.gov.br
 \end{itemize}
-\column{0.49\textwidth}
+\column{0.34\textwidth}
 \textbf{\color{navy}Censo 2022 / IBGE}
 \begin{itemize}\small
-\item Retrato de toda a população
-\item Renda, trabalho, educação, cor ou raça, idade
-\item sidra.ibge.gov.br
+\item Toda a população
+\item Renda, trabalho, escola, cor, idade, migração
+\end{itemize}
+\column{0.30\textwidth}
+\textbf{\color{navy}INEP 2022}
+\begin{itemize}\small
+\item Censo Escolar
+\item Abandono e atraso no ensino médio
 \end{itemize}
 \end{columns}
 \vspace{0.8em}
-\small Ligadas pelo código do município, em 2021--2023.
+\small Ligadas pelo código do município; homicídios de 2021--2023.
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -120,16 +124,16 @@
 \textbf{Resposta:} taxa de homicídios por 100 mil hab./ano\par
 \vspace{0.4em}
 \begin{columns}[T]
-\column{0.55\textwidth}
+\column{0.6\textwidth}
 \textbf{\color{navy}Quantitativas (contínuas)}
 \begin{itemize}\small
-\item Renda, desigualdade, \% pobres
-\item Alfabetização, desocupação
-\item \% urbana, densidade
+\item Renda, desigualdade, \% pobres, alfabetização
+\item Desocupação, \% urbana, densidade
 \item \% preta ou parda, \% homens 15--29
-\item \% mortes de intenção indeterminada
+\item Escola: frequência 15--17, abandono e atraso no ensino médio
+\item Migração recente, \% mortes de intenção indeterminada
 \end{itemize}
-\column{0.42\textwidth}
+\column{0.37\textwidth}
 \textbf{\color{navy}Qualitativas (nominais)}
 \begin{itemize}\small
 \item Estado (27 UFs)
@@ -236,9 +240,9 @@
 \input{tabelas/efeitos.tex}
 \column{0.28\textwidth}
 \begin{itemize}\small
-\item $R^2_a$ = \nRdoisA
-\item $F$ = \nFglobal
+\item $R^2_a$ = \nRdoisA; $F$ = \nFglobal
 \item Demais variáveis constantes
+\item \textcolor{gray}{Não significativas: \nNaoSig}
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -280,7 +284,7 @@
 \item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
 \item Decidir as variáveis não significativas e frágeis
 \item Tratar a variância não constante
-\item Testar frequência escolar e garimpo
+\item Testar gasto municipal em segurança e assistência
 \end{itemize}
 \end{frame}
 

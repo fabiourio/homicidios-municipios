@@ -43,10 +43,10 @@ m <- with(mod, c(
     n = nrow(d), lambda = lambda, lambda_ic_inf = unname(lambda_ic[1]), lambda_ic_sup = unname(lambda_ic[2]),
     sw_y = unname(sw_y$statistic), sw_ln = unname(sw_log$statistic),
     vif_renda = unname(vif_colin["log_rend"]),
-    F_B = anova_blocos$F[2], F_C = anova_blocos$F[3], F_D = anova_blocos$F[4],
-    p_B = anova_blocos$`Pr(>F)`[2], p_C = anova_blocos$`Pr(>F)`[3], p_D = anova_blocos$`Pr(>F)`[4],
-    R2a_A = comp$R2a[1], R2a_B = comp$R2a[2], R2a_C = comp$R2a[3], R2a_D = comp$R2a[4], R2a_D_regiao = comp$R2a[5],
-    DW_D_regiao = comp$DW[5], F_uf = F_uf$F[2],
+    F_B = anova_blocos$F[2], F_C = anova_blocos$F[3], F_D = anova_blocos$F[4], F_E = anova_blocos$F[5],
+    p_B = anova_blocos$`Pr(>F)`[2], p_C = anova_blocos$`Pr(>F)`[3], p_D = anova_blocos$`Pr(>F)`[4], p_E = anova_blocos$`Pr(>F)`[5],
+    R2a_A = comp$R2a[1], R2a_B = comp$R2a[2], R2a_C = comp$R2a[3], R2a_D = comp$R2a[4], R2a_E = comp$R2a[5],
+    R2a_E_regiao = comp$R2a[6], DW_E_regiao = comp$DW[6], F_uf = F_uf$F[2],
     R2a = sf_$adj.r.squared, F_global = unname(sf_$fstatistic[1]),
     gl1 = unname(sf_$fstatistic[2]), gl2 = unname(sf_$fstatistic[3]),
     pico_renda = unname(pico_renda), bp = unname(bp$statistic), bp_p = unname(bp$p.value),
@@ -65,8 +65,10 @@ coef <- function(t, col) coefs[coefs$termo == t, col]
 confere <- function(ok, frase) if (!isTRUE(ok)) stop("O resultado não sustenta mais a frase do slide: ", frase)
 confere(coef("rend_c2", "b") < 0 && coef("rend_c2", "p") < 0.05, "renda em U invertido")
 confere(m[["lambda_ic_sup"]] < 0.25, "Box-Cox indica o logaritmo (lambda mais perto de 0 do que de 0,5)")
-confere(all(c(m[["p_B"]], m[["p_C"]], m[["p_D"]]) < 0.001), "todos os blocos entram (p < 0,001)")
-confere(m[["R2a_D"]] > m[["R2a_D_regiao"]], "estado no lugar de região melhora o modelo")
+confere(all(c(m[["p_B"]], m[["p_C"]], m[["p_D"]], m[["p_E"]]) < 0.001), "todos os blocos entram (p < 0,001)")
+confere(m[["R2a_E"]] > m[["R2a_E_regiao"]], "estado no lugar de região melhora o modelo")
+confere(coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "mais frequência escolar, menos homicídios")
+confere(all(sapply(c("abandono_em", "distorcao_em", "pct_migr_10anos"), function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05)), "mais abandono, distorção e migração recente, mais homicídios")
 confere(m[["vif_renda"]] > 10, "renda, % pobres e alfabetização juntas têm VIF alto")
 confere(e[["zeros_escopo"]] == 0, "nenhum município sem homicídio no escopo")
 confere(m[["n"]] == e[["municipios_escopo"]], "exploratória e modelo no mesmo escopo")
@@ -100,8 +102,8 @@ mac <- c(
   PorteOscVinte = fmt(e[["porte_oscilacao_20a50mil"]], 0),
   Lambda = fmt(m[["lambda"]], 2), LambdaInf = fmt(m[["lambda_ic_inf"]], 2), LambdaSup = fmt(m[["lambda_ic_sup"]], 2),
   SWy = fmt(m[["sw_y"]], 2), SWln = fmt(m[["sw_ln"]], 2), VIFrenda = fmt(m[["vif_renda"]], 0),
-  RdoisA = fmt(m[["R2a"]], 2), RdoisAregiao = fmt(m[["R2a_D_regiao"]], 2), DWregiao = fmt(m[["DW_D_regiao"]], 2),
-  Fuf = fmt(m[["F_uf"]]), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
+  RdoisA = fmt(m[["R2a"]], 2), RdoisAregiao = fmt(m[["R2a_E_regiao"]], 2), DWregiao = fmt(m[["DW_E_regiao"]], 2),
+  Fuf = fmt(m[["F_uf"]]), FblocoEd = fmt(m[["F_D"]]), RdoisAsemEd = fmt(m[["R2a_C"]], 2), RdoisAcomEd = fmt(m[["R2a_D"]], 2), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
   Pico = fmt(m[["pico_renda"]], 0), BP = fmt(m[["bp"]], 0), DW = fmt(m[["dw"]], 2), DWp = fmt(m[["dw_p"]], 2),
   SW = fmt(m[["sw"]], 2), Nout = fmt(m[["n_outliers"]], 0),
   IconeSW = if (sw_ok) "\\ok" else "\\nao", TextoSW = if (sw_ok) "Normalidade razoável" else "Normalidade violada",
@@ -126,15 +128,17 @@ writeLines(c("\\begin{tabular}{@{}lrr@{}}", "\\toprule",
              sprintf("A: renda e desigualdade & --- & %s\\\\", fmt(m[["R2a_A"]], 2)),
              sprintf("B: + demografia & %s & %s\\\\", fmt(m[["F_B"]]), fmt(m[["R2a_B"]], 2)),
              sprintf("C: + fronteira e registro & %s & %s\\\\", fmt(m[["F_C"]]), fmt(m[["R2a_C"]], 2)),
-             sprintf("\\rowcolor{fundo}\\textbf{D: + estado} & \\textbf{%s} & \\textbf{%s}\\\\", fmt(m[["F_D"]]), fmt(m[["R2a_D"]], 2)),
+             sprintf("D: + educação e migração & %s & %s\\\\", fmt(m[["F_D"]]), fmt(m[["R2a_D"]], 2)),
+             sprintf("\\rowcolor{fundo}\\textbf{E: + estado} & \\textbf{%s} & \\textbf{%s}\\\\", fmt(m[["F_E"]]), fmt(m[["R2a_E"]], 2)),
              "\\bottomrule", "\\end{tabular}"), "tabelas/blocos.tex")
 
-# Tabela de efeitos na taxa (%): significativos primeiro; n.s. em cinza
-efe <- efe[order(efe$p >= 0.05, -abs(efe$efeito_pct)), ]
-lin <- ifelse(efe$p < 0.05,
-              sprintf("%s & %s & %s\\%% & %s\\\\", gsub("%", "\\\\%", efe$variavel), efe$mudanca, sinal(efe$efeito_pct), fp(efe$p)),
-              sprintf("\\textcolor{gray}{%s} & \\textcolor{gray}{%s} & \\textcolor{gray}{n.s.} & \\textcolor{gray}{%s}\\\\",
-                      gsub("%", "\\\\%", efe$variavel), efe$mudanca, fp(efe$p)))
+# Tabela de efeitos na taxa (%): só as significativas; as n.s. viram a macro \nNaoSig
+efe <- efe[order(-abs(efe$efeito_pct)), ]
+ns <- efe$p >= 0.05
+cat(sprintf("\\newcommand{\\nNaoSig}{%s}\n", paste(tolower(gsub("%", "\\\\%", efe$variavel[ns])), collapse = ", ")),
+    file = "numeros.tex", append = TRUE)
+efe <- efe[!ns, ]
+lin <- sprintf("%s & %s & %s\\%% & %s\\\\", gsub("%", "\\\\%", efe$variavel), efe$mudanca, sinal(efe$efeito_pct), fp(efe$p))
 writeLines(c("\\begin{tabular}{@{}llrr@{}}", "\\toprule",
              "\\textbf{Variável} & \\textbf{Mudança} & \\textbf{Taxa} & \\textbf{p}\\\\", "\\midrule",
              sprintf("Renda & --- & U invertido & %s\\\\", fp(coef("rend_c2", "p"))),
@@ -143,7 +147,9 @@ writeLines(c("\\begin{tabular}{@{}llrr@{}}", "\\toprule",
 # Apêndice: coeficientes (sem as 26 indicadoras de estado)
 nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", desig = "Desigualdade", desocup = "Desocupação",
            pct_urbana = "\\% urbana", log_dens = "ln densidade", pct_negra = "\\% preta ou parda",
-           pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada")
+           pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
+           freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
+           pct_migr_10anos = "Migração recente")
 cc <- coefs[match(names(nomes), coefs$termo), ]
 cel <- sprintf("%s & %s & %s", nomes, gsub("-", "$-$", fmt(cc$b, 3)), fp(cc$p))
 k <- ceiling(length(cel) / 2)

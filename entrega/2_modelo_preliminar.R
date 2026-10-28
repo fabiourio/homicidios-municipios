@@ -2,7 +2,7 @@
 # Fatores associados aos homicídios nos municípios brasileiros
 # Parte 2 - Ajuste preliminar do modelo de regressão linear múltipla
 #
-# Entrada: dados/base_analitica.csv (modelo ajustado nos municípios com 20 mil hab. ou mais)
+# Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv (modelo nos municípios com 20 mil hab. ou mais)
 # Saída:   resultados/modelagem/ (figuras, tabelas e valores_modelo.txt)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 # =============================================================================
@@ -22,6 +22,10 @@ dir.create("resultados/modelagem", recursive = TRUE, showWarnings = FALSE)
 # Leitura dos dados
 # -----------------------------------------------------------------------------
 d <- read.csv("dados/base_analitica.csv")
+
+# Variáveis de educação e migração (INEP 2022 e Censo 2022), em arquivo à parte
+extras <- read.csv("dados/variaveis_extras.csv")
+d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10anos")], by = "cod_ibge")
 
 # Escopo do modelo: municípios com 20 mil habitantes ou mais (1.710, 84% da população).
 # Abaixo disso a taxa é dominada pelo acaso (poucos casos, muitos zeros): ver confiabilidade_porte.csv
@@ -54,7 +58,7 @@ summary(rls)
 # 2. Transformação da resposta (Box-Cox)
 # -----------------------------------------------------------------------------
 f_base <- ~ log_rend + desig + desocup + pct_urbana + log_dens + pct_negra + pct_h1529 +
-  faixa_fronteira + pct_indet + uf
+  faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + uf
 
 m_y <- lm(update(f_base, y ~ .), data = d)
 
@@ -76,7 +80,8 @@ sw_log  <- shapiro.test(rstandard(m_log))
 # 3. Multicolinearidade: renda, % pobres e alfabetização juntas
 # -----------------------------------------------------------------------------
 m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + desig + desocup + pct_urbana + log_dens +
-                pct_negra + pct_h1529 + faixa_fronteira + pct_indet + uf, data = d)
+                pct_negra + pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em +
+                pct_migr_10anos + uf, data = d)
 summary(m_colin)
 
 # Para a região (4 indicadoras) o car devolve o GVIF; GVIF^(1/(2*gl)) ao quadrado fica na escala do VIF
@@ -93,33 +98,34 @@ cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend
 mA <- lm(ly ~ rend_c + rend_c2 + desig + desocup, data = d)                    # socioeconômico
 mB <- update(mA, . ~ . + pct_urbana + log_dens + pct_negra + pct_h1529)         # + demografia
 mC <- update(mB, . ~ . + faixa_fronteira + pct_indet)                           # + contexto
-mD <- update(mC, . ~ . + uf)                                                    # + estado
+mD <- update(mC, . ~ . + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos)   # + educação e migração
+mE <- update(mD, . ~ . + uf)                                                    # + estado
 # Amazônia Legal fica de fora: com o estado no modelo ela só varia dentro do Maranhão
 
 # Região x estado: a região é agregação dos estados (modelos aninhados)
-mD_regiao <- update(mC, . ~ . + regiao)
+mE_regiao <- update(mD, . ~ . + regiao)
 
-anova_blocos <- anova(mA, mB, mC, mD)
+anova_blocos <- anova(mA, mB, mC, mD, mE)
 anova_blocos
 write.csv(as.data.frame(anova_blocos), "resultados/modelagem/anova_blocos.csv")
 
 # F parcial do termo quadrático (Ho: beta_renda² = 0) e da interação (Ho: os 4 coeficientes = 0)
-F_quad  <- anova(update(mD, . ~ . - rend_c2), mD)
-F_uf <- anova(mD_regiao, mD)        # Ho: os estados não acrescentam nada além da região
+F_quad  <- anova(update(mE, . ~ . - rend_c2), mE)
+F_uf <- anova(mE_regiao, mE)        # Ho: os estados não acrescentam nada além da região
 
 comp <- data.frame(
-  modelo = c("A socioeconômico", "B + demografia", "C + contexto", "D + estado", "D com região"),
-  p   = sapply(list(mA, mB, mC, mD, mD_regiao), function(m) length(coef(m)) - 1),
-  R2  = sapply(list(mA, mB, mC, mD, mD_regiao), function(m) summary(m)$r.squared),
-  R2a = sapply(list(mA, mB, mC, mD, mD_regiao), function(m) summary(m)$adj.r.squared),
-  MSE = sapply(list(mA, mB, mC, mD, mD_regiao), function(m) summary(m)$sigma^2),
-  DW  = sapply(list(mA, mB, mC, mD, mD_regiao), function(m) unname(dwtest(m)$statistic)))
+  modelo = c("A socioeconômico", "B + demografia", "C + contexto", "D + educação e migração", "E + estado", "E com região"),
+  p   = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) length(coef(m)) - 1),
+  R2  = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$r.squared),
+  R2a = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$adj.r.squared),
+  MSE = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$sigma^2),
+  DW  = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) unname(dwtest(m)$statistic)))
 write.csv(comp, "resultados/modelagem/comparacao_blocos.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
 # 5. Modelo preliminar (D): teste F global, coeficientes e intervalos de confiança
 # -----------------------------------------------------------------------------
-final <- mD
+final <- mE
 sf_ <- summary(final)
 sf_
 anova(final)
@@ -136,11 +142,14 @@ pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 
 # Efeitos na escala da taxa: com ln(taxa), uma mudança delta em X multiplica a taxa por exp(b * delta)
 mudancas <- data.frame(
-  termo   = c("desig", "pct_urbana", "pct_negra", "log_dens", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira"),
+  termo   = c("desig", "pct_urbana", "pct_negra", "log_dens", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
+              "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos"),
   variavel = c("Desigualdade", "% urbana", "% preta ou parda", "Densidade", "Desocupação",
-               "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira"),
-  mudanca = c("+0,1", "+10 pontos", "+10 pontos", "dobra", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não"),
-  delta   = c(0.1, 10, 10, log(2), 1, 1, 1, 1))
+               "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira",
+               "Frequência escolar 15–17", "Abandono no ensino médio", "Distorção idade-série (EM)", "Migração recente"),
+  mudanca = c("+0,1", "+10 pontos", "+10 pontos", "dobra", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
+              "+5 pontos", "+5 pontos", "+10 pontos", "+5 pontos"),
+  delta   = c(0.1, 10, 10, log(2), 1, 1, 1, 1, 5, 5, 10, 5))
 mudancas$b <- b[mudancas$termo]
 mudancas$p <- sf_$coefficients[mudancas$termo, 4]
 mudancas$efeito_pct <- 100 * (exp(mudancas$b * mudancas$delta) - 1)
@@ -152,7 +161,8 @@ write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = 
 # (fronteira = não, estado = SP, a referência). O nível depende do estado; a forma não.
 grade <- data.frame(rend = exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
-for (v in c("desig", "desocup", "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet")) grade[[v]] <- mean(d[[v]])
+for (v in c("desig", "desocup", "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet",
+           "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
 grade$faixa_fronteira <- 0
 grade$uf <- factor("SP", levels = levels(d$uf))
 pr <- predict(final, newdata = grade, interval = "confidence", level = 0.95)

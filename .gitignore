@@ -26,6 +26,7 @@ desktop.ini
 dados/candidatos/*
 !dados/candidatos/FONTES.md
 !dados/candidatos/baixar_candidatos.R
+!dados/candidatos/baixar_siconfi.R
 
 # Intermediários do LaTeX
 *.fls
