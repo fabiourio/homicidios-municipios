@@ -1,0 +1,315 @@
+VALIDAÇÃO DOS DADOS
+===================
+
+== 1. Completude e chaves ==
+Linhas: 5570 | códigos IBGE únicos: 5570 | cod6 únicos: 5570 | NAs: 0
+Municípios por UF somam 5.570: TRUE | DF com 1 município: TRUE
+cod6 == cod_ibge %/% 10 em todos: TRUE
+Dígito verificador confere: 5561 de 5570 (exceções conhecidas do IBGE: Bom Princípio do Piauí PI; Brejo do Piauí PI; Canavieira PI; Quixaba PE; Cônego Marinho MG; Ponto Chique MG; Coronel Barros RS; Buriti de Goiás GO; Buritinópolis GO)
+SIM 2021-23: 5566 linhas, 0 sem par na base | SIM 2024: 5446 linhas, 0 sem par na base
+cod6 duplicado no SIM: 0
+Municípios sem linha no SIM 2021-23 (recebem 0):
+       municipio uf  pop
+ São Bento Abade MG 4713
+        Serranos MG 1990
+   Nova Castilho SP 1062
+        Rubiácea SP 2700
+Nomes diferentes entre IBGE e TabNet: 10 (só grafia):
+                 municipio uf          municipio_tabnet
+       Eldorado do Carajás PA      ELDORADO DOS CARAJAS
+   Amparo do São Francisco SE   AMPARO DE SAO FRANCISCO
+           Graccho Cardoso SE            GRACHO CARDOSO
+   Muquém do São Francisco BA   MUQUEM DE SAO FRANCISCO
+       Barão do Monte Alto MG       BARAO DE MONTE ALTO
+              Dona Euzébia MG              DONA EUSEBIA
+       São Tomé das Letras MG      SAO THOME DAS LETRAS
+    São Luiz do Paraitinga SP    SAO LUIS DO PARAITINGA
+                   Poxoréu MT                   POXOREO
+ Santo Antônio de Leverger MT SANTO ANTONIO DO LEVERGER
+Municípios criados em 2013 (instalados com o Censo 2010 já feito):
+ cod_ibge         municipio uf   pop total_causas_externas hom hom_24
+  1504752  Mojuí dos Campos PA 23501                    44   8      1
+  4212650    Pescaria Brava SC 10190                    25   0      1
+  4220000  Balneário Rincão SC 15981                    34   5      4
+  4314548    Pinto Bandeira RS  2723                     8   0      0
+  5006275 Paraíso das Águas MS  5510                    11   3      0
+Boa Esperança do Norte-MT (5101837) na base: FALSE (instalado em 2025, depois do Censo 2022)
+
+== 2. Valores impossíveis ou suspeitos ==
+Percentuais fora de 0-100:
+ pct_pobres     desocup     alfabet  pct_urbana   pct_negra   pct_h1529 
+          0           0           0           0           0           0 
+  pct_indet  freq_15a17 pct_garimpo 
+          0           0           0 
+Contagens negativas: 0
+Homicídios > total de causas externas: 0
+Renda mediana > média: 0 | desig < 1: 0 | desig mín/máx: 1.051 / 2.923
+Densidade x pop/área: maior diferença relativa = 2.53% (arredondamento da densidade)
+Mediana igual a fração/múltiplo do SM (303, 606, 1212, 1818, 2424): 638 municípios; = 1.212: 395
+Frequência escolar 15-17 = 100%: 38 | % urbana = 100%: 32 | desocupação = 0: 29
+Desocupação acima de 30% (Censo: dado da amostra, erro grande em município pequeno):
+               municipio uf   pop forca_trab desocupados desocup particip
+ Governador Newton Bello MA 10713       4968        1724    34.7     60.6
+       Alegrete do Piauí PI  4634       1391         702    50.5     36.8
+                Guaribas PI  4276       1163         419    36.0     34.8
+            Joca Marques PI  5394       1132         577    51.0     26.8
+               Venha-Ver RN  3014        416         129    31.0     16.9
+             Nova Olinda PB  5787       1808         546    30.2     39.4
+           Coité do Nóia AL 10810       3429        1272    37.1     40.3
+         Rafael Jambeiro BA 19662       4957        1517    30.6     31.2
+Participação na força de trabalho: mediana Brasil = 52.5%
+
+== 3. Coerência interna ==
+Taxa recalculada x taxa da base: maior diferença = 5.1e-13
+Contagens da base x tabela SIM: diferenças = 0
+Soma dos grupos CID x total no SIM 2021-23: linhas com diferença = 0
+Homicídios: 2021-23 = 138316 (46105/ano) | 2024 = 42132
+Populações entre tabelas (municípios com diferença):
+t4714 t9923 t9605 
+    0     0     0 
+9605 total - soma das cores: municípios com diferença = 1277 | maior = 1503 pessoas (3.97% da pop) | efeito máx. em pct_negra se a falta fosse redistribuída = 2.58 p.p.
+Tabela 10300 (soma das classes - total), em pessoas:
+d10300
+  -3   -2   -1    0    1    2    3 
+  11  231 1330 2391 1348  247   12 
+  maior diferença relativa: 0.185% do total
+Tabela 9517 (ocupados + desocupados - força de trabalho), em pessoas:
+d9517a
+  -1    0    1 
+ 725 4196  649 
+Tabela 9517 (força + fora da força - total 14+), em pessoas:
+d9517b
+  -1    0    1 
+ 726 4130  714 
+Efeito em pct_pobres (denominador = soma das classes): maior mudança = 0.0284 p.p.
+Efeito em desocup (denominador = ocupados + desocupados): maior mudança = 0.0296 p.p.
+Pessoas 14+ na 9517 (todos) - 10300 (só domicílio particular): mín 0 | mediana 20 | máx 52298
+% da população fora de domicílio particular (pop - moradores 10295): mediana 0.20% | > 10%: 35 municípios
+
+== 4. Qualidade da resposta ==
+Taxa zero: 655 | municípios sem nenhum óbito externo: 4
+% intenção indeterminada >= 30%: 147 | >= 50%: 30 | = 100%: 2 (todos com <= 1 óbito externo: TRUE)
+% indeterminada por UF (as 6 maiores):
+ uf intencao_indeterminada total_causas_externas   hom pct_indet
+ SP                  13806                 71242  9171      19.4
+ MG                   6011                 41804  7999      14.4
+ RJ                   4981                 37643 12361      13.2
+ CE                   2991                 24643  9492      12.1
+ PE                   2532                 25021 10344      10.1
+ ES                    849                 11355  3473       7.5
+ razao_indet_hom
+            1.51
+            0.75
+            0.40
+            0.32
+            0.24
+            0.24
+Municípios com >= 50 óbitos externos e maior % indeterminada:
+            municipio uf    pop hom intencao_indeterminada
+ São Joaquim de Bicas MG  34348  18                    111
+           Embu-Guaçu SP  66970   7                     59
+ Itapecerica da Serra SP 158522  22                    156
+            Nova Lima MG 111697  23                     94
+               Divino MG  20706   8                     31
+            Juquitiba SP  27404   4                     29
+            Carangola MG  31240   6                     37
+   São Caetano do Sul SP 165655   7                     82
+ total_causas_externas pct_indet
+                   159  69.81132
+                   109  54.12844
+                   296  52.70270
+                   193  48.70466
+                    64  48.43750
+                    60  48.33333
+                    78  47.43590
+                   179  45.81006
+Correlação taxa 2021-23 x 2024: 0.534 (todos) | 0.827 (pop >= 50 mil) | 0.255 (pop < 5 mil)
+Municípios com 2024 muito diferente da média 2021-23 (|z| >= 4, z = (hom24 - hom/3)/sqrt(hom/3)): 77
+TabNet por ano confere com a base (soma 2021-23 = hom): 5570 de 5570 municípios
+Óbitos por causa mal definida (cap. XVIII), % do total de óbitos: mediana 4.7% | > 20%: 118 municípios
+          municipio uf   pop obitos mal_def pct_mal_def      taxa
+ Novo Santo Antônio MT  2015     38      22    57.89474 33.085194
+            Luciara MT  2509     45      24    53.33333 26.571011
+             Aveiro PA 18290    178      78    43.82022  7.289958
+           Guaribas PI  4276     71      28    39.43662  0.000000
+        Paripiranga BA 26604    589     216    36.67233 13.782389
+            Sanharó PE 18624    534     174    32.58427 50.114548
+          Crisólita MG  5265    111      36    32.43243  6.331117
+             Damião PB  4982    114      36    31.57895 20.072260
+Correlação % mal definida x taxa: 0.043 | x % indeterminada: 0.093
+Municípios com > 10% da população fora de domicílio particular (presídios etc.): 35
+  homicídios por residência = 217 | por ocorrência = 239
+              municipio uf   pop pct_fora_dpp pct_h1529 hom hom_ocor      taxa
+               Balbinos SP  3887     64.80576 21.018781   1        2  8.575594
+                Lavínia SP  9689     50.44896 22.633915   2        2  6.880655
+               Pracinha SP  2578     44.64701 31.574864   0        0  0.000000
+                  Iaras SP  8010     36.01748 11.660424   1        1  4.161465
+     Álvaro de Carvalho SP  4808     34.46339 17.262895   0        1  0.000000
+               Pacaembu SP 14877     34.24750 18.720172   4        0  8.962380
+    Fernando de Noronha PE  3167     32.64919 13.040733   0        0  0.000000
+   São Cristóvão do Sul SC  6084     29.50362 16.617357   5        2 27.394258
+             Serra Azul SP 12746     29.37392 16.789581   6        2 15.691197
+               Florínea SP  3851     28.12257 14.048299   0        1  0.000000
+            Reginópolis SP  7662     26.27251 25.215348   0        0  0.000000
+              Riolândia SP 10309     23.74624 18.149190   3        2  9.700262
+        Marabá Paulista SP  4573     23.63875 21.517603   2        2 14.578322
+                  Caiuá SP  5466     21.13063 19.099890   2        1 12.196609
+ São Pedro de Alcântara SC  5776     20.37742 13.590720   0        5  0.000000
+              Itirapina SP 16148     18.58434 16.088680   4        2  8.256956
+                 Guareí SP 15013     18.30414 15.206821   3        2  6.660894
+                Irapuru SP  7085     16.99365 15.201129   1        0  4.704775
+                 Taiúva SP  6548     15.63836 16.218693   1        0  5.090613
+           Mirandópolis SP 27983     15.62377 10.606440  10       11 11.911994
+                Pirajuí SP 22431     14.85444 12.415853   9        7 13.374348
+   Presidente Bernardes SP 14490     14.34783 12.691511   0        2  0.000000
+                  Potim SP 20392     14.03982 15.682621  20       20 32.692559
+             Itapissuma PE 27749     13.58968 17.888933  22       23 26.427379
+              Itaitinga CE 64650     13.55143 16.816705  45       62 23.201856
+               Tremembé SP 51173     13.24331 13.233541   9       13  5.862467
+                Lucélia SP 20061     12.87074 10.443148   3        1  4.984796
+     Nova Independência SP  4609     12.58407 16.272510   0        0  0.000000
+               Getulina SP 10232     12.42181 12.226349   1        0  3.257753
+      Ilha de Itamaracá PE 24540     12.28606 13.696007  48       63 65.199674
+             Valparaíso SP 24241     12.08283 11.393919   4        6  5.500323
+                   Icém SP  7819     11.58716 14.937972   1        0  4.263120
+          Tupi Paulista SP 15854     11.53021  8.786426   3        1  6.307556
+            Charqueadas RS 35012     10.90198 12.875586   7        5  6.664382
+       Flórida Paulista SP 12958     10.73468 13.350826   0        0  0.000000
+
+== 5. Outliers e pontos influentes ==
+|e*| >= 4: 3 | |e*| >= 3: 32
+[fora da apostila] alavancagem h > 2p/n (0.0057): 345 | Cook > 4/n: 296 | Cook máx = 0.0290
+|e*| >= 4:
+             municipio uf   pop hom     taxa  taxa_24   desocup    desig
+           Ibicuitinga CE 11611  46 132.0587 86.12523 10.720831 1.244980
+ São João do Jaguaribe CE  5855  50 284.6570 17.07942  3.196803 1.174800
+     Rodolfo Fernandes RN  4242  21 165.0165 47.14757  1.636905 1.458589
+ pct_h1529 pct_indet pct_fora_dpp   e_semi           h        cook h21 h22 h23
+ 11.144604  4.477612    0.4736887 4.138559 0.001268146 0.001360974  20  10  16
+  8.590948  0.000000    0.0000000 7.189454 0.002773802 0.009010727  22  14  14
+ 12.211221  3.846154    0.0000000 4.399274 0.004002307 0.004880179   9   9   3
+[fora da apostila] 10 maiores distâncias de Cook:
+             municipio uf   pop       taxa   desocup    desig pct_h1529
+           Alto Alegre RR 21096 115.345721 4.0221914 2.922687 12.869738
+              Uiramutã RR 13751  24.240661 2.3368251 1.683778 12.973602
+              Pracinha SP  2578   0.000000 0.0000000 1.138964 31.574864
+ São João do Jaguaribe CE  5855 284.656988 3.1968032 1.174800  8.590948
+          Campinápolis MT 15347   6.515931 0.9022556 2.350749 13.201277
+           Reginópolis SP  7662   0.000000 2.1913580 1.272738 25.215348
+      Coronel Sapucaia MS 14289  90.979075 3.1242768 1.431774 13.156974
+               Amajari RR 13927  50.262081 3.2900981 1.775899 12.737847
+     Rodolfo Fernandes RN  4242 165.016502 1.6369048 1.458589 12.211221
+               Lizarda TO  2999   0.000000 3.6817102 1.816242 12.004001
+    e_semi           h        cook
+  3.066453 0.045015419 0.029008233
+  2.850762 0.037532161 0.020579412
+ -1.705356 0.069782590 0.014658460
+  7.189454 0.002773802 0.009010727
+ -1.794191 0.029499490 0.006301445
+ -1.641293 0.034037496 0.006141713
+  2.904793 0.009644239 0.005185562
+  2.518276 0.012201939 0.004956545
+  4.399274 0.004002307 0.004880179
+ -3.257837 0.006938328 0.004667035
+[fora da apostila] 10 maiores alavancagens:
+             municipio uf    pop       taxa    desocup    desig pct_h1529
+              Pracinha SP   2578   0.000000  0.0000000 1.138964 31.574864
+           Alto Alegre RR  21096 115.345721  4.0221914 2.922687 12.869738
+              Uiramutã RR  13751  24.240661  2.3368251 1.683778 12.973602
+             Nova Lima MG 111697   6.863807  3.3094237 2.606006  9.666329
+           Reginópolis SP   7662   0.000000  2.1913580 1.272738 25.215348
+          Joca Marques PI   5394   6.179706 50.9717314 1.364650 12.106044
+     Alegrete do Piauí PI   4634  14.386419 50.4672897 1.581309 11.350885
+            Araguainha MT   1010   0.000000  2.3166023 1.372896  8.019802
+          Campinápolis MT  15347   6.515931  0.9022556 2.350749 13.201277
+ Itambé do Mato Dentro MG   2142   0.000000  0.2444988 1.262372  7.329599
+  pct_indet     e_semi          h
+  50.000000 -1.7053561 0.06978259
+   2.666667  3.0664532 0.04501542
+   2.777778  2.8507617 0.03753216
+  48.704663  0.7888961 0.03595583
+   0.000000 -1.6412933 0.03403750
+   0.000000 -0.8077302 0.03253032
+   0.000000 -0.5029051 0.03227101
+ 100.000000 -1.2689776 0.03212657
+   4.000000 -1.7941906 0.02949949
+ 100.000000 -0.5375124 0.02528386
+
+== 6. Sensibilidade do modelo ==
+Termos que mudam de sinal ou de significância (5%) em relação ao modelo base:
+                      cenario    n           termo            b           p
+                sem |e*| >= 4 5567         desocup -0.014485256 0.051508235
+ sem desocupação > 30% ou = 0 5533         desocup -0.011476723 0.153600643
+   sem % indeterminada >= 30% 5423       pct_indet -0.001459794 0.711583379
+              sem pop < 5 mil 4246       pct_h1529 -0.059631371 0.009514794
+              sem pop < 5 mil 4246  amazonia_legal  0.152852817 0.155705893
+              sem pop < 5 mil 4246 faixa_fronteira  0.177958942 0.059745151
+        [fora] sem Cook > 4/n 5274         desocup -0.013931486 0.055396747
+ var_pct
+    -9.8
+   -28.5
+   -92.7
+  -204.0
+   -52.8
+   -10.8
+   -13.2
+Maior variação relativa de coeficiente por cenário (termo e %):
+  sem |e*| >= 4                        n = 5567 | R² = 0.344 | desocup -9.8%
+  sem > 10% fora de dom. particular    n = 5535 | R² = 0.340 | pct_h1529 +62.2%
+  sem desocupação > 30% ou = 0       n = 5533 | R² = 0.339 | desocup -28.5%
+  sem % indeterminada >= 30%           n = 5423 | R² = 0.338 | pct_indet -92.7%
+  sem pop < 5 mil                      n = 4246 | R² = 0.371 | pct_h1529 -204.0%
+  [fora] sem Cook > 4/n                n = 5274 | R² = 0.433 | pct_negra +25.3%
+  sem % mal definida > 20%             n = 5452 | R² = 0.343 | rend_c +8.3%
+Coeficientes por cenário:
+           termo    base sem |e*| >= 4 sem > 10% fora de dom. particular
+     (Intercept) -3.6569       -3.7430                           -3.8270
+          rend_c -0.7172       -0.7061                           -0.5946
+         rend_c2 -2.1745       -2.1947                           -2.1824
+           desig  2.1263        2.1538                            2.0080
+         desocup -0.0161       -0.0145                           -0.0161
+      pct_urbana  0.0166        0.0165                            0.0160
+        log_dens  0.2829        0.2829                            0.2783
+       pct_negra  0.0272        0.0272                            0.0272
+       pct_h1529  0.0574        0.0616                            0.0930
+  amazonia_legal  0.3239        0.3329                            0.2851
+ faixa_fronteira  0.1995        0.1986                            0.2006
+       pct_indet -0.0200       -0.0198                           -0.0198
+        regiaoCO  1.6713        1.6683                            1.6464
+         regiaoN  1.4338        1.4172                            1.4365
+        regiaoNE  1.4487        1.4272                            1.4670
+         regiaoS  1.4332        1.4391                            1.4075
+ sem desocupação > 30% ou = 0 sem % indeterminada >= 30% sem pop < 5 mil
+                      -3.6809                   -3.62127         -1.0338
+                      -0.6746                   -0.72694         -0.6608
+                      -2.2018                   -2.19979         -1.9788
+                       2.0884                    2.01039          1.3636
+                      -0.0115                   -0.01677         -0.0234
+                       0.0162                    0.01633          0.0157
+                       0.2822                    0.28534          0.2038
+                       0.0269                    0.02757          0.0318
+                       0.0662                    0.05649         -0.0596
+                       0.3340                    0.37661          0.1529
+                       0.2110                    0.21611          0.1780
+                      -0.0196                   -0.00146         -0.0217
+                       1.6711                    1.70583          1.6228
+                       1.4215                    1.44912          1.6547
+                       1.4443                    1.47837          1.4918
+                       1.4226                    1.50178          1.4186
+ [fora] sem Cook > 4/n sem % mal definida > 20%
+               -3.4217                  -3.7284
+               -0.5411                  -0.7769
+               -2.3454                  -2.1332
+                1.7188                   2.1801
+               -0.0139                  -0.0169
+                0.0177                   0.0169
+                0.2609                   0.2784
+                0.0341                   0.0269
+                0.0465                   0.0592
+                0.3241                   0.3186
+                0.1810                   0.2018
+               -0.0171                  -0.0196
+                1.6536                   1.6579
+                1.5342                   1.4267
+                1.5556                   1.4297
+                1.6346                   1.4328

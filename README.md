@@ -1,5 +1,7 @@
 # Fatores associados aos homicídios nos municípios brasileiros
 
+Grupo: Douglas Bergamim Fernandes, Fabio Eiiti Kobayashi Urio, Kauan Alves Aragão, Luiz Felipe de Brito Ramos e Willian Nelton Teleken.
+
 Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16.1.1, taxa de homicídios por 100 mil habitantes).
 
 **Pergunta:** quais fatores socioeconômicos, demográficos e geográficos estão associados à taxa de homicídios nos municípios brasileiros?
@@ -7,8 +9,8 @@ Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16
 - **Unidade de análise:** os 5.570 municípios
 - **Resposta:** taxa de homicídios (agressão X85–Y09 + intervenção legal Y35–Y36), por residência, média anual 2021–2023
 - **Explicativas:** Censo Demográfico 2022, mais indicadoras de Amazônia Legal e faixa de fronteira
-- **Modelo principal:** regressão linear múltipla para √taxa, estimada por mínimos quadrados ponderados
-- **Robustez:** regressão binomial negativa para as contagens
+- **Modelo (preliminar):** regressão linear múltipla para √taxa, por mínimos quadrados ordinários
+- **Regras do trabalho:** ver `CLAUDE.md` (código só em R; só técnicas da apostila de GED)
 
 ## Estrutura
 
@@ -18,16 +20,14 @@ dados/
   tabelas/              tabelas limpas em CSV + dicionários (geradas pelo script 01)
   malha_mun.geojson     malha municipal 2022 (IBGE)
 scripts/
-  00_coletar_dados.py   baixa tudo de novo das fontes (opcional; os dados já estão no repo)
-  01_preparar_dados.py  limpeza, checagens de consistência e montagem da base analítica
-  02_eda.R              análise exploratória: estatísticas, correlações, gráficos
-  03_modelagem.R        transformação, multicolinearidade, testes F, seleção, diagnóstico, MQP, validação
-  04_robustez_binomial_negativa.R  comparação com modelo de contagem
-  instalar_pacotes.R    instala os pacotes de R
-resultados/
-  eda/                  figuras e2–e8, descritiva.csv, correlacao.csv, valores_eda.txt
-  modelagem/            figuras f1–f6, tabelas de coeficientes/comparação, valores_principais.txt
-  robustez/             comparação binomial negativa × MQP
+  00_coletar_dados.R       baixa tudo de novo das fontes (opcional; os dados já estão no repo)
+  01_preparar_dados.R      limpeza, checagens de consistência e montagem da base analítica
+  instalar_pacotes.R       instala os pacotes de R
+entrega/                   CÓDIGO DA ANÁLISE para entregar (ver entrega/LEIA-ME.md)
+  1_analise_exploratoria.R estatísticas, mapa, correlações, gráficos -> entrega/resultados/eda/
+  2_modelo_preliminar.R    Box-Cox, VIF, blocos com F parcial, modelo e diagnóstico -> entrega/resultados/modelagem/
+  dados/                   cópia da base analítica (gerada pelo script 01)
+apresentacao/              INTERNO: slides (latex/), notas.json, exportação .pptx/.html e briefings/ por apresentador
 ```
 
 ## Como rodar
@@ -35,16 +35,31 @@ resultados/
 Na raiz do repositório:
 
 ```bash
-pip install -r requirements.txt
 Rscript scripts/instalar_pacotes.R
 
-python scripts/01_preparar_dados.py        # gera dados/tabelas/
-Rscript scripts/02_eda.R                    # gera resultados/eda/
-Rscript scripts/03_modelagem.R              # gera resultados/modelagem/
-Rscript scripts/04_robustez_binomial_negativa.R   # gera resultados/robustez/
+Rscript scripts/01_preparar_dados.R       # gera dados/tabelas/ e copia a base para entrega/dados/
+cd entrega
+Rscript 1_analise_exploratoria.R          # gera entrega/resultados/eda/
+Rscript 2_modelo_preliminar.R             # gera entrega/resultados/modelagem/
 ```
 
-Os números do trabalho ficam em `resultados/*/valores_*.txt`. Para baixar os dados de novo das fontes oficiais, rode `python scripts/00_coletar_dados.py` antes do passo 01. Isso leva alguns minutos e precisa de acesso a `servicodados.ibge.gov.br` e `tabnet.datasus.gov.br`.
+Slides (sempre depois de rodar os dois scripts da entrega, para os números baterem com o código):
+
+```bash
+cd apresentacao/latex
+Rscript gerar_numeros.R                   # roda a análise da entrega e gera numeros.tex e tabelas/
+tectonic -X compile apresentacao_parcial.tex
+cd ..
+Rscript exportar_pptx_html.R              # .pdf, .pptx e .html iguais, com as notas (notas.json)
+cd briefings
+Rscript gerar_briefings.R                 # um briefing_<nome>.pdf por apresentador
+```
+
+Tudo em `apresentacao/` é interno do grupo (não vai na entrega). Para atualizar os briefings, use a skill `briefing-apresentacao` (`.claude/skills/`).
+
+Nenhum número é digitado à mão no `.tex`: tudo vem de `numeros.tex` e `tabelas/`. O `gerar_numeros.R` também confere as frases fixas dos slides (ex.: "renda em U invertido") e para com erro se o resultado deixar de sustentá-las.
+
+Os números do trabalho ficam em `entrega/resultados/*/valores_*.txt` e `numeros_*.csv`. Para baixar os dados de novo das fontes oficiais, rode `Rscript scripts/00_coletar_dados.R` antes do passo 01. Isso leva alguns minutos e precisa de acesso a `servicodados.ibge.gov.br` e `tabnet.datasus.gov.br`.
 
 ## Fontes
 

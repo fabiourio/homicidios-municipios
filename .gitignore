@@ -21,3 +21,12 @@ venv/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Bases candidatas: fica só a lista e o script de download (arquivos brutos são baixados de novo)
+dados/candidatos/*
+!dados/candidatos/FONTES.md
+!dados/candidatos/baixar_candidatos.R
+
+# Intermediários do LaTeX
+*.fls
+*.fdb_latexmk

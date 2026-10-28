@@ -1,0 +1,20 @@
+\section{Sua parte: renda em U, transformação e construção do modelo}
+\textbf{Mensagem principal:} a relação com a renda é em U invertido; a resposta entra em log (Box-Cox); e o modelo foi montado em blocos, cada um testado pelo $F$ parcial.
+
+\subsection{O que enfatizar}
+\begin{itemize}
+\item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos são os de renda média, não os mais pobres. Por isso entram renda e renda² (modelo polinomial).
+\item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln.
+\item \textbf{Blocos:} todos entram; o estado no lugar da região leva o $R^2_a$ de \nRdoisAregiao{} para \nRdoisA.
+\item \textbf{Multicolinearidade:} renda, \% pobres e alfabetização juntas dão VIF \nVIFrenda; ficamos só com a renda.
+\end{itemize}
+
+\subsection{Perguntas prováveis}
+\begin{description}[leftmargin=0pt]
+\item[O $\lambda$ estimado não é 0; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log ainda permite ler os efeitos em \%.
+\item[Por que estado e não região?] O $F$ parcial do estado além da região é \nFuf{} (significativo) e resolve a correlação entre municípios vizinhos.
+\item[Tirar \% pobres e alfabetização não perde informação?] Pouca: elas repetem a renda; mantê-las deixaria os coeficientes instáveis e com sinais trocados.
+\end{description}
+
+\subsection{Transição}
+``Com o modelo montado, o Willian mostra o que ele diz e como checamos as hipóteses.''

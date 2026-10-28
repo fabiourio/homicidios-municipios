@@ -1,0 +1,19 @@
+\section{Sua parte: primeiros achados da análise exploratória}
+\textbf{Mensagem principal:} a taxa é assimétrica (o log corrige), a violência é concentrada no Norte e no Nordeste e nenhum fator sozinho explica a taxa.
+
+\subsection{O que enfatizar}
+\begin{itemize}
+\item Daqui em diante, tudo usa os \nMunEsc{} municípios do escopo (no mapa, os de fora aparecem em cinza).
+\item \textbf{Assimetria:} a taxa tem cauda longa à direita (assimetria \nAssimTaxa); no log fica quase simétrica (\nAssimLn). Isso antecipa a transformação do modelo.
+\item \textbf{Mapa:} Nordeste \nTaxaNE{} contra Sudeste \nTaxaSE{} por 100 mil.
+\item \textbf{Correlações:} a maior é a de \nCorMaxVar{} (\nCorMax). Renda, \% pobres e alfabetização se repetem (até \nCorTrio{} entre si): alerta de multicolinearidade.
+\end{itemize}
+
+\subsection{Perguntas prováveis}
+\begin{description}[leftmargin=0pt]
+\item[Correlação alta com \% preta ou parda quer dizer que a cor causa violência?] Não. É associação: reflete desigualdade racial e a concentração da vitimização na população negra, como mostram o Atlas da Violência e a literatura.
+\item[Por que o log e não a raiz?] Quem decide é o Box-Cox, no slide do Luiz Felipe; aqui só mostramos que a taxa original é assimétrica.
+\end{description}
+
+\subsection{Transição}
+``A relação com a renda tem uma forma especial, que o Luiz Felipe mostra agora.''
