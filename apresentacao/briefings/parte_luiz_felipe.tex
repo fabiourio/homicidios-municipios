@@ -5,15 +5,15 @@
 \begin{itemize}
 \item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos são os de renda média, não os mais pobres. Por isso entram renda e renda² (modelo polinomial).
 \item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln.
-\item \textbf{Blocos:} todos entram; educação e migração dão $F$ parcial \nFblocoEd; o estado no lugar da região leva o $R^2_a$ de \nRdoisAregiao{} para \nRdoisA.
-\item \textbf{Multicolinearidade:} renda, \% pobres e alfabetização juntas dão VIF \nVIFrenda; ficamos só com a renda.
+\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), os blocos A a D e o estado (variação entre regiões).
+\item \textbf{Blocos:} todos entram; educação e migração dão $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem do estado, que no lugar da região leva o $R^2_a$ de \nRdoisAregiao{} para \nRdoisA.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[O $\lambda$ estimado não é 0; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log ainda permite ler os efeitos em \%.
-\item[Por que estado e não região?] O $F$ parcial do estado além da região é \nFuf{} (significativo) e resolve a correlação entre municípios vizinhos.
-\item[Tirar \% pobres e alfabetização não perde informação?] Pouca: elas repetem a renda; mantê-las deixaria os coeficientes instáveis e com sinais trocados.
+\item[O $\lambda$ estimado não é 0, e o 0 está fora do IC; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log permite ler os efeitos em \%. Dizemos no slide que a escolha é por interpretabilidade.
+\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $\mathbf{x}$ são as outras explicativas, $D$ são as indicadoras de estado e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
+\item[Por que estado e não região?] O $F$ parcial do estado além da região é \nFuf{} com \nGlUF{} gl (significativo): os estados diferem muito entre si (polícia, facções), mais do que a região capta.
 \end{description}
 
 \subsection{Transição}

@@ -6,6 +6,8 @@
 
 \begin{itemize}
 \item \textbf{Tema:} ODS 16 (paz e justiça), indicador 16.1.1: homicídios por 100 mil habitantes.
+\item \textbf{Contexto:} \nHomAno{} homicídios por ano; taxa \nRazaoMundo{} vezes a média mundial (UNODC); Norte e Nordeste bem acima de Sudeste e Sul.
+\item \textbf{Literatura:} os estudos nacionais com municípios (Wanzinack et al., 2022; Barros et al., 2020; Aransiola et al., 2022; Castellucci e Silva, 2026) usam dados de 2010. Nós usamos o Censo 2022 completo.
 \item \textbf{Unidade de análise:} o município. São \nMunBR{} municípios, com \nHomBR{} homicídios em 2021--2023 (\nTaxaBR{} por 100 mil hab./ano).
 \item \textbf{Resposta:} taxa de homicídios (agressão + intervenção legal, por residência da vítima), média de 2021 a 2023, do SIM/DATASUS.
 \item \textbf{Explicativas:} Censo 2022 do IBGE (renda, desigualdade, trabalho, frequência escolar, urbanização, cor ou raça, idade, migração), INEP 2022 (abandono e distorção idade-série no ensino médio), mais estado, Amazônia Legal e faixa de fronteira.
@@ -19,11 +21,12 @@
 \toprule
 \textbf{Decisão} & \textbf{Por quê} & \textbf{Apostila}\\
 \midrule
+Violência medida pela taxa de homicídios do SIM & Indicador 16.1.1 do ODS 16; estatística de violência local mais confiável do país e correlacionada com outros crimes (Murray et al., 2013); o SIM cobre todos os municípios com a mesma codificação (CID-10). Pela residência da vítima, média de 2021--2023 & ---\\
 Escopo: municípios com \nPopMin{} mil hab. ou mais & Nos pequenos o homicídio é raro: abaixo de 5 mil hab. a mediana é \nPorteHomMenor{} caso em 3 anos e a taxa oscila $\pm$\nPorteOscMenor\% só pelo acaso; \nZerosBR{} municípios têm taxa zero. O escopo fica com \nPctPopEsc\% da população e nenhum zero & Cap. 1: escopo do modelo\\
-Resposta em ln(taxa) & Box-Cox estimou $\lambda$ = \nLambda{} (IC de \nLambdaInf{} a \nLambdaSup); usamos $\lambda = 0$, simples de interpretar. A normalidade melhora ($W$ de \nSWy{} para \nSWln) & Cap. 4: Box-Cox\\
+Resposta em ln(taxa) & Box-Cox estimou $\lambda$ = \nLambda{} (IC de \nLambdaInf{} a \nLambdaSup); usamos $\lambda = 0$, simples de interpretar, mesmo fora do IC. A normalidade melhora ($W$ de \nSWy{} para \nSWln) & Cap. 4: Box-Cox\\
 Só a renda (sem \% pobres e alfabetização) & As três medem quase o mesmo: VIF da renda \nVIFrenda{} e sinais contraditórios & Cap. 6: multicolinearidade e VIF\\
 Renda e renda², com a renda centralizada & A taxa sobe até a renda média e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
-Estado (27 UFs) no lugar de região & Estados diferem muito (polícia, facções). Com estado: $R^2_a$ de \nRdoisAregiao{} para \nRdoisA, $F$ parcial \nFuf{} e Durbin-Watson de \nDWregiao{} para \nDW{} (vizinhos deixam de ter resíduos parecidos) & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
+Estado (27 UFs) no lugar de região & Estados diferem muito (polícia, facções). Com estado: $R^2_a$ de \nRdoisAregiao{} para \nRdoisA, $F$ parcial \nFuf{} (\nGlUF{} gl). O Durbin-Watson vai de \nDWregiao{} para \nDW, mas na ordem do código IBGE (quase alfabética dentro da UF): não mede a correlação entre vizinhos geográficos & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
 Bloco de educação e migração & Frequência escolar 15--17, abandono, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
 Amazônia Legal fora do modelo & Com o estado no modelo, ela só varia dentro do Maranhão: fica redundante & ---\\
 Variáveis frágeis mantidas por enquanto & \% homens 15--29, \% intenção indeterminada e desocupação saem (ou não) na seleção de variáveis & Cap. 8: seleção\\
@@ -45,12 +48,13 @@ Nada fora da apostila & Regra do grupo: técnicas de fora (pesos, modelos espaci
 \renewcommand{\arraystretch}{1.1}
 \input{../latex/tabelas/efeitos.tex}
 \end{center}
-{\footnotesize Efeito = variação da taxa para a mudança indicada, com as demais variáveis constantes (100 × $b$ com a resposta em log).}
+{\footnotesize Efeito = variação da taxa para a mudança indicada, com as demais variáveis constantes ($100\,[\exp(b\,\Delta) - 1]\%$ com a resposta em log), com o IC 95\% ao lado.}
 
 \section{O que ainda não está resolvido}
 \begin{itemize}
 \item \textbf{Variância não constante:} Breusch-Pagan = \nBP{} (rejeita). Os coeficientes continuam certos na média, mas os valores p ficam aproximados.
 \item \textbf{Seleção de variáveis} ($C_p$, AIC, BIC, PRESS) ainda não foi feita: é da entrega final.
+\item \textbf{Correlação entre vizinhos:} o Durbin-Watson na ordem do código não a avalia; falta verificar se resíduos de municípios vizinhos se parecem.
 \item Testadas e deixadas de fora (não ajudam): garimpo, desmatamento, Bolsa Família, mães solo e gasto municipal em segurança e assistência (SICONFI 2022).
 \end{itemize}
 
@@ -65,9 +69,11 @@ Box-Cox & Procedimento que escolhe a potência $\lambda$ da resposta que deixa o
 $R^2_a$ (ajustado) & Fração da variação explicada, com penalidade por variável a mais.\\
 Teste $F$ parcial & Compara o modelo com e sem um bloco de variáveis: diz se o bloco ajuda.\\
 VIF & Mede o quanto uma variável repete as outras (multicolinearidade). Acima de 10 é grave.\\
-Durbin-Watson & Testa se os resíduos de vizinhos se parecem. Perto de 2 = independentes.\\
+Durbin-Watson & Testa se resíduos consecutivos, na ordem dos dados, se parecem. Perto de 2 = sem correlação. Só mede vizinhança se a ordem dos dados for geográfica.\\
 Breusch-Pagan & Testa se a variância dos resíduos é constante.\\
 Shapiro-Wilk ($W$) & Testa a normalidade dos resíduos; perto de 1 = mais normal.\\
 Outlier & Resíduo semi-studentizado com $|e^*| \geq 4$.\\
+Modelo espacial autorregressivo & Regressão em que a taxa de um município depende também da taxa dos vizinhos (usado por Barros et al.). Fora da apostila.\\
+Modelo multinível & Regressão com municípios agrupados em estados, separando a variação entre e dentro dos estados (usado por Castellucci e Silva). Fora da apostila.\\
 \end{tabularx}
 \normalsize

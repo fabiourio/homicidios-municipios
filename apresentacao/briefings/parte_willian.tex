@@ -1,20 +1,20 @@
-\section{Sua parte: resultados, diagnóstico e próximos passos}
-\textbf{Mensagem principal:} o modelo explica \nRdoisA{} da variação; renda em U, \% preta ou parda, urbanização, desigualdade e evasão escolar se associam à violência; a variância não constante é a principal pendência.
+\section{Sua parte: resultados, diagnóstico e conclusão}
+\textbf{Mensagem principal:} os sinais são consistentes com as três hipóteses (desigualdade, escola e migração), a renda tem efeito em U invertido e os estados diferem muito; isso está de acordo com a literatura. A variância não constante e a correlação entre vizinhos são as principais pendências.
 
 \subsection{O que enfatizar}
 \begin{itemize}
-\item \textbf{Efeitos em \%:} como a resposta está em log, cada efeito é a variação da taxa para a mudança indicada, com as outras variáveis constantes. As não significativas aparecem em cinza, ao lado da tabela.
-\item \textbf{Escola:} mais jovens de 15--17 na escola, menos homicídios; mais abandono e atraso no ensino médio, mais homicídios. É associação, não causa.
+\item \textbf{Efeitos em \%:} como a resposta está em log, cada efeito é a variação da taxa para a mudança indicada, com as outras variáveis constantes. A primeira coluna liga cada variável à hipótese (H1, H2, H3). As não significativas aparecem em cinza, ao lado da tabela.
+\item \textbf{Escola (H2):} mais jovens de 15--17 na escola, menos homicídios; mais abandono e atraso no ensino médio, mais homicídios. É associação, não causa.
 \item \textbf{Curva da renda:} pico em R\$ \nPico{} quando as outras variáveis estão controladas (diferente do pico dos dados brutos, que não controla nada).
-\item \textbf{Diagnóstico:} normalidade razoável ($W$ = \nSW), \nNoutTxt{} mantido(s), vizinhos independentes (Durbin-Watson = \nDW), variância não constante (Breusch-Pagan = \nBP).
-\item \textbf{Próximos passos:} seleção de variáveis (cap. 8), decidir as frágeis, tratar a variância. O gasto municipal em segurança e assistência já foi testado e não ajuda.
+\item \textbf{Diagnóstico:} Shapiro-Wilk rejeita com $W$ = \nSW{} (cauda esquerda mais pesada), variância não constante (Breusch-Pagan = \nBP), \nNout{} outlier mantido. O Durbin-Watson (\nDW) está na ordem do código IBGE, quase alfabética dentro da UF: não diz nada sobre vizinhos geográficos.
+\item \textbf{Conclusão:} responder a pergunta do início e comparar com os estudos do slide do Kauan: urbanização e desigualdade com o mesmo sinal de Wanzinack et al.; diferença entre estados como em Castellucci e Silva; a correlação entre vizinhos de Barros et al. fica para a próxima etapa.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
 \item[Por que \% intenção indeterminada tem efeito negativo?] Ela mede subnotificação: onde muitas mortes ficam como indeterminadas, parte dos homicídios some do registro. É um controle de qualidade do registro, não um fator de risco.
 \item[A variância não constante invalida o modelo?] Não invalida os coeficientes (continuam certos na média), mas deixa os valores p aproximados; está nos próximos passos.
-\item[Fronteira não ser significativa contradiz a hipótese do tráfico?] Com o estado no modelo, boa parte do efeito regional já é capturada pelo estado; a seleção de variáveis vai decidir se a fronteira fica.
+\item[O Durbin-Watson perto de 2 não mostra que os vizinhos são independentes?] Não: ele compara cada município com o seguinte na ordem do código IBGE, que dentro do estado é quase alfabética. Verificar a correlação entre vizinhos geográficos está nos próximos passos.
 \item[E o gasto da prefeitura com segurança?] Testamos: não tem efeito. Segurança é sobretudo do estado, que já está no modelo, e muitas prefeituras não gastam nada nessa função.
 \end{description}
 

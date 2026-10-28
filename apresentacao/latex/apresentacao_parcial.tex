@@ -1,41 +1,45 @@
-\documentclass[aspectratio=169,14pt,xcolor=table]{beamer}
-\usetheme[progressbar=frametitle,numbering=fraction,sectionpage=none]{metropolis}
-\usepackage{fontspec}
-\usepackage[sfdefault,book]{FiraSans}
-\usepackage{FiraMono}
+\documentclass[aspectratio=169,11pt,xcolor=table]{beamer}
+% Tema Berlin com cores e fonte padrão, sem cabeçalho de navegação e sem rodapé (visual limpo)
+\usetheme{Berlin}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\usepackage[no-math]{fontspec}   % Latin Modern no texto; no-math deixa o beamer pôr a matemática sem serifa
+\usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{icomma}   % vírgula decimal sem espaço dentro da matemática (ex.: $R^2 = 0,59$)
 \usepackage{bm}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{graphicx}
 \usepackage{appendixnumberbeamer}
 
 % Figuras e números vêm do código de entrega (entrega/) via gerar_numeros.R: nada é digitado à mão
 \graphicspath{{../../entrega/resultados/eda/}{../../entrega/resultados/modelagem/}}
 
-\definecolor{navy}{HTML}{13294B}
+\definecolor{navy}{rgb}{0.2,0.2,0.7}   % mesmo azul da estrutura do tema padrão do beamer
 \definecolor{ods}{HTML}{00689D}
 \definecolor{destaque}{HTML}{C8343B}
 \definecolor{verde}{HTML}{2E7D4F}
 \definecolor{fundo}{HTML}{EAF1F7}
-\setbeamercolor{frametitle}{bg=navy,fg=white}
-\setbeamercolor{palette primary}{bg=navy,fg=white}
-\setbeamercolor{progress bar}{fg=destaque,bg=fundo}
-\setbeamercolor{title separator}{fg=destaque}
 \setbeamercolor{alerted text}{fg=destaque}
-\setbeamercolor{background canvas}{bg=white}
-\setbeamerfont{frametitle}{size=\normalsize,series=\bfseries}
-\setbeamertemplate{itemize item}{\color{ods}$\blacktriangleright$}
+\setbeamerfont{institute}{size=\footnotesize}
+\setbeamerfont{date}{size=\footnotesize}
+\setbeamertemplate{navigation symbols}{}
+% Frame de encerramento: o gerar_briefings.R reconhece a opção "standout" pelo nome
+\makeatletter\define@key{beamerframe}{standout}[true]{}\makeatother
 
 \newcommand{\ok}{{\color{verde}\checkmark}}
 \newcommand{\nao}{{\color{destaque}$\bm{\times}$}}
-\newcommand{\fig}[1]{\includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{#1}}
+\newcommand{\fig}[1]{\includegraphics[width=\linewidth,height=0.66\textheight,keepaspectratio]{#1}}
+% Fonte da figura ou tabela, no padrão "Fonte: ... Elaboração própria."
+\newcommand{\fonte}[1]{\par\vspace{0.2em}{\tiny\color{black!60}Fonte: #1\par}}
 \input{numeros.tex}
 
 \title{Fatores associados aos homicídios nos municípios brasileiros}
-\subtitle{Apresentação parcial}
+\subtitle{Uma análise de regressão linear múltipla \textbullet{} ODS 16, indicador 16.1.1}
 \author{\footnotesize Douglas Bergamim Fernandes \and Fabio Eiiti Kobayashi Urio \and Kauan Alves Aragão \and Luiz Felipe de Brito Ramos \and Willian Nelton Teleken}
-\institute{\small GED-16 · ITA · 28/10/2026}
-\date{}
+\institute{Instituto Tecnológico de Aeronáutica \textbullet{} GED-16 Análise de Regressão}
+\date{Apresentação parcial \textbullet{} 28 de outubro de 2026}
 
 \begin{document}
 
@@ -43,265 +47,443 @@
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Roteiro}
-\begin{enumerate}
-\item Questão de pesquisa
-\item[] \textcolor{black!55}{Limitações dos dados e escopo}
-\item Base de dados
-\item Variáveis
-\item Análise exploratória
-\item Ajuste preliminar do modelo
-\item[] \textcolor{black!55}{Próximos passos}
-\end{enumerate}
+\tableofcontents
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{1 · Questão de pesquisa}
-\textcolor{navy}{\textbf{Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?}}\par
-\vspace{1em}
+\section[Contexto]{Contexto e questão de pesquisa}
+\begin{frame}{Homicídios no Brasil}
 \begin{itemize}
-\item \nMunBR{} municípios
-\item \nHomBR{} homicídios em 2021--2023
-\item \alert{\nTaxaBR} homicídios por 100 mil hab. por ano
+\setlength{\itemsep}{0.6em}
+\item 2021--2023: \nHomBR{} homicídios, média de \nHomAno{} por ano
+\item Taxa de \alert{\nTaxaBR} por 100 mil hab. por ano: \nRazaoMundo{} vezes a média mundial (\nTaxaMundo{} em 2021)
+\item Distribuição desigual entre as regiões (por 100 mil hab. por ano):
+\begin{itemize}\small
+\item Norte \nTaxaNbr{} e Nordeste \nTaxaNEbr
+\item Centro-Oeste \nTaxaCObr
+\item Sul \nTaxaSbr{} e Sudeste \nTaxaSEbr
 \end{itemize}
+\item ODS 16, meta 16.1: reduzir significativamente todas as formas de violência e as taxas de mortalidade relacionadas; indicador 16.1.1: vítimas de homicídio por 100 mil hab.
+\end{itemize}
+\fonte{SIM/DATASUS (2021--2023); IBGE, Censo 2022; UNODC (2023), taxa mundial. Elaboração própria.}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Estudos anteriores com todos os municípios do país}
+\fontsize{7}{8.4}\selectfont
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.37\textwidth}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Artigo} & \textbf{Dados} & \textbf{Principais resultados}\\
+\midrule
+\textbf{Wanzinack, Signorelli e Reis (2022)}. \textit{Violence and social determinants of health in Brazil: association between homicides, urbanization, population, inequality, and development} & 5.570 municípios; homicídios do SIM, 2005--2015; Censo 2010 e Atlas & Mais risco de homicídio em municípios mais populosos, mais urbanizados e mais desiguais (Gini); menos risco com IDH-M maior\\
+\textbf{Barros, Baggio e Baggio (2020)}. \textit{The socioeconomic determinants of crime in Brazil: the role of spatial spillovers and heterogeneity} & 5.565 municípios; homicídios do SIM, média 2009--2011; Censo 2010 e Atlas & Taxa de um município associada à dos vizinhos; efeitos diferem entre as regiões; desorganização social associada a mais crime em todas; desigualdade significativa só no Sul\\
+\textbf{Aransiola, Ceccato e Justus (2022)}. \textit{Growth of lethal violence in Brazil 2000--2017: a space-temporal analysis of homicides} & Municípios; homicídios do SIM, 2000--2017; dados do Censo & Violência cresce no Norte e no Nordeste e desacelera no Sul e no Sudeste; privação, heterogeneidade étnica e urbanização associadas ao crescimento\\
+\textbf{Castellucci e Silva (2026)}. \textit{Fatores socioeconômicos da violência letal urbana em municípios brasileiros} & 282 municípios com 100 mil hab. ou mais; mortes violentas intencionais (IPEA); indicadores de 2010 & Grande parte da variação está entre estados; população e emprego associados a mais violência; Censo 2022 ainda incompleto na época\\
+\bottomrule
+\end{tabularx}
+\vspace{0.5em}
+
+\scriptsize\textbf{Lacuna:} os estudos nacionais usam variáveis explicativas de 2010. Este trabalho usa o Censo 2022 completo, educação (INEP 2022) e migração, com controle pelo estado.
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Questão de pesquisa e hipóteses}
+\textcolor{navy}{\textbf{Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?}}\par
+\vspace{0.6em}
+\small
+\textbf{Hipóteses} (sinal esperado da associação, segundo a literatura):
+\begin{itemize}\small
+\item[\textbf{H1}] Desigualdade de renda $(+)$ \hfill {\footnotesize\color{black!60}Fajnzylber, Lederman e Loayza (2002)}
+\item[\textbf{H2}] Exclusão escolar dos jovens $(+)$ \hfill {\footnotesize\color{black!60}Lochner e Moretti (2004)}
+\item[\textbf{H3}] Rotatividade populacional (migração recente) $(+)$ \hfill {\footnotesize\color{black!60}Sampson e Groves (1989)}
+\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\section[Dados]{Dados e variáveis}
+\begin{frame}{Fontes de dados}
+\footnotesize
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+\textbf{Fonte} & \textbf{Conteúdo} & \textbf{Período}\\
+\midrule
+SIM / DATASUS (TabNet) & Óbitos por causas externas, por município de residência (CID-10) & 2021--2023\\
+Censo Demográfico / IBGE (SIDRA) & Renda, trabalho, cor ou raça, idade, urbanização, escola, migração & 2022\\
+Censo Escolar / INEP & Abandono e distorção idade-série no ensino médio & 2022\\
+DATASUS (TabNet) & Recortes territoriais: Amazônia Legal e faixa de fronteira & ---\\
+\bottomrule
+\end{tabularx}
+\vspace{0.8em}
+
+\small Chave de ligação: código IBGE do município (7 dígitos; 6 no DATASUS). Todos os municípios casam entre as bases.
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Medida de violência: taxa de homicídios}
+\[
+Y_i = \frac{H_i^{2021} + H_i^{2022} + H_i^{2023}}{3\,P_i} \times 10^5
+\]
+{\scriptsize\color{black!70}$H$: óbitos por agressão (CID-10 X85--Y09) e intervenção legal (Y35--Y36), por município de residência; $P$: população do Censo 2022}
+\vspace{0.6em}
+
+\begin{columns}[T]
+\column{0.49\textwidth}
+\textbf{\color{navy}Por que homicídios}
+\begin{itemize}\small
+\item Indicador 16.1.1 do ODS 16
+\item Estatística de violência local mais confiável do país e correlacionada com outros crimes (Murray, Cerqueira e Kahn, 2013)
+\item SIM: cobertura nacional, causa codificada pela CID-10 com o mesmo critério em todo o país
+\end{itemize}
+\column{0.49\textwidth}
+\textbf{\color{navy}Como medimos}
+\begin{itemize}\small
+\item Residência da vítima: a morte fica no município cuja população e características vêm do Censo
+\item Média de 2021--2023: reduz a oscilação de um ano isolado, em torno do ano do Censo
+\item Por 100 mil hab.: compara municípios de tamanhos diferentes
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Variáveis explicativas}
+\footnotesize
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}cl>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Bloco} & \textbf{Dimensão} & \textbf{Explicativas}\\
+\midrule
+A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade, desocupação\\
+B & Demográfica & \% urbana, ln densidade, \% preta ou parda, \% homens 15--29\\
+C & Contexto e registro & faixa de fronteira, \% óbitos de intenção indeterminada\\
+D & Educação e migração & frequência escolar 15--17, abandono e distorção no EM, migração\\
+E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
+\bottomrule
+\end{tabularx}
+\vspace{0.6em}
+
+{\scriptsize\color{black!70}Desigualdade: razão média/mediana da renda (o Gini municipal de 2022 não foi publicado). Migração: \% de moradores há menos de 10 anos no município.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Limitações dos dados}
 \begin{itemize}
-\setlength{\itemsep}{0.5em}
-\item Estudo observacional: associação, não causa
-\item Só homicídios registrados: há subnotificação
-\item Presos contam como moradores do município do presídio
-\item Municípios pequenos: poucos casos e muitos zeros, a taxa oscila por acaso
+\setlength{\itemsep}{0.45em}
+\item \textbf{Desenho observacional e ecológico:} associações entre municípios; sem interpretação causal nem individual (falácia ecológica)
+\item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios
+\item \textbf{Denominador:} a população prisional é recenseada no município do presídio
+\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso
 \end{itemize}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{Escopo: municípios com \nPopMin{} mil hab. ou mais}
+\begin{frame}{Escopo: municípios com \nPopMin{} mil habitantes ou mais}
 \begin{columns}[c]
-\column{0.62\textwidth}
+\column{0.58\textwidth}
 \footnotesize
 \renewcommand{\arraystretch}{1.2}
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/porte.tex}
-\column{0.36\textwidth}
+\fonte{SIM/DATASUS (2021--2023); IBGE, Censo 2022. Elaboração própria.}
+\column{0.40\textwidth}
 \begin{itemize}\small
+\item Oscilação: erro relativo esperado da contagem, $1/\sqrt{\mathrm{E}[H_i]}$
 \item Abaixo de 5 mil hab.: mediana de \nPorteHomMenor{} homicídio em 3 anos
-\item Ficamos com \textbf{\nMunEsc{} municípios}
-\item Eles têm \textbf{\nPctPopEsc\%} da população
+\item Escopo: \textbf{\nMunEsc{} municípios}, \textbf{\nPctPopEsc\%} da população, nenhuma taxa nula
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{2 · Base de dados}
-\begin{columns}[T]
-\column{0.32\textwidth}
-\textbf{\color{navy}SIM / DATASUS}
+\section[Exploratória]{Análise exploratória}
+\begin{frame}{Resumo das variáveis}
+\begin{columns}[c]
+\column{0.71\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{3pt}
+\input{tabelas/descritiva.tex}
+\fonte{SIM/DATASUS; IBGE; INEP. \nMunEsc{} municípios do escopo. DP: desvio-padrão. Elaboração própria.}
+\column{0.27\textwidth}
 \begin{itemize}\small
-\item Registro de óbitos
-\item Homicídios por município de residência
-\end{itemize}
-\column{0.34\textwidth}
-\textbf{\color{navy}Censo 2022 / IBGE}
-\begin{itemize}\small
-\item Toda a população
-\item Renda, trabalho, escola, cor, idade, migração
-\end{itemize}
-\column{0.30\textwidth}
-\textbf{\color{navy}INEP 2022}
-\begin{itemize}\small
-\item Censo Escolar
-\item Abandono e atraso no ensino médio
-\end{itemize}
-\end{columns}
-\vspace{0.8em}
-\small Ligadas pelo código do município; homicídios de 2021--2023.
-\end{frame}
-
-% -----------------------------------------------------------------------------
-\begin{frame}{3 · Variáveis}
-\textbf{Resposta:} taxa de homicídios por 100 mil hab./ano\par
-\vspace{0.4em}
-\begin{columns}[T]
-\column{0.6\textwidth}
-\textbf{\color{navy}Quantitativas (contínuas)}
-\begin{itemize}\small
-\item Renda, desigualdade, \% pobres, alfabetização
-\item Desocupação, \% urbana, densidade
-\item \% preta ou parda, \% homens 15--29
-\item Escola: frequência 15--17, abandono e atraso no ensino médio
-\item Migração recente, \% mortes de intenção indeterminada
-\end{itemize}
-\column{0.37\textwidth}
-\textbf{\color{navy}Qualitativas (nominais)}
-\begin{itemize}\small
-\item Estado (27 UFs)
-\item Amazônia Legal
-\item Faixa de fronteira
+\item Densidade muito assimétrica (média muito acima da mediana): entra em ln no modelo
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{4 · A taxa é assimétrica; o log corrige}
+\begin{frame}{Distribuição da variável resposta}
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{e1_hist_resposta.png}
+\fonte{SIM/DATASUS; IBGE. \nMunEsc{} municípios do escopo. Elaboração própria.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item \nMunEsc{} municípios do escopo
-\item Média \nTaxaMedia; mediana \nTaxaMediana
-\item Assimetria: \nAssimTaxa{} na taxa, \nAssimLn{} no log
+\item Média \nTaxaMedia; mediana \nTaxaMediana{} por 100 mil
+\item Coeficiente de assimetria: \nAssimTaxa{} em $Y$ e \nAssimLn{} em $\ln Y$
+\item Assimetria à direita sugere transformar a resposta
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{4 · A violência se concentra no Norte e Nordeste}
+\begin{frame}{Variação entre regiões}
 \begin{columns}[c]
-\column{0.5\textwidth}
-\fig{e2_mapa_taxa.png}
-\column{0.48\textwidth}
-\begin{itemize}\small
-\item Nordeste: \alert{\nTaxaNE} por 100 mil
-\item Sudeste: \nTaxaSE{} por 100 mil
-\item Amazônia Legal: mediana \nMedAma, contra \nMedForaAma{} no resto
-\item Cinza: fora do escopo
+\column{0.36\textwidth}
+\includegraphics[width=\linewidth,height=0.7\textheight,keepaspectratio]{e2_mapa_taxa.png}
+\fonte{SIM/DATASUS; IBGE (malha municipal 2022). Em cinza: fora do escopo.}
+\column{0.62\textwidth}
+\includegraphics[width=\linewidth,keepaspectratio]{e3_box_regiao.png}
+\fonte{Ponto vermelho: média. Elaboração própria.}
+\vspace{0.3em}
+\begin{itemize}\footnotesize
+\item Norte e Nordeste acima de Sudeste e Sul
+\item Mediana na Amazônia Legal: \nMedAma, contra \nMedForaAma; na faixa de fronteira: \nMedFront, contra \nMedForaFront
+\item No modelo: estado (UF) como variável categórica; a Amazônia Legal sai, redundante com a UF
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{4 · Nenhum fator sozinho explica a taxa}
+\begin{frame}{Correlação linear com ln(taxa)}
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{e5_correlacao.png}
+\fonte{SIM/DATASUS; IBGE; INEP. Coeficiente de Pearson. Elaboração própria.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item Maior: \nCorMaxVar{} (\nCorMax)
-\item Renda, \% pobres e alfabetização se repetem: até \nCorTrio{} entre si
-\item Precisamos de um modelo múltiplo
+\item Maior $|r|$: \nCorMaxVar{} (\nCorMax)
+\item Nenhuma variável isolada basta: modelo múltiplo
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{4 · A renda tem efeito em U invertido}
+\begin{frame}{Correlação entre as explicativas}
+\begin{columns}[c]
+\column{0.6\textwidth}
+\includegraphics[width=\linewidth,height=0.84\textheight,keepaspectratio]{e8_pares.png}
+\fonte{SIM/DATASUS; IBGE. Elaboração própria.}
+\column{0.38\textwidth}
+\begin{itemize}\small
+\item Renda, \% pobres e alfabetização: $|r|$ até \nCorTrio{} entre si
+\item As três medem quase o mesmo: VIF da renda \nVIFrenda{} com as três no modelo
+\item No modelo fica só a renda; \% pobres e alfabetização saem
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Relação não linear com a renda}
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{e7_box_renda.png}
+\fonte{SIM/DATASUS; IBGE. Décimos de renda per capita. Elaboração própria.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item Nos dados, o pico fica perto de R\$ \nRendaDecilPico
-\item Os mais violentos são os de renda média
-\item No modelo: renda e renda²
+\item Taxa maior nos décimos intermediários (pico perto de R\$ \nRendaDecilPico)
+\item Forma de U invertido
+\item No modelo: polinômio de 2ª ordem na renda
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{5 · Box-Cox indica o logaritmo da taxa}
+\section[Modelo]{Ajuste preliminar do modelo}
+\begin{frame}{Transformação da resposta (Box-Cox)}
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m1_boxcox.png}
+\fonte{Elaboração própria; modelo com todas as explicativas e a UF.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item $\lambda$ estimado: \nLambda
-\item Usamos ln(taxa), mais simples de interpretar
-\item Normalidade: $W$ de \nSWy{} para \nSWln
+\item Box e Cox (1964): $\hat\lambda = \nLambda$; IC 95\%: [\nLambdaInf; \nLambdaSup]
+\item Adotado $\lambda = 0$ ($\ln Y$), por interpretabilidade (efeitos lidos em \%), embora fique fora do IC
+\item Shapiro-Wilk: $W$ de \nSWy{} ($Y$) para \nSWln{} ($\ln Y$)
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{5 · Construção do modelo em blocos}
-\begin{columns}[c]
-\column{0.6\textwidth}
-\small
-\renewcommand{\arraystretch}{1.3}
-\input{tabelas/blocos.tex}
-\column{0.38\textwidth}
+\begin{frame}{Especificação do modelo}
+\[
+\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumUF} \gamma_k D_{ik} + \varepsilon_i,
+\qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2)
+\]
 \begin{itemize}\small
-\item Todos os blocos entram ($p < 0{,}001$)
-\item Estado no lugar de região: $R^2_a$ de \nRdoisAregiao{} para \nRdoisA
-\item \% pobres e alfabetização saem (VIF \nVIFrenda)
+\setlength{\itemsep}{0.3em}
+\item $r_i$: ln da renda per capita, centrada na média (reduz a correlação entre $r$ e $r^2$ de \nCorQuadSem{} para \nCorQuadCen)
+\item $\mathbf{x}_i$: as demais \nNumX{} explicativas dos blocos A a D
+\item $D_{ik}$: indicadora da UF $k$ (referência: SP)
+\item Mínimos quadrados ordinários; $n = \nMunEsc$ municípios e \nNumPar{} parâmetros
 \end{itemize}
-\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{5 · Modelo preliminar: efeito de cada variável na taxa}
+\begin{frame}{Construção do modelo em blocos}
 \begin{columns}[c]
-\column{0.7\textwidth}
+\column{0.58\textwidth}
 \footnotesize
-\renewcommand{\arraystretch}{1.12}
-\setlength{\tabcolsep}{3pt}
-\input{tabelas/efeitos.tex}
-\column{0.28\textwidth}
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{4pt}
+\input{tabelas/blocos.tex}
+\fonte{Elaboração própria. $F$ parcial pelas somas de quadrados extras.}
+\column{0.40\textwidth}
 \begin{itemize}\small
-\item $R^2_a$ = \nRdoisA; $F$ = \nFglobal
-\item Demais variáveis constantes
-\item \textcolor{gray}{Não significativas: \nNaoSig}
+\item $H_0$: os coeficientes do bloco são nulos; rejeitada em todos os blocos
+\item Maior ganho de $R^2_a$ com o estado (bloco E)
+\item UF além da região: $F = \nFuf$ (\nGlUF{} gl), $p$ \nPUF; $R^2_a$ de \nRdoisAregiao{} para \nRdoisA
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{5 · Efeito da renda previsto pelo modelo}
+\begin{frame}{Estimativas: efeito de cada variável na taxa}
+\begin{columns}[c]
+\column{0.74\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{2.5pt}
+\input{tabelas/efeitos.tex}
+\fonte{Elaboração própria. Efeito $= 100\,[\exp(b\,\Delta) - 1]\%$, demais variáveis constantes.}
+\column{0.24\textwidth}
+\begin{itemize}\footnotesize
+\item Sinais consistentes com H1, H2 e H3
+\item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
+\item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
+\item \textcolor{gray}{Não significativas (5\%): \nNaoSig}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Efeito da renda previsto pelo modelo}
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m7_efeito_renda.png}
+\fonte{Elaboração própria. Demais variáveis na média; UF = SP. Faixa: IC 95\% da resposta esperada.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item Pico controlando as demais: \alert{R\$ \nPico}
-\item Mais pobres e mais ricos têm menos homicídios
-\item Faixa: IC 95\% da taxa esperada
+\item $\hat\beta_2$ = \nBetaDois{} ($p$ \nBetaDoisP): concavidade
+\item Máximo em $r^{*} = -\hat\beta_1 / (2\hat\beta_2)$: renda de \alert{R\$ \nPico}
+\item Taxa esperada menor nos extremos de renda
 \end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{5 · Diagnóstico dos resíduos}
+\begin{frame}{Diagnóstico dos resíduos}
 \begin{columns}[c]
-\column{0.6\textwidth}
-\fig{m3a_residuos_ajustados.png}
-\column{0.38\textwidth}
-\renewcommand{\arraystretch}{1.5}
-\small
-\begin{tabular}{@{}cl@{}}
-\nIconeSW & \nTextoSW\\
-\nIconeOut & \nTextoOut\\
-\nIconeDW & \nTextoDW\\
-\nIconeBP & \nTextoBP\\
+\column{0.31\textwidth}
+\includegraphics[width=\linewidth,height=0.55\textheight,keepaspectratio]{m3a_residuos_ajustados.png}
+\fonte{Elaboração própria. Resíduos semi-studentizados.}
+\column{0.67\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}llrr@{}}
+\toprule
+\textbf{Pressuposto} & \textbf{Teste} & \textbf{Estatística} & \textbf{$p$}\\
+\midrule
+Normalidade & Shapiro-Wilk & $W = \nSW$ & \nSWp\\
+Homocedasticidade & Breusch-Pagan & \nBP{} (\nBPgl{} gl) & \nBPp\\
+Independência & Durbin-Watson & $d = \nDW$ & \nDWp\\
+Multicolinearidade & VIF máximo & \nVIFrendaFinal{} (renda) & ---\\
+Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
+\bottomrule
 \end{tabular}
+\par\vspace{0.1em}{\tiny\color{black!60}VIF das demais variáveis $\leq$ \nVIFdemaisMax. Outlier: \nOutNomes.}
+\vspace{0.3em}
+
+\begin{itemize}\scriptsize
+\item Breusch-Pagan rejeita $H_0$: erros-padrão e valores $p$ são aproximados
+\item Shapiro-Wilk rejeita com $W$ próximo de 1 ($n$ grande); cauda esquerda mais pesada que a normal
+\item Durbin-Watson na ordem do código IBGE (quase alfabética dentro da UF): não avalia a dependência entre vizinhos geográficos
+\end{itemize}
 \end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{Próximos passos}
-\begin{itemize}
-\item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
-\item Decidir as variáveis não significativas e frágeis
-\item Tratar a variância não constante
-\item Gasto municipal em segurança e assistência: testado, não ajuda
+\section[Conclusão]{Considerações e próximos passos}
+\begin{frame}{Considerações e próximos passos}
+\begin{columns}[T]
+\column{0.49\textwidth}
+\textbf{\color{navy}Resposta preliminar à pergunta}
+\begin{itemize}\small
+\item Mais homicídios com mais desigualdade (H1), exclusão escolar (H2) e migração recente (H3)
+\item Renda em U invertido: pico em R\$ \nPico
+\item Também mais homicídios com mais \% preta ou parda e urbanização
+\item Grande diferença entre estados
 \end{itemize}
+\column{0.49\textwidth}
+\textbf{\color{navy}Em relação à literatura}
+\begin{itemize}\small
+\item Urbanização e desigualdade: mesmo sinal de Wanzinack et al. (2022)
+\item Diferença entre estados: como em Castellucci e Silva (2026)
+\end{itemize}
+\vspace{0.3em}
+\textbf{\color{navy}Próximos passos}
+\begin{itemize}\small
+\item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
+\item Variância não constante
+\item Correlação dos resíduos entre vizinhos, como em Barros et al. (2020)
+\end{itemize}
+\end{columns}
 \end{frame}
 
-\begin{frame}[standout]
-Obrigado!
+\begin{frame}[plain,c,standout]
+\centering
+{\Huge\color{navy}Obrigado!}\par
+\vspace{1em}
+{\large Perguntas?}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 \appendix
 
-\begin{frame}{Apêndice: coeficientes do modelo preliminar}
-\footnotesize
+\begin{frame}{Apêndice A · Coeficientes estimados}
+\scriptsize
 \renewcommand{\arraystretch}{1.1}
 \input{tabelas/coeficientes.tex}
 \vspace{0.5em}
 
-Mais 26 indicadoras de estado (base: SP). Resposta ln(taxa), \nMunEsc{} municípios.
+Resposta $\ln Y$; MQO; $n = \nMunEsc$. Mais \nNumUF{} indicadoras de UF (referência: SP), omitidas.
+$\hat\sigma = \nSigma$; $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$. EP: erro-padrão.
+\end{frame}
+
+\begin{frame}{Apêndice B · Referências}
+\tiny
+\begin{columns}[T]
+\column{0.49\textwidth}\setlength{\parskip}{0.5em}
+ARANSIOLA, T. J.; CECCATO, V.; JUSTUS, M. Growth of lethal violence in Brazil 2000--2017: a space-temporal analysis of homicides. \textit{Journal of Contemporary Criminal Justice}, 2022. DOI: 10.1177/10439862211034343.
+
+BARROS, P. H. B.; BAGGIO, H. S.; BAGGIO, I. S. The socioeconomic determinants of crime in Brazil: the role of spatial spillovers and heterogeneity. \textit{Revista Brasileira de Segurança Pública}, v. 14, n. 2, p. 188--209, 2020.
+
+BOX, G. E. P.; COX, D. R. An analysis of transformations. \textit{Journal of the Royal Statistical Society: Series B}, v. 26, n. 2, p. 211--252, 1964.
+
+CASTELLUCCI, L. V.; SILVA, É. M. Fatores socioeconômicos da violência letal urbana em municípios brasileiros. \textit{E\&S Journal}, 2026.
+
+FAJNZYLBER, P.; LEDERMAN, D.; LOAYZA, N. Inequality and violent crime. \textit{Journal of Law and Economics}, v. 45, n. 1, p. 1--39, 2002.
+
+FERRARI, D. \textit{GED-16: Análise de Regressão} (apostila). São José dos Campos: ITA. Disponível em: \texttt{www.ief.ita.br/\~{}denise/GED16/Apostila/}.
+
+IBGE. \textit{Censo Demográfico 2022}. Rio de Janeiro: IBGE. Sistema IBGE de Recuperação Automática (SIDRA).
+\column{0.49\textwidth}\setlength{\parskip}{0.5em}
+INEP. \textit{Indicadores Educacionais 2022}: taxas de rendimento e distorção idade-série por município. Brasília: INEP.
+
+LOCHNER, L.; MORETTI, E. The effect of education on crime: evidence from prison inmates, arrests, and self-reports. \textit{American Economic Review}, v. 94, n. 1, p. 155--189, 2004.
+
+MINISTÉRIO DA SAÚDE. \textit{Sistema de Informações sobre Mortalidade (SIM)}. DATASUS, TabNet.
+
+MURRAY, J.; CERQUEIRA, D. R. C.; KAHN, T. Crime and violence in Brazil: systematic review of time trends, prevalence rates and risk factors. \textit{Aggression and Violent Behavior}, v. 18, n. 5, p. 471--483, 2013.
+
+SAMPSON, R. J.; GROVES, W. B. Community structure and crime: testing social-disorganization theory. \textit{American Journal of Sociology}, v. 94, n. 4, p. 774--802, 1989.
+
+UNODC. \textit{Global Study on Homicide 2023}. Viena: United Nations Office on Drugs and Crime, 2023.
+
+WANZINACK, C.; SIGNORELLI, M. C.; REIS, C. Violence and social determinants of health in Brazil: association between homicides, urbanization, population, inequality, and development. \textit{Cadernos de Saúde Pública}, v. 38, n. 10, e00282621, 2022.
+\end{columns}
 \end{frame}
 
 \end{document}

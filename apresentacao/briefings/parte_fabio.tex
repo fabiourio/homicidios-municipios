@@ -1,21 +1,23 @@
-\section{Sua parte: base de dados e variáveis}
-\textbf{Mensagem principal:} usamos três fontes oficiais, ligadas pelo código do município: o SIM (homicídios), o Censo 2022 (características dos municípios) e o INEP (escola).
+\section{Sua parte: dados, medida de violência, limitações e escopo}
+\textbf{Mensagem principal:} usamos três fontes oficiais, ligadas pelo código do município; a violência é medida pela taxa de homicídios do SIM, a estatística mais confiável e comparável entre municípios; e os próprios dados nos obrigaram a restringir o estudo aos municípios com \nPopMin{} mil habitantes ou mais.
 
 \subsection{O que enfatizar}
 \begin{itemize}
-\item \textbf{SIM/DATASUS:} registro oficial de óbitos; contamos agressão (CID-10 X85--Y09) e intervenção legal (Y35--Y36), pelo município onde a vítima morava, somando 2021 a 2023.
-\item \textbf{Censo 2022:} retrato de toda a população; renda e trabalho vêm da amostra do Censo (parte dos domicílios), as demais variáveis do questionário completo. Frequência escolar 15--17 e migração recente também vêm do Censo.
-\item \textbf{INEP 2022 (Censo Escolar):} abandono e distorção idade-série (2 anos ou mais de atraso) no ensino médio, todas as redes.
-\item \textbf{Variáveis:} a resposta é quantitativa contínua; 14 quantitativas e 3 qualitativas. O estado entra como 26 variáveis indicadoras, com SP como referência.
-\item Amazônia Legal: região definida em lei (9 estados). Faixa de fronteira: 150 km ao longo da fronteira terrestre.
+\item \textbf{Fontes:} SIM/DATASUS (óbitos), Censo 2022 (características dos municípios; renda e trabalho vêm da amostra do Censo) e INEP 2022 (abandono e distorção idade-série no ensino médio).
+\item \textbf{Por que homicídios:} é o indicador 16.1.1 do ODS 16; é a estatística de violência local mais confiável do país e anda junto com os outros crimes (Murray, Cerqueira e Kahn, 2013); o SIM cobre todos os municípios com a mesma codificação (CID-10).
+\item \textbf{Como medimos:} agressão (X85--Y09) e intervenção legal (Y35--Y36), pela residência da vítima, média de 2021 a 2023, por 100 mil habitantes.
+\item \textbf{Explicativas:} cinco blocos (A a E), os mesmos da construção do modelo. O estado entra como \nNumUF{} indicadoras, com SP como referência.
+\item \textbf{Limitações:} as quatro em linguagem simples. A última (municípios pequenos) prepara o slide do escopo.
+\item \textbf{Escopo:} nos menores, muitos zeros e oscilação grande só pelo acaso. Por isso ficamos com \nMunEsc{} municípios (\nPctPopEsc\% da população). O escopo vale para \textbf{toda} a análise, exploratória e modelo.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Por que somar três anos?] Para estabilizar a taxa: um ano só tem poucos casos em muitos municípios.
+\item[Por que não usar dados da polícia?] O SIM cobre todos os municípios com a mesma codificação (CID-10); o homicídio é a medida de violência local mais confiável do país (Murray et al., 2013).
 \item[Por que município de residência e não de ocorrência?] Porque o denominador é a população residente; assim taxa e população falam das mesmas pessoas.
+\item[Por que 20 mil, e não 10 mil ou 50 mil?] É a partir desse porte que nenhum município tem taxa zero e a oscilação por acaso cai para $\pm$\nPorteOscVinte\%. Com 50 mil perderíamos boa parte do país; com 10 mil ainda há zeros.
 \item[Por que o Gini não está?] O Gini municipal de 2022 não foi publicado; usamos a razão renda média / mediana como medida de desigualdade.
 \end{description}
 
 \subsection{Transição}
-Ao terminar as variáveis: ``Agora o Douglas mostra o que os dados revelam antes de qualquer modelo.''
+Ao terminar o escopo: ``Com o escopo definido, o Douglas mostra o que os dados revelam antes de qualquer modelo.''

@@ -31,7 +31,7 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 - Análise exploratória e modelo usam os 1.710 municípios com 20 mil habitantes ou mais (84% da população): abaixo disso a taxa é dominada pelo acaso (ver `resultados/eda/confiabilidade_porte.csv`). Só a tabela de porte e o mapa mostram os 5.570.
 - O modelo é montado em 5 blocos, cada um testado pelo F parcial: A renda e desigualdade; B demografia; C fronteira e registro; D educação e migração; E estado.
 - Resposta do modelo: ln(taxa), escolhida pelo procedimento de Box-Cox.
-- Estado (27 UFs, base SP) entra como variável categórica no lugar da região: absorve diferenças entre estados e elimina a correlação entre resíduos de municípios vizinhos (ver Durbin-Watson em `resultados/modelagem/valores_modelo.txt`).
+- Estado (27 UFs, base SP) entra como variável categórica no lugar da região: absorve diferenças entre estados. O Durbin-Watson (em `resultados/modelagem/valores_modelo.txt`) é calculado na ordem do código IBGE e não avalia a correlação entre resíduos de municípios vizinhos.
 
 ## Dados
 

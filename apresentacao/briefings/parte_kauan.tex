@@ -1,20 +1,20 @@
-\section{Sua parte: abrir e definir o escopo}
-\textbf{Mensagem principal:} queremos entender o que está associado à violência letal nos municípios, e os próprios dados nos obrigaram a restringir o estudo aos municípios com \nPopMin{} mil habitantes ou mais.
+\section{Sua parte: contexto, literatura e pergunta}
+\textbf{Mensagem principal:} o Brasil tem uma taxa de homicídios muito acima da média mundial e desigual entre as regiões; os estudos nacionais com municípios usam dados de 2010, e nós usamos o Censo 2022 para responder a uma pergunta de associação.
 
 \subsection{O que enfatizar}
 \begin{itemize}
-\item A pergunta é de associação, não de causa: é um estudo observacional.
-\item As quatro limitações dos dados, em linguagem simples. A última (municípios pequenos) prepara o slide do escopo.
-\item No escopo, a tabela fala sozinha: nos menores, muitos zeros e oscilação grande só pelo acaso. Por isso ficamos com \nMunEsc{} municípios (\nPctPopEsc\% da população).
-\item O escopo vale para \textbf{toda} a análise, exploratória e modelo.
+\item \textbf{Contexto:} \nHomAno{} homicídios por ano em 2021--2023; taxa de \nTaxaBR, \nRazaoMundo{} vezes a média mundial (\nTaxaMundo, UNODC). Norte (\nTaxaNbr) e Nordeste (\nTaxaNEbr) bem acima de Sudeste (\nTaxaSEbr) e Sul (\nTaxaSbr). É o indicador 16.1.1 do ODS 16.
+\item \textbf{Literatura:} os quatro estudos usam municípios do país inteiro, como o nosso. Ler a tabela pela última coluna: população, urbanização e desigualdade aparecem associadas a mais homicídios; a taxa de um município se parece com a dos vizinhos; o padrão muda entre regiões e estados.
+\item \textbf{Lacuna:} todos usam variáveis explicativas de 2010. Nós usamos o Censo 2022 completo, mais educação (INEP) e migração, com controle pelo estado.
+\item \textbf{Pergunta e hipóteses:} é uma pergunta de associação, não de causa (estudo observacional). As três hipóteses vêm da literatura: desigualdade, exclusão escolar e rotatividade de moradores, todas com sinal positivo esperado.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Por que 20 mil, e não 10 mil ou 50 mil?] É a partir desse porte que nenhum município tem taxa zero e a oscilação por acaso cai para $\pm$\nPorteOscVinte\%. Com 50 mil perderíamos boa parte do país; com 10 mil ainda há zeros.
-\item[Vocês não perdem os municípios pequenos e violentos?] Sim, e isso é uma limitação declarada: as conclusões valem para municípios com \nPopMin{} mil habitantes ou mais.
-\item[Por que usar homicídios registrados se há subnotificação?] É a fonte oficial e completa disponível; controlamos a qualidade do registro pela \% de mortes de intenção indeterminada.
+\item[Se já há estudos com todos os municípios, o que vocês acrescentam?] Eles usam dados de 2010; nós usamos o Censo 2022 completo, com educação e migração, e controlamos as diferenças entre estados.
+\item[Barros et al. usam um modelo espacial. Por que vocês não?] Modelos espaciais estão fora da apostila (regra do grupo). Controlamos pelo estado e deixamos a correlação entre vizinhos como próximo passo.
+\item[Por que essas três hipóteses?] São as explicações mais citadas na literatura sobre crime: desigualdade (Fajnzylber et al.), escola (Lochner e Moretti) e desorganização social (Sampson e Groves), e temos dados de 2022 para as três.
 \end{description}
 
 \subsection{Transição}
-Ao terminar o escopo: ``Com o escopo definido, o Fabio apresenta de onde vêm os dados e as variáveis.''
+Ao terminar as hipóteses: ``Com a pergunta definida, o Fabio apresenta os dados e como medimos a violência.''
