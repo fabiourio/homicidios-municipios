@@ -51,17 +51,16 @@ m <- with(mod, c(
     F_B = anova_blocos$F[2], F_C = anova_blocos$F[3], F_D = anova_blocos$F[4], F_E = anova_blocos$F[5],
     p_B = anova_blocos$`Pr(>F)`[2], p_C = anova_blocos$`Pr(>F)`[3], p_D = anova_blocos$`Pr(>F)`[4], p_E = anova_blocos$`Pr(>F)`[5],
     R2a_A = comp$R2a[1], R2a_B = comp$R2a[2], R2a_C = comp$R2a[3], R2a_D = comp$R2a[4], R2a_E = comp$R2a[5],
-    R2a_E_regiao = comp$R2a[6], F_uf = F_uf$F[2],
     R2a = sf_$adj.r.squared, F_global = unname(sf_$fstatistic[1]),
     gl1 = unname(sf_$fstatistic[2]), gl2 = unname(sf_$fstatistic[3]),
     pico_renda = unname(pico_renda), bp = unname(bp$statistic), bp_p = unname(bp$p.value),
     sw = unname(sw_final$statistic), n_outliers = nrow(outliers),
     sw_p = sw_final$p.value, bp_gl = unname(bp$parameter),
     gl_B = anova_blocos$Df[2], gl_C = anova_blocos$Df[3], gl_D = anova_blocos$Df[4], gl_E = anova_blocos$Df[5],
-    gl_uf = F_uf$Df[2], p_uf = F_uf$`Pr(>F)`[2], R2_E = comp$R2[5], sigma = sf_$sigma,
+    R2_E = comp$R2[5], sigma = sf_$sigma,
     F_global_p = unname(pf(sf_$fstatistic[1], sf_$fstatistic[2], sf_$fstatistic[3], lower.tail = FALSE)),
     vif_renda_final = unname(vif_final["rend_c"]), vif_demais_max = max(vif_final[names(vif_final) != "rend_c"]),
-    n_uf = nlevels(d$uf) - 1, n_x = length(coef(final)) - 3 - (nlevels(d$uf) - 1),
+    n_reg = nlevels(d$regiao) - 1, n_x = length(coef(final)) - 3 - (nlevels(d$regiao) - 1),
     cor_quad_sem = unname(cor_quad[1]), cor_quad_cen = unname(cor_quad[2])))
 out_nomes <- with(mod$outliers, paste0(municipio, "-", uf))
 efe <- mod$mudancas; coefs <- mod$coefs
@@ -77,12 +76,11 @@ coef <- function(t, col) coefs[coefs$termo == t, col]
 # Confere as frases fixas dos slides: se o resultado mudar, para aqui em vez de gerar slide errado
 confere <- function(ok, frase) if (!isTRUE(ok)) stop("O resultado não sustenta mais a frase do slide: ", frase)
 confere(coef("rend_c2", "b") < 0 && coef("rend_c2", "p") < 0.05, "renda em U invertido")
-confere(m[["lambda_ic_sup"]] < 0.25, "Box-Cox: lambda perto de 0, o log é um valor de fácil interpretação próximo")
+confere(m[["lambda"]] < 0.25, "Box-Cox: lambda mais perto de 0 (log) do que de 0,5 (raiz); o log é o valor de fácil interpretação mais próximo")
 confere(m[["lambda_ic_inf"]] > 0, "lambda = 0 fica fora do IC 95% de Box-Cox")
 confere(all(c(m[["p_B"]], m[["p_C"]], m[["p_D"]], m[["p_E"]]) < 0.001), "todos os blocos entram (p < 0,001)")
-confere(m[["R2a_E"]] > m[["R2a_E_regiao"]], "estado no lugar de região melhora o modelo")
 ganho <- diff(c(m[["R2a_A"]], m[["R2a_B"]], m[["R2a_C"]], m[["R2a_D"]], m[["R2a_E"]]))
-confere(which.max(ganho) == 4, "maior ganho de R² ajustado com o estado (bloco E)")
+confere(which.max(ganho) == 4, "maior ganho de R² ajustado com a região (bloco E)")
 confere(coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "mais frequência escolar, menos homicídios")
 confere(all(sapply(c("distorcao_em", "pct_migr_10anos"), function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05)), "mais distorção e migração recente, mais homicídios")
 confere(m[["vif_renda"]] > 10, "renda, % pobres e alfabetização juntas têm VIF alto")
@@ -92,14 +90,16 @@ med_reg <- tapply(d_eda$taxa, d_eda$regiao, median)
 confere(min(med_reg[c("Norte", "Nordeste")]) > max(med_reg[c("Sudeste", "Sul")]), "boxplot: Norte e Nordeste acima de Sudeste e Sul no escopo")
 confere(e[["taxa_media"]] > e[["taxa_mediana"]], "taxa: média acima da mediana")
 confere(e[["assim_taxa"]] > 0, "taxa: assimetria à direita (coeficiente positivo)")
-confere(e[["dens_extremos"]] > 0 && max(abs(mod$d$dens_z)) < 3, "densidade: sem os extremos, nenhum município a mais de 3 desvios-padrão da média")
+confere(e[["dens_extremos"]] > 0 && all(d_eda$p_dens > eda$P_CORTE & d_eda$p_dens < 100 - eda$P_CORTE), "densidade: ficam só os municípios entre os percentis de corte da sua região")
 confere(m[["n"]] == e[["municipios_escopo"]], "exploratória e modelo no mesmo escopo")
 confere(e[["porte_zero_20a50mil"]] == 0, "a partir de 20 mil hab. nenhum município tem taxa zero")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
-confere(sig_pos("desig") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") && coef("abandono_em", "b") > 0 &&
+confere(sig_pos("desig") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
           coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1, H2 e H3")
-confere(coef("abandono_em", "p") > 0.05, "H2: abandono no ensino médio com o sinal esperado, mas não significativo")
+confere(coef("abandono_em", "p") > 0.05, "H2: abandono no ensino médio não significativo")
+confere(all(sapply(paste0("regiao", c("Norte", "Nordeste", "Centro-Oeste", "Sul")), sig_pos)), "taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste")
+confere(mean(d_eda$regiao[d_eda$amazonia_legal == 1] == "Norte") > 0.5, "a maior parte da Amazônia Legal é a região Norte")
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
@@ -141,14 +141,14 @@ mac <- c(
   PorteOscVinte = fmt(e[["porte_oscilacao_20a50mil"]], 0),
   Lambda = fmt(m[["lambda"]], 2), LambdaInf = fmt(m[["lambda_ic_inf"]], 2), LambdaSup = fmt(m[["lambda_ic_sup"]], 2),
   SWy = fmt(m[["sw_y"]], 2), SWln = fmt(m[["sw_ln"]], 2), VIFrenda = fmt(m[["vif_renda"]], 0),
-  RdoisA = fmt(m[["R2a"]], 2), RdoisAregiao = fmt(m[["R2a_E_regiao"]], 2),
-  Fuf = fmt(m[["F_uf"]]), FblocoEd = fmt(m[["F_D"]]), RdoisAsemEd = fmt(m[["R2a_C"]], 2), RdoisAcomEd = fmt(m[["R2a_D"]], 2), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
+  RdoisA = fmt(m[["R2a"]], 2),
+  FblocoEd = fmt(m[["F_D"]]), RdoisAsemEd = fmt(m[["R2a_C"]], 2), RdoisAcomEd = fmt(m[["R2a_D"]], 2), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
   Pico = fmt(m[["pico_renda"]], 0), BP = fmt(m[["bp"]], 0),
   SW = fmt(m[["sw"]], 2), Nout = fmt(m[["n_outliers"]], 0),
   SWp = fp(m[["sw_p"]]), BPgl = fmt(m[["bp_gl"]], 0), BPp = fp(m[["bp_p"]]),
-  GlUF = fmt(m[["gl_uf"]], 0), PUF = fp(m[["p_uf"]]), RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
+  RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
   FglobalP = fp(m[["F_global_p"]]), VIFrendaFinal = fmt(m[["vif_renda_final"]]), VIFdemaisMax = fmt(m[["vif_demais_max"]]), VIFrendaCru = fmt(vif_cru[["log_rend"]], 0),
-  NumUF = fmt(m[["n_uf"]], 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
+  NumReg = fmt(m[["n_reg"]], 0), PCorte = fmt(eda$P_CORTE, 1), PCorteSup = fmt(100 - eda$P_CORTE, 1), PctCentral = fmt(100 - 2 * eda$P_CORTE, 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
   CorQuadSem = fmt(m[["cor_quad_sem"]], 4), CorQuadCen = fmt(m[["cor_quad_cen"]], 2),
   BetaDois = fmt(coef("rend_c2", "b"), 3), BetaDoisP = fp(coef("rend_c2", "p")),
   OutNomes = if (length(out_nomes)) paste(out_nomes, collapse = ", ") else "nenhum",
@@ -166,6 +166,14 @@ lin <- sprintf("%s%s & %s & %s\\%% & $\\pm$%s\\%%\\\\", ifelse(esc, "\\rowcolor{
 writeLines(c("\\begin{tabular}{@{}lrrr@{}}", "\\toprule",
              "\\textbf{Porte} & \\textbf{Municípios} & \\textbf{Zeros} & \\textbf{Oscilação}\\\\", "\\midrule",
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/porte.tex")
+
+# Tabela do corte por percentil da densidade em cada região
+cr <- as.data.frame(eda$corte_regiao)
+lin <- sprintf("%s & %s & %s & %s & %s a %s\\\\", cr$regiao, fmt(cr$municipios, 0), fmt(cr$fora, 0), fmt(cr$considerados, 0),
+               fmt(cr$dens_min, 1), fmt(cr$dens_max, 1))
+writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
+             "\\textbf{Região} & \\textbf{Municípios} & \\textbf{Saem} & \\textbf{Ficam} & \\textbf{Densidade que fica}\\\\", "\\midrule",
+             lin, "\\bottomrule", "\\end{tabular}"), "tabelas/corte_regiao.tex")
 
 # Tabela-resumo da exploratória: resposta e explicativas do modelo (casas decimais por variável)
 casas <- c(taxa = 1, rend_pc_media = 0, desig = 2, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2,
@@ -195,7 +203,7 @@ writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
              "\\textbf{Bloco} & \\textbf{gl} & \\textbf{$F$ parcial} & \\textbf{$p$} & \\textbf{$R^2_a$}\\\\", "\\midrule",
              sprintf("A: renda e desigualdade & --- & --- & --- & %s\\\\", fmt(m[["R2a_A"]], 2)),
              bloco("B: + demografia", "B"), bloco("C: + fronteira e registro", "C"),
-             bloco("D: + educação e migração", "D"), bloco("E: + estado (UF)", "E", neg = TRUE),
+             bloco("D: + educação e migração", "D"), bloco("E: + região", "E", neg = TRUE),
              "\\bottomrule", "\\end{tabular}"), "tabelas/blocos.tex")
 
 # Tabela de efeitos na taxa (%): só as significativas; as n.s. viram a macro \nNaoSig
@@ -214,12 +222,13 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
              sprintf(" & Renda & --- & U invertido & --- & %s\\\\", fp(coef("rend_c2", "p"))),
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/efeitos.tex")
 
-# Apêndice: coeficientes (sem as 26 indicadoras de estado)
+# Apêndice: coeficientes
 nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", desig = "Desigualdade", desocup = "Desocupação",
            pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)",
            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
-           pct_migr_10anos = "Migração recente")
+           pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
+           `regiaoCentro-Oeste` = "Centro-Oeste", regiaoSul = "Sul")
 cc <- coefs[match(names(nomes), coefs$termo), ]
 cel <- sprintf("%s & %s & %s & %s", nomes, gsub("-", "$-$", fmt(cc$b, 3)), fmt(cc$ep, 3), fp(cc$p))
 k <- ceiling(length(cel) / 2)

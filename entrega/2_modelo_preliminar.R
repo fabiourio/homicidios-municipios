@@ -31,17 +31,19 @@ d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10
 # Abaixo disso a taxa é dominada pelo acaso (poucos casos, muitos zeros): ver confiabilidade_porte.csv
 d <- d[d$pop >= 20000, ]
 
-# Densidade: saem os valores extremos de ln(densidade) pelo critério do boxplot (além de 1,5 x IQR dos quartis)
-q_dens <- quantile(d$log_dens, c(.25, .75))
-d <- d[d$log_dens >= q_dens[1] - 1.5 * diff(q_dens) & d$log_dens <= q_dens[2] + 1.5 * diff(q_dens), ]
+# Percentil da densidade de cada município dentro da sua região (0 a 100).
+# Saem os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
+P_CORTE <- 2.5
+percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
+d$p_dens <- ave(d$dens, d$regiao, FUN = percentil)
+d <- d[d$p_dens > P_CORTE & d$p_dens < 100 - P_CORTE, ]
 
 # ln(densidade) padronizado: média 0 e desvio-padrão 1
 d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
 
-# Região: 5 classes -> 4 indicadoras, com o Sudeste como referência
-# Estado (UF) como variável categórica: 27 classes -> 26 indicadoras, com SP como referência.
-# Absorve diferenças entre estados (polícia, facções)
-d$uf <- relevel(factor(d$uf), ref = "SP")
+# Região como variável categórica: 5 classes -> 4 indicadoras, com o Sudeste como referência
+d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                           labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")), ref = "Sudeste")
 
 # Resposta: taxa de homicídios por 100 mil hab./ano (2021-2023)
 d$y <- d$taxa
@@ -62,7 +64,7 @@ summary(rls)
 # 2. Transformação da resposta (Box-Cox)
 # -----------------------------------------------------------------------------
 f_base <- ~ log_rend + desig + desocup + pct_urbana + dens_z + pct_h1529 +
-  faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + uf
+  faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
 
 m_y <- lm(update(f_base, y ~ .), data = d)
 
@@ -85,7 +87,7 @@ sw_log  <- shapiro.test(rstandard(m_log))
 # -----------------------------------------------------------------------------
 m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + desig + desocup + pct_urbana + dens_z +
                 pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em +
-                pct_migr_10anos + uf, data = d)
+                pct_migr_10anos + regiao, data = d)
 summary(m_colin)
 
 # Para a região (4 indicadoras) o car devolve o GVIF; GVIF^(1/(2*gl)) ao quadrado fica na escala do VIF
@@ -103,26 +105,21 @@ mA <- lm(ly ~ rend_c + rend_c2 + desig + desocup, data = d)                    #
 mB <- update(mA, . ~ . + pct_urbana + dens_z + pct_h1529)         # + demografia
 mC <- update(mB, . ~ . + faixa_fronteira + pct_indet)                           # + contexto
 mD <- update(mC, . ~ . + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos)   # + educação e migração
-mE <- update(mD, . ~ . + uf)                                                    # + estado
-# Amazônia Legal fica de fora: com o estado no modelo ela só varia dentro do Maranhão
-
-# Região x estado: a região é agregação dos estados (modelos aninhados)
-mE_regiao <- update(mD, . ~ . + regiao)
+mE <- update(mD, . ~ . + regiao)                                                # + região
 
 anova_blocos <- anova(mA, mB, mC, mD, mE)
 anova_blocos
 write.csv(as.data.frame(anova_blocos), "resultados/modelagem/anova_blocos.csv")
 
-# F parcial do termo quadrático (Ho: beta_renda² = 0) e da interação (Ho: os 4 coeficientes = 0)
+# F parcial do termo quadrático (Ho: beta_renda² = 0)
 F_quad  <- anova(update(mE, . ~ . - rend_c2), mE)
-F_uf <- anova(mE_regiao, mE)        # Ho: os estados não acrescentam nada além da região
 
 comp <- data.frame(
-  modelo = c("A socioeconômico", "B + demografia", "C + contexto", "D + educação e migração", "E + estado", "E com região"),
-  p   = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) length(coef(m)) - 1),
-  R2  = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$r.squared),
-  R2a = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$adj.r.squared),
-  MSE = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$sigma^2))
+  modelo = c("A socioeconômico", "B + demografia", "C + contexto", "D + educação e migração", "E + região"),
+  p   = sapply(list(mA, mB, mC, mD, mE), function(m) length(coef(m)) - 1),
+  R2  = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$r.squared),
+  R2a = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$adj.r.squared),
+  MSE = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$sigma^2))
 write.csv(comp, "resultados/modelagem/comparacao_blocos.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
@@ -161,13 +158,13 @@ mudancas$ic_sup_pct <- 100 * (exp(ic[mudancas$termo, 2] * mudancas$delta) - 1)
 write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = FALSE)
 
 # Gráfico de efeito da renda: taxa esperada (IC 95%) ao longo da renda, demais variáveis na média
-# (fronteira = não, estado = SP, a referência). O nível depende do estado; a forma não.
+# (fronteira = não, região = Sudeste, a referência). O nível depende da região; a forma não.
 grade <- data.frame(rend = exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
 for (v in c("desig", "desocup", "pct_urbana", "dens_z", "pct_h1529", "pct_indet",
            "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
 grade$faixa_fronteira <- 0
-grade$uf <- factor("SP", levels = levels(d$uf))
+grade$regiao <- factor("Sudeste", levels = levels(d$regiao))
 pr <- predict(final, newdata = grade, interval = "confidence", level = 0.95)
 grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
 
@@ -265,7 +262,6 @@ print(summary(m_colin)$coefficients[c("log_rend", "pct_pobres", "alfabet"), ])
 cat(sprintf("cor(X, X²): sem centrar = %.4f | centrado = %.4f\n", cor_quad[1], cor_quad[2]))
 cat("\n== 4. Blocos (F parcial) ==\n"); print(anova_blocos)
 cat(sprintf("\nF parcial renda²: F = %.1f | p = %.2g\n", F_quad$F[2], F_quad$`Pr(>F)`[2]))
-cat(sprintf("F parcial estado além da região: F = %.2f (gl %d) | p = %.2g\n", F_uf$F[2], F_uf$Df[2], F_uf$`Pr(>F)`[2]))
 cat("\nR² e R² ajustado por bloco:\n"); print(comp, digits = 4, row.names = FALSE)
 cat("\n== 5. Modelo preliminar (D) ==\n"); print(sf_)
 cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))

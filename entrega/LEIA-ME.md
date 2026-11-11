@@ -28,10 +28,10 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 
 - A análise exploratória usa os 5.570 municípios.
 - O modelo usa os municípios com 20 mil habitantes ou mais: abaixo disso a taxa é dominada pelo acaso (ver `resultados/eda/confiabilidade_porte.csv`).
-- Saem os 50 municípios com valor extremo de ln(densidade), pelo critério do boxplot. Ficam 1.660 municípios (65% da população).
+- Cada município recebe o percentil da sua densidade dentro da sua região (`resultados/eda/percentis_municipios.csv`). Ficam os que estão entre os percentis 2,5 e 97,5 da região: saem 87 e ficam 1.623 municípios (66% da população).
 - ln(densidade) entra no modelo padronizado (média 0, desvio-padrão 1).
 - Resposta do modelo: ln(taxa), escolhida pelo procedimento de Box-Cox.
-- Estado (27 UFs, base SP) entra como variável categórica no lugar da região: absorve diferenças entre estados.
+- A região (5 classes, base Sudeste) entra como variável categórica.
 
 ## Dados
 

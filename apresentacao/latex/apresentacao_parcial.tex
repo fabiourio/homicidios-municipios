@@ -84,7 +84,7 @@
 \end{tabularx}
 \vspace{0.5em}
 
-\scriptsize\textbf{Lacuna:} os estudos nacionais usam variáveis explicativas de 2010. Este trabalho usa o Censo 2022 completo, educação (INEP 2022) e migração, com controle pelo estado.
+\scriptsize\textbf{Lacuna:} os estudos nacionais usam variáveis explicativas de 2010. Este trabalho usa o Censo 2022 completo, educação (INEP 2022) e migração, com controle pela região.
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade, desocupa
 B & Demográfica & \% urbana, ln densidade (padronizado), \% homens 15--29\\
 C & Contexto e registro & faixa de fronteira, \% óbitos de intenção indeterminada\\
 D & Educação e migração & frequência escolar 15--17, abandono e distorção no EM, migração\\
-E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
+E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \bottomrule
 \end{tabularx}
 \vspace{0.6em}
@@ -173,8 +173,26 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \item \textbf{Desenho observacional e ecológico:} associações entre municípios; sem interpretação causal nem individual (falácia ecológica)
 \item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios
 \item \textbf{Denominador:} a população prisional é recenseada no município do presídio
-\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os municípios com \nPopMin{} mil hab. ou mais. Sem os \nDensExt{} extremos de densidade, ficam \textbf{\nMunEsc{} municípios} (\nPctPopEsc\% da população)
+\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os municípios com \nPopMin{} mil hab. ou mais. Sem os \nDensExt{} extremos de densidade de cada região, ficam \textbf{\nMunEsc{} municípios} (\nPctPopEsc\% da população)
 \end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Municípios considerados: percentil por região}
+\begin{columns}[c]
+\column{0.64\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+\input{tabelas/corte_regiao.tex}
+\fonte{IBGE, Censo 2022. Municípios com \nPopMin{} mil hab. ou mais. Densidade em hab./km².}
+\column{0.34\textwidth}
+\begin{itemize}\small
+\item Cada município recebe o percentil da sua densidade dentro da sua região
+\item Ficam os que estão entre os percentis \nPCorte{} e \nPCorteSup: os \nPctCentral\% centrais de cada região
+\item Saem \nDensExt{} municípios; ficam \nMunEsc
+\end{itemize}
+\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -189,7 +207,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \fonte{SIM/DATASUS; IBGE; INEP. \nMunEsc{} municípios do escopo. DP: desvio-padrão. Elaboração própria.}
 \column{0.27\textwidth}
 \begin{itemize}\small
-\item Densidade: saem os \nDensExt{} valores extremos de ln densidade (critério do boxplot)
+\item Densidade: saem os \nDensExt{} municípios fora dos \nPctCentral\% centrais da sua região
 \item No modelo, ln densidade entra padronizado (média 0, DP 1)
 \end{itemize}
 \end{columns}
@@ -220,7 +238,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \vspace{0.3em}
 \begin{itemize}\footnotesize
 \item Norte e Nordeste acima de Sudeste e Sul
-\item No modelo: estado (UF) como variável categórica
+\item No modelo: região como variável categórica
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -267,7 +285,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m1_boxcox.png}
-\fonte{Elaboração própria; modelo com todas as explicativas e a UF.}
+\fonte{Elaboração própria; modelo com todas as explicativas e a região.}
 \column{0.38\textwidth}
 \begin{itemize}\small
 \item Box e Cox (1964): $\hat\lambda = \nLambda$; IC 95\%: [\nLambdaInf; \nLambdaSup]
@@ -285,7 +303,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \column{0.49\textwidth}
 \includegraphics[width=\linewidth]{m2b_qq_y_transformada.png}
 \end{columns}
-\fonte{Elaboração própria. Resíduos padronizados do modelo com todas as explicativas e a UF.}
+\fonte{Elaboração própria. Resíduos padronizados do modelo com todas as explicativas e a região.}
 \vspace{0.3em}
 \begin{itemize}\small
 \item Com $Y$: a dispersão cresce com o valor ajustado e a cauda direita foge da reta
@@ -296,14 +314,14 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 % -----------------------------------------------------------------------------
 \begin{frame}{Especificação do modelo}
 \[
-\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumUF} \gamma_k D_{ik} + \varepsilon_i,
+\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumReg} \gamma_k D_{ik} + \varepsilon_i,
 \qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2)
 \]
 \begin{itemize}\small
 \setlength{\itemsep}{0.3em}
 \item $r_i$: ln da renda per capita, centrada na média (reduz a correlação entre $r$ e $r^2$ de \nCorQuadSem{} para \nCorQuadCen)
 \item $\mathbf{x}_i$: as demais \nNumX{} explicativas dos blocos A a D
-\item $D_{ik}$: indicadora da UF $k$ (referência: SP)
+\item $D_{ik}$: indicadora da região $k$ (referência: Sudeste)
 \item Mínimos quadrados ordinários; $n = \nMunEsc$ municípios e \nNumPar{} parâmetros
 \end{itemize}
 \end{frame}
@@ -320,8 +338,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \column{0.40\textwidth}
 \begin{itemize}\small
 \item $H_0$: os coeficientes do bloco são nulos; rejeitada em todos os blocos
-\item Maior ganho de $R^2_a$ com o estado (bloco E)
-\item UF além da região: $F = \nFuf$ (\nGlUF{} gl), $p$ \nPUF; $R^2_a$ de \nRdoisAregiao{} para \nRdoisA
+\item Maior ganho de $R^2_a$ com a região (bloco E)
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -338,7 +355,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \column{0.24\textwidth}
 \begin{itemize}\footnotesize
 \item Sinais consistentes com H1, H2 e H3
-\item Abandono (H2): sinal esperado, mas não significativo
+\item Abandono (H2): não significativo
 \item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
 \item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
 \item \textcolor{gray}{Não significativas (5\%): \nNaoSig}
@@ -351,7 +368,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m7_efeito_renda.png}
-\fonte{Elaboração própria. Demais variáveis na média; UF = SP. Faixa: IC 95\% da resposta esperada.}
+\fonte{Elaboração própria. Demais variáveis na média; região = Sudeste. Faixa: IC 95\% da resposta esperada.}
 \column{0.38\textwidth}
 \begin{itemize}\small
 \item $\hat\beta_2$ = \nBetaDois{} ($p$ \nBetaDoisP): concavidade
@@ -431,13 +448,13 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \item Mais homicídios com mais desigualdade (H1), exclusão escolar (H2) e migração recente (H3)
 \item Renda em U invertido: pico em R\$ \nPico
 \item Também mais homicídios com mais urbanização
-\item Grande diferença entre estados
+\item Taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste
 \end{itemize}
 \column{0.49\textwidth}
 \textbf{\color{navy}Em relação à literatura}
 \begin{itemize}\small
 \item Urbanização e desigualdade: mesmo sinal de Wanzinack et al. (2022)
-\item Diferença entre estados: como em Castellucci e Silva (2026)
+\item Diferença entre regiões: como em Barros et al. (2020)
 \end{itemize}
 \vspace{0.3em}
 \textbf{\color{navy}Próximos passos}
@@ -464,7 +481,7 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \input{tabelas/coeficientes.tex}
 \vspace{0.5em}
 
-Resposta $\ln Y$; MQO; $n = \nMunEsc$. Mais \nNumUF{} indicadoras de UF (referência: SP), omitidas.
+Resposta $\ln Y$; MQO; $n = \nMunEsc$. Região: referência Sudeste.
 $\hat\sigma = \nSigma$; $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$. EP: erro-padrão.
 \end{frame}
 

@@ -6,7 +6,7 @@
 # Saída:   resultados/eda/ (figuras e tabelas)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 #
-# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais, sem os extremos de densidade
+# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais, sem os extremos de densidade de cada região
 # (o mesmo do modelo). Só a definição do escopo e o mapa usam todos os 5.570 municípios.
 # =============================================================================
 
@@ -31,9 +31,25 @@ str(br)
 POP_MIN <- 20000                                   # escopo: municípios com 20 mil hab. ou mais
 br$escopo <- br$pop >= POP_MIN
 
-# Densidade: saem do escopo os valores extremos de ln(densidade) pelo critério do boxplot (além de 1,5 x IQR dos quartis)
-q_dens <- quantile(br$log_dens[br$escopo], c(.25, .75))
-br$dens_extrema <- br$escopo & (br$log_dens < q_dens[1] - 1.5 * diff(q_dens) | br$log_dens > q_dens[2] + 1.5 * diff(q_dens))
+# Percentil da densidade de cada município dentro da sua região (0 a 100), entre os de 20 mil hab. ou mais.
+# Saem do escopo os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
+P_CORTE <- 2.5
+percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
+br$p_dens <- NA
+br$p_dens[br$escopo] <- ave(br$dens[br$escopo], br$regiao[br$escopo], FUN = percentil)
+br$dens_extrema <- br$escopo & (br$p_dens <= P_CORTE | br$p_dens >= 100 - P_CORTE)
+
+# Percentil de cada município e resumo do corte por região (para decidir quais considerar)
+perc <- br[br$escopo, c("cod_ibge", "municipio", "uf", "regiao", "pop", "dens", "p_dens")]
+perc$considerado <- ifelse(br$dens_extrema[br$escopo], "não", "sim")
+perc$regiao <- factor(perc$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                      labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
+perc <- perc[order(perc$regiao, perc$p_dens), ]
+write.csv(perc, "resultados/eda/percentis_municipios.csv", row.names = FALSE)
+corte_regiao <- perc %>% group_by(regiao) %>%
+  summarise(municipios = n(), fora = sum(considerado == "não"), considerados = sum(considerado == "sim"),
+            dens_min = min(dens[considerado == "sim"]), dens_max = max(dens[considerado == "sim"]), .groups = "drop")
+write.csv(corte_regiao, "resultados/eda/corte_regiao.csv", row.names = FALSE)
 br$escopo <- br$escopo & !br$dens_extrema
 taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os municípios)
 
