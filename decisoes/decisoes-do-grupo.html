@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Decisões do grupo · guia para entender e decidir</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 12mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #16202e; font: 9.3pt/1.38 -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  h1 { font-size: 16pt; margin: 0 0 2pt; }
+  .sub { color: #5b6778; margin: 0 0 7pt; }
+  .nome { border: 1px solid #b8c2d0; border-radius: 4pt; padding: 5pt 8pt; margin: 0 0 6pt; }
+  .nome span { display: inline-block; width: 60%; border-bottom: 1px solid #16202e; margin-left: 6pt; }
+  h2 { font-size: 9.6pt; color: #00689d; background: #e3f0f7; text-transform: uppercase; letter-spacing: .04em;
+       padding: 3.5pt 7pt; margin: 10pt 0 6pt; break-after: avoid; }
+  .q { break-inside: avoid; margin: 0 0 9pt; padding-bottom: 2pt; }
+  .q h3 { font-size: 10.6pt; margin: 0 0 3pt; }
+  .q h3 b { display: inline-block; min-width: 17pt; padding: 0 5pt; margin-right: 5pt; border-radius: 9pt; background: #00689d;
+            color: #fff; text-align: center; font-size: 9.4pt; }
+  p { margin: 0 0 3.5pt; }
+  .simples { border-left: 2.5pt solid #00689d; padding: 1pt 0 1pt 8pt; margin: 0 0 4pt; }
+  .simples b.t { color: #00689d; }
+  table { width: 100%; border-collapse: collapse; margin: 2pt 0 3pt; }
+  th { text-align: left; font-size: 8pt; color: #5b6778; border-bottom: 1px solid #16202e; padding: 1.5pt 5pt; }
+  td { vertical-align: top; padding: 2.8pt 5pt; border-bottom: 1px solid #d9dfe8; }
+  table.num td, table.num th { padding: 2pt 5pt; }
+  table.num { width: auto; min-width: 62%; margin: 2pt 0 4pt 10pt; font-size: 8.8pt; }
+  td.o { width: 29%; font-weight: 600; }
+  td.p { width: 35%; }
+  .cx { display: inline-block; width: 9pt; height: 9pt; border: 1.2px solid #16202e; border-radius: 2pt; margin-right: 4pt; vertical-align: -1pt; }
+  .rec { font-size: 7.6pt; font-weight: 700; color: #1d7a46; border: 1px solid #1d7a46; border-radius: 8pt; padding: 0 4pt; margin-left: 2pt; white-space: nowrap; }
+  .sug { background: #e2f3e9; border-radius: 4pt; padding: 3pt 7pt; margin: 3pt 0 0; font-size: 9pt; }
+  .gloss { background: #f4f6f9; border: 1px solid #d9dfe8; border-radius: 5pt; padding: 6pt 9pt; margin: 0 0 4pt; columns: 2; column-gap: 16pt; }
+  .gloss p { break-inside: avoid; margin: 0 0 3pt; font-size: 8.9pt; }
+  .como { margin: 0 0 6pt; padding-left: 14pt; }
+  .como li { margin: 0 0 1pt; }
+  .obs div { border-bottom: 1px solid #b8c2d0; height: 16pt; }
+  .cx.ck { background: #1d7a46; border-color: #1d7a46; position: relative; }
+  .cx.ck::after { content: ""; position: absolute; left: 2.3pt; top: 0.2pt; width: 2.4pt; height: 5pt; border: solid #fff; border-width: 0 1.4pt 1.4pt 0; transform: rotate(45deg); }
+  .dec { background: #1d7a46; color: #fff; border-radius: 4pt; padding: 3pt 7pt; margin: 3pt 0 0; font-size: 9pt; }
+  .dec b { color: #fff; }
+  .placar td { padding: 2.2pt 5pt; }
+  .ok { color: #1d7a46; font-weight: 700; }
+  .ab { color: #a15c00; font-weight: 700; }
+  .met { background: #f4f6f9; border: 1px solid #d9dfe8; border-radius: 5pt; padding: 5pt 9pt; margin: 3pt 0 4pt; }
+  .met ol { margin: 2pt 0 3pt; padding-left: 15pt; }
+  .met p { margin: 0 0 2pt; }
+  .rodape { margin-top: 6pt; font-size: 8.4pt; color: #5b6778; }
+</style>
+</head>
+<body>
+  <h1>Decisões do grupo: guia para entender e decidir</h1>
+  <p class="sub">Trabalho de GED-16 · Fatores associados aos homicídios nos municípios brasileiros · 16 perguntas · atualizado em 11/11/2026 com as decisões já tomadas</p>
+  <div class="nome">Nome:<span>&nbsp;</span></div>
+
+  <ol class="como">
+    <li>Cada pergunta traz: uma explicação em palavras simples, os números do trabalho, as opções com prós e contras, e uma sugestão.</li>
+    <li>Marque uma opção por pergunta. A etiqueta <span class="rec">recomendada</span> é a sugestão de quem aplicou os ajustes da professora.</li>
+    <li>As perguntas 3, 6, 13 e 14 são as que mais mudam o trabalho. A caixa verde marcada mostra o que já foi decidido.</li>
+  </ol>
+
+  <div class="gloss">
+    <p><b>Taxa:</b> homicídios por 100 mil habitantes por ano, média de 2021 a 2023. É o que o modelo tenta explicar.</p>
+    <p><b>Significativo:</b> o efeito aparece nos dados com pouca chance de ser acaso (valor p abaixo de 0,05).</p>
+    <p><b>R² ajustado:</b> parcela da variação da taxa que o modelo explica, de 0 a 1. Quanto maior, melhor o ajuste.</p>
+    <p><b>VIF:</b> mede o quanto uma variável repete as outras do modelo. Acima de 10 é considerado grave.</p>
+    <p><b>Percentil:</b> posição do município numa fila ordenada, de 0 a 100. O percentil 50 é o do meio.</p>
+    <p><b>Gini:</b> mede a desigualdade de renda, de 0 (todos com a mesma renda) a 1 (uma pessoa com tudo).</p>
+    <p><b>Densidade:</b> habitantes por km².</p>
+    <p><b>H1, H2 e H3:</b> as hipóteses do trabalho. Mais desigualdade, mais exclusão escolar e mais migração recente vêm com mais homicídios.</p>
+  </div>
+
+  <h2>Situação das decisões</h2>
+  <table class="placar"><tr><th>#</th><th>Pergunta</th><th>Decisão</th><th>Situação</th></tr>
+  <tr><td>1</td><td>Percentil de qual variável</td><td>Densidade, dentro de cada região</td><td class="ok">Decidido</td></tr>
+  <tr><td>2</td><td>Teste de independência dos erros</td><td>Fica fora, como a professora pediu</td><td class="ok">Decidido</td></tr>
+  <tr><td>3</td><td>Região ou estado</td><td>Região</td><td class="ok">Decidido</td></tr>
+  <tr><td>4</td><td>Faixa de corte da densidade</td><td>—</td><td class="ab">Em aberto</td></tr>
+  <tr><td>5</td><td>Renda no modelo</td><td>Fica (a % urbana também)</td><td class="ok">Decidido</td></tr>
+  <tr><td>6</td><td>Medida de desigualdade</td><td>Gini de 2022 calculado por nós, com o cálculo explicado e base científica citada</td><td class="ok">Decidido</td></tr>
+  <tr><td>7 a 16</td><td>Demais perguntas</td><td>—</td><td class="ab">Em aberto</td></tr></table>
+
+  <h2>A. O que entendemos dos pedidos da professora</h2>
+
+  <div class="q"><h3><b>1</b>O percentil para escolher os municípios é de qual variável?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> A professora pediu "percentil por município para ver quais iremos considerar". Ela não disse de qual variável. O percentil serve para tirar os municípios que estão nas pontas da fila.</p>
+  <p>Nós aplicamos na densidade, porque foi nela que a professora viu valores extremos. A conta é feita dentro de cada região, porque a densidade típica muda muito: 8 hab./km² no Norte e 102 no Sudeste.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx ck"></span>Densidade, dentro da região <span class="rec">recomendada</span></td><td class="p">É a variável em que ela apontou extremos. O corte fica equilibrado entre as regiões.</td><td>Tira 88 municípios, com 22% da população do estudo, e São Paulo.</td></tr>
+  <tr><td class="o"><span class="cx"></span>População</td><td class="p">É o critério que já define o estudo (20 mil habitantes ou mais).</td><td>O corte de 20 mil existe por causa do número de casos, que depende do tamanho absoluto da cidade. Por região, ele mudaria de um lugar para outro.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Perguntar à professora</td><td class="p">Acaba a dúvida.</td><td>Depende de ter resposta antes da entrega.</td></tr></table>
+  <p class="dec"><b>Decidido em 11/11:</b> percentil da densidade, dentro de cada região. A população fica só com o corte mínimo. É o que o código já faz.</p></div>
+
+  <div class="q"><h3><b>2</b>"Não forçar a correlação de vizinhos": o teste de independência dos erros volta?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> A regressão supõe que o erro de um município não depende do erro de outro. O trabalho testava isso de um jeito artificial: punha os municípios na ordem do código do IBGE e comparava cada um com o seguinte.</p>
+  <p>Como os municípios de um mesmo estado ficam seguidos nessa ordem, o grupo os chamava de "vizinhos". Depois usava o estado no modelo para a correlação sumir. A professora pediu para não forçar isso. Nós tiramos o teste.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx ck"></span>Fica fora, como está <span class="rec">recomendada</span></td><td class="p">Segue o pedido, sem construir uma vizinhança artificial.</td><td>O diagnóstico fica sem checagem de independência. Com região, os erros de um mesmo estado se parecem.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Volta, sem falar em vizinhos</td><td class="p">A apostila aplica esse teste em dados sem ordem no tempo. Ele mostra a diferença entre região (1,67, com correlação) e estado (2,03, sem).</td><td>A ordem dos dados é a do código do IBGE, a mesma que gerou a crítica.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Perguntar à professora</td><td class="p">Acaba a dúvida.</td><td>Depende de ter resposta antes da entrega.</td></tr></table>
+  <p class="dec"><b>Decidido em 11/11:</b> o teste fica fora, seguindo o que a professora falou. Nada muda no trabalho.</p></div>
+
+  <h2>B. Escolhas do modelo</h2>
+
+  <div class="q"><h3><b>3</b>Região ou estado como variável de lugar?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> A violência muda muito de um lugar para outro. Por isso o modelo precisa de uma variável que diga onde o município fica. Pode ser a região (5 grupos) ou o estado (27 grupos).</p>
+  <p>Mais grupos explicam mais, mas deixam o modelo maior e criam grupos com poucos municípios. A professora pediu região. As três hipóteses valem nos dois modelos.</p></div>
+  <table class="num"><tr><th></th><th>Região</th><th>Estado</th></tr>
+  <tr><td>Quanto o modelo explica (R² ajustado)</td><td>0,45</td><td>0,56</td></tr>
+  <tr><td>Número de parâmetros do modelo</td><td>18</td><td>40</td></tr>
+  <tr><td>Maior VIF</td><td>8,5</td><td>10,8</td></tr>
+  <tr><td>Efeito de +0,05 no Gini sobre a taxa</td><td>+16%</td><td>+7%</td></tr>
+  <tr><td>Grupos com menos de 10 municípios</td><td>nenhum</td><td>5 estados (o DF tem 1)</td></tr></table>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx ck"></span>Região <span class="rec">recomendada</span></td><td class="p">É o pedido da professora. Modelo menor e mais fácil de explicar. Nenhum grupo pequeno.</td><td>Explica menos. Sobram diferenças entre estados que o modelo não capta.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Estado</td><td class="p">Explica mais, e o teste confirma (F = 17,7). A segurança pública é responsabilidade dos estados.</td><td>Modelo com 40 parâmetros e VIF acima de 10. Cinco estados com poucos municípios. Contraria o pedido.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Os dois lado a lado, e perguntar à professora</td><td class="p">Mostra que a conclusão não depende da escolha.</td><td>Ocupa um slide e adia a decisão.</td></tr></table>
+  <p class="dec"><b>Decidido em 11/11:</b> região. A aplicar: trocar "escolha em aberto" por "escolhemos região" nos slides, nas falas e no LEIA-ME. A comparação com o estado fica como apoio.</p></div>
+
+  <div class="q"><h3><b>4</b>Qual faixa de percentil da densidade usar, dentro de cada região?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Escolhida a densidade (pergunta 1), falta dizer quanto cortar em cada ponta. Cortar mais deixa os municípios mais parecidos, mas tira mais cidades grandes. As conclusões das três hipóteses são as mesmas em todas as faixas.</p></div>
+  <p>O motivo do pedido: na tabela da apresentação, a densidade tinha desvio-padrão 3,4 vezes a média. Mas o modelo usa o logaritmo da densidade, que já encolhe os valores altos. Por isso o modelo quase não muda com o corte:</p>
+  <table class="num"><tr><th>Corte</th><th>Ficam</th><th>População coberta</th><th>Cidades com mais de 500 mil</th><th>São Paulo</th><th>Efeito do Gini (H1)</th><th>Migração (H3)</th><th>R² ajustado</th></tr>
+  <tr><td>Sem corte</td><td>1.710</td><td>84%</td><td>41</td><td>fica</td><td>+15,9%</td><td>+4,7%</td><td>0,46</td></tr>
+  <tr><td>Além de 3 desvios-padrão</td><td>1.703</td><td>83%</td><td>40</td><td>fica</td><td>+15,9%</td><td>+4,7%</td><td>0,45</td></tr>
+  <tr><td>Percentis 1 a 99</td><td>1.676</td><td>78%</td><td>34</td><td>fica</td><td>+15,6%</td><td>+4,6%</td><td>0,46</td></tr>
+  <tr><td>Percentis 2,5 a 97,5 (aplicada)</td><td>1.622</td><td>66%</td><td>26</td><td>sai</td><td>+16,2%</td><td>+4,6%</td><td>0,46</td></tr></table>
+  <p>São Paulo não atrapalha o modelo: depois do logaritmo, fica a 2,8 desvios-padrão da média, e tirar só ela muda os coeficientes em menos de 0,1 erro-padrão. Cortar só a ponta de baixo não reduz o desvio-padrão, porque ele vem das cidades muito densas.</p>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>2,5 a 97,5 (aplicada hoje)</td><td class="p">São os 95% centrais, um critério usual. Tira as duas pontas em toda região.</td><td>Saem 88 municípios, entre eles 15 cidades com mais de 500 mil habitantes.</td></tr>
+  <tr><td class="o"><span class="cx"></span>1 a 99 <span class="rec">recomendada</span></td><td class="p">Mantém a ideia de percentil por região. São Paulo e a maioria das capitais ficam.</td><td>O desvio-padrão da densidade crua cai pouco.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Além de 3 desvios-padrão da densidade padronizada</td><td class="p">Liga as duas partes do pedido: padronizar e tirar os extremos. Saem só 7 municípios; das grandes, só Osasco.</td><td>Não usa percentil nem região. A regra não está na apostila.</td></tr>
+  <tr><td class="o"><span class="cx"></span>5 a 95</td><td class="p">Densidade mais homogênea.</td><td>Saem 172 municípios. Cobre pouco mais da metade da população.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Sem corte</td><td class="p">Mantém as capitais. As conclusões são as mesmas.</td><td>Não atende o pedido de tirar os extremos.</td></tr></table>
+  <p class="sug"><b>Sugestão (revista em 11/11):</b> percentis 1 a 99 por região. Atende o pedido de tirar os extremos sem tirar São Paulo e as capitais. Em qualquer opção, levar a tabela acima para a apresentação.</p></div>
+
+  <div class="q"><h3><b>5</b>A renda fica no modelo?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> A renda é a variável que mais se repete nas outras. Juntas, as outras variáveis do modelo explicam 88% da renda. Só a região e a % urbana já explicam 80%. Por isso o VIF dela é o maior do modelo (8,5).</p>
+  <p>A professora pediu para comparar o modelo com e sem a renda. O teste mostra que a renda contribui (F = 84,3).</p></div>
+  <table class="num"><tr><th></th><th>Com a renda</th><th>Sem a renda</th></tr>
+  <tr><td>Quanto o modelo explica (R² ajustado)</td><td>0,45</td><td>0,40</td></tr>
+  <tr><td>Maior VIF</td><td>8,5</td><td>2,5</td></tr>
+  <tr><td>Migração recente (H3)</td><td>significativa</td><td>não significativa</td></tr>
+  <tr><td>Desigualdade (H1)</td><td>significativa</td><td>significativa, com efeito menor</td></tr></table>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx ck"></span>Fica <span class="rec">recomendada</span></td><td class="p">Contribui para o modelo. Permite ler a desigualdade com a renda controlada. O VIF fica abaixo de 10.</td><td>É a variável que mais repete as outras.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Sai</td><td class="p">O maior VIF cai para 2,5.</td><td>O modelo explica menos. A migração (H3) deixa de ser significativa. Perde-se a curva da renda.</td></tr></table>
+  <p>Também foi testado tirar a % urbana para aliviar o VIF da renda. Não vale: o VIF só cai de 8,5 para 6,7, o modelo explica menos (0,44) e a % urbana é um dado mais confiável que a renda, porque vem da contagem completa do Censo.</p>
+  <p class="dec"><b>Decidido em 11/11:</b> a renda fica, e a % urbana também. Nada muda no trabalho.</p></div>
+
+  <div class="q"><h3><b>6</b>Qual medida de desigualdade usamos?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> O Gini é a medida mais conhecida de desigualdade. O IBGE calculou um Gini para cada município no Censo 2010. No Censo 2022, só publicou por região e por estado.</p>
+  <p>A professora pediu o Gini, ou uma medida parecida. Como não existe Gini oficial de 2022 por município, nós calculamos um, a partir do número de pessoas em cada faixa de renda do Censo 2022. Hoje o modelo usa só esse Gini de 2022.</p></div>
+  <div class="met"><b>Como o cálculo é feito, e em que ele se apoia</b>
+  <ol>
+    <li><b>Dado:</b> número de pessoas de 14 anos ou mais em cada uma de 11 faixas de renda domiciliar per capita, por município (IBGE, Censo 2022, tabela 10300).</li>
+    <li><b>Renda de cada faixa:</b> o ponto médio da faixa, em salários mínimos. A faixa aberta (mais de 20) recebe 50. Com esse valor, o cálculo dá para o Brasil o Gini oficial (0,542).</li>
+    <li><b>Curva de Lorenz:</b> as faixas são ordenadas da mais pobre para a mais rica. Acumula-se a parcela das pessoas e a parcela da renda.</li>
+    <li><b>Gini:</b> 1 menos a soma, em todas as faixas, de (parcela de pessoas da faixa) × (renda acumulada até a faixa + renda acumulada até a faixa anterior).</li>
+  </ol>
+  <p><b>Base científica:</b> é o Gini de dados agrupados, com a curva de Lorenz ligada por retas entre as faixas. Referência: GASTWIRTH, J. L. The estimation of the Lorenz curve and Gini index. <i>The Review of Economics and Statistics</i>, v. 54, n. 3, p. 306–316, 1972.</p>
+  <p><b>Conferência:</b> aplicado aos 27 estados, o cálculo tem correlação de 0,995 com o Gini oficial do IBGE (tabela 10301) e erro médio de 0,003.</p>
+  <p><b>O que é escolha nossa, e não do método:</b> usar o ponto médio de cada faixa e o valor de 50 salários mínimos na faixa aberta.</p></div>
+  <table class="num"><tr><th>Medida</th><th>Ano</th><th>Quem calculou</th><th>Situação hoje</th></tr>
+  <tr><td>Gini por município, pelas faixas de renda</td><td>2022</td><td>Nós</td><td>É a medida do modelo</td></tr>
+  <tr><td>Gini oficial por região e estado</td><td>2022</td><td>IBGE</td><td>Só confere o nosso cálculo</td></tr>
+  <tr><td>Gini oficial por município</td><td>2010</td><td>IBGE</td><td>Não é usado em nenhuma conta</td></tr>
+  <tr><td>Razão renda média / mediana</td><td>2022</td><td>Nós</td><td>Era a medida antiga; saiu</td></tr></table>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx ck"></span>Gini de 2022 calculado por nós <span class="rec">recomendada</span></td><td class="p">É do mesmo ano dos outros dados. Nos 27 estados, quase coincide com o oficial (correlação de 0,995). Atende o pedido.</td><td>É uma aproximação: ignora a desigualdade dentro de cada faixa. Em município com poucas pessoas na faixa mais alta, o valor muda bastante.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Gini oficial de 2010</td><td class="p">É oficial e existe para cada município.</td><td>É 12 anos mais antigo que os outros dados. Cinco municípios novos não têm valor. A correlação com o de 2022 é só 0,58.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Razão renda média / mediana</td><td class="p">Conta simples, sem hipótese sobre as faixas.</td><td>A mediana se concentra em múltiplos do salário mínimo. A professora pediu o Gini. Tem menos relação com a taxa (0,13 contra 0,26).</td></tr></table>
+  <p class="dec"><b>Decidido em 11/11:</b> Gini de 2022 calculado por nós, com o cálculo explicado e a base científica citada. A aplicar: incluir a explicação do cálculo e a referência de Gastwirth (1972) nos slides e no LEIA-ME.</p></div>
+
+  <div class="q"><h3><b>7</b>Testamos de novo a Amazônia Legal no modelo?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> A Amazônia Legal é uma marca que diz se o município está nessa área. Ela ficou fora do modelo porque o estado já dizia quase a mesma coisa. Agora o modelo usa região, e a marca volta a trazer informação: ela separa municípios dentro do Centro-Oeste e do Nordeste.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Testar, na seleção de variáveis <span class="rec">recomendada</span></td><td class="p">É uma característica geográfica, parte da pergunta do trabalho. O teste decide se ela fica.</td><td>64% dela é a própria região Norte. É mais um parâmetro.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Deixar fora</td><td class="p">Modelo mais simples.</td><td>O motivo antigo para tirá-la não vale mais.</td></tr></table>
+  <p><b>Resultado do teste (feito em 11/11, a pedido).</b> No estudo há 271 municípios na Amazônia Legal: 172 no Norte, 66 no Nordeste e 33 no Centro-Oeste.</p>
+  <table class="num"><tr><th></th><th>Sem a Amazônia Legal (atual)</th><th>Com a Amazônia Legal</th></tr>
+  <tr><td>Efeito de estar na Amazônia Legal</td><td>—</td><td>+20,7% na taxa (de +5% a +38%); p = 0,007</td></tr>
+  <tr><td>Quanto o modelo explica (R² ajustado)</td><td>0,455</td><td>0,457</td></tr>
+  <tr><td>Maior VIF</td><td>8,5</td><td>8,5 (o da Amazônia Legal é 3,0)</td></tr>
+  <tr><td>H1, H2 e H3</td><td>valem</td><td>valem, com os mesmos efeitos</td></tr>
+  <tr><td>Região Norte acima do Sudeste</td><td>+89%</td><td>+62%: parte do efeito do Norte passa para a Amazônia Legal</td></tr></table>
+  <p>A favor de incluir: é significativa e não mexe nas hipóteses. Contra: o ganho no ajuste é pequeno e ela divide o efeito com a região Norte.</p>
+  <p class="sug"><b>Sugestão:</b> incluir. O teste a sustenta, e ela é uma característica geográfica, parte da pergunta do trabalho. <b>Falta decidir.</b></p></div>
+
+  <div class="q"><h3><b>8</b>Nhamundá (AM) e Campos do Jordão (SP) ficam no estudo?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Esses dois municípios têm taxa muito abaixo do que o modelo prevê. Cada um teve 1 homicídio em 3 anos. A apostila só permite tirar um ponto quando há evidência de erro no dado, e a validação não achou erro.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Ficam <span class="rec">recomendada</span></td><td class="p">Segue a apostila. Tirar quase não muda o modelo (R² de 0,460 para 0,463).</td><td>Campos do Jordão pode ter taxa subestimada: 37,5% das mortes externas ficaram sem causa definida.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Saem</td><td class="p">Some o peso de 2 pontos extremos.</td><td>Sem base na apostila. O desvio vem do logaritmo aplicado a uma contagem muito pequena.</td></tr></table>
+  <p class="sug"><b>Sugestão:</b> manter os dois e citar o caso de Campos do Jordão.</p></div>
+
+  <h2>C. O que falta para a entrega</h2>
+
+  <div class="q"><h3><b>9</b>Fazemos agora a seleção de variáveis e o tratamento da variância não constante?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> A seleção de variáveis é o procedimento do capítulo 8 da apostila para decidir quais variáveis ficam. Hoje 4 não são significativas: fronteira, % de homens de 15 a 29 anos, abandono escolar e desocupação.</p>
+  <p>Variância não constante quer dizer que o erro do modelo é maior nos municípios pequenos. Por isso os valores p de hoje são aproximados. Os slides listam os dois itens como "próximos passos".</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Fazer para a entrega final <span class="rec">recomendada</span></td><td class="p">Usa o que a apostila ensina. Cumpre o que os slides prometem. O modelo final fica mais enxuto.</td><td>Os números mudam de novo. Slides e briefings precisam ser refeitos.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Entregar como está</td><td class="p">Nada muda. Está pronto hoje.</td><td>O modelo fica com 4 variáveis sem efeito e com valores p aproximados.</td></tr></table>
+  <p class="sug"><b>Sugestão:</b> fazer, se esta for a entrega final (pergunta 10).</p></div>
+
+  <div class="q"><h3><b>10</b>Esta entrega é a final?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> O deck ainda se chama "apresentação parcial", a capa tem a data de 28 de outubro, e o código fala em "modelo preliminar". Se a entrega agora é a final, esses nomes precisam mudar.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>É a final: trocar os nomes e a capa</td><td class="p">Nomes e capa ficam coerentes com a entrega.</td><td>Muda nomes de arquivos e exige uma conferência.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Ainda é parcial: manter os nomes</td><td class="p">Nada a fazer.</td><td>Capa com data antiga e a palavra "preliminar" em uma entrega final.</td></tr></table></div>
+
+  <div class="q"><h3><b>11</b>O deck fica com 32 slides e com a divisão atual das falas?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Os ajustes criaram 7 slides novos. Hoje o Willian apresenta 8 slides, o Luiz Felipe 6, e Kauan, Fabio e Douglas 5 cada. Há 3 slides de apêndice.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Mover 2 ou 3 slides para o apêndice e redividir <span class="rec">recomendada</span></td><td class="p">Cabe melhor no tempo. As falas ficam equilibradas.</td><td>Os gráficos que a professora pediu precisam continuar no corpo do deck.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Manter os 32 slides e só redividir as falas</td><td class="p">Nenhum conteúdo sai.</td><td>A apresentação fica longa.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Manter tudo como está</td><td class="p">Sem retrabalho.</td><td>As falas ficam desiguais.</td></tr></table></div>
+
+  <div class="q"><h3><b>12</b>Quem lê o deck inteiro antes da apresentação?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Cada slide alterado foi conferido sozinho. Ninguém leu os 32 em sequência, do início ao fim. É uma tarefa, não uma escolha.</p></div>
+  <table><tr><td class="o"><span class="cx"></span>Eu leio</td><td class="p"><span class="cx"></span>Outra pessoa: ____________________</td><td></td></tr></table></div>
+
+  <h2>D. Achados da revisão do projeto</h2>
+
+  <div class="q"><h3><b>13</b>O efeito da desigualdade (H1) muda com a renda do município. Mostramos isso no modelo?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Hoje o modelo dá um único efeito da desigualdade para todos os municípios: +16% na taxa para +0,05 no Gini. A revisão mostrou que esse número é uma média de situações opostas.</p>
+  <p>Para o modelo mostrar isso, entra um termo a mais, chamado interação entre Gini e renda. A apostila ensina esse termo. O relatório do Douglas propõe a mesma ideia.</p></div>
+  <table class="num"><tr><th>Renda do município</th><th>Efeito de +0,05 no Gini</th></tr>
+  <tr><td>Baixa (R$ 668, os 10% mais pobres)</td><td>−9%</td></tr>
+  <tr><td>Mediana (R$ 1.248)</td><td>+16%</td></tr>
+  <tr><td>Alta (R$ 1.957, os 10% mais ricos)</td><td>+37%</td></tr></table>
+  <p>Por região, a desigualdade só é significativa no Sudeste e no Sul. Barros et al. (2020) acharam o mesmo para o Sul.</p>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Incluir a interação Gini × renda <span class="rec">recomendada</span></td><td class="p">Os dados mostram com folga (F = 83,7). O modelo passa a explicar mais (0,45 para 0,48). Conta a história certa.</td><td>H1 deixa de ter uma resposta única. A conclusão passa a ser "depende da renda".</td></tr>
+  <tr><td class="o"><span class="cx"></span>Manter o modelo e citar como limitação</td><td class="p">Modelo e slides ficam como estão.</td><td>O "+16%" esconde que, nos municípios pobres, o sinal é o contrário.</td></tr></table>
+  <p class="sug"><b>Sugestão:</b> incluir. É o achado mais forte da revisão e reforça o trabalho.</p></div>
+
+  <div class="q"><h3><b>14</b>O que fazemos com a variável "% de mortes sem causa definida"?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Essa variável é a parcela das mortes violentas que ficaram sem causa definida no registro. Ela está no modelo para controlar a qualidade do registro. O problema é a conta: os homicídios entram no total que divide.</p>
+  <p>Assim, quando os homicídios sobem, a parcela cai sozinha. O sinal negativo que o modelo mostra vem da conta, não da realidade. Refazendo a conta sem os homicídios, o sinal vira positivo. As três hipóteses não mudam em nenhum caso.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Refazer a conta sem os homicídios <span class="rec">recomendada</span></td><td class="p">Tira o efeito da conta. Mantém o controle da qualidade do registro.</td><td>O sinal vira positivo e precisa de nova explicação.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Tirar do modelo</td><td class="p">Mais simples. As hipóteses não mudam.</td><td>Perde-se o controle do sub-registro, que os slides citam como limitação.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Manter e não interpretar o sinal</td><td class="p">Nada muda.</td><td>Fica um resultado significativo que não pode ser lido.</td></tr></table>
+  <p class="sug"><b>Sugestão:</b> refazer a conta.</p></div>
+
+  <div class="q"><h3><b>15</b>Citamos a semelhança entre municípios vizinhos como limitação do estudo?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> O slide de estudos anteriores diz que a taxa de um município se parece com a dos vizinhos. O nosso modelo supõe que os erros são independentes e não diz nada sobre isso. Citar como limitação não é fazer teste. Esta pergunta se liga à pergunta 2.</p></div>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>Citar em "Limitações", sem testar <span class="rec">recomendada</span></td><td class="p">É honesto com o estudo que os próprios slides citam.</td><td>Toca no tema que a professora pediu para não forçar.</td></tr>
+  <tr><td class="o"><span class="cx"></span>Não citar</td><td class="p">Segue o pedido ao pé da letra.</td><td>O slide de estudos anteriores fala de vizinhos, e a conclusão não.</td></tr></table>
+  <p class="sug"><b>Sugestão:</b> citar em uma linha, sem teste.</p></div>
+
+  <div class="q"><h3><b>16</b>O corte de população fica em 20 mil ou sobe para 30 mil habitantes?</h3>
+  <div class="simples"><p><b class="t">Em palavras simples.</b> Os maiores erros do modelo estão nas cidades pequenas com 1 a 5 homicídios em 3 anos. Nelas, um caso a mais dobra a taxa. Os 13 maiores erros estão todos em cidades com menos de 50 mil habitantes.</p>
+  <p>Subir o corte de população melhora o ajuste, mas tira municípios. Tirar cidades só porque o modelo erra nelas não é correto; mudar o corte só se sustenta com uma regra que não dependa do resultado.</p></div>
+  <table class="num"><tr><th>Corte</th><th>Municípios</th><th>População coberta</th><th>Casos esperados em 3 anos na cidade do corte</th><th>R² ajustado</th><th>Migração (H3)</th></tr>
+  <tr><td>20 mil (atual)</td><td>1.622</td><td>66%</td><td>14</td><td>0,46</td><td>+4,6%</td></tr>
+  <tr><td>25 mil</td><td>1.285</td><td>62%</td><td>17</td><td>0,49</td><td>+3,8%</td></tr>
+  <tr><td>30 mil</td><td>1.078</td><td>59%</td><td>20</td><td>0,53</td><td>+3,6%</td></tr>
+  <tr><td>35 mil</td><td>888</td><td>56%</td><td>24</td><td>0,55</td><td>some</td></tr>
+  <tr><td>50 mil</td><td>613</td><td>50%</td><td>34</td><td>0,57</td><td>some</td></tr></table>
+  <p>Desigualdade (H1) e escola (H2) valem em todos os cortes. A migração (H3) só vale nas cidades menores.</p>
+  <p><b>O corte de 30 mil não resolve o desvio-padrão da densidade:</b> ele cai de 3,4 para 2,9 vezes a média, porque as cidades muito densas são grandes e ficam. O corte de população, sozinho, também não é o que a professora pediu.</p>
+  <p><b>Mas, com 30 mil, a densidade deixa de ser significativa</b> (p = 0,19). Tirá-la do modelo não muda o ajuste (R² ajustado de 0,54 com ou sem ela) nem as hipóteses. Sem a densidade no modelo, o corte dos extremos deixa de ser necessário, e São Paulo e as capitais ficam.</p>
+  <p>30 mil habitantes é o percentil 80 da população: o estudo ficaria com os 20% maiores municípios (1.134, com 77% da população do país).</p>
+  <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
+  <tr><td class="o"><span class="cx"></span>20 mil <span class="rec">recomendada</span></td><td class="p">Tem regra própria: é o primeiro porte sem cidade com taxa zero. Maior alcance. A professora não pediu para mudar.</td><td>Mantém 111 cidades com até 5 homicídios, onde o modelo erra mais.</td></tr>
+  <tr><td class="o"><span class="cx"></span>30 mil, mantendo a densidade e o corte dela</td><td class="p">Tem regra própria: pelo menos 20 casos esperados em 3 anos. O modelo explica mais (0,53). As três hipóteses valem.</td><td>Saem 544 municípios. Todos os números e slides mudam. A densidade fica no modelo sem ser significativa.</td></tr>
+  <tr><td class="o"><span class="cx"></span>30 mil, sem a densidade no modelo e sem corte de densidade</td><td class="p">Usa percentil (o 80 da população). Mantém São Paulo e as 41 maiores cidades. Cobre 77% da população, mais que hoje. Modelo mais simples; as três hipóteses valem.</td><td>A professora pediu para tratar a densidade, não para tirá-la. Muda as respostas das perguntas 1 e 4. Todos os números e slides mudam.</td></tr>
+  <tr><td class="o"><span class="cx"></span>35 mil ou mais</td><td class="p">Ajuste um pouco melhor; erros com distribuição normal.</td><td>A migração (H3) deixa de ser significativa. Não há regra simples que justifique.</td></tr></table>
+  <p class="sug"><b>Sugestão:</b> manter 20 mil e mostrar esta tabela como teste de sensibilidade.</p></div>
+
+  <div class="obs">Observações:<div></div><div></div></div>
+  <p class="rodape">Os números vêm do código do trabalho, na versão de 11/11/2026. A página <b>perguntas-para-o-grupo.html</b>, enviada junto, permite marcar as respostas e copiar para o grupo.</p>
+</body>
+</html>

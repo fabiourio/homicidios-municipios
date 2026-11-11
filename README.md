@@ -33,6 +33,7 @@ entrega/                   CÓDIGO DA ANÁLISE para entregar (ver entrega/LEIA-M
   dados/                   cópia da base analítica e das variáveis extras (geradas pelos scripts 01 e 02)
 validacao/                 validação da qualidade dos dados (validar_dados.R e RELATORIO.md)
 relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv)
+decisoes/                  INTERNO: guia das decisões do grupo, com opções, prós e contras e o que já foi decidido (PDF e a fonte em HTML)
 apresentacao/              INTERNO: slides (latex/), notas.json, exportação .pptx/.html e briefings/ por apresentador
 ```
 
