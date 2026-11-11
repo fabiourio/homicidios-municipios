@@ -11,7 +11,6 @@
 rm(list = ls())
 
 library(ggplot2)
-library(dplyr)
 library(MASS)     # boxcox
 library(car)      # vif
 library(lmtest)   # bptest

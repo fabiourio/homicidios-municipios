@@ -16,9 +16,9 @@ Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16
 
 ```
 dados/
-  raw/                  extrações originais — SIDRA e TabNet (JSON) e MapBiomas (xlsx)
+  raw/                  extrações originais (JSON) — SIDRA e TabNet
   candidatos/           fontes e scripts de download das variáveis candidatas (ver FONTES.md)
-  tabelas/              tabelas limpas em CSV + dicionários (geradas pelos scripts 01 e 02)
+  tabelas/              tabelas limpas em CSV + dicionários (geradas pelo script 01)
   malha_mun.geojson     malha municipal 2022 (IBGE)
 scripts/
   00_coletar_dados.R       baixa tudo de novo das fontes (opcional; os dados já estão no repo)
@@ -63,7 +63,7 @@ Tudo em `apresentacao/` é interno do grupo (não vai na entrega). Para atualiza
 
 Nenhum número é digitado à mão no `.tex`: tudo vem de `numeros.tex` e `tabelas/`. O `gerar_numeros.R` também confere as frases fixas dos slides (ex.: "renda em U invertido") e para com erro se o resultado deixar de sustentá-las.
 
-Os números do trabalho ficam em `entrega/resultados/modelagem/valores_modelo.txt` e nos CSVs de `entrega/resultados/`. Para baixar os dados de novo das fontes oficiais, rode `Rscript scripts/00_coletar_dados.R` antes do passo 01. Isso leva alguns minutos e precisa de acesso a `servicodados.ibge.gov.br`, `apisidra.ibge.gov.br`, `tabnet.datasus.gov.br` e `brasil.mapbiomas.org`.
+Os números do trabalho ficam em `entrega/resultados/modelagem/valores_modelo.txt` e nos CSVs de `entrega/resultados/`. Para baixar os dados de novo das fontes oficiais, rode `Rscript scripts/00_coletar_dados.R` antes do passo 01. Isso leva alguns minutos e precisa de acesso a `servicodados.ibge.gov.br`, `apisidra.ibge.gov.br` e `tabnet.datasus.gov.br`.
 
 O script 02 só roda depois de baixar os arquivos das variáveis candidatas, que não ficam no repositório: `Rscript dados/candidatos/baixar_candidatos.R` (ver `dados/candidatos/FONTES.md`). Não é preciso rodá-lo para refazer a análise: `entrega/dados/variaveis_extras.csv` já está versionado.
 

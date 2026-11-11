@@ -22,7 +22,6 @@ mod <- roda("2_modelo_preliminar.R")
 setwd(atual)
 
 br <- eda$br; d_eda <- eda$d; porte <- as.data.frame(eda$porte); R <- eda$R
-reg <- tapply(d_eda$hom, d_eda$regiao, sum) / tapply(d_eda$exposure, d_eda$regiao, sum) * 1e5
 reg_br <- tapply(br$hom, br$regiao, sum) / tapply(br$exposure, br$regiao, sum) * 1e5   # todos os municípios
 # Taxa mundial de homicídios em 2021: UNODC, Global Study on Homicide 2023 (único número externo, com fonte no slide)
 TAXA_MUNDO_UNODC <- 5.8
@@ -33,15 +32,13 @@ e <- c(
   dens_extremos = sum(br$dens_extrema),
   zeros_escopo = sum(d_eda$hom == 0), zeros_br = sum(br$hom == 0),
   taxa_media = mean(d_eda$taxa), taxa_mediana = median(d_eda$taxa),
-  assim_taxa = eda$assimetria(d_eda$taxa), assim_ln_taxa = eda$assimetria(d_eda$ln_taxa),
-  taxa_nordeste = reg[["Nordeste"]], taxa_sudeste = reg[["Sudeste"]],
+  assim_taxa = eda$assimetria(d_eda$taxa),
   hom_ano = sum(br$hom) / 3, taxa_mundo = TAXA_MUNDO_UNODC, razao_mundo = eda$taxa_br / TAXA_MUNDO_UNODC,
   taxa_n_br = reg_br[["N"]], taxa_ne_br = reg_br[["NE"]], taxa_co_br = reg_br[["CO"]],
   taxa_se_br = reg_br[["SE"]], taxa_s_br = reg_br[["S"]],
   cor_renda_pobres = R["ln Renda", "% pobres"], cor_renda_alfabet = R["ln Renda", "Alfabetização"],
   renda_decil_pico = eda$med_faixa$renda[which.max(eda$med_faixa$med)],
   porte_hom_mediana_menor5mil = porte$hom_mediana_3anos[1], porte_oscilacao_menor5mil = porte$oscilacao[1],
-  porte_cor2024_menor5mil = porte$cor_2024[1], porte_cor2024_maior100mil = porte$cor_2024[6],
   porte_oscilacao_20a50mil = porte$oscilacao[4], porte_zero_20a50mil = porte$pct_zero[4])
 
 m <- with(mod, c(
@@ -123,10 +120,6 @@ confere(coef("abandono_em", "p") > 0.05 && coef("freq_15a17", "p") < 0.05 && coe
 confere(lmtest::bptest(mod$m_y)$statistic > lmtest::bptest(mod$m_log)$statistic, "com ln Y a dispersão dos resíduos fica mais uniforme do que com Y")
 confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos municípios menores")
 
-# Diagnóstico: ícone e texto decididos pelo teste (5%)
-bp_ok <- m[["bp_p"]] > 0.05
-sw_ok <- m[["sw"]] >= 0.97
-
 # Variável com maior correlação com ln(taxa)
 r_resp <- R["ln Taxa", colnames(R) != "ln Taxa"]
 var_max <- names(which.max(abs(r_resp)))
@@ -137,8 +130,7 @@ mac <- c(
   PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), DensExt = fmt(e[["dens_extremos"]], 0), ZerosBR = fmt(e[["zeros_br"]], 0),
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
-  AssimTaxa = fmt(e[["assim_taxa"]], 2), AssimLn = fmt(e[["assim_ln_taxa"]], 2),
-  TaxaNE = fmt(e[["taxa_nordeste"]]), TaxaSE = fmt(e[["taxa_sudeste"]]),
+  AssimTaxa = fmt(e[["assim_taxa"]], 2),
   HomAno = fmt(e[["hom_ano"]], 0), TaxaMundo = fmt(e[["taxa_mundo"]]), RazaoMundo = fmt(e[["razao_mundo"]]),
   TaxaNbr = fmt(e[["taxa_n_br"]]), TaxaNEbr = fmt(e[["taxa_ne_br"]]), TaxaCObr = fmt(e[["taxa_co_br"]]),
   TaxaSEbr = fmt(e[["taxa_se_br"]]), TaxaSbr = fmt(e[["taxa_s_br"]]),
@@ -147,7 +139,6 @@ mac <- c(
   RendaDecilPico = fmt(e[["renda_decil_pico"]], 0), DecilPico = fmt(decil_pico, 0), PicoPct = fmt(pico_pct, 0),
   RendaMediana = fmt(median(mod$d$rend_pc_media), 0),
   PorteHomMenor = fmt(e[["porte_hom_mediana_menor5mil"]], 0), PorteOscMenor = fmt(e[["porte_oscilacao_menor5mil"]], 0),
-  PorteCorMenor = fmt(e[["porte_cor2024_menor5mil"]], 2), PorteCorMaior = fmt(e[["porte_cor2024_maior100mil"]], 2),
   PorteOscVinte = fmt(e[["porte_oscilacao_20a50mil"]], 0),
   Lambda = fmt(m[["lambda"]], 2), LambdaInf = fmt(m[["lambda_ic_inf"]], 2), LambdaSup = fmt(m[["lambda_ic_sup"]], 2),
   SWy = fmt(m[["sw_y"]], 2), SWln = fmt(m[["sw_ln"]], 2), VIFrenda = fmt(m[["vif_renda"]], 0),
@@ -162,21 +153,9 @@ mac <- c(
   NumReg = fmt(m[["n_reg"]], 0), PCorte = fmt(eda$P_CORTE, 1), PCorteSup = fmt(100 - eda$P_CORTE, 1), PctCentral = fmt(100 - 2 * eda$P_CORTE, 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
   CorQuadSem = fmt(m[["cor_quad_sem"]], 4), CorQuadCen = fmt(m[["cor_quad_cen"]], 2),
   BetaDois = fmt(coef("rend_c2", "b"), 3), BetaDoisP = fp(coef("rend_c2", "p")),
-  OutNomes = if (length(out_nomes)) paste(out_nomes, collapse = ", ") else "nenhum",
-  IconeSW = if (sw_ok) "\\ok" else "\\nao", TextoSW = if (sw_ok) "Normalidade razoável" else "Normalidade violada",
-  IconeOut = "\\ok", TextoOut = paste0(fmt(m[["n_outliers"]], 0), if (m[["n_outliers"]] == 1) " outlier" else " outliers"),
-  IconeBP = if (bp_ok) "\\ok" else "\\nao", TextoBP = if (bp_ok) "Variância constante" else "Variância não constante")
+  OutNomes = if (length(out_nomes)) paste(out_nomes, collapse = ", ") else "nenhum")
 mac <- sub("^-", "$-$", mac)
 writeLines(sprintf("\\newcommand{\\n%s}{%s}", names(mac), mac), "numeros.tex")
-
-# Tabela do escopo: confiabilidade por porte (linhas do escopo destacadas)
-esc <- porte$porte %in% c("20–50 mil", "50–100 mil", ">= 100 mil")
-lin <- sprintf("%s%s & %s & %s\\%% & $\\pm$%s\\%%\\\\", ifelse(esc, "\\rowcolor{fundo}", ""),
-               sub(">= ", "$\\\\geq$ ", sub("< ", "$<$ ", porte$porte)), fmt(porte$municipios, 0),
-               fmt(porte$pct_zero, 0), fmt(porte$oscilacao, 0))
-writeLines(c("\\begin{tabular}{@{}lrrr@{}}", "\\toprule",
-             "\\textbf{Porte} & \\textbf{Municípios} & \\textbf{Zeros} & \\textbf{Oscilação}\\\\", "\\midrule",
-             lin, "\\bottomrule", "\\end{tabular}"), "tabelas/porte.tex")
 
 # Tabela do corte por percentil da densidade em cada região
 cr <- as.data.frame(eda$corte_regiao)
