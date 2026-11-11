@@ -154,7 +154,7 @@ Y_i = \frac{H_i^{2021} + H_i^{2022} + H_i^{2023}}{3\,P_i} \times 10^5
 \toprule
 \textbf{Bloco} & \textbf{Dimensão} & \textbf{Explicativas}\\
 \midrule
-A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade, desocupação\\
+A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade (índice de Gini), desocupação\\
 B & Demográfica & \% urbana, ln densidade (padronizado), \% homens 15--29\\
 C & Contexto e registro & faixa de fronteira, \% óbitos de intenção indeterminada\\
 D & Educação e migração & frequência escolar 15--17, abandono e distorção no EM, migração\\
@@ -163,7 +163,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \end{tabularx}
 \vspace{0.6em}
 
-{\scriptsize\color{black!70}Desigualdade: razão média/mediana da renda, indicador proposto por Birdsall e Meyer (2015); o Gini municipal de 2022 não foi publicado. Migração: \% de moradores há menos de 10 anos no município.}
+{\scriptsize\color{black!70}Desigualdade: índice de Gini da renda domiciliar per capita, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; nas 27 UFs, a correlação do calculado com o oficial é \nGiniCorUF. Migração: \% de moradores há menos de 10 anos no município.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -492,8 +492,6 @@ $\hat\sigma = \nSigma$; $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$. EP: erro-padrão.
 ARANSIOLA, T. J.; CECCATO, V.; JUSTUS, M. Growth of lethal violence in Brazil 2000--2017: a space-temporal analysis of homicides. \textit{Journal of Contemporary Criminal Justice}, 2022. DOI: 10.1177/10439862211034343.
 
 BARROS, P. H. B.; BAGGIO, H. S.; BAGGIO, I. S. The socioeconomic determinants of crime in Brazil: the role of spatial spillovers and heterogeneity. \textit{Revista Brasileira de Segurança Pública}, v. 14, n. 2, p. 188--209, 2020.
-
-BIRDSALL, N.; MEYER, C. J. The median is the message: a good enough measure of material wellbeing and shared development progress. \textit{Global Policy}, v. 6, n. 4, p. 343--357, 2015.
 
 BOX, G. E. P.; COX, D. R. An analysis of transformations. \textit{Journal of the Royal Statistical Society: Series B}, v. 26, n. 2, p. 211--252, 1964.
 

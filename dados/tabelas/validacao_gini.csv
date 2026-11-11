@@ -1,0 +1,34 @@
+"nivel","codigo","local","gini_oficial","gini_calculado"
+"Brasil","1","Brasil",0.542,0.542044350811472
+"Grande Região","1","Norte",0.545,0.546404623330635
+"Grande Região","2","Nordeste",0.541,0.54449670931327
+"Grande Região","3","Sudeste",0.53,0.528970650902388
+"Grande Região","4","Sul",0.476,0.477262454834514
+"Grande Região","5","Centro-Oeste",0.531,0.532998700616971
+"Unidade da Federação","11","Rondônia",0.489,0.490246229555003
+"Unidade da Federação","12","Acre",0.547,0.54754287532563
+"Unidade da Federação","13","Amazonas",0.572,0.574458950336887
+"Unidade da Federação","14","Roraima",0.572,0.568023671818356
+"Unidade da Federação","15","Pará",0.539,0.541253852838661
+"Unidade da Federação","16","Amapá",0.542,0.539749970619763
+"Unidade da Federação","17","Tocantins",0.511,0.519323668199542
+"Unidade da Federação","21","Maranhão",0.525,0.525440819842521
+"Unidade da Federação","22","Piauí",0.52,0.523110095901803
+"Unidade da Federação","23","Ceará",0.536,0.543255747272404
+"Unidade da Federação","24","Rio Grande do Norte",0.555,0.556031492971212
+"Unidade da Federação","25","Paraíba",0.536,0.541363339908098
+"Unidade da Federação","26","Pernambuco",0.564,0.565136741655726
+"Unidade da Federação","27","Alagoas",0.538,0.543611918232531
+"Unidade da Federação","28","Sergipe",0.557,0.559518590515611
+"Unidade da Federação","29","Bahia",0.531,0.535720083500401
+"Unidade da Federação","31","Minas Gerais",0.495,0.498601325060585
+"Unidade da Federação","32","Espírito Santo",0.505,0.507051891019807
+"Unidade da Federação","33","Rio de Janeiro",0.574,0.568974322355272
+"Unidade da Federação","35","São Paulo",0.525,0.522947615098199
+"Unidade da Federação","41","Paraná",0.482,0.482220288437692
+"Unidade da Federação","42","Santa Catarina",0.452,0.452771113699099
+"Unidade da Federação","43","Rio Grande do Sul",0.484,0.487484092202844
+"Unidade da Federação","50","Mato Grosso do Sul",0.503,0.502314530401632
+"Unidade da Federação","51","Mato Grosso",0.496,0.493823718516872
+"Unidade da Federação","52","Goiás",0.501,0.504010694433652
+"Unidade da Federação","53","Distrito Federal",0.584,0.583570249063027

@@ -10,6 +10,7 @@
 "rend_pc_media","Rendimento domiciliar per capita médio, R$ (SIDRA 10295)"
 "rend_pc_mediana","Rendimento domiciliar per capita mediano, R$ (SIDRA 10295)"
 "pct_pobres","% de pessoas de 14+ anos com renda domiciliar per capita até 1/4 SM ou sem rendimento (SIDRA 10300)"
+"gini","Índice de Gini da renda domiciliar per capita das pessoas de 14+ anos, calculado pelas classes de renda (SIDRA 10300)"
 "desocup","Taxa de desocupação, % da força de trabalho (SIDRA 9517)"
 "alfabet","Taxa de alfabetização, 15+ anos, % (SIDRA 9543)"
 "pct_urbana","% da população em situação urbana (SIDRA 9923)"

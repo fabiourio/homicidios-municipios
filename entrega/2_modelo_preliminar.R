@@ -63,7 +63,7 @@ summary(rls)
 # -----------------------------------------------------------------------------
 # 2. Transformação da resposta (Box-Cox)
 # -----------------------------------------------------------------------------
-f_base <- ~ log_rend + desig + desocup + pct_urbana + dens_z + pct_h1529 +
+f_base <- ~ log_rend + gini + desocup + pct_urbana + dens_z + pct_h1529 +
   faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
 
 m_y <- lm(update(f_base, y ~ .), data = d)
@@ -85,7 +85,7 @@ sw_log  <- shapiro.test(rstandard(m_log))
 # -----------------------------------------------------------------------------
 # 3. Multicolinearidade: renda, % pobres e alfabetização juntas
 # -----------------------------------------------------------------------------
-m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + desig + desocup + pct_urbana + dens_z +
+m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + gini + desocup + pct_urbana + dens_z +
                 pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em +
                 pct_migr_10anos + regiao, data = d)
 summary(m_colin)
@@ -101,7 +101,7 @@ cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend
 # -----------------------------------------------------------------------------
 # 4. Construção em blocos: somas de quadrados extras e teste F parcial
 # -----------------------------------------------------------------------------
-mA <- lm(ly ~ rend_c + rend_c2 + desig + desocup, data = d)                    # socioeconômico
+mA <- lm(ly ~ rend_c + rend_c2 + gini + desocup, data = d)                    # socioeconômico
 mB <- update(mA, . ~ . + pct_urbana + dens_z + pct_h1529)         # + demografia
 mC <- update(mB, . ~ . + faixa_fronteira + pct_indet)                           # + contexto
 mD <- update(mC, . ~ . + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos)   # + educação e migração
@@ -142,14 +142,14 @@ pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 
 # Efeitos na escala da taxa: com ln(taxa), uma mudança delta em X multiplica a taxa por exp(b * delta)
 mudancas <- data.frame(
-  termo   = c("desig", "pct_urbana", "dens_z", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
+  termo   = c("gini", "pct_urbana", "dens_z", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
               "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos"),
-  variavel = c("Desigualdade", "% urbana", "Densidade", "Desocupação",
+  variavel = c("Desigualdade (Gini)", "% urbana", "Densidade", "Desocupação",
                "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira",
                "Frequência escolar 15–17", "Abandono no ensino médio", "Distorção idade-série (EM)", "Migração recente"),
-  mudanca = c("+0,1", "+10 pontos", "+1 DP", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
+  mudanca = c("+0,05", "+10 pontos", "+1 DP", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
               "+5 pontos", "+5 pontos", "+10 pontos", "+5 pontos"),
-  delta   = c(0.1, 10, 1, 1, 1, 1, 1, 5, 5, 10, 5))
+  delta   = c(0.05, 10, 1, 1, 1, 1, 1, 5, 5, 10, 5))
 mudancas$b <- b[mudancas$termo]
 mudancas$p <- sf_$coefficients[mudancas$termo, 4]
 mudancas$efeito_pct <- 100 * (exp(mudancas$b * mudancas$delta) - 1)
@@ -161,7 +161,7 @@ write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = 
 # (fronteira = não, região = Sudeste, a referência). O nível depende da região; a forma não.
 grade <- data.frame(rend = exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
-for (v in c("desig", "desocup", "pct_urbana", "dens_z", "pct_h1529", "pct_indet",
+for (v in c("gini", "desocup", "pct_urbana", "dens_z", "pct_h1529", "pct_indet",
            "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
 grade$faixa_fronteira <- 0
 grade$regiao <- factor("Sudeste", levels = levels(d$regiao))

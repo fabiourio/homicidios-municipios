@@ -95,7 +95,7 @@ confere(m[["n"]] == e[["municipios_escopo"]], "exploratória e modelo no mesmo e
 confere(e[["porte_zero_20a50mil"]] == 0, "a partir de 20 mil hab. nenhum município tem taxa zero")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
-confere(sig_pos("desig") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
+confere(sig_pos("gini") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
           coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1, H2 e H3")
 confere(coef("abandono_em", "p") > 0.05, "H2: abandono no ensino médio não significativo")
 confere(all(sapply(paste0("regiao", c("Norte", "Nordeste", "Centro-Oeste", "Sul")), sig_pos)), "taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste")
@@ -103,6 +103,10 @@ confere(mean(d_eda$regiao[d_eda$amazonia_legal == 1] == "Norte") > 0.5, "a maior
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
+# Gini calculado pelas classes de renda x Gini oficial do IBGE nas 27 UFs
+vg <- read.csv("../../entrega/dados/validacao_gini.csv"); vg <- vg[vg$nivel == "Unidade da Federação", ]
+confere(nrow(vg) == 27 && cor(vg$gini_calculado, vg$gini_oficial) > 0.98 && mean(abs(vg$gini_calculado - vg$gini_oficial)) < 0.01,
+        "o Gini calculado pelas classes de renda reproduz o Gini oficial das UFs")
 # VIF da renda no modelo final com ln renda padronizado (média 0, DP 1) e com ln renda cru (sem centralizar)
 vif2 <- function(mm) car::vif(mm)[, "GVIF^(1/(2*Df))"]^2
 z <- function(x) (x - mean(x)) / sd(x)
@@ -148,6 +152,7 @@ mac <- c(
   SWp = fp(m[["sw_p"]]), BPgl = fmt(m[["bp_gl"]], 0), BPp = fp(m[["bp_p"]]),
   RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
   FglobalP = fp(m[["F_global_p"]]), VIFrendaFinal = fmt(m[["vif_renda_final"]]), VIFdemaisMax = fmt(m[["vif_demais_max"]]), VIFrendaCru = fmt(vif_cru[["log_rend"]], 0),
+  GiniCorUF = fmt(cor(vg$gini_calculado, vg$gini_oficial), 3), GiniErroUF = fmt(mean(abs(vg$gini_calculado - vg$gini_oficial)), 3),
   NumReg = fmt(m[["n_reg"]], 0), PCorte = fmt(eda$P_CORTE, 1), PCorteSup = fmt(100 - eda$P_CORTE, 1), PctCentral = fmt(100 - 2 * eda$P_CORTE, 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
   CorQuadSem = fmt(m[["cor_quad_sem"]], 4), CorQuadCen = fmt(m[["cor_quad_cen"]], 2),
   BetaDois = fmt(coef("rend_c2", "b"), 3), BetaDoisP = fp(coef("rend_c2", "p")),
@@ -176,17 +181,17 @@ writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/corte_regiao.tex")
 
 # Tabela-resumo da exploratória: resposta e explicativas do modelo (casas decimais por variável)
-casas <- c(taxa = 1, rend_pc_media = 0, desig = 2, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2,
+casas <- c(taxa = 1, rend_pc_media = 0, gini = 3, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2,
            pct_h1529 = 1, pct_indet = 1, freq_15a17 = 1, abandono_em = 1, distorcao_em = 1, pct_migr_10anos = 1)
 rotulo <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R\\$)",
-            desig = "Desigualdade (média/mediana)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
+            gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
             dens = "Densidade (hab./km²)", log_dens = "ln Densidade", pct_h1529 = "Homens 15--29 (\\%)",
             pct_indet = "Intenção indeterminada (\\%)", freq_15a17 = "Frequência escolar 15--17 (\\%)",
             abandono_em = "Abandono no ensino médio (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
 ds <- as.data.frame(eda$desc)[match(names(casas), eda$desc$name), ]
 stopifnot(!anyNA(ds$name))
-num <- function(col) mapply(function(x, k) fmt(x, k), ds[[col]], casas)
+num <- function(col) mapply(function(x, k) sub("^-", "$-$", fmt(x, k)), ds[[col]], casas)
 lin <- sprintf("%s%s & %s & %s & %s & %s & %s\\\\", ifelse(ds$name == "taxa", "\\rowcolor{fundo}", ""),
                rotulo[ds$name], num("media"), num("dp"), num("min"), num("mediana"), num("max"))
 writeLines(c("\\begin{tabular}{@{}lrrrrr@{}}", "\\toprule",
@@ -213,7 +218,7 @@ cat(sprintf("\\newcommand{\\nNaoSig}{%s}\n", paste(tolower(gsub("%", "\\\\%", ef
     file = "numeros.tex", append = TRUE)
 efe <- efe[!ns, ]
 # Hipótese do slide da questão de pesquisa que cada variável testa (H1 desigualdade, H2 escola, H3 migração)
-hip <- c(desig = "H1", freq_15a17 = "H2", abandono_em = "H2", distorcao_em = "H2", pct_migr_10anos = "H3")
+hip <- c(gini = "H1", freq_15a17 = "H2", abandono_em = "H2", distorcao_em = "H2", pct_migr_10anos = "H3")
 efe$hip <- ifelse(efe$termo %in% names(hip), hip[efe$termo], "")
 lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", efe$hip, gsub("%", "\\\\%", efe$variavel), efe$mudanca,
                sinal(efe$efeito_pct, 1), sinal(efe$ic_inf_pct, 1), sinal(efe$ic_sup_pct, 1), fp(efe$p))
@@ -223,7 +228,7 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/efeitos.tex")
 
 # Apêndice: coeficientes
-nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", desig = "Desigualdade", desocup = "Desocupação",
+nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", gini = "Desigualdade (Gini)", desocup = "Desocupação",
            pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)",
            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",

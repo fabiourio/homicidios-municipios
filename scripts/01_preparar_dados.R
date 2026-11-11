@@ -3,6 +3,7 @@
 # Entradas: dados/raw/sidra_raw.json (Censo 2022, API SIDRA)
 #           dados/raw/tabnet_raw.json (SIM/DATASUS, TabNet)
 #           dados/raw/sidra_10056_freq_escolar.json (Censo 2022, frequência escolar)
+#           dados/raw/sidra_10301_gini.json (Censo 2022, Gini oficial do Brasil, das regiões e das UFs)
 #           dados/raw/mapbiomas_mineracao_col11.xlsx (MapBiomas, área de garimpo)
 # Saídas:   dados/tabelas/ (tabelas limpas e base_analitica.csv) e cópia em entrega/dados/
 # =============================================================================
@@ -82,6 +83,32 @@ c22 <- junta("10295", c("rend_pc_media", "rend_pc_mediana"))
 
 p <- sidra[["10300"]]                                        # pessoas 14+ por classe de renda per capita
 p$pct_pobres <- (p$p14_ate_1_4sm + p$p14_sem_rendimento) / p$p14_total * 100
+
+# Índice de Gini pelas classes de renda: 1 menos o dobro da área sob a curva de Lorenz (por trapézios).
+# Renda de cada classe = ponto médio, em salários mínimos. Classe aberta (mais de 20 SM) = 50 SM,
+# valor com que o cálculo reproduz o Gini oficial do Brasil (SIDRA 10301)
+classes <- c(p14_sem_rendimento = 0, p14_ate_1_4sm = 1/8, p14_1_4_a_1_2sm = 3/8, p14_1_2_a_1sm = 3/4, p14_1_a_2sm = 1.5,
+             p14_2_a_3sm = 2.5, p14_3_a_5sm = 4, p14_5_a_10sm = 7.5, p14_10_a_15sm = 12.5, p14_15_a_20sm = 17.5,
+             p14_mais_20sm = 50)
+gini <- function(n) {
+  pessoas <- n / sum(n)
+  renda <- cumsum(n * classes) / sum(n * classes)
+  1 - sum(pessoas * (renda + c(0, renda[-length(renda)])))
+}
+pc <- as.matrix(p[, names(classes)]); pc[is.na(pc)] <- 0
+p$gini <- apply(pc, 1, gini)
+
+# Conferência com o Gini oficial do IBGE, publicado só para o Brasil, as regiões e as UFs
+go <- fromJSON("dados/raw/sidra_10301_gini.json", simplifyVector = FALSE)[[1]]$resultados[[1]]$series
+val_gini <- data.frame(nivel = sapply(go, function(s) s$localidade$nivel$nome), codigo = sapply(go, function(s) s$localidade$id),
+                       local = sapply(go, function(s) s$localidade$nome),
+                       gini_oficial = as.numeric(sapply(go, function(s) s$serie[["2022"]])))
+soma <- function(digitos) apply(rowsum(pc, substr(p$cod_ibge, 1, digitos)), 1, gini)
+val_gini$gini_calculado <- c(gini(colSums(pc)), soma(1)[val_gini$codigo[2:6]], soma(2)[val_gini$codigo[-(1:6)]])
+write.csv(val_gini, "dados/tabelas/validacao_gini.csv", row.names = FALSE)
+cat(sprintf("\nGini calculado x oficial nas 27 UFs: correlação = %.3f | erro absoluto médio = %.3f\n",
+            cor(val_gini$gini_calculado[-(1:6)], val_gini$gini_oficial[-(1:6)]),
+            mean(abs(val_gini$gini_calculado - val_gini$gini_oficial)[-(1:6)])))
 t9517 <- sidra[["9517"]]
 t9517$desocup <- t9517$desocupados / t9517$forca_trabalho * 100
 u <- sidra[["9923"]]
@@ -91,7 +118,7 @@ r$pct_negra <- (r$preta + r$parda) / r$pop_total * 100
 h <- sidra[["9606"]]
 h$homens_15_29 <- h$homens_15_19 + h$homens_20_24 + h$homens_25_29
 
-c22 <- merge(c22, p[, c("cod_ibge", "pct_pobres")], by = "cod_ibge")
+c22 <- merge(c22, p[, c("cod_ibge", "pct_pobres", "gini")], by = "cod_ibge")
 c22 <- merge(c22, t9517[, c("cod_ibge", "desocup")], by = "cod_ibge")
 c22 <- merge(c22, data.frame(cod_ibge = sidra[["9543"]]$cod_ibge,
                              alfabet = sidra[["9543"]]$taxa_alfabetizacao_15mais), by = "cod_ibge")
@@ -182,7 +209,7 @@ b$taxa_24  <- b$hom_24 / b$pop * 1e5
 
 # Variáveis explicativas derivadas
 b$log_rend  <- log(b$rend_pc_media)
-b$desig     <- b$rend_pc_media / b$rend_pc_mediana           # razão média/mediana (Gini não está no SIDRA)
+b$desig     <- b$rend_pc_media / b$rend_pc_mediana           # razão média/mediana
 b$log_dens  <- log(b$dens)
 b$pct_h1529 <- b$homens_15_29 / b$pop * 100
 b$pct_indet <- ifelse(b$total_causas_externas > 0,
@@ -219,6 +246,7 @@ dic <- c(
   rend_pc_media = "Rendimento domiciliar per capita médio, R$ (SIDRA 10295)",
   rend_pc_mediana = "Rendimento domiciliar per capita mediano, R$ (SIDRA 10295)",
   pct_pobres = "% de pessoas de 14+ anos com renda domiciliar per capita até 1/4 SM ou sem rendimento (SIDRA 10300)",
+  gini = "Índice de Gini da renda domiciliar per capita das pessoas de 14+ anos, calculado pelas classes de renda (SIDRA 10300)",
   desocup = "Taxa de desocupação, % da força de trabalho (SIDRA 9517)",
   alfabet = "Taxa de alfabetização, 15+ anos, % (SIDRA 9543)",
   pct_urbana = "% da população em situação urbana (SIDRA 9923)",
@@ -245,5 +273,5 @@ write.csv(data.frame(coluna = names(dic), descricao = dic), "dados/tabelas/dicio
 
 # Cópia da base, do dicionário e da malha para a pasta do código de entrega (análise)
 dir.create("entrega/dados", recursive = TRUE, showWarnings = FALSE)
-file.copy(c("dados/tabelas/base_analitica.csv", "dados/tabelas/dicionario.csv", "dados/malha_mun.geojson"),
+file.copy(c("dados/tabelas/base_analitica.csv", "dados/tabelas/dicionario.csv", "dados/tabelas/validacao_gini.csv", "dados/malha_mun.geojson"),
           "entrega/dados/", overwrite = TRUE)
