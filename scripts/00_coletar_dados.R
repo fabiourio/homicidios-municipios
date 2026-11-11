@@ -4,8 +4,9 @@
 #   2. TabNet/DATASUS (SIM)      -> dados/raw/tabnet_raw.json
 #   3. Malha municipal do IBGE   -> dados/malha_mun.geojson
 #   4. Extras: frequência escolar (SIDRA 10056) e garimpo (MapBiomas) -> dados/raw/
+#   5. Relatório: Gini oficial por UF (SIDRA 10301) e recortes territoriais (RM, concentração urbana) -> dados/raw/
 # Uso: Rscript scripts/00_coletar_dados.R              (baixa tudo)
-#      Rscript scripts/00_coletar_dados.R sidra        (só uma parte: sidra | tabnet | malha | extras)
+#      Rscript scripts/00_coletar_dados.R sidra        (só uma parte: sidra | tabnet | malha | extras | relatorio)
 # =============================================================================
 
 # Roda a partir da raiz do repositório (ou de scripts/)
@@ -142,6 +143,22 @@ coletar_extras <- function() {
   writeBin(content(baixa(url), "raw"), "dados/raw/mapbiomas_mineracao_col11.xlsx")
 }
 
+# -----------------------------------------------------------------------------
+# 5. Apoio ao relatório (relatorio/relatorio.qmd)
+#    - Gini oficial 2022 por UF (SIDRA 10301): só existe para Brasil, regiões e UFs;
+#      serve para validar o Gini calculado a partir das classes de renda (SIDRA 10300)
+#    - Recortes territoriais 2022 do IBGE: região metropolitana/RIDE e concentração urbana por município
+# -----------------------------------------------------------------------------
+coletar_relatorio <- function() {
+  message("Gini oficial 2022 por UF (SIDRA 10301)...")
+  url <- "https://servicodados.ibge.gov.br/api/v3/agregados/10301/periodos/2022/variaveis/13418?localidades=N3[all]"
+  writeBin(content(baixa(URLencode(url)), "raw"), "dados/raw/sidra_10301_gini_uf.json")
+  message("Recortes territoriais 2022 (RM/RIDE e concentração urbana)...")
+  url <- paste0("https://ftp.ibge.gov.br/Censos/Censo_Demografico_2022/Microdados_e_Areas_de_Ponderacao/",
+                "Documentacao/Divis%c3%a3o%20territorial/Munic%c3%adpios_BR_Recortes_Territoriais_2022.xlsx")
+  writeBin(content(baixa(url), "raw"), "dados/raw/ibge_recortes_territoriais_2022.xlsx")
+}
+
 coletar_malha <- function() {
   message("Malha municipal...")
   url <- paste0("https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR",
@@ -150,9 +167,10 @@ coletar_malha <- function() {
 }
 
 partes <- commandArgs(trailingOnly = TRUE)
-if (!length(partes)) partes <- c("sidra", "tabnet", "malha", "extras")
+if (!length(partes)) partes <- c("sidra", "tabnet", "malha", "extras", "relatorio")
 if ("sidra"  %in% partes) coletar_sidra()
 if ("tabnet" %in% partes) coletar_tabnet()
 if ("malha"  %in% partes) coletar_malha()
 if ("extras" %in% partes) coletar_extras()
+if ("relatorio" %in% partes) coletar_relatorio()
 message("Pronto. Rode agora: Rscript scripts/01_preparar_dados.R")

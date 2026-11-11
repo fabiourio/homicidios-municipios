@@ -22,11 +22,15 @@ dados/
 scripts/
   00_coletar_dados.R       baixa tudo de novo das fontes (opcional; os dados já estão no repo)
   01_preparar_dados.R      limpeza, checagens de consistência e montagem da base analítica
+  02_integrar_candidatas.R variáveis candidatas -> dados/tabelas/candidatas.csv
+  03_preparar_relatorio.R  Gini agrupado e RM/RIDE -> dados/tabelas/base_relatorio.csv
+  funcoes_desigualdade.R   cálculo do Gini agrupado (usado pelo 03 e pelo relatório)
   instalar_pacotes.R       instala os pacotes de R
 entrega/                   CÓDIGO DA ANÁLISE para entregar (ver entrega/LEIA-ME.md)
   1_analise_exploratoria.R estatísticas, mapa, correlações, gráficos -> entrega/resultados/eda/
   2_modelo_preliminar.R    Box-Cox, VIF, blocos com F parcial, modelo e diagnóstico -> entrega/resultados/modelagem/
   dados/                   cópia da base analítica (gerada pelo script 01)
+relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv)
 apresentacao/              INTERNO: slides (latex/), notas.json, exportação .pptx/.html e briefings/ por apresentador
 ```
 
@@ -38,6 +42,7 @@ Na raiz do repositório:
 Rscript scripts/instalar_pacotes.R
 
 Rscript scripts/01_preparar_dados.R       # gera dados/tabelas/ e copia a base para entrega/dados/
+Rscript scripts/03_preparar_relatorio.R   # gera dados/tabelas/base_relatorio.csv, usada pelo relatorio/relatorio.qmd
 cd entrega
 Rscript 1_analise_exploratoria.R          # gera entrega/resultados/eda/
 Rscript 2_modelo_preliminar.R             # gera entrega/resultados/modelagem/

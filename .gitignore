@@ -31,3 +31,7 @@ dados/candidatos/*
 # Intermediários do LaTeX
 *.fls
 *.fdb_latexmk
+
+# Saídas intermediárias do Quarto (o HTML final já embute as figuras)
+relatorio/relatorio_files/
+relatorio/*.rmarkdown
