@@ -100,7 +100,7 @@ cat(sprintf("Boa Esperança do Norte-MT (5101837) na base: %s (instalado em 2025
 # 2. Valores impossíveis ou suspeitos
 # -----------------------------------------------------------------------------
 cat("\n== 2. Valores impossíveis ou suspeitos ==\n")
-pcts <- c("pct_pobres", "desocup", "alfabet", "pct_urbana", "pct_h1529", "pct_indet", "freq_15a17", "pct_garimpo",
+pcts <- c("pct_pobres", "desocup", "alfabet", "pct_urbana", "pct_h1529", "pct_indet", "freq_15a17",
           vars_extras)
 fora <- sapply(b[pcts], function(x) sum(x < 0 | x > 100, na.rm = TRUE))
 cat("Percentuais fora de 0-100:\n"); print(fora)

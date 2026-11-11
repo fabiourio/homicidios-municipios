@@ -38,6 +38,20 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 - O modelo é montado em 5 blocos, cada um testado pelo F parcial: A renda e desigualdade; B demografia; C fronteira e registro; D educação e migração; E região.
 - A região (5 classes, base Sudeste) entra como variável categórica. O script também ajusta o modelo com o estado (27 UFs, base SP) e grava os dois lado a lado em `resultados/modelagem/regiao_x_estado.csv`; a escolha está em aberto.
 
+## O que vem de fora da apostila
+
+A regra do trabalho é usar só técnicas da apostila de GED-16. Estes itens não estão descritos nela:
+
+| Item | Origem | Para que serve |
+|---|---|---|
+| Índice de Gini por município, calculado pelas classes de renda | Revisão da professora | Medir a desigualdade; o IBGE só publica o Gini por região e UF |
+| Corte por percentil da densidade dentro da região | Revisão da professora | Tirar os municípios de densidade extrema |
+| Padronização de ln(densidade) | Revisão da professora | A apostila cita a padronização (cap. 6), sem detalhar |
+| VIF generalizado (pacote `car`) | Escolha do grupo | VIF de variável com várias categorias (região e estado) |
+| Efeito em %: 100·[exp(b·Δ) − 1] | Escolha do grupo | Ler os coeficientes com a resposta em ln |
+| Intervalo de confiança de λ no Box-Cox | Escolha do grupo | Dizer se λ = 0 é compatível com os dados |
+| Oscilação da taxa por porte: 1/√(casos esperados) | Escolha do grupo | Justificar o corte em 20 mil habitantes |
+
 ## Dados
 
 - Resposta: taxa de homicídios por 100 mil hab./ano, 2021–2023 (SIM/DATASUS, óbitos por residência; CID-10 X85–Y09 e Y35–Y36).

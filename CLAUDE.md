@@ -4,3 +4,4 @@
 2. Toda escolha técnica é embasada no conteúdo da apostila de GED (Denise Ferrari, ITA): https://www.ief.ita.br/~denise/GED16/Apostila/
 3. Só usar modelos e técnicas descritos na apostila. Se algo de fora for muito necessário e fizer muito sentido, não usar direto: levar ao grupo para decidir e sinalizar no trabalho que é de fora da apostila.
 4. Só entram dados que ajudam a responder a pergunta de pesquisa. Dado sem ligação clara com a pergunta não entra no repositório.
+5. A revisão da professora vale bastante: o que ela pede na revisão do trabalho é aplicado como foi pedido, mesmo que a técnica não esteja na apostila. Nesse caso, sinalizar no trabalho que o item veio da revisão dela.

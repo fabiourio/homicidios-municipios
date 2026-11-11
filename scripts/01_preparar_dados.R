@@ -4,7 +4,6 @@
 #           dados/raw/tabnet_raw.json (SIM/DATASUS, TabNet)
 #           dados/raw/sidra_10056_freq_escolar.json (Censo 2022, frequência escolar)
 #           dados/raw/sidra_10301_gini.json (Censo 2022, Gini oficial do Brasil, das regiões e das UFs)
-#           dados/raw/mapbiomas_mineracao_col11.xlsx (MapBiomas, área de garimpo)
 # Saídas:   dados/tabelas/ (tabelas limpas e base_analitica.csv) e cópia em entrega/dados/
 # =============================================================================
 
@@ -15,7 +14,6 @@ rm(list = ls())
 if (basename(getwd()) == "scripts") setwd("..")
 
 library(jsonlite)
-library(readxl)
 
 dir.create("dados/tabelas", showWarnings = FALSE)
 
@@ -217,14 +215,6 @@ fe <- fromJSON("dados/raw/sidra_10056_freq_escolar.json")[-1, ]          # 1a li
 fe <- fe[fe$D4C == "2792", ]                                             # 2792 = 15 a 17 anos
 b$freq_15a17 <- as.numeric(fe$V)[match(b$cod_ibge, as.integer(fe$D1C))]
 
-# Garimpo de ouro ativo (solo exposto) em 2022, em % da área do município (MapBiomas, Coleção 11)
-# Fora: areia e brita (minerais classe 2) e áreas em revegetação, que não têm relação com a hipótese
-g <- read_excel("dados/raw/mapbiomas_mineracao_col11.xlsx", sheet = "MINED_SUBSTANCE")
-g <- g[g$CLASS_LEVEL_1 == "Garimpo" & g$CLASS_NAME == "Ouro" & g$CLASS_LEVEL_2 == "Solo exposto", ]
-ga <- tapply(g$y2022, g$GEOCODE, sum, na.rm = TRUE)                      # hectares
-b$garimpo_ha  <- ifelse(is.na(ga[as.character(b$cod_ibge)]), 0, ga[as.character(b$cod_ibge)])
-b$pct_garimpo <- b$garimpo_ha / (b$area_km2 * 100) * 100                 # 1 km² = 100 ha
-
 b <- b[order(b$cod_ibge), c("cod_ibge", setdiff(names(b), "cod_ibge"))]
 write.csv(b, "dados/tabelas/base_analitica.csv", row.names = FALSE)
 
@@ -261,9 +251,7 @@ dic <- c(
   log_rend = "ln(rend_pc_media)",
   log_dens = "ln(dens)", pct_h1529 = "% de homens de 15 a 29 anos na população",
   pct_indet = "% de óbitos de intenção indeterminada no total de causas externas",
-  freq_15a17 = "Taxa de frequência escolar bruta de 15 a 17 anos, % (Censo 2022, SIDRA 10056)",
-  garimpo_ha = "Área de garimpo de ouro ativo (solo exposto) em 2022, ha (MapBiomas Coleção 11)",
-  pct_garimpo = "Área de garimpo de ouro ativo em % da área do município, 2022 (MapBiomas)")
+  freq_15a17 = "Taxa de frequência escolar bruta de 15 a 17 anos, % (Censo 2022, SIDRA 10056)")
 write.csv(data.frame(coluna = names(dic), descricao = dic), "dados/tabelas/dicionario.csv", row.names = FALSE)
 
 # Cópia da base, do dicionário e da malha para a pasta do código de entrega (análise)

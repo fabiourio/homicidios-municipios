@@ -44,8 +44,8 @@ Boa Esperança do Norte-MT (5101837) na base: FALSE (instalado em 2025, depois d
 
 == 2. Valores impossíveis ou suspeitos ==
 Percentuais fora de 0-100:
-     pct_pobres         desocup         alfabet      pct_urbana       pct_h1529       pct_indet      freq_15a17     pct_garimpo     abandono_em    distorcao_em pct_migr_10anos 
-              0               0               0               0               0               0               0               0               0               0               0 
+     pct_pobres         desocup         alfabet      pct_urbana       pct_h1529       pct_indet      freq_15a17     abandono_em    distorcao_em pct_migr_10anos 
+              0               0               0               0               0               0               0               0               0               0 
 Contagens negativas: 0
 Homicídios > total de causas externas: 0
 Gini: NAs = 0 | fora de 0-1: 0 | mín/máx na base: 0.275 / 0.684 | mín/máx no escopo: 0.300 / 0.684
