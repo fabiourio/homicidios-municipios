@@ -41,7 +41,6 @@ nomes_colunas <- list(
   "9517"  = c("p14_total", "forca_trabalho", "ocupados", "desocupados", "fora_forca_trabalho"),
   "9543"  = "taxa_alfabetizacao_15mais",
   "9923"  = c("pop_total", "pop_urbana", "pop_rural"),
-  "9605"  = c("pop_total", "branca", "preta", "amarela", "parda", "indigena"),
   "9606"  = c("homens_15_19", "homens_20_24", "homens_25_29"))
 
 # Converte uma tabela do JSON em data.frame (valores ainda como texto)
@@ -79,7 +78,7 @@ c22 <- data.frame(cod_ibge  = pop$cod_ibge,
 
 junta <- function(t, cols) merge(c22, sidra[[t]][, c("cod_ibge", cols)], by = "cod_ibge", sort = FALSE)
 c22 <- junta("4714", c("area_km2", "densidade"));            names(c22)[names(c22) == "densidade"] <- "dens"
-c22 <- junta("10295", c("rend_pc_media", "rend_pc_mediana"))
+c22 <- junta("10295", "rend_pc_media")
 
 p <- sidra[["10300"]]                                        # pessoas 14+ por classe de renda per capita
 p$pct_pobres <- (p$p14_ate_1_4sm + p$p14_sem_rendimento) / p$p14_total * 100
@@ -113,8 +112,6 @@ t9517 <- sidra[["9517"]]
 t9517$desocup <- t9517$desocupados / t9517$forca_trabalho * 100
 u <- sidra[["9923"]]
 u$pct_urbana <- u$pop_urbana / u$pop_total * 100
-r <- sidra[["9605"]]
-r$pct_negra <- (r$preta + r$parda) / r$pop_total * 100
 h <- sidra[["9606"]]
 h$homens_15_29 <- h$homens_15_19 + h$homens_20_24 + h$homens_25_29
 
@@ -123,14 +120,12 @@ c22 <- merge(c22, t9517[, c("cod_ibge", "desocup")], by = "cod_ibge")
 c22 <- merge(c22, data.frame(cod_ibge = sidra[["9543"]]$cod_ibge,
                              alfabet = sidra[["9543"]]$taxa_alfabetizacao_15mais), by = "cod_ibge")
 c22 <- merge(c22, u[, c("cod_ibge", "pct_urbana")], by = "cod_ibge")
-c22 <- merge(c22, r[, c("cod_ibge", "pct_negra")], by = "cod_ibge")
 c22 <- merge(c22, h[, c("cod_ibge", "homens_15_29")], by = "cod_ibge")
 
 # Checagens de consistência entre as tabelas (nº de municípios com diferença)
 cat("\nInconsistências:\n")
 cat("  pop 4709 x 4714:", sum(pop$pop != sidra[["4714"]]$pop), "\n")
 cat("  pop 4709 x 9923:", sum(pop$pop != u$pop_total), "\n")
-cat("  pop 4709 x 9605:", sum(pop$pop != r$pop_total), "\n")
 cat("  10300 soma das classes x total:", sum(rowSums(p[, nomes_colunas[["10300"]][-1]]) != p$p14_total), "\n")
 cat("  9517 ocupados + desocupados x força de trabalho:",
     sum(t9517$ocupados + t9517$desocupados != t9517$forca_trabalho), "\n")
@@ -209,7 +204,6 @@ b$taxa_24  <- b$hom_24 / b$pop * 1e5
 
 # Variáveis explicativas derivadas
 b$log_rend  <- log(b$rend_pc_media)
-b$desig     <- b$rend_pc_media / b$rend_pc_mediana           # razão média/mediana
 b$log_dens  <- log(b$dens)
 b$pct_h1529 <- b$homens_15_29 / b$pop * 100
 b$pct_indet <- ifelse(b$total_causas_externas > 0,
@@ -244,13 +238,11 @@ dic <- c(
   pop = "População residente, Censo 2022 (SIDRA 4709)",
   area_km2 = "Área territorial em km² (SIDRA 4714)", dens = "Densidade demográfica, hab/km² (SIDRA 4714)",
   rend_pc_media = "Rendimento domiciliar per capita médio, R$ (SIDRA 10295)",
-  rend_pc_mediana = "Rendimento domiciliar per capita mediano, R$ (SIDRA 10295)",
   pct_pobres = "% de pessoas de 14+ anos com renda domiciliar per capita até 1/4 SM ou sem rendimento (SIDRA 10300)",
   gini = "Índice de Gini da renda domiciliar per capita das pessoas de 14+ anos, calculado pelas classes de renda (SIDRA 10300)",
   desocup = "Taxa de desocupação, % da força de trabalho (SIDRA 9517)",
   alfabet = "Taxa de alfabetização, 15+ anos, % (SIDRA 9543)",
   pct_urbana = "% da população em situação urbana (SIDRA 9923)",
-  pct_negra = "% da população preta ou parda (SIDRA 9605)",
   homens_15_29 = "Homens de 15 a 29 anos (SIDRA 9606)",
   agressao = "Óbitos por agressão X85-Y09, 2021-2023, por residência (SIM)",
   intervencao_legal = "Óbitos por intervenção legal Y35-Y36, 2021-2023 (SIM)",
@@ -263,7 +255,7 @@ dic <- c(
   exposure = "Pessoas-ano de exposição = 3 x pop",
   taxa = "Taxa de homicídios por 100 mil hab./ano, 2021-2023 (variável resposta)",
   taxa_24 = "Taxa de homicídios por 100 mil hab., 2024",
-  log_rend = "ln(rend_pc_media)", desig = "Razão média/mediana do rendimento per capita (desigualdade)",
+  log_rend = "ln(rend_pc_media)",
   log_dens = "ln(dens)", pct_h1529 = "% de homens de 15 a 29 anos na população",
   pct_indet = "% de óbitos de intenção indeterminada no total de causas externas",
   freq_15a17 = "Taxa de frequência escolar bruta de 15 a 17 anos, % (Censo 2022, SIDRA 10056)",
