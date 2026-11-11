@@ -344,6 +344,27 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \end{frame}
 
 % -----------------------------------------------------------------------------
+\begin{frame}{Região ou estado: os dois modelos lado a lado}
+\begin{columns}[c]
+\column{0.54\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.02}
+\setlength{\tabcolsep}{4pt}
+\input{tabelas/regiao_x_estado.tex}
+\fonte{Elaboração própria. Indicadoras de região e de estado omitidas. Em negrito: a significância a 5\% muda.}
+\column{0.44\textwidth}
+\begin{itemize}\footnotesize
+\item Região: \nNumPar{} parâmetros; $R^2_a$ = \nRdoisA; VIF máximo \nVIFrendaFinal
+\item Estado: \nNumParEstado{} parâmetros; $R^2_a$ = \nRdoisAestado; VIF máximo \nVIFmaxEstado
+\item $F$ parcial do estado além da região: \nFEstado{} (\nGlEstado{} gl), $p$ \nPEstado
+\item H1, H2 e H3 valem nos dois; a densidade só é significativa com região
+\item \nNumUFpoucos{} estados têm menos de 10 municípios no estudo
+\item Escolha em aberto; os demais slides usam região
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
 \begin{frame}{Estimativas: efeito de cada variável na taxa}
 \begin{columns}[c]
 \column{0.74\textwidth}

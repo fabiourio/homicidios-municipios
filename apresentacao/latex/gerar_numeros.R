@@ -222,6 +222,27 @@ cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcom
             fmt(mod$F_renda$F[2]), fmt(mod$F_renda$Df[2], 0), fp(mod$F_renda$`Pr(>F)`[2]), fmt(mod$ss_$adj.r.squared, 2), fmt(max(mod$vif_sem_renda))),
     file = "numeros.tex", append = TRUE)
 
+# Tabela dos dois modelos lado a lado: região x estado; em negrito, onde a significância a 5% muda
+re <- mod$regiao_estado
+rot_re <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", rot_cs)
+stopifnot(all(re$termo %in% names(rot_re)))
+muda <- (re$p_regiao < 0.05) != (re$p_estado < 0.05)
+cel <- cbind(rot_re[re$termo], gsub("-", "$-$", fmt(re$b_regiao, 3)), fp(re$p_regiao), gsub("-", "$-$", fmt(re$b_estado, 3)), fp(re$p_estado))
+cel[muda, ] <- paste0("\\textbf{", cel[muda, ], "}")
+writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
+             " & \\multicolumn{2}{c}{\\textbf{Com região}} & \\multicolumn{2}{c}{\\textbf{Com estado}}\\\\",
+             "\\textbf{Termo} & \\textbf{$b$} & \\textbf{$p$} & \\textbf{$b$} & \\textbf{$p$}\\\\", "\\midrule",
+             paste0(apply(cel, 1, paste, collapse = " & "), "\\\\"), "\\bottomrule", "\\end{tabular}"), "tabelas/regiao_x_estado.tex")
+p_re <- function(t, col) re[re$termo == t, col]
+confere(mod$F_estado$`Pr(>F)`[2] < 0.001 && mod$se_$adj.r.squared > mod$sf_$adj.r.squared, "o estado explica mais que a região (F parcial e R² ajustado)")
+confere(max(mod$vif_estado) > 10 && max(mod$vif_final) < 10, "VIF máximo acima de 10 com estado e abaixo de 10 com região")
+confere(all(sapply(c("gini", "distorcao_em", "pct_migr_10anos"), function(t) p_re(t, "p_estado") < 0.05 && p_re(t, "b_estado") > 0)) &&
+          p_re("freq_15a17", "p_estado") < 0.05 && p_re("freq_15a17", "b_estado") < 0, "H1, H2 e H3 valem nos dois modelos")
+confere(p_re("dens_z", "p_regiao") < 0.05 && p_re("dens_z", "p_estado") > 0.05, "a densidade só é significativa com região")
+cat(sprintf("\\newcommand{\\nNumParEstado}{%s}\n\\newcommand{\\nRdoisAestado}{%s}\n\\newcommand{\\nVIFmaxEstado}{%s}\n\\newcommand{\\nFEstado}{%s}\n\\newcommand{\\nGlEstado}{%s}\n\\newcommand{\\nPEstado}{%s}\n\\newcommand{\\nNumUFpoucos}{%s}\n",
+            fmt(length(stats::coef(mod$com_estado)), 0), fmt(mod$se_$adj.r.squared, 2), fmt(max(mod$vif_estado)), fmt(mod$F_estado$F[2]), fmt(mod$F_estado$Df[2], 0),
+            fp(mod$F_estado$`Pr(>F)`[2]), fmt(sum(table(mod$d$uf) < 10), 0)), file = "numeros.tex", append = TRUE)
+
 # Tabela dos blocos (F parcial e R² ajustado)
 bloco <- function(nome, k, neg = FALSE) {
   cel <- c(nome, fmt(m[[paste0("gl_", k)]], 0), fmt(m[[paste0("F_", k)]]), fp(m[[paste0("p_", k)]]), fmt(m[[paste0("R2a_", k)]], 2))
