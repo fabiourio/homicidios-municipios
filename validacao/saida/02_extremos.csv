@@ -1,61 +1,157 @@
-"variavel","lado","municipio","uf","pop","valor"
-"taxa","menor","Cacaulândia","RO",4150,0
-"taxa","menor","São Felipe D'Oeste","RO",5258,0
-"taxa","menor","Santa Rosa do Purus","AC",6723,0
-"taxa","maior","Ibicuitinga","CE",11611,132.06
-"taxa","maior","Rodolfo Fernandes","RN",4242,165.02
-"taxa","maior","São João do Jaguaribe","CE",5855,284.66
-"rend_pc_media","menor","Uiramutã","RR",13751,288.65
-"rend_pc_media","menor","Bagre","PA",31892,358.65
-"rend_pc_media","menor","Manari","PE",23763,359.1
-"rend_pc_media","maior","Florianópolis","SC",537211,3636.13
-"rend_pc_media","maior","São Caetano do Sul","SP",165655,3884.58
-"rend_pc_media","maior","Nova Lima","MG",111697,4299.91
-"desig","menor","Cedro do Abaeté","MG",1081,1.05
-"desig","menor","Estiva","MG",11502,1.06
-"desig","menor","Novo Machado","RS",3198,1.06
-"desig","maior","Petrolândia","SC",6716,2.48
-"desig","maior","Nova Lima","MG",111697,2.61
-"desig","maior","Alto Alegre","RR",21096,2.92
-"desocup","menor","Aroeiras do Itaim","PI",2690,0
-"desocup","menor","Quixaba","PB",1743,0
-"desocup","menor","Riachão","PB",2927,0
-"desocup","maior","Coité do Nóia","AL",10810,37.1
-"desocup","maior","Alegrete do Piauí","PI",4634,50.47
-"desocup","maior","Joca Marques","PI",5394,50.97
-"pct_urbana","menor","Chuvisca","RS",4597,7.33
-"pct_urbana","menor","Uiramutã","RR",13751,7.68
-"pct_urbana","menor","Curral de Cima","PB",5254,11.78
-"pct_urbana","maior","Cachoeirinha","RS",136258,100
-"pct_urbana","maior","Canoas","RS",347657,100
-"pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
-"dens","menor","Barcelos","AM",18834,0.15
-"dens","menor","Japurá","AM",8858,0.16
-"dens","menor","Atalaia do Norte","AM",15314,0.2
-"dens","maior","São João de Meriti","RJ",440962,12521.64
-"dens","maior","Diadema","SP",393237,12795.69
-"dens","maior","Taboão da Serra","SP",273542,13416.81
-"pct_negra","menor","Morrinhos do Sul","RS",3071,2.51
-"pct_negra","menor","Forquetinha","RS",2393,2.84
-"pct_negra","menor","Charrua","RS",2768,3.07
-"pct_negra","maior","Teodoro Sampaio","BA",7110,95.2
-"pct_negra","maior","Terra Nova","BA",10798,96.17
-"pct_negra","maior","Serrano do Maranhão","MA",10202,97.2
-"pct_h1529","menor","Coqueiro Baixo","RS",1290,6.05
-"pct_h1529","menor","Barra do Rio Azul","RS",1696,6.54
-"pct_h1529","menor","Porto Lucena","RS",4360,6.65
-"pct_h1529","maior","Lavínia","SP",9689,22.63
-"pct_h1529","maior","Reginópolis","SP",7662,25.22
-"pct_h1529","maior","Pracinha","SP",2578,31.57
-"pct_indet","menor","Cabixi","RO",5351,0
-"pct_indet","menor","Cerejeiras","RO",15890,0
-"pct_indet","menor","Colorado do Oeste","RO",15663,0
-"pct_indet","maior","Pedra Dourada","MG",2757,80
-"pct_indet","maior","Itambé do Mato Dentro","MG",2142,100
-"pct_indet","maior","Araguainha","MT",1010,100
-"pop","menor","Serra da Saudade","MG",833,833
-"pop","menor","Borá","SP",907,907
-"pop","menor","Anhanguera","GO",924,924
-"pop","maior","Brasília","DF",2817381,2817381
-"pop","maior","Rio de Janeiro","RJ",6211223,6211223
-"pop","maior","São Paulo","SP",11451999,11451999
+"conjunto","variavel","lado","municipio","uf","pop","valor"
+"base","taxa","menor","Cacaulândia","RO",4150,0
+"base","taxa","menor","São Felipe D'Oeste","RO",5258,0
+"base","taxa","menor","Santa Rosa do Purus","AC",6723,0
+"base","taxa","maior","Ibicuitinga","CE",11611,132.059
+"base","taxa","maior","Rodolfo Fernandes","RN",4242,165.017
+"base","taxa","maior","São João do Jaguaribe","CE",5855,284.657
+"base","rend_pc_media","menor","Uiramutã","RR",13751,288.65
+"base","rend_pc_media","menor","Bagre","PA",31892,358.65
+"base","rend_pc_media","menor","Manari","PE",23763,359.1
+"base","rend_pc_media","maior","Florianópolis","SC",537211,3636.13
+"base","rend_pc_media","maior","São Caetano do Sul","SP",165655,3884.58
+"base","rend_pc_media","maior","Nova Lima","MG",111697,4299.91
+"base","gini","menor","Presidente Lucena","RS",3077,0.275
+"base","gini","menor","São José do Hortêncio","RS",4447,0.279
+"base","gini","menor","Vale Real","RS",6058,0.279
+"base","gini","maior","Nova Lima","MG",111697,0.652
+"base","gini","maior","Petrolândia","SC",6716,0.671
+"base","gini","maior","Alto Alegre","RR",21096,0.684
+"base","desocup","menor","Aroeiras do Itaim","PI",2690,0
+"base","desocup","menor","Quixaba","PB",1743,0
+"base","desocup","menor","Riachão","PB",2927,0
+"base","desocup","maior","Coité do Nóia","AL",10810,37.095
+"base","desocup","maior","Alegrete do Piauí","PI",4634,50.467
+"base","desocup","maior","Joca Marques","PI",5394,50.972
+"base","pct_urbana","menor","Chuvisca","RS",4597,7.331
+"base","pct_urbana","menor","Uiramutã","RR",13751,7.679
+"base","pct_urbana","menor","Curral de Cima","PB",5254,11.781
+"base","pct_urbana","maior","Cachoeirinha","RS",136258,100
+"base","pct_urbana","maior","Canoas","RS",347657,100
+"base","pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
+"base","dens","menor","Barcelos","AM",18834,0.15
+"base","dens","menor","Japurá","AM",8858,0.16
+"base","dens","menor","Atalaia do Norte","AM",15314,0.2
+"base","dens","maior","São João de Meriti","RJ",440962,12521.64
+"base","dens","maior","Diadema","SP",393237,12795.69
+"base","dens","maior","Taboão da Serra","SP",273542,13416.81
+"base","pct_h1529","menor","Coqueiro Baixo","RS",1290,6.047
+"base","pct_h1529","menor","Barra do Rio Azul","RS",1696,6.545
+"base","pct_h1529","menor","Porto Lucena","RS",4360,6.651
+"base","pct_h1529","maior","Lavínia","SP",9689,22.634
+"base","pct_h1529","maior","Reginópolis","SP",7662,25.215
+"base","pct_h1529","maior","Pracinha","SP",2578,31.575
+"base","pct_indet","menor","Cabixi","RO",5351,0
+"base","pct_indet","menor","Cerejeiras","RO",15890,0
+"base","pct_indet","menor","Colorado do Oeste","RO",15663,0
+"base","pct_indet","maior","Pedra Dourada","MG",2757,80
+"base","pct_indet","maior","Itambé do Mato Dentro","MG",2142,100
+"base","pct_indet","maior","Araguainha","MT",1010,100
+"base","freq_15a17","menor","Veranópolis","RS",24021,43.48
+"base","freq_15a17","menor","Nova Santa Bárbara","PR",4184,43.92
+"base","freq_15a17","menor","Recursolândia","TO",3421,49.09
+"base","freq_15a17","maior","Relvado","RS",1796,100
+"base","freq_15a17","maior","Toropi","RS",2554,100
+"base","freq_15a17","maior","Nova Iguaçu de Goiás","GO",3010,100
+"base","abandono_em","menor","Santa Luzia D'Oeste","RO",7419,0
+"base","abandono_em","menor","Alvorada D'Oeste","RO",13117,0
+"base","abandono_em","menor","Seringueiras","RO",11171,0
+"base","abandono_em","maior","Tenente Ananias","RN",10262,34
+"base","abandono_em","maior","União do Sul","MT",3838,37
+"base","abandono_em","maior","Vila Flor","RN",3174,37.8
+"base","distorcao_em","menor","Campo Grande","AL",8143,0
+"base","distorcao_em","menor","Monções","SP",1937,0
+"base","distorcao_em","menor","Pedrinhas Paulista","SP",2804,0
+"base","distorcao_em","maior","Pureza","RN",9362,71.8
+"base","distorcao_em","maior","Lagoa de Velhos","RN",2567,74.5
+"base","distorcao_em","maior","São Valério do Sul","RS",2543,75.9
+"base","pct_migr_10anos","menor","Tigrinhos","SC",2329,2.404
+"base","pct_migr_10anos","menor","Uiramutã","RR",13751,2.785
+"base","pct_migr_10anos","menor","Morro do Pilar","MG",3133,3.064
+"base","pct_migr_10anos","maior","Balneário Gaivota","SC",15669,55.792
+"base","pct_migr_10anos","maior","Lavínia","SP",9689,57.798
+"base","pct_migr_10anos","maior","Balbinos","SP",3887,72.601
+"base","pop","menor","Serra da Saudade","MG",833,833
+"base","pop","menor","Borá","SP",907,907
+"base","pop","menor","Anhanguera","GO",924,924
+"base","pop","maior","Brasília","DF",2817381,2817381
+"base","pop","maior","Rio de Janeiro","RJ",6211223,6211223
+"base","pop","maior","São Paulo","SP",11451999,11451999
+"escopo","taxa","menor","Campos do Jordão","SP",46974,0.71
+"escopo","taxa","menor","Barra Bonita","SP",34346,0.971
+"escopo","taxa","menor","Pomerode","SC",34289,0.972
+"escopo","taxa","maior","Camamu","BA",30469,115.965
+"escopo","taxa","maior","Forquilha","CE",24173,119.969
+"escopo","taxa","maior","Belmonte","BA",20121,125.905
+"escopo","rend_pc_media","menor","Bagre","PA",31892,358.65
+"escopo","rend_pc_media","menor","Manari","PE",23763,359.1
+"escopo","rend_pc_media","menor","São Paulo de Olivença","AM",32967,396.95
+"escopo","rend_pc_media","maior","Niterói","RJ",481749,3577.32
+"escopo","rend_pc_media","maior","Florianópolis","SC",537211,3636.13
+"escopo","rend_pc_media","maior","Nova Lima","MG",111697,4299.91
+"escopo","gini","menor","Nova Hartz","RS",20088,0.3
+"escopo","gini","menor","Forquilhinha","SC",31431,0.325
+"escopo","gini","menor","Nova Serrana","MG",105552,0.338
+"escopo","gini","maior","Santana de Parnaíba","SP",154105,0.611
+"escopo","gini","maior","Nova Lima","MG",111697,0.652
+"escopo","gini","maior","Alto Alegre","RR",21096,0.684
+"escopo","desocup","menor","Guaporé","RS",25268,0.621
+"escopo","desocup","menor","Bonito","MS",23659,0.692
+"escopo","desocup","menor","Monte Sião","MG",24089,0.707
+"escopo","desocup","maior","Santa Helena","MA",41561,20.966
+"escopo","desocup","maior","Inajá","PE",25603,21.606
+"escopo","desocup","maior","Queimadas","BA",25988,28.834
+"escopo","pct_urbana","menor","Palmeirândia","MA",21059,19.298
+"escopo","pct_urbana","menor","Igreja Nova","AL",21372,21.037
+"escopo","pct_urbana","menor","Acará","PA",59023,22.159
+"escopo","pct_urbana","maior","Mesquita","RJ",167127,100
+"escopo","pct_urbana","maior","Niterói","RJ",481749,100
+"escopo","pct_urbana","maior","Pinhais","PR",127019,100
+"escopo","dens","menor","São Gabriel da Cachoeira","AM",51795,0.47
+"escopo","dens","menor","Almeirim","PA",34280,0.47
+"escopo","dens","menor","Novo Aripuanã","AM",23818,0.58
+"escopo","dens","maior","Itaquaquecetuba","SP",369275,4469.45
+"escopo","dens","maior","Barueri","SP",316473,4816.87
+"escopo","dens","maior","Rio de Janeiro","RJ",6211223,5174.6
+"escopo","pct_h1529","menor","Nova Petrópolis","RS",23300,8.395
+"escopo","pct_h1529","menor","Santa Rita do Passa Quatro","SP",24833,8.618
+"escopo","pct_h1529","menor","Santos","SP",418608,8.722
+"escopo","pct_h1529","maior","Melgaço","PA",27881,16.05
+"escopo","pct_h1529","maior","Itaitinga","CE",64650,16.817
+"escopo","pct_h1529","maior","Itapissuma","PE",27749,17.889
+"escopo","pct_indet","menor","Senador Guiomard","AC",21454,0
+"escopo","pct_indet","menor","Barreirinha","AM",31051,0
+"escopo","pct_indet","menor","Beruri","AM",20718,0
+"escopo","pct_indet","maior","Itapecerica da Serra","SP",158522,52.703
+"escopo","pct_indet","maior","Embu-Guaçu","SP",66970,54.128
+"escopo","pct_indet","maior","São Joaquim de Bicas","MG",34348,69.811
+"escopo","freq_15a17","menor","Veranópolis","RS",24021,43.48
+"escopo","freq_15a17","menor","Alto Alegre","RR",21096,51.23
+"escopo","freq_15a17","menor","Vertentes","PE",21959,56.16
+"escopo","freq_15a17","maior","São Sepé","RS",21219,96.14
+"escopo","freq_15a17","maior","Alegrete","RS",72409,96.4
+"escopo","freq_15a17","maior","Conceição de Macabu","RJ",21104,96.53
+"escopo","abandono_em","menor","Novo Oriente","CE",27545,0
+"escopo","abandono_em","menor","Pindoretama","CE",23391,0
+"escopo","abandono_em","menor","Pedras de Fogo","PB",29662,0
+"escopo","abandono_em","maior","Melgaço","PA",27881,27
+"escopo","abandono_em","maior","Presidente Tancredo Neves","BA",27734,27.3
+"escopo","abandono_em","maior","Serra do Ramalho","BA",34222,30.8
+"escopo","distorcao_em","menor","Osvaldo Cruz","SP",31272,2.6
+"escopo","distorcao_em","menor","Guararapes","SP",31043,3
+"escopo","distorcao_em","menor","Pirajuí","SP",22431,3.7
+"escopo","distorcao_em","maior","Anajás","PA",28011,63
+"escopo","distorcao_em","maior","Turiaçu","MA",37491,64.8
+"escopo","distorcao_em","maior","Oeiras do Pará","PA",33844,66.6
+"escopo","pct_migr_10anos","menor","Itaperuçu","PR",31217,3.344
+"escopo","pct_migr_10anos","menor","Rio Branco do Sul","PR",37558,3.935
+"escopo","pct_migr_10anos","menor","Ipixuna","AM",24311,4.315
+"escopo","pct_migr_10anos","maior","Sapezal","MT",28944,47.993
+"escopo","pct_migr_10anos","maior","Satuba","AL",24278,48.789
+"escopo","pct_migr_10anos","maior","Itapoá","SC",30750,52.995
+"escopo","pop","menor","Turmalina","MG",20000,20000
+"escopo","pop","menor","Rio Formoso","PE",20009,20009
+"escopo","pop","menor","Presidente Getúlio","SC",20010,20010
+"escopo","pop","maior","Manaus","AM",2063689,2063689
+"escopo","pop","maior","Brasília","DF",2817381,2817381
+"escopo","pop","maior","Rio de Janeiro","RJ",6211223,6211223
