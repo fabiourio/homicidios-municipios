@@ -147,6 +147,27 @@ VIF máximo: com = 8.46 | sem = 2.52
  regiaoCentro-Oeste  0.64875 1.35e-17  0.60174 3.72e-14
           regiaoSul  0.36693 1.28e-10  0.15851 5.32e-03
 
+== 5.2 Região x estado ==
+Parâmetros: região = 18 | estado = 40
+R² ajustado: região = 0.455 | estado = 0.556
+VIF máximo: região = 8.46 | estado = 10.79
+F parcial do estado além da região: F = 17.7 (gl 22) | p = 5.2e-61
+Estados com menos de 10 municípios no estudo: 5
+           termo b_regiao p_regiao b_estado p_estado
+          rend_c -0.66435 6.52e-11 -0.41411 5.99e-05
+         rend_c2 -0.93610 3.25e-23 -0.59238 9.43e-11
+            gini  3.00460 1.87e-11  1.36724 1.34e-03
+         desocup -0.00469 4.87e-01 -0.00423 5.04e-01
+      pct_urbana  0.00986 6.72e-11  0.01131 2.42e-15
+          dens_z  0.05282 2.25e-02  0.03530 1.12e-01
+       pct_h1529 -0.03283 6.80e-02  0.00133 9.39e-01
+ faixa_fronteira -0.03594 5.74e-01 -0.08223 2.03e-01
+       pct_indet -0.00835 2.48e-04 -0.00889 3.42e-05
+      freq_15a17 -0.01618 2.40e-07 -0.01033 4.33e-04
+     abandono_em -0.00226 5.43e-01  0.00641 1.07e-01
+    distorcao_em  0.01039 1.20e-07  0.00674 5.05e-03
+ pct_migr_10anos  0.00908 1.09e-03  0.00862 8.30e-04
+
 == 6. Diagnóstico ==
 Breusch-Pagan = 56.9 (gl 17) | p = 3.4e-06
 Shapiro-Wilk = 0.989 | p = 1.3e-09

@@ -181,6 +181,19 @@ com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficient
 write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
+# 5.2 Região x estado: os dois modelos lado a lado (a escolha está em aberto)
+# -----------------------------------------------------------------------------
+d$uf <- relevel(factor(d$uf), ref = "SP")
+com_estado <- update(mD, . ~ . + uf)                  # estado (26 indicadoras) no lugar da região
+F_estado <- anova(final, com_estado)                  # Ho: os estados não acrescentam nada além da região
+vif_estado <- vif(com_estado)[, "GVIF^(1/(2*Df))"]^2
+se_ <- summary(com_estado)
+termos_x <- grep("^regiao|Intercept", rownames(sf_$coefficients), value = TRUE, invert = TRUE)
+regiao_estado <- data.frame(termo = termos_x, b_regiao = b[termos_x], p_regiao = sf_$coefficients[termos_x, 4],
+                            b_estado = se_$coefficients[termos_x, 1], p_estado = se_$coefficients[termos_x, 4], row.names = NULL)
+write.csv(regiao_estado, "resultados/modelagem/regiao_x_estado.csv", row.names = FALSE)
+
+# -----------------------------------------------------------------------------
 # 6. Diagnóstico preliminar pela análise dos resíduos
 # -----------------------------------------------------------------------------
 d$ajustado <- fitted(final)
@@ -284,6 +297,13 @@ cat(sprintf("F parcial da renda (renda e renda²): F = %.1f (gl %d) | p = %.2g\n
 cat(sprintf("R² ajustado: com = %.3f | sem = %.3f\n", sf_$adj.r.squared, ss_$adj.r.squared))
 cat(sprintf("VIF máximo: com = %.2f | sem = %.2f\n", max(vif_final), max(vif_sem_renda)))
 print(com_sem, digits = 3, row.names = FALSE)
+cat("\n== 5.2 Região x estado ==\n")
+cat(sprintf("Parâmetros: região = %d | estado = %d\n", length(coef(final)), length(coef(com_estado))))
+cat(sprintf("R² ajustado: região = %.3f | estado = %.3f\n", sf_$adj.r.squared, se_$adj.r.squared))
+cat(sprintf("VIF máximo: região = %.2f | estado = %.2f\n", max(vif_final), max(vif_estado)))
+cat(sprintf("F parcial do estado além da região: F = %.1f (gl %d) | p = %.2g\n", F_estado$F[2], F_estado$Df[2], F_estado$`Pr(>F)`[2]))
+cat(sprintf("Estados com menos de 10 municípios no estudo: %d\n", sum(table(d$uf) < 10)))
+print(regiao_estado, digits = 3, row.names = FALSE)
 cat("\n== 6. Diagnóstico ==\n")
 cat(sprintf("Breusch-Pagan = %.1f (gl %d) | p = %.2g\n", bp$statistic, bp$parameter, bp$p.value))
 cat(sprintf("Shapiro-Wilk = %.3f | p = %.2g\n", sw_final$statistic, sw_final$p.value))
