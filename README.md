@@ -84,6 +84,6 @@ Dados do SIM coletados em 25/10/2026 e do Censo em 27/10/2026.
 - **Junção:** o código IBGE de 7 dígitos dividido por 10 dá o código de 6 dígitos do DATASUS. Todos os municípios casam.
 - **Municípios ausentes no TabNet:** o TabNet omite municípios sem nenhuma morte externa no período, e eles recebem 0.
 - **Município de residência ignorado:** 1.687 homicídios (1,2%) de 2021–2023 não puderam ser atribuídos a um município.
-- **Desigualdade:** o Gini municipal não está no SIDRA, então usamos a razão média/mediana da renda. A mediana se concentra em múltiplos do salário mínimo, o que torna essa medida mais ruidosa.
+- **Desigualdade:** o Gini municipal não está no SIDRA, então usamos a razão média/mediana da renda, indicador de desigualdade proposto por Birdsall e Meyer (2015, *Global Policy*, v. 6, n. 4, p. 343–357). A mediana se concentra em múltiplos do salário mínimo, o que torna essa medida mais ruidosa.
 - **Presídios:** os presos entram na população do Censo, o que distorce a % de homens de 15 a 29 anos e o denominador da taxa em alguns municípios pequenos de SP.
 - **% intenção indeterminada:** vem da mesma base que a resposta. É um controle de qualidade do registro, não um fator de risco.
