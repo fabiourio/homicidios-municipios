@@ -194,13 +194,14 @@ com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficient
 write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5.2 Região x estado: os dois modelos lado a lado (o grupo escolheu a região)
+# 5.2 Região x estado: os dois modelos lado a lado (escolha em aberto; os resultados usam a região)
 # -----------------------------------------------------------------------------
 d$uf <- relevel(factor(d$uf), ref = "SP")
 com_estado <- update(final, . ~ . - regiao + uf)      # estado (26 indicadoras) no lugar da região
 F_estado <- anova(final, com_estado)                  # Ho: os estados não acrescentam nada além da região
 vif_estado <- vif(com_estado)[, "GVIF^(1/(2*Df))"]^2
 se_ <- summary(com_estado)
+sw_estado <- shapiro.test(rstandard(com_estado))       # Ho: normalidade, no modelo com estado
 termos_x <- grep("^regiao|Intercept", rownames(sf_$coefficients), value = TRUE, invert = TRUE)
 regiao_estado <- data.frame(termo = termos_x, b_regiao = b[termos_x], p_regiao = sf_$coefficients[termos_x, 4],
                             b_estado = se_$coefficients[termos_x, 1], p_estado = se_$coefficients[termos_x, 4], row.names = NULL)
@@ -346,6 +347,7 @@ cat(sprintf("R² ajustado: região = %.3f | estado = %.3f\n", sf_$adj.r.squared,
 cat(sprintf("VIF máximo: região = %.2f | estado = %.2f\n", max(vif_final), max(vif_estado)))
 cat(sprintf("F parcial do estado além da região: F = %.1f (gl %d) | p = %.2g\n", F_estado$F[2], F_estado$Df[2], F_estado$`Pr(>F)`[2]))
 cat(sprintf("Estados com menos de 10 municípios no estudo: %d\n", sum(table(d$uf) < 10)))
+cat(sprintf("Shapiro-Wilk com estado = %.3f | p = %.2g\n", sw_estado$statistic, sw_estado$p.value))
 print(regiao_estado, digits = 3, row.names = FALSE)
 cat("\n== 5.3 Variáveis testadas e retiradas (F parcial de cada uma somada ao modelo) ==\n")
 print(retiradas[, -1], digits = 3, row.names = FALSE)

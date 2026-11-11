@@ -141,6 +141,7 @@ R² ajustado: região = 0.558 | estado = 0.638
 VIF máximo: região = 7.61 | estado = 10.60
 F parcial do estado além da região: F = 12.1 (gl 22) | p = 8.4e-39
 Estados com menos de 10 municípios no estudo: 5
+Shapiro-Wilk com estado = 0.993 | p = 6.1e-05
            termo b_regiao p_regiao b_estado p_estado
           rend_c -0.86098 6.18e-17 -0.54882 4.72e-07
          rend_c2 -0.99845 2.19e-26 -0.70082 4.55e-14
