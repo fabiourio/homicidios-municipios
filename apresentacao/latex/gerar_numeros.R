@@ -115,6 +115,11 @@ vif_z   <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 + rend_z + rend_z2, d
 vif_cru <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 + log_rend + rend_cru2, data = dz))
 confere(abs(vif_z[["rend_z"]] - mod$vif_final[["rend_c"]]) < 1e-6, "padronizar ln renda não muda o VIF")
 confere(vif_cru[["log_rend"]] > 100, "sem centralizar, o VIF da renda fica muito maior")
+pico_pct <- 100 * mean(mod$d$rend_pc_media < m[["pico_renda"]]); decil_pico <- which.max(eda$med_faixa$med)
+confere(m[["pico_renda"]] < median(mod$d$rend_pc_media) && e[["renda_decil_pico"]] < median(mod$d$rend_pc_media), "o pico da taxa fica abaixo da renda mediana, nos dados e no modelo")
+confere(abs(m[["pico_renda"]] - e[["renda_decil_pico"]]) / m[["pico_renda"]] < 0.15, "o pico do modelo fica perto do pico dos dados")
+confere(max(eda$med_faixa$med[c(1, 10)]) < max(eda$med_faixa$med), "a taxa cai para os dois lados do décimo do pico")
+confere(coef("abandono_em", "p") > 0.05 && coef("freq_15a17", "p") < 0.05 && coef("distorcao_em", "p") < 0.05, "H2: frequência e distorção significativas; abandono não")
 confere(lmtest::bptest(mod$m_y)$statistic > lmtest::bptest(mod$m_log)$statistic, "com ln Y a dispersão dos resíduos fica mais uniforme do que com Y")
 confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos municípios menores")
 
@@ -139,7 +144,8 @@ mac <- c(
   TaxaSEbr = fmt(e[["taxa_se_br"]]), TaxaSbr = fmt(e[["taxa_s_br"]]),
   CorMax = fmt(abs(r_resp[[var_max]]), 2), CorMaxVar = gsub("%", "\\\\%", var_max),
   CorTrio = fmt(max(abs(c(e[["cor_renda_pobres"]], e[["cor_renda_alfabet"]]))), 2),
-  RendaDecilPico = fmt(e[["renda_decil_pico"]], 0),
+  RendaDecilPico = fmt(e[["renda_decil_pico"]], 0), DecilPico = fmt(decil_pico, 0), PicoPct = fmt(pico_pct, 0),
+  RendaMediana = fmt(median(mod$d$rend_pc_media), 0),
   PorteHomMenor = fmt(e[["porte_hom_mediana_menor5mil"]], 0), PorteOscMenor = fmt(e[["porte_oscilacao_menor5mil"]], 0),
   PorteCorMenor = fmt(e[["porte_cor2024_menor5mil"]], 2), PorteCorMaior = fmt(e[["porte_cor2024_maior100mil"]], 2),
   PorteOscVinte = fmt(e[["porte_oscilacao_20a50mil"]], 0),

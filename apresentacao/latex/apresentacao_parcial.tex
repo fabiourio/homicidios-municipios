@@ -69,7 +69,7 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{Estudos anteriores com todos os municípios do país}
+\begin{frame}{Estudos anteriores com municípios brasileiros}
 \fontsize{7}{8.4}\selectfont
 \renewcommand{\arraystretch}{1.1}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.37\textwidth}>{\raggedright\arraybackslash}p{0.23\textwidth}>{\raggedright\arraybackslash}X@{}}
@@ -272,7 +272,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \fonte{SIM/DATASUS; IBGE. Décimos de renda per capita. Elaboração própria.}
 \column{0.38\textwidth}
 \begin{itemize}\small
-\item Taxa maior nos décimos intermediários (pico perto de R\$ \nRendaDecilPico)
+\item Taxa maior no \nDecilPico º décimo de renda (perto de R\$ \nRendaDecilPico), abaixo da renda mediana (R\$ \nRendaMediana)
 \item Forma de U invertido
 \item No modelo: polinômio de 2ª ordem na renda
 \end{itemize}
@@ -379,7 +379,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \item Abandono (H2): não significativo
 \item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
 \item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
-\item \textcolor{gray}{Não significativas (5\%): \nNaoSig}
+\item \textcolor{black!65}{Não significativas (5\%): \nNaoSig}
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -389,7 +389,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m7_efeito_renda.png}
-\fonte{Elaboração própria. Demais variáveis na média; região = Sudeste. Faixa: IC 95\% da resposta esperada.}
+\fonte{Elaboração própria. Demais variáveis na média. Cada curva cobre só a renda observada na região. Faixa: IC 95\%.}
 \column{0.38\textwidth}
 \begin{itemize}\small
 \item $\hat\beta_2$ = \nBetaDois{} ($p$ \nBetaDoisP): concavidade
@@ -501,7 +501,7 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \textbf{\color{navy}Próximos passos}
 \begin{itemize}\small
 \item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
-\item Variância não constante
+\item Tratar a variância não constante
 \end{itemize}
 \end{columns}
 \end{frame}

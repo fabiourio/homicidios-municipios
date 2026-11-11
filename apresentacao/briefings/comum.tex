@@ -26,12 +26,12 @@ Escopo: municípios com \nPopMin{} mil hab. ou mais & Nos pequenos o homicídio 
 Densidade sem extremos e padronizada & Pedido da professora: o desvio-padrão da densidade era muito maior que a média. Cada município recebe o percentil da sua densidade dentro da sua região. Ficam os que estão entre os percentis \nPCorte{} e \nPCorteSup{} (os \nPctCentral\% centrais); saem \nDensExt{} e ficam \nMunEsc{} (\nPctPopEsc\% da população). ln densidade entra padronizado & Cap. 1: resumos da distribuição; Cap. 6: padronização\\
 Resposta em ln(taxa) & Box-Cox estimou $\lambda$ = \nLambda{} (IC de \nLambdaInf{} a \nLambdaSup); usamos $\lambda = 0$, simples de interpretar, mesmo fora do IC. A normalidade melhora ($W$ de \nSWy{} para \nSWln) & Cap. 4: Box-Cox\\
 Só a renda (sem \% pobres e alfabetização) & As três medem quase o mesmo: VIF da renda \nVIFrenda{} e sinais contraditórios & Cap. 6: multicolinearidade e VIF\\
-Renda e renda², com a renda centralizada & A taxa sobe até a renda média e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
+Renda e renda², com a renda centralizada & A taxa sobe até uma renda de cerca de R\$ \nPico{} (abaixo da renda mediana) e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
 Renda mantida, depois de comparar o modelo com e sem ela & Pedido da professora, por causa do VIF da renda (\nVIFrendaFinal). $F$ parcial da renda \nFRenda{} (\nGlRenda{} gl); sem ela o $R^2_a$ cai de \nRdoisA{} para \nRdoisAsemRenda. A desigualdade continua significativa sem a renda; migração e densidade deixam de ser & Cap. 6: multicolinearidade e $F$ parcial\\
 Região (5 classes) como variável categórica & Pedido da professora: agrupar os municípios por região do Brasil. Entram \nNumReg{} indicadoras, com o Sudeste de referência. É o bloco com maior ganho de $R^2_a$. \textbf{A escolha entre região e estado está em aberto}: um slide mostra os dois modelos lado a lado (com estado: \nNumParEstado{} parâmetros, $R^2_a$ \nRdoisAestado, VIF máximo \nVIFmaxEstado) & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
-Bloco de educação e migração & Frequência escolar 15--17, abandono, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
+Bloco de educação e migração & Frequência escolar 15--17, abandono, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas em uma versão anterior do modelo. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
 Amazônia Legal fora do modelo & A maior parte dela é a própria região Norte, que já está no modelo & ---\\
-Variáveis frágeis mantidas por enquanto & \% homens 15--29, \% intenção indeterminada e desocupação saem (ou não) na seleção de variáveis & Cap. 8: seleção\\
+Variáveis não significativas mantidas por enquanto & \nNaoSig: saem (ou não) na seleção de variáveis & Cap. 8: seleção\\
 Outliers mantidos & A validação dos dados não achou erro; a apostila manda remover só com evidência de erro & Cap. 4: outliers\\
 Nada fora da apostila & Regra do grupo: técnicas de fora (pesos, modelos espaciais, de contagem) só com decisão do grupo & ---\\
 \bottomrule
@@ -56,7 +56,7 @@ Nada fora da apostila & Regra do grupo: técnicas de fora (pesos, modelos espaci
 \begin{itemize}
 \item \textbf{Variância não constante:} Breusch-Pagan = \nBP{} (rejeita). Os coeficientes continuam certos na média, mas os valores p ficam aproximados.
 \item \textbf{Seleção de variáveis} ($C_p$, AIC, BIC, PRESS) ainda não foi feita: é da entrega final.
-\item Testadas e deixadas de fora (não ajudam): garimpo, desmatamento, Bolsa Família, mães solo e gasto municipal em segurança e assistência (SICONFI 2022).
+\item Testadas em uma versão anterior do modelo e deixadas de fora (não ajudaram): garimpo, desmatamento, Bolsa Família, mães solo e gasto municipal em segurança e assistência (SICONFI 2022).
 \end{itemize}
 
 \section{Quem fala o quê}
