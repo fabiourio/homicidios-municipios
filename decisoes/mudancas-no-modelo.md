@@ -9,16 +9,17 @@ A coluna "Final" tem todas as decisões e é o que o código faz hoje. A coluna 
 | | Apresentação parcial (28/10) | Antes das decisões 8, 9, 13 e 14 | Final |
 |---|---|---|---|
 | Municípios | 1.710 (20 mil hab. ou mais) | 1.134 (30 mil hab. ou mais) | 1.133 (sai Campos do Jordão) |
-| Variável de lugar | 27 estados | 5 regiões | 5 regiões |
+| Variável de lugar | 27 estados | 5 regiões | 5 regiões (escolha em aberto) |
 | Desigualdade | razão renda média / mediana | Gini de 2022, calculado por nós | Gini, com efeito que muda conforme a renda |
 | Raça e densidade | no modelo | fora | fora |
 | Fronteira, abandono escolar, % homens 15–29, % de mortes sem causa definida | no modelo | no modelo | fora |
 | Parâmetros | 41 | 17 | 14 |
 | Quanto explica (R² ajustado) | 0,59 | 0,54 | 0,56 |
 | Quanto explica em municípios que o modelo não viu | não medido | 0,53 | 0,55 |
-| Maior VIF (limite: 10) | 12,7 | 8,2 | 7,6 |
 | Erros com distribuição normal (Shapiro-Wilk) | reprova | reprova | aprova (p = 0,17) |
 | Pontos a mais de 4 desvios-padrão | — | 2 | 0 |
+| Variância dos erros constante (Breusch-Pagan) | reprova | reprova | reprova |
+| Maior VIF | 12,7 | 8,2 | 7,6 |
 
 O R² ajustado caiu de 0,59 para 0,54 quando o estado deu lugar à região, a pedido da professora. Em troca, o modelo passou de 41 para 17 parâmetros. O modelo final recupera parte da diferença com 14 parâmetros.
 
@@ -34,7 +35,7 @@ ln(taxa de homicídios) explicada por: renda e renda² · Gini · Gini × renda 
 - **Sem variável com defeito.** A "% de mortes sem causa definida" tinha os homicídios no divisor. Por isso ela caía sozinha quando os homicídios subiam. Com a conta corrigida, ela não tem efeito.
 - **Sem sobreajuste.** A diferença entre o que o modelo explica nos dados usados e em dados que ele não viu é de 0,01. Só entrou o que melhora o modelo fora da amostra.
 - **Efeito da desigualdade descrito como ele é.** Um único número (+18%) escondia situações diferentes; o modelo final mostra o efeito por faixa de renda.
-- **Suposições mais bem atendidas.** Nenhuma variável repete as outras em excesso (VIF de 12,7 para 7,6) e os erros passam no teste de normalidade.
+- **Suposições mais bem atendidas.** Os erros passam no teste de normalidade e nenhum ponto fica a mais de 4 desvios-padrão. A normalidade só passa sem Campos do Jordão.
 
 ## Decisões
 
@@ -44,7 +45,7 @@ ln(taxa de homicídios) explicada por: renda e renda² · Gini · Gini × renda 
 | 16 | Corte de população em 30 mil habitantes | Fica perto do percentil 80 da população; menos ruído nas cidades pequenas |
 | 1 e 4 | Densidade fora do modelo, sem corte de densidade | Com 30 mil habitantes ela não tem efeito (p = 0,78 no modelo final) |
 | 2 | Sem teste de independência dos erros | Pedido da professora |
-| 3 | Região, e não estado | Pedido da professora; modelo menor |
+| 3 | Região ou estado: em aberto; os resultados usam a região | Reaberta depois da reunião com os professores (abaixo) |
 | 5 | A renda fica | Contribui para o modelo; VIF abaixo de 10 |
 | 6 | Gini de 2022 calculado por nós | O IBGE só publica o Gini por região e estado |
 | 7 | Amazônia Legal fora | O efeito vem só do Mato Grosso; ganho de 0,002 |
@@ -79,9 +80,20 @@ Efeitos no modelo final, com as outras variáveis constantes:
 
 A renda continua com efeito em U invertido: a taxa esperada é máxima perto de R$ 815.
 
+## Reunião de alinhamento com os professores
+
+| Orientação | O que foi feito |
+|---|---|
+| Olhar primeiro a especificação e as hipóteses do modelo; a multicolinearidade (VIF) vem depois e só afeta a leitura dos coeficientes | Nos slides, o diagnóstico vem antes dos coeficientes, e o VIF fica por último |
+| Contar só a história do modelo final, sem a primeira apresentação nem as decisões do caminho | Região × estado e com × sem a renda foram para os apêndices E e F; a densidade saiu do corpo |
+| Criticar o modelo e sugerir trabalhos futuros | Slide "Crítica do modelo" e lista de trabalhos futuros |
+| Região ou estado: não há opção certa, depende da história; com estado, cada um é comparado com São Paulo | Escolha reaberta. Com estado o modelo explica mais (0,64 contra 0,56), mas tem 36 parâmetros, o teste de normalidade reprova e 5 estados têm menos de 10 municípios |
+
+Aprovados na reunião: o Gini calculado pelas faixas de renda, a retirada de Campos do Jordão, o corte em 30 mil habitantes e a Amazônia Legal fora.
+
 ## O que continua como limitação
 
 - A variância dos erros não é constante (teste de Breusch-Pagan). Os valores p são aproximados.
 - O Gini municipal é uma aproximação pelas faixas de renda do Censo.
-- O efeito negativo da desocupação não tem explicação testada e é frágil: perde a significância sem os 31 municípios com muitas mortes sem causa definida.
+- A desocupação tem sinal negativo no modelo e correlação simples positiva com a taxa (+0,30). É sinal de multicolinearidade com a renda (−0,55), e por isso o coeficiente não é interpretado. O efeito também é frágil: perde a significância sem os 31 municípios com muitas mortes sem causa definida.
 - O estudo é observacional: mostra associação entre municípios, não causa.

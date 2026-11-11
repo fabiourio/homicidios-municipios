@@ -36,7 +36,7 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 - Resposta do modelo: ln(taxa). O Box-Cox estima λ perto de 0; adotamos o logaritmo (λ = 0), mais simples de interpretar, embora 0 fique fora do intervalo de confiança de λ.
 - Os números citados no trabalho ficam em `resultados/modelagem/valores_modelo.txt`; as tabelas e figuras, em `resultados/eda/` e `resultados/modelagem/`.
 - O modelo é montado em 5 blocos, cada um testado pelo F parcial: A renda, desigualdade e desocupação; B urbanização; C educação e migração; D região; E Gini × renda.
-- A região (5 classes, base Sudeste) entra como variável categórica. O script também ajusta o modelo com o estado (27 UFs, base SP) e grava os dois lado a lado em `resultados/modelagem/regiao_x_estado.csv`. O grupo escolheu a região; o modelo com estado fica como comparação.
+- A região (5 classes, base Sudeste) entra como variável categórica. O script também ajusta o modelo com o estado (27 UFs, base SP) e grava os dois lado a lado em `resultados/modelagem/regiao_x_estado.csv`. A escolha entre região e estado está em aberto; os resultados usam a região.
 
 ## O que vem de fora da apostila
 

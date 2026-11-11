@@ -102,11 +102,16 @@ confere(sig_pos("gini_c") && sig_pos("rend_c:gini_c") && sig_pos("distorcao_em")
           coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1 e H2; o efeito do Gini cresce com a renda")
 confere(gr$efeito_pct[gr$percentil == 50] > 0 && gr$p[gr$percentil == 50] < 0.05 && gr$ic_sup_pct[gr$percentil == 25] > 0 && gr$ic_inf_pct[gr$percentil == 25] < 0,
         "o efeito do Gini é positivo na renda mediana e não se distingue de zero no primeiro quarto de renda")
-confere(coef("desocup", "b") < 0 && coef("desocup", "p") < 0.05, "desocupação com sinal negativo e significativa")
 confere(all(sapply(paste0("regiao", c("Norte", "Nordeste", "Centro-Oeste", "Sul")), sig_pos)), "taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste")
 confere(mean(d_eda$regiao[d_eda$amazonia_legal == 1] == "Norte") > 0.5, "a maior parte da Amazônia Legal é a região Norte")
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] > 0.05 && m[["n_outliers"]] == 0, "Shapiro-Wilk não rejeita a normalidade e não há resíduo além de 4")
+d_com <- transform(br[br$pop >= eda$POP_MIN, ], ly = log(taxa), rend_c = log_rend - mean(log_rend), gini_c = gini - mean(gini))
+d_com$rend_c2 <- d_com$rend_c^2
+confere(shapiro.test(rstandard(lm(formula(mod$final), d_com)))$p.value < 0.05, "com o município retirado no estudo, Shapiro-Wilk rejeitava a normalidade")
+confere(mod$sw_estado$p.value < 0.05, "com estado, Shapiro-Wilk rejeita a normalidade")
+cor_desocup <- cor(mod$d$desocup, mod$d$ly); cor_desocup_renda <- cor(mod$d$desocup, mod$d$log_rend)
+confere(cor_desocup > 0.2 && coef("desocup", "b") < 0 && cor_desocup_renda < -0.5, "desocupação: correlação simples positiva, coeficiente negativo e correlação forte com a renda")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
 # Gini calculado pelas classes de renda x Gini oficial do IBGE nas 27 UFs
 vg <- read.csv("../../entrega/dados/validacao_gini.csv"); vg <- vg[vg$nivel == "Unidade da Federação", ]
@@ -139,6 +144,7 @@ mac <- c(
   ForaNome = paste0(fora$municipio, "-", fora$uf), ForaHom = fmt(fora$hom, 0), ForaIndet = fmt(fora$intencao_indeterminada, 0),
   GiniZero = fmt(mod$renda_gini_zero, 0), GiniZeroPct = fmt(100 * mean(mod$d$rend_pc_media < mod$renda_gini_zero), 0),
   GiniEfMediana = sinal(gr$efeito_pct[gr$percentil == 50]), GiniEfNoventa = sinal(gr$efeito_pct[gr$percentil == 90]),
+  CorDesocup = sinal(cor_desocup, 2), CorDesocupRenda = sinal(cor_desocup_renda, 2), RdoisPct = fmt(100 * m[["R2a"]], 0), SWpEstado = fp(mod$sw_estado$p.value),
   FInter = fmt(m[["F_E"]]), RdoisAsemInter = fmt(m[["R2a_D"]], 2), PMigr = fmt(coef("pct_migr_10anos", "p"), 2), ZerosBR = fmt(e[["zeros_br"]], 0),
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
