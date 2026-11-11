@@ -1,6 +1,7 @@
 # =============================================================================
 # Validação da qualidade dos dados da base analítica
-# Entradas: dados/tabelas/ (base_analitica.csv e tabelas SIDRA/SIM intermediárias)
+# Entradas: dados/tabelas/ (base_analitica.csv, validacao_gini.csv e tabelas SIDRA/SIM intermediárias)
+#           entrega/dados/ (cópia da base e variaveis_extras.csv)
 #           TabNet/DATASUS (3 consultas extras, guardadas em validacao/saida/tabnet_extra.json)
 # Saídas:   validacao/saida/ (tabelas, figuras e valores_validacao.txt)
 # Não altera nenhum dado do projeto.
@@ -13,6 +14,7 @@ library(jsonlite)
 library(ggplot2)
 library(car)
 
+options(width = 200)
 OUT <- "validacao/saida"
 dir.create(OUT, showWarnings = FALSE, recursive = TRUE)
 salva <- function(df, nome) write.csv(df, file.path(OUT, nome), row.names = FALSE)
@@ -40,6 +42,26 @@ cat(sprintf("Linhas: %d | códigos IBGE únicos: %d | cod6 únicos: %d | NAs: %d
 cat(sprintf("Municípios por UF somam 5.570: %s | DF com 1 município: %s\n",
             sum(table(b$uf)) == 5570, sum(b$uf == "DF") == 1))
 cat(sprintf("cod6 == cod_ibge %%/%% 10 em todos: %s\n", all(b$cod6 == b$cod_ibge %/% 10)))
+e <- read.csv("entrega/dados/base_analitica.csv")
+cat(sprintf("Cópia em entrega/dados igual à base: %s\n", identical(b, e[order(e$cod_ibge), ])))
+
+extras <- read.csv("entrega/dados/variaveis_extras.csv")
+vars_extras <- c("abandono_em", "distorcao_em", "pct_migr_10anos")
+b <- cbind(b, extras[match(b$cod_ibge, extras$cod_ibge), vars_extras])
+
+# Escopo do modelo (igual a entrega/2_modelo_preliminar.R): pop >= 20 mil e densidade entre os percentis da região
+P_CORTE <- 2.5
+percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
+b$escopo <- b$pop >= 20000
+b$p_dens <- NA
+b$p_dens[b$escopo] <- ave((b$pop / b$area_km2)[b$escopo], b$regiao[b$escopo], FUN = percentil)
+b$escopo <- b$escopo & b$p_dens > P_CORTE & b$p_dens < 100 - P_CORTE
+cat(sprintf("Variáveis extras: %d linhas, %d sem par na base | NAs na base inteira: %s | NAs no escopo: %d\n",
+            nrow(extras), sum(!extras$cod_ibge %in% b$cod_ibge),
+            paste(vars_extras, colSums(is.na(b[vars_extras])), collapse = ", "), sum(is.na(b[b$escopo, vars_extras]))))
+cat(sprintf("Escopo do modelo: pop >= 20 mil = %d | depois do corte da densidade (percentis %.1f a %.1f da região) = %d\n",
+            sum(b$pop >= 20000), P_CORTE, 100 - P_CORTE, sum(b$escopo)))
+cat("Escopo por região:\n"); print(table(b$regiao[b$escopo]))
 
 # Dígito verificador do código IBGE (módulo 10, pesos 1-2-1-2-1-2)
 dv <- function(cod6) {
@@ -78,33 +100,48 @@ cat(sprintf("Boa Esperança do Norte-MT (5101837) na base: %s (instalado em 2025
 # 2. Valores impossíveis ou suspeitos
 # -----------------------------------------------------------------------------
 cat("\n== 2. Valores impossíveis ou suspeitos ==\n")
-pcts <- c("pct_pobres", "desocup", "alfabet", "pct_urbana", "pct_negra", "pct_h1529", "pct_indet",
-          "freq_15a17", "pct_garimpo")
-fora <- sapply(b[pcts], function(x) sum(x < 0 | x > 100))
+pcts <- c("pct_pobres", "desocup", "alfabet", "pct_urbana", "pct_h1529", "pct_indet", "freq_15a17", "pct_garimpo",
+          vars_extras)
+fora <- sapply(b[pcts], function(x) sum(x < 0 | x > 100, na.rm = TRUE))
 cat("Percentuais fora de 0-100:\n"); print(fora)
 cat(sprintf("Contagens negativas: %d\n", sum(b[c("pop", "hom", "hom_24", "total_causas_externas")] < 0)))
 cat(sprintf("Homicídios > total de causas externas: %d\n", sum(b$hom > b$total_causas_externas)))
-cat(sprintf("Renda mediana > média: %d | desig < 1: %d | desig mín/máx: %.3f / %.3f\n",
-            sum(b$rend_pc_mediana > b$rend_pc_media), sum(b$desig < 1), min(b$desig), max(b$desig)))
+cat(sprintf("Gini: NAs = %d | fora de 0-1: %d | mín/máx na base: %.3f / %.3f | mín/máx no escopo: %.3f / %.3f\n",
+            sum(is.na(b$gini)), sum(b$gini < 0 | b$gini > 1, na.rm = TRUE), min(b$gini), max(b$gini),
+            min(b$gini[b$escopo]), max(b$gini[b$escopo])))
 dens_rel <- abs(b$dens - b$pop / b$area_km2) / b$dens
 cat(sprintf("Densidade x pop/área: maior diferença relativa = %.2f%% (arredondamento da densidade)\n",
             100 * max(dens_rel)))
-mult_sm <- b$rend_pc_mediana %in% (1212 * c(0.25, 0.5, 1, 1.5, 2))
-cat(sprintf("Mediana igual a fração/múltiplo do SM (303, 606, 1212, 1818, 2424): %d municípios; = 1.212: %d\n",
-            sum(mult_sm), sum(b$rend_pc_mediana == 1212)))
-cat(sprintf("Frequência escolar 15-17 = 100%%: %d | %% urbana = 100%%: %d | desocupação = 0: %d\n",
-            sum(b$freq_15a17 >= 100), sum(b$pct_urbana == 100), sum(b$desocup == 0)))
+cat(sprintf("Frequência escolar 15-17 = 100%%: %d (no escopo: %d) | %% urbana = 100%%: %d (no escopo: %d) | desocupação = 0: %d (no escopo: %d)\n",
+            sum(b$freq_15a17 >= 100), sum(b$freq_15a17[b$escopo] >= 100), sum(b$pct_urbana == 100),
+            sum(b$pct_urbana[b$escopo] == 100), sum(b$desocup == 0), sum(b$desocup[b$escopo] == 0)))
+cat("Frequência escolar 15-17 mais baixa no escopo:\n")
+print(head(b[b$escopo, ][order(b$freq_15a17[b$escopo]), c("municipio", "uf", "pop", "freq_15a17", "alfabet",
+                                                          "rend_pc_media")], 4), row.names = FALSE)
 
-# Extremos de cada variável usada no modelo
-vars_mod <- c("taxa", "rend_pc_media", "desig", "desocup", "pct_urbana", "dens", "pct_negra", "pct_h1529",
-              "pct_indet", "pop")
-ext <- do.call(rbind, lapply(vars_mod, function(v) {
-  o <- order(b[[v]])
+# Extremos de cada variável usada no modelo, na base inteira e no escopo do modelo
+vars_mod <- c("taxa", "rend_pc_media", "gini", "desocup", "pct_urbana", "dens", "pct_h1529", "pct_indet",
+              "freq_15a17", vars_extras, "pop")
+extremos <- function(x, conjunto) do.call(rbind, lapply(vars_mod, function(v) {
+  o <- order(x[[v]], na.last = NA)
   i <- c(head(o, 3), tail(o, 3))
-  data.frame(variavel = v, lado = rep(c("menor", "maior"), each = 3), municipio = b$municipio[i],
-             uf = b$uf[i], pop = b$pop[i], valor = round(b[[v]][i], 2))
+  data.frame(conjunto = conjunto, variavel = v, lado = rep(c("menor", "maior"), each = 3),
+             municipio = x$municipio[i], uf = x$uf[i], pop = x$pop[i], valor = round(x[[v]][i], 3))
 }))
+ext <- rbind(extremos(b, "base"), extremos(b[b$escopo, ], "escopo"))
 salva(ext, "02_extremos.csv")
+cat("Extremos do Gini (3 menores e 3 maiores), na base inteira e no escopo do modelo:\n")
+print(ext[ext$variavel == "gini", ], row.names = FALSE)
+
+vg <- read.csv("dados/tabelas/validacao_gini.csv")
+vg$erro <- abs(vg$gini_calculado - vg$gini_oficial)
+ufs <- vg[vg$codigo >= 11, ]
+reg <- vg[vg$codigo < 11, ][-1, ]
+cat(sprintf("Gini calculado x oficial do IBGE: Brasil = %.3f x %.3f | %d regiões: erro absoluto máximo = %.3f (%s)\n",
+            vg$gini_calculado[1], vg$gini_oficial[1], nrow(reg), max(reg$erro), reg$local[which.max(reg$erro)]))
+cat(sprintf("  %d UFs: correlação = %.3f | erro absoluto médio = %.3f | erro absoluto máximo = %.3f (%s)\n",
+            nrow(ufs), cor(ufs$gini_calculado, ufs$gini_oficial), mean(ufs$erro), max(ufs$erro),
+            ufs$local[which.max(ufs$erro)]))
 
 t9517 <- le_sidra("9517")
 cat("Desocupação acima de 30% (Censo: dado da amostra, erro grande em município pequeno):\n")
@@ -112,9 +149,16 @@ alto <- which(b$desocup > 30)
 print(data.frame(municipio = b$municipio[alto], uf = b$uf[alto], pop = b$pop[alto],
                  forca_trab = t9517$forca_trabalho[alto], desocupados = t9517$desocupados[alto],
                  desocup = round(b$desocup[alto], 1),
-                 particip = round(100 * t9517$forca_trabalho[alto] / t9517$p14_total[alto], 1)), row.names = FALSE)
+                 particip = round(100 * t9517$forca_trabalho[alto] / t9517$p14_total[alto], 1),
+                 escopo = b$escopo[alto]), row.names = FALSE)
 cat(sprintf("Participação na força de trabalho: mediana Brasil = %.1f%%\n",
             median(100 * t9517$forca_trabalho / t9517$p14_total)))
+cat(sprintf("Desocupação no escopo do modelo: mín %.1f%% | máx %.1f%% | > 20%%: %d\n", min(b$desocup[b$escopo]),
+            max(b$desocup[b$escopo]), sum(b$desocup[b$escopo] > 20)))
+alto <- which(b$escopo & b$desocup > 20)
+print(data.frame(municipio = b$municipio[alto], uf = b$uf[alto], pop = b$pop[alto],
+                 desocup = round(b$desocup[alto], 1),
+                 particip = round(100 * t9517$forca_trabalho[alto] / t9517$p14_total[alto], 1)), row.names = FALSE)
 
 # -----------------------------------------------------------------------------
 # 3. Coerência interna
@@ -129,17 +173,24 @@ cat(sprintf("Soma dos grupos CID x total no SIM 2021-23: linhas com diferença =
             sum(rowSums(s21[, 3:10]) != s21$total_causas_externas)))
 cat(sprintf("Homicídios: 2021-23 = %d (%.0f/ano) | 2024 = %d\n", sum(b$hom), sum(b$hom) / 3, sum(b$hom_24)))
 
-pops <- data.frame(t4709 = b$pop, t4714 = le_sidra("4714")$pop, t9923 = le_sidra("9923")$pop_total,
-                   t9605 = le_sidra("9605")$pop_total)
+pops <- data.frame(t4709 = b$pop, t4714 = le_sidra("4714")$pop, t9923 = le_sidra("9923")$pop_total)
 cat("Populações entre tabelas (municípios com diferença):\n")
 print(sapply(pops[-1], function(x) sum(x != pops$t4709)))
-r9605 <- le_sidra("9605")
-gap9605 <- r9605$pop_total - rowSums(r9605[, c("branca", "preta", "amarela", "parda", "indigena")])
-cat(sprintf("9605 total - soma das cores: municípios com diferença = %d | maior = %d pessoas (%.2f%% da pop) | efeito máx. em pct_negra se a falta fosse redistribuída = %.2f p.p.\n",
-            sum(gap9605 != 0), max(gap9605), 100 * max(gap9605 / r9605$pop_total),
-            max(abs(100 * (r9605$preta + r9605$parda) / (r9605$pop_total - gap9605) - b$pct_negra))))
+fe <- fromJSON("dados/raw/sidra_10056_freq_escolar.json")[-1, ]
+fe <- fe[fe$D4C == "2792", ]
+cat(sprintf("Frequência escolar 15-17 da base x arquivo bruto do SIDRA 10056: municípios com diferença = %d\n",
+            sum(b$freq_15a17 != as.numeric(fe$V)[match(b$cod_ibge, as.integer(fe$D1C))])))
 
 p <- le_sidra("10300")
+renda_sm <- c(p14_sem_rendimento = 0, p14_ate_1_4sm = 1/8, p14_1_4_a_1_2sm = 3/8, p14_1_2_a_1sm = 3/4,
+              p14_1_a_2sm = 1.5, p14_2_a_3sm = 2.5, p14_3_a_5sm = 4, p14_5_a_10sm = 7.5, p14_10_a_15sm = 12.5,
+              p14_15_a_20sm = 17.5, p14_mais_20sm = 50)
+gini_rec <- apply(as.matrix(p[names(renda_sm)]), 1, function(n) {
+  renda <- cumsum(n * renda_sm) / sum(n * renda_sm)
+  1 - sum(n / sum(n) * (renda + c(0, renda[-length(renda)])))
+})
+cat(sprintf("Gini recalculado pelas classes da tabela 10300 x gini da base: maior diferença = %.2g\n",
+            max(abs(gini_rec - b$gini))))
 classes <- names(p)[4:14]
 d10300 <- rowSums(p[classes]) - p$p14_total
 d9517a <- t9517$ocupados + t9517$desocupados - t9517$forca_trabalho
@@ -169,11 +220,15 @@ cat(sprintf("%% da população fora de domicílio particular (pop - moradores 10
 # 4. Qualidade da resposta
 # -----------------------------------------------------------------------------
 cat("\n== 4. Qualidade da resposta ==\n")
-cat(sprintf("Taxa zero: %d | municípios sem nenhum óbito externo: %d\n", sum(b$hom == 0),
-            sum(b$total_causas_externas == 0)))
-cat(sprintf("%% intenção indeterminada >= 30%%: %d | >= 50%%: %d | = 100%%: %d (todos com <= 1 óbito externo: %s)\n",
-            sum(b$pct_indet >= 30), sum(b$pct_indet >= 50), sum(b$pct_indet == 100),
+cat(sprintf("Taxa zero: %d (no escopo: %d) | municípios sem nenhum óbito externo: %d\n", sum(b$hom == 0),
+            sum(b$hom[b$escopo] == 0), sum(b$total_causas_externas == 0)))
+cat(sprintf("Homicídios em 3 anos no escopo: mín %d | municípios com menos de 5: %d\n", min(b$hom[b$escopo]),
+            sum(b$hom[b$escopo] < 5)))
+cat(sprintf("%% intenção indeterminada >= 30%%: %d (no escopo: %d) | >= 50%%: %d (no escopo: %d) | = 100%%: %d (todos com <= 1 óbito externo: %s)\n",
+            sum(b$pct_indet >= 30), sum(b$pct_indet[b$escopo] >= 30), sum(b$pct_indet >= 50),
+            sum(b$pct_indet[b$escopo] >= 50), sum(b$pct_indet == 100),
             all(b$total_causas_externas[b$pct_indet == 100] <= 1)))
+cat("% indeterminada >= 30% no escopo, por UF:\n"); print(table(b$uf[b$escopo & b$pct_indet >= 30]))
 uf_ind <- aggregate(cbind(intencao_indeterminada, total_causas_externas, hom) ~ uf, b, sum)
 uf_ind$pct_indet <- round(100 * uf_ind$intencao_indeterminada / uf_ind$total_causas_externas, 1)
 uf_ind$razao_indet_hom <- round(uf_ind$intencao_indeterminada / uf_ind$hom, 2)
@@ -182,19 +237,20 @@ cat("% indeterminada por UF (as 6 maiores):\n"); print(head(uf_ind, 6), row.name
 salva(uf_ind, "04_indeterminada_uf.csv")
 gr <- b[b$total_causas_externas >= 50, ]
 gr <- gr[order(-gr$pct_indet), c("municipio", "uf", "pop", "hom", "intencao_indeterminada",
-                                 "total_causas_externas", "pct_indet")]
+                                 "total_causas_externas", "pct_indet", "escopo")]
 cat("Municípios com >= 50 óbitos externos e maior % indeterminada:\n"); print(head(gr, 8), row.names = FALSE)
 
 # Estabilidade: taxa 2021-23 x taxa 2024
-cat(sprintf("Correlação taxa 2021-23 x 2024: %.3f (todos) | %.3f (pop >= 50 mil) | %.3f (pop < 5 mil)\n",
+cat(sprintf("Correlação taxa 2021-23 x 2024: %.3f (todos) | %.3f (pop >= 50 mil) | %.3f (pop < 5 mil) | %.3f (escopo do modelo)\n",
             cor(b$taxa, b$taxa_24), cor(b$taxa[b$pop >= 5e4], b$taxa_24[b$pop >= 5e4]),
-            cor(b$taxa[b$pop < 5e3], b$taxa_24[b$pop < 5e3])))
+            cor(b$taxa[b$pop < 5e3], b$taxa_24[b$pop < 5e3]), cor(b$taxa[b$escopo], b$taxa_24[b$escopo])))
 # Esperado de Poisson se a taxa fosse estável: hom_24 ~ Poisson(hom/3)
 b$z24 <- (b$hom_24 - b$hom / 3) / sqrt(pmax(b$hom / 3, 1))
-inst <- b[abs(b$z24) >= 4, c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "taxa_24", "z24")]
+inst <- b[abs(b$z24) >= 4, c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "taxa_24", "z24", "escopo")]
 inst <- inst[order(-abs(inst$z24)), ]
-cat(sprintf("Municípios com 2024 muito diferente da média 2021-23 (|z| >= 4, z = (hom24 - hom/3)/sqrt(hom/3)): %d\n",
-            nrow(inst)))
+cat(sprintf("Municípios com 2024 muito diferente da média 2021-23 (|z| >= 4, z = (hom24 - hom/3)/sqrt(hom/3)): %d (no escopo: %d)\n",
+            nrow(inst), sum(inst$escopo)))
+cat("Os 8 maiores |z| no escopo:\n"); print(head(inst[inst$escopo, ], 8), row.names = FALSE)
 salva(inst, "04_instabilidade_2024.csv")
 
 # Consultas extras ao TabNet (feitas uma vez e guardadas)
@@ -250,16 +306,34 @@ if (file.exists(arq_extra)) {
   b$obitos <- cap$Total[match(b$cod6, cap$cod6)]
   b$mal_def <- cap[["Cap XVIII"]][match(b$cod6, cap$cod6)]
   b$pct_mal_def <- 100 * b$mal_def / b$obitos
-  cat(sprintf("Óbitos por causa mal definida (cap. XVIII), %% do total de óbitos: mediana %.1f%% | > 20%%: %d municípios\n",
-              median(b$pct_mal_def, na.rm = TRUE), sum(b$pct_mal_def > 20, na.rm = TRUE)))
+  cat(sprintf("Óbitos por causa mal definida (cap. XVIII), %% do total de óbitos: mediana %.1f%% | > 20%%: %d municípios | NAs: %d\n",
+              median(b$pct_mal_def, na.rm = TRUE), sum(b$pct_mal_def > 20, na.rm = TRUE), sum(is.na(b$pct_mal_def))))
   print(head(b[order(-b$pct_mal_def), c("municipio", "uf", "pop", "obitos", "mal_def", "pct_mal_def", "taxa")], 8),
         row.names = FALSE)
-  cat(sprintf("Correlação %% mal definida x taxa: %.3f | x %% indeterminada: %.3f\n",
-              cor(b$pct_mal_def, b$taxa, use = "complete.obs"), cor(b$pct_mal_def, b$pct_indet, use = "complete.obs")))
-  pres <- b[b$pct_fora_dpp > 10, c("municipio", "uf", "pop", "pct_fora_dpp", "pct_h1529", "hom", "hom_ocor", "taxa")]
+  cat(sprintf("No escopo: mediana %.1f%% | > 20%%: %d | NAs: %d\n", median(b$pct_mal_def[b$escopo]),
+              sum(b$pct_mal_def[b$escopo] > 20), sum(is.na(b$pct_mal_def[b$escopo]))))
+  esc <- b[b$escopo, ]
+  print(head(esc[order(-esc$pct_mal_def), c("municipio", "uf", "pop", "obitos", "mal_def", "pct_mal_def", "taxa")], 8),
+        row.names = FALSE)
+  cat(sprintf("Correlação %% mal definida x taxa: %.3f | x %% indeterminada: %.3f | no escopo: %.3f e %.3f\n",
+              cor(b$pct_mal_def, b$taxa, use = "complete.obs"), cor(b$pct_mal_def, b$pct_indet, use = "complete.obs"),
+              cor(b$pct_mal_def[b$escopo], b$taxa[b$escopo]), cor(b$pct_mal_def[b$escopo], b$pct_indet[b$escopo])))
+  pres <- b[b$pct_fora_dpp > 10, c("municipio", "uf", "pop", "pct_fora_dpp", "pct_h1529", "hom", "hom_ocor", "taxa",
+                                   "escopo")]
   pres <- pres[order(-pres$pct_fora_dpp), ]
-  cat(sprintf("Municípios com > 10%% da população fora de domicílio particular (presídios etc.): %d\n", nrow(pres)))
+  cat(sprintf("Municípios com > 10%% da população fora de domicílio particular (presídios etc.): %d (no escopo: %d)\n",
+              nrow(pres), sum(pres$escopo)))
+  cat("  por UF:\n"); print(table(pres$uf))
+  cat(sprintf("  dos 10 municípios com maior %% de homens 15-29, têm > 10%% fora de domicílio particular: %d na base | %d no escopo\n",
+              sum(head(b$pct_fora_dpp[order(-b$pct_h1529)], 10) > 10),
+              sum(head(esc$pct_fora_dpp[order(-esc$pct_h1529)], 10) > 10)))
   cat(sprintf("  homicídios por residência = %d | por ocorrência = %d\n", sum(pres$hom), sum(pres$hom_ocor)))
+  cat(sprintf("  no escopo: por residência = %d | por ocorrência = %d\n", sum(pres$hom[pres$escopo]),
+              sum(pres$hom_ocor[pres$escopo])))
+  cat(sprintf("  %% fora de domicílio particular no escopo: mediana %.2f%% | > 5%%: %d\n",
+              median(b$pct_fora_dpp[b$escopo]), sum(b$pct_fora_dpp[b$escopo] > 5)))
+  cat(sprintf("  homicídios por ocorrência x por residência no escopo: correlação = %.3f | razão das somas = %.3f\n",
+              cor(b$hom_ocor[b$escopo], b$hom[b$escopo]), sum(b$hom_ocor[b$escopo]) / sum(b$hom[b$escopo])))
   print(pres, row.names = FALSE)
   salva(pres, "04_presidios.csv")
 } else {
@@ -267,35 +341,45 @@ if (file.exists(arq_extra)) {
 }
 
 # -----------------------------------------------------------------------------
-# 5. Outliers e pontos influentes no modelo preliminar (D)
+# 5. Outliers e pontos influentes no modelo preliminar (entrega/2_modelo_preliminar.R)
 # -----------------------------------------------------------------------------
 cat("\n== 5. Outliers e pontos influentes ==\n")
-b$regiao <- relevel(factor(b$regiao), ref = "SE")
-b$ys <- sqrt(b$taxa)
-b$rend_c <- b$log_rend - mean(b$log_rend)
-b$rend_c2 <- b$rend_c^2
-form <- ys ~ rend_c + rend_c2 + desig + desocup + pct_urbana + log_dens + pct_negra + pct_h1529 +
-  amazonia_legal + faixa_fronteira + pct_indet + regiao
-m <- lm(form, data = b)
-n <- nrow(b); pp <- length(coef(m))
-b$e_semi <- residuals(m) / sqrt(sum(residuals(m)^2) / m$df.residual)
-b$h <- hatvalues(m)                       # fora da apostila: só descritivo
-b$cook <- cooks.distance(m)               # fora da apostila: só descritivo
-cat(sprintf("|e*| >= 4: %d | |e*| >= 3: %d\n", sum(abs(b$e_semi) >= 4), sum(abs(b$e_semi) >= 3)))
+d <- b[b$escopo, ]
+d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
+d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                           labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")), ref = "Sudeste")
+d$ly <- log(d$taxa)
+d$rend_c <- d$log_rend - mean(d$log_rend)
+d$rend_c2 <- d$rend_c^2
+form <- ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + dens_z + pct_h1529 + faixa_fronteira + pct_indet +
+  freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
+m <- lm(form, data = d)
+n <- nrow(d); pp <- length(coef(m))
+cat(sprintf("Modelo: n = %d | linhas usadas no ajuste: %d | parâmetros: %d | R² = %.4f | R² ajustado = %.4f\n",
+            n, nobs(m), pp, summary(m)$r.squared, summary(m)$adj.r.squared))
+cat("Coeficientes do modelo base:\n"); print(round(summary(m)$coefficients, 4))
+d$e_semi <- residuals(m) / sqrt(sum(residuals(m)^2) / m$df.residual)
+d$h <- hatvalues(m)                       # fora da apostila: só descritivo
+d$cook <- cooks.distance(m)               # fora da apostila: só descritivo
+cat(sprintf("|e*| >= 4: %d | |e*| >= 3: %d (positivos: %d | negativos: %d)\n", sum(abs(d$e_semi) >= 4),
+            sum(abs(d$e_semi) >= 3), sum(d$e_semi >= 3), sum(d$e_semi <= -3)))
 cat(sprintf("[fora da apostila] alavancagem h > 2p/n (%.4f): %d | Cook > 4/n: %d | Cook máx = %.4f\n",
-            2 * pp / n, sum(b$h > 2 * pp / n), sum(b$cook > 4 / n), max(b$cook)))
-cols <- c("municipio", "uf", "pop", "hom", "taxa", "taxa_24", "desocup", "desig", "pct_h1529", "pct_indet",
-          "pct_fora_dpp", "e_semi", "h", "cook")
-if ("h21" %in% names(b)) cols <- c(cols, "h21", "h22", "h23")
-out <- b[abs(b$e_semi) >= 3 | b$cook > 8 / n | b$h > 4 * pp / n, cols]
-out <- out[order(-b$cook[abs(b$e_semi) >= 3 | b$cook > 8 / n | b$h > 4 * pp / n]), ]
+            2 * pp / n, sum(d$h > 2 * pp / n), sum(d$cook > 4 / n), max(d$cook)))
+cols <- c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "taxa_24", "gini", "desocup", "pct_h1529", "pct_indet",
+          "intencao_indeterminada", "pct_fora_dpp", "e_semi", "h", "cook")
+if ("h21" %in% names(d)) cols <- c(cols, "h21", "h22", "h23", "hom_ocor", "pct_mal_def")
+out <- d[abs(d$e_semi) >= 3 | d$cook > 8 / n | d$h > 4 * pp / n, cols]
+out <- out[order(-out$cook), ]
 salva(out, "05_outliers_influentes.csv")
-cat("|e*| >= 4:\n"); print(b[abs(b$e_semi) >= 4, intersect(cols, names(b))], row.names = FALSE)
+cat("|e*| >= 4:\n"); print(d[abs(d$e_semi) >= 4, cols], row.names = FALSE)
+cat("|e*| >= 3:\n")
+print(d[abs(d$e_semi) >= 3, c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "pct_indet", "e_semi")][
+  order(d$e_semi[abs(d$e_semi) >= 3]), ], row.names = FALSE)
 cat("[fora da apostila] 10 maiores distâncias de Cook:\n")
-print(head(b[order(-b$cook), c("municipio", "uf", "pop", "taxa", "desocup", "desig", "pct_h1529", "e_semi",
+print(head(d[order(-d$cook), c("municipio", "uf", "pop", "taxa", "desocup", "gini", "pct_h1529", "e_semi",
                                "h", "cook")], 10), row.names = FALSE)
 cat("[fora da apostila] 10 maiores alavancagens:\n")
-print(head(b[order(-b$h), c("municipio", "uf", "pop", "taxa", "desocup", "desig", "pct_h1529", "pct_indet",
+print(head(d[order(-d$h), c("municipio", "uf", "pop", "taxa", "desocup", "gini", "pct_h1529", "pct_indet",
                             "e_semi", "h")], 10), row.names = FALSE)
 
 # -----------------------------------------------------------------------------
@@ -304,30 +388,33 @@ print(head(b[order(-b$h), c("municipio", "uf", "pop", "taxa", "desocup", "desig"
 cat("\n== 6. Sensibilidade do modelo ==\n")
 cenarios <- list(
   "base"                              = rep(TRUE, n),
-  "sem |e*| >= 4"                     = abs(b$e_semi) < 4,
-  "sem > 10% fora de dom. particular" = b$pct_fora_dpp <= 10,
-  "sem desocupação > 30% ou = 0"      = b$desocup <= 30 & b$desocup > 0,
-  "sem % indeterminada >= 30%"        = b$pct_indet < 30,
-  "sem pop < 5 mil"                   = b$pop >= 5000,
-  "[fora] sem Cook > 4/n"             = b$cook <= 4 / n)
-if ("pct_mal_def" %in% names(b)) cenarios[["sem % mal definida > 20%"]] <- b$pct_mal_def <= 20
+  "sem |e*| >= 4"                     = abs(d$e_semi) < 4,
+  "sem |e*| >= 3"                     = abs(d$e_semi) < 3,
+  "sem > 10% fora de dom. particular" = d$pct_fora_dpp <= 10,
+  "sem desocupação > 20%"             = d$desocup <= 20,
+  "sem % indeterminada >= 30%"        = d$pct_indet < 30,
+  "[fora] sem Cook > 4/n"             = d$cook <= 4 / n)
+if ("pct_mal_def" %in% names(d)) cenarios[["sem % mal definida > 20%"]] <- d$pct_mal_def <= 20
 res <- do.call(rbind, lapply(names(cenarios), function(k) {
-  f <- summary(lm(form, data = b[cenarios[[k]], ]))$coefficients
+  f <- summary(lm(form, data = d[cenarios[[k]], ]))$coefficients
   data.frame(cenario = k, n = sum(cenarios[[k]]), termo = rownames(f), b = f[, 1], p = f[, 4], row.names = NULL)
 }))
-salva(res, "06_sensibilidade.csv")
 base <- res[res$cenario == "base", ]
 res$muda_sinal <- sign(res$b) != sign(base$b[match(res$termo, base$termo)])
 res$muda_signif <- (res$p < 0.05) != (base$p[match(res$termo, base$termo)] < 0.05)
 res$var_pct <- round(100 * (res$b / base$b[match(res$termo, base$termo)] - 1), 1)
+salva(res, "06_sensibilidade.csv")
 cat("Termos que mudam de sinal ou de significância (5%) em relação ao modelo base:\n")
 print(res[res$muda_sinal | res$muda_signif, c("cenario", "n", "termo", "b", "p", "var_pct")], row.names = FALSE)
-cat("Maior variação relativa de coeficiente por cenário (termo e %):\n")
+cat("Termos que não mudam de sinal nem de significância em nenhum cenário:\n ",
+    paste(setdiff(base$termo, res$termo[res$muda_sinal | res$muda_signif]), collapse = ", "), "\n")
+cat("Maior variação relativa de coeficiente por cenário, entre os termos significativos a 5% no modelo base (termo e %):\n")
+cat(sprintf("  %-36s n = %d | R² = %.3f\n", "base", n, summary(m)$r.squared))
 for (k in names(cenarios)[-1]) {
-  r <- res[res$cenario == k & res$termo != "(Intercept)", ]
+  r <- res[res$cenario == k & res$termo %in% base$termo[base$p < 0.05 & base$termo != "(Intercept)"], ]
   i <- which.max(abs(r$var_pct))
-  cat(sprintf("  %-36s n = %d | R² = %.3f | %s %+.1f%%\n", k, r$n[1],
-              summary(lm(form, data = b[cenarios[[k]], ]))$r.squared, r$termo[i], r$var_pct[i]))
+  cat(sprintf("  %-36s n = %d | retirados = %d | R² = %.3f | %s %+.1f%%\n", k, r$n[1], n - r$n[1],
+              summary(lm(form, data = d[cenarios[[k]], ]))$r.squared, r$termo[i], r$var_pct[i]))
 }
 tab <- reshape(res[, c("cenario", "termo", "b")], idvar = "termo", timevar = "cenario", direction = "wide")
 names(tab) <- sub("^b\\.", "", names(tab))
@@ -341,19 +428,19 @@ AZUL <- "#2a78d6"; VERMELHO <- "#e34948"; CINZA <- "#898781"
 th <- theme_minimal(base_size = 11) + theme(panel.grid.minor = element_blank())
 
 # V1. Resíduo semi-studentizado x ajustado, com nomes dos |e*| >= 4
-b$aj <- fitted(m)
-g <- ggplot(b, aes(aj, e_semi)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
+d$aj <- fitted(m)
+g <- ggplot(d, aes(aj, e_semi)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
   geom_hline(yintercept = c(-4, 4), colour = VERMELHO, linetype = 2) +
-  geom_text(data = b[abs(b$e_semi) >= 4, ], aes(label = paste(municipio, uf, sep = "-")), size = 2.6,
+  geom_text(data = d[abs(d$e_semi) >= 4, ], aes(label = paste(municipio, uf, sep = "-")), size = 2.6,
             hjust = -0.05, vjust = 0) +
-  labs(x = "Valor ajustado (√taxa)", y = "Resíduo semi-studentizado e*") + th
+  labs(x = "Valor ajustado (ln taxa)", y = "Resíduo semi-studentizado e*") + th
 ggsave(file.path(OUT, "v1_residuos_semi.png"), g, width = 6.4, height = 3, dpi = 200)
 
 # V2. Distância de Cook por município (fora da apostila, descritivo)
-b$ordem <- seq_len(n)
-g <- ggplot(b, aes(ordem, cook)) + geom_segment(aes(xend = ordem, yend = 0), colour = AZUL, linewidth = .2) +
+d$ordem <- seq_len(n)
+g <- ggplot(d, aes(ordem, cook)) + geom_segment(aes(xend = ordem, yend = 0), colour = AZUL, linewidth = .2) +
   geom_hline(yintercept = 4 / n, colour = VERMELHO, linetype = 2) +
-  geom_text(data = head(b[order(-b$cook), ], 6), aes(label = paste(municipio, uf, sep = "-")), size = 2.6,
+  geom_text(data = head(d[order(-d$cook), ], 6), aes(label = paste(municipio, uf, sep = "-")), size = 2.6,
             vjust = -0.4) +
   labs(x = "Municípios em ordem de código IBGE", y = "Distância de Cook (fora da apostila)") + th
 ggsave(file.path(OUT, "v2_cook.png"), g, width = 6.4, height = 3, dpi = 200)

@@ -4,12 +4,6 @@
 .Rproj.user/
 *.rds
 
-# Python
-__pycache__/
-*.pyc
-.venv/
-venv/
-
 # LaTeX (relatório será montado à parte)
 *.aux
 *.log

@@ -3,17 +3,18 @@
 
 \subsection{O que enfatizar}
 \begin{itemize}
-\item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos são os de renda média, não os mais pobres. Por isso entram renda e renda² (modelo polinomial).
-\item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln.
-\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), os blocos A a D e o estado (variação entre regiões).
-\item \textbf{Blocos:} todos entram; educação e migração dão $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem do estado, que no lugar da região leva o $R^2_a$ de \nRdoisAregiao{} para \nRdoisA.
+\item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos não são os mais pobres nem os mais ricos: são os do \nDecilPico º décimo de renda, abaixo da renda mediana. Por isso entram renda e renda² (modelo polinomial).
+\item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln. No slide seguinte, mostrar os gráficos dos resíduos antes e depois: com o log, a dispersão fica mais uniforme e os pontos ficam mais perto da reta.
+\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), os blocos A a D e a região (variação entre regiões).
+\item \textbf{Blocos:} todos entram; educação e migração dão $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem da região.
+\item \textbf{Região ou estado:} mostrar os dois modelos lado a lado. O estado explica mais ($R^2_a$ \nRdoisAestado{} contra \nRdoisA), mas usa \nNumParEstado{} parâmetros e o VIF máximo sobe para \nVIFmaxEstado. As três hipóteses valem nos dois. Dizer que a escolha está em aberto.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
 \item[O $\lambda$ estimado não é 0, e o 0 está fora do IC; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log permite ler os efeitos em \%. Dizemos no slide que a escolha é por interpretabilidade.
-\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $\mathbf{x}$ são as outras explicativas, $D$ são as indicadoras de estado e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
-\item[Por que estado e não região?] O $F$ parcial do estado além da região é \nFuf{} com \nGlUF{} gl (significativo): os estados diferem muito entre si (polícia, facções), mais do que a região capta.
+\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $\mathbf{x}$ são as outras explicativas, $D$ são as indicadoras de região e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
+\item[Região ou estado: qual vocês vão usar?] Ainda não decidimos. A professora pediu para agrupar por região, e esse é o modelo dos outros slides. O estado explica mais ($F$ parcial \nFEstado{} com \nGlEstado{} gl), mas tem \nNumParEstado{} parâmetros, VIF máximo de \nVIFmaxEstado{} e \nNumUFpoucos{} estados com menos de 10 municípios.
 \end{description}
 
 \subsection{Transição}

@@ -3,6 +3,7 @@
 # Entradas: dados/raw/sidra_raw.json (Censo 2022, API SIDRA)
 #           dados/raw/tabnet_raw.json (SIM/DATASUS, TabNet)
 #           dados/raw/sidra_10056_freq_escolar.json (Censo 2022, frequência escolar)
+#           dados/raw/sidra_10301_gini.json (Censo 2022, Gini oficial do Brasil, das regiões e das UFs)
 #           dados/raw/mapbiomas_mineracao_col11.xlsx (MapBiomas, área de garimpo)
 # Saídas:   dados/tabelas/ (tabelas limpas e base_analitica.csv) e cópia em entrega/dados/
 # =============================================================================
@@ -33,14 +34,13 @@ S <- fromJSON("dados/raw/sidra_raw.json", simplifyVector = FALSE)
 nomes_colunas <- list(
   "4709"  = "pop",
   "4714"  = c("pop", "area_km2", "densidade"),
-  "10295" = c("moradores_dpp", "rend_pc_media", "rend_pc_mediana"),
+  "10295" = c("moradores_dpp", "rend_pc_media"),
   "10300" = c("p14_total", "p14_ate_1_4sm", "p14_1_4_a_1_2sm", "p14_1_2_a_1sm", "p14_1_a_2sm",
               "p14_2_a_3sm", "p14_3_a_5sm", "p14_5_a_10sm", "p14_10_a_15sm", "p14_15_a_20sm",
               "p14_mais_20sm", "p14_sem_rendimento"),
   "9517"  = c("p14_total", "forca_trabalho", "ocupados", "desocupados", "fora_forca_trabalho"),
   "9543"  = "taxa_alfabetizacao_15mais",
   "9923"  = c("pop_total", "pop_urbana", "pop_rural"),
-  "9605"  = c("pop_total", "branca", "preta", "amarela", "parda", "indigena"),
   "9606"  = c("homens_15_19", "homens_20_24", "homens_25_29"))
 
 # Converte uma tabela do JSON em data.frame (valores ainda como texto)
@@ -78,32 +78,57 @@ c22 <- data.frame(cod_ibge  = pop$cod_ibge,
 
 junta <- function(t, cols) merge(c22, sidra[[t]][, c("cod_ibge", cols)], by = "cod_ibge", sort = FALSE)
 c22 <- junta("4714", c("area_km2", "densidade"));            names(c22)[names(c22) == "densidade"] <- "dens"
-c22 <- junta("10295", c("rend_pc_media", "rend_pc_mediana"))
+c22 <- junta("10295", "rend_pc_media")
 
 p <- sidra[["10300"]]                                        # pessoas 14+ por classe de renda per capita
 p$pct_pobres <- (p$p14_ate_1_4sm + p$p14_sem_rendimento) / p$p14_total * 100
+
+# Índice de Gini pelas classes de renda: 1 menos o dobro da área sob a curva de Lorenz (por trapézios).
+# Renda de cada classe = ponto médio, em salários mínimos. Classe aberta (mais de 20 SM) = 50 SM,
+# valor com que o cálculo reproduz o Gini oficial do Brasil (SIDRA 10301)
+classes <- c(p14_sem_rendimento = 0, p14_ate_1_4sm = 1/8, p14_1_4_a_1_2sm = 3/8, p14_1_2_a_1sm = 3/4, p14_1_a_2sm = 1.5,
+             p14_2_a_3sm = 2.5, p14_3_a_5sm = 4, p14_5_a_10sm = 7.5, p14_10_a_15sm = 12.5, p14_15_a_20sm = 17.5,
+             p14_mais_20sm = 50)
+gini <- function(n) {
+  pessoas <- n / sum(n)
+  renda <- cumsum(n * classes) / sum(n * classes)
+  1 - sum(pessoas * (renda + c(0, renda[-length(renda)])))
+}
+pc <- as.matrix(p[, names(classes)]); pc[is.na(pc)] <- 0
+p$gini <- apply(pc, 1, gini)
+
+# Conferência com o Gini oficial do IBGE, publicado só para o Brasil, as regiões e as UFs
+go <- fromJSON("dados/raw/sidra_10301_gini.json", simplifyVector = FALSE)[[1]]$resultados[[1]]$series
+val_gini <- data.frame(nivel = sapply(go, function(s) s$localidade$nivel$nome), codigo = sapply(go, function(s) s$localidade$id),
+                       local = sapply(go, function(s) s$localidade$nome),
+                       gini_oficial = as.numeric(sapply(go, function(s) s$serie[["2022"]])))
+soma <- function(digitos) apply(rowsum(pc, substr(p$cod_ibge, 1, digitos)), 1, gini)
+regioes <- val_gini$nivel == "Grande Região"; ufs <- val_gini$nivel == "Unidade da Federação"
+val_gini$gini_calculado <- gini(colSums(pc))
+val_gini$gini_calculado[regioes] <- soma(1)[val_gini$codigo[regioes]]
+val_gini$gini_calculado[ufs] <- soma(2)[val_gini$codigo[ufs]]
+write.csv(val_gini, "dados/tabelas/validacao_gini.csv", row.names = FALSE)
+cat(sprintf("\nGini calculado x oficial nas 27 UFs: correlação = %.3f | erro absoluto médio = %.3f\n",
+            cor(val_gini$gini_calculado[ufs], val_gini$gini_oficial[ufs]),
+            mean(abs(val_gini$gini_calculado - val_gini$gini_oficial)[ufs])))
 t9517 <- sidra[["9517"]]
 t9517$desocup <- t9517$desocupados / t9517$forca_trabalho * 100
 u <- sidra[["9923"]]
 u$pct_urbana <- u$pop_urbana / u$pop_total * 100
-r <- sidra[["9605"]]
-r$pct_negra <- (r$preta + r$parda) / r$pop_total * 100
 h <- sidra[["9606"]]
 h$homens_15_29 <- h$homens_15_19 + h$homens_20_24 + h$homens_25_29
 
-c22 <- merge(c22, p[, c("cod_ibge", "pct_pobres")], by = "cod_ibge")
+c22 <- merge(c22, p[, c("cod_ibge", "pct_pobres", "gini")], by = "cod_ibge")
 c22 <- merge(c22, t9517[, c("cod_ibge", "desocup")], by = "cod_ibge")
 c22 <- merge(c22, data.frame(cod_ibge = sidra[["9543"]]$cod_ibge,
                              alfabet = sidra[["9543"]]$taxa_alfabetizacao_15mais), by = "cod_ibge")
 c22 <- merge(c22, u[, c("cod_ibge", "pct_urbana")], by = "cod_ibge")
-c22 <- merge(c22, r[, c("cod_ibge", "pct_negra")], by = "cod_ibge")
 c22 <- merge(c22, h[, c("cod_ibge", "homens_15_29")], by = "cod_ibge")
 
 # Checagens de consistência entre as tabelas (nº de municípios com diferença)
 cat("\nInconsistências:\n")
 cat("  pop 4709 x 4714:", sum(pop$pop != sidra[["4714"]]$pop), "\n")
 cat("  pop 4709 x 9923:", sum(pop$pop != u$pop_total), "\n")
-cat("  pop 4709 x 9605:", sum(pop$pop != r$pop_total), "\n")
 cat("  10300 soma das classes x total:", sum(rowSums(p[, nomes_colunas[["10300"]][-1]]) != p$p14_total), "\n")
 cat("  9517 ocupados + desocupados x força de trabalho:",
     sum(t9517$ocupados + t9517$desocupados != t9517$forca_trabalho), "\n")
@@ -182,7 +207,6 @@ b$taxa_24  <- b$hom_24 / b$pop * 1e5
 
 # Variáveis explicativas derivadas
 b$log_rend  <- log(b$rend_pc_media)
-b$desig     <- b$rend_pc_media / b$rend_pc_mediana           # razão média/mediana (Gini não está no SIDRA)
 b$log_dens  <- log(b$dens)
 b$pct_h1529 <- b$homens_15_29 / b$pop * 100
 b$pct_indet <- ifelse(b$total_causas_externas > 0,
@@ -217,12 +241,11 @@ dic <- c(
   pop = "População residente, Censo 2022 (SIDRA 4709)",
   area_km2 = "Área territorial em km² (SIDRA 4714)", dens = "Densidade demográfica, hab/km² (SIDRA 4714)",
   rend_pc_media = "Rendimento domiciliar per capita médio, R$ (SIDRA 10295)",
-  rend_pc_mediana = "Rendimento domiciliar per capita mediano, R$ (SIDRA 10295)",
   pct_pobres = "% de pessoas de 14+ anos com renda domiciliar per capita até 1/4 SM ou sem rendimento (SIDRA 10300)",
+  gini = "Índice de Gini da renda domiciliar per capita das pessoas de 14+ anos, calculado pelas classes de renda (SIDRA 10300)",
   desocup = "Taxa de desocupação, % da força de trabalho (SIDRA 9517)",
   alfabet = "Taxa de alfabetização, 15+ anos, % (SIDRA 9543)",
   pct_urbana = "% da população em situação urbana (SIDRA 9923)",
-  pct_negra = "% da população preta ou parda (SIDRA 9605)",
   homens_15_29 = "Homens de 15 a 29 anos (SIDRA 9606)",
   agressao = "Óbitos por agressão X85-Y09, 2021-2023, por residência (SIM)",
   intervencao_legal = "Óbitos por intervenção legal Y35-Y36, 2021-2023 (SIM)",
@@ -235,7 +258,7 @@ dic <- c(
   exposure = "Pessoas-ano de exposição = 3 x pop",
   taxa = "Taxa de homicídios por 100 mil hab./ano, 2021-2023 (variável resposta)",
   taxa_24 = "Taxa de homicídios por 100 mil hab., 2024",
-  log_rend = "ln(rend_pc_media)", desig = "Razão média/mediana do rendimento per capita (desigualdade)",
+  log_rend = "ln(rend_pc_media)",
   log_dens = "ln(dens)", pct_h1529 = "% de homens de 15 a 29 anos na população",
   pct_indet = "% de óbitos de intenção indeterminada no total de causas externas",
   freq_15a17 = "Taxa de frequência escolar bruta de 15 a 17 anos, % (Censo 2022, SIDRA 10056)",
@@ -245,5 +268,5 @@ write.csv(data.frame(coluna = names(dic), descricao = dic), "dados/tabelas/dicio
 
 # Cópia da base, do dicionário e da malha para a pasta do código de entrega (análise)
 dir.create("entrega/dados", recursive = TRUE, showWarnings = FALSE)
-file.copy(c("dados/tabelas/base_analitica.csv", "dados/tabelas/dicionario.csv", "dados/malha_mun.geojson"),
+file.copy(c("dados/tabelas/base_analitica.csv", "dados/tabelas/dicionario.csv", "dados/tabelas/validacao_gini.csv", "dados/malha_mun.geojson"),
           "entrega/dados/", overwrite = TRUE)
