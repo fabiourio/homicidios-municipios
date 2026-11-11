@@ -6,9 +6,9 @@ Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16
 
 **Pergunta:** quais fatores socioeconômicos, demográficos e geográficos estão associados à taxa de homicídios nos municípios brasileiros?
 
-- **Unidade de análise:** o município. O modelo usa os 1.134 municípios com 30 mil habitantes ou mais (perto do percentil 80 da população)
+- **Unidade de análise:** o município. O modelo usa os municípios com 30 mil habitantes ou mais (perto do percentil 80 da população): 1.133, sem Campos do Jordão-SP
 - **Resposta:** taxa de homicídios (agressão X85–Y09 + intervenção legal Y35–Y36), por residência, média anual 2021–2023
-- **Explicativas:** Censo Demográfico 2022 (renda, desigualdade pelo índice de Gini, trabalho, urbanização, idade, frequência escolar, migração), INEP 2022 (abandono e distorção idade-série no ensino médio), região e faixa de fronteira
+- **Explicativas:** Censo Demográfico 2022 (renda, desigualdade pelo índice de Gini, trabalho, urbanização, frequência escolar, migração), INEP 2022 (distorção idade-série no ensino médio) e região
 - **Modelo (preliminar):** regressão linear múltipla para ln(taxa), por mínimos quadrados ordinários
 - **Regras do trabalho:** ver `CLAUDE.md` (código só em R; só técnicas da apostila de GED)
 
@@ -101,7 +101,9 @@ Dados do SIM coletados em 25/10/2026 e do Censo em 27/10/2026.
 - **Municípios ausentes no TabNet:** o TabNet omite municípios sem nenhuma morte externa no período, e eles recebem 0.
 - **Município de residência ignorado:** 1.687 homicídios (1,2%) de 2021–2023 não puderam ser atribuídos a um município.
 - **Desigualdade:** o IBGE só publica o Gini do Censo 2022 para o Brasil, as regiões e as UFs (SIDRA 10301). Calculamos o Gini de cada município pelas classes de renda (SIDRA 10300), pela área sob a curva de Lorenz (Gastwirth, 1972). O mesmo cálculo nas 27 UFs tem correlação de 0,995 com o Gini oficial (`dados/tabelas/validacao_gini.csv`).
-- **Escopo:** o modelo usa os municípios com 30 mil habitantes ou mais, perto do percentil 80 da população (79,6; `entrega/resultados/eda/percentis_municipios.csv`). Nesse porte a taxa nacional dá pelo menos 20 homicídios esperados em 3 anos; abaixo disso a taxa oscila por acaso. A densidade foi testada e ficou fora do modelo.
+- **Escopo:** o modelo usa os municípios com 30 mil habitantes ou mais, perto do percentil 80 da população (79,6; `entrega/resultados/eda/percentis_municipios.csv`). Nesse porte a taxa nacional dá pelo menos 20 homicídios esperados em 3 anos; abaixo disso a taxa oscila por acaso. Campos do Jordão-SP fica fora, por indício de sub-registro (1 homicídio registrado e 36 óbitos de intenção indeterminada).
+- **Variáveis testadas e retiradas:** densidade, faixa de fronteira, abandono no ensino médio, % de homens de 15 a 29 anos, Amazônia Legal e % de óbitos de intenção indeterminada (`entrega/resultados/modelagem/testadas_retiradas.csv`).
+- **Desigualdade e renda:** o modelo tem o termo Gini × renda, porque o efeito da desigualdade muda com a renda do município.
 - **Região:** entra como variável categórica (5 classes, referência Sudeste).
 - **Presídios:** os presos entram na população do Censo, o que distorce a % de homens de 15 a 29 anos e o denominador da taxa em alguns municípios pequenos de SP.
-- **% intenção indeterminada:** vem da mesma base que a resposta. É um controle de qualidade do registro, não um fator de risco.
+- **% intenção indeterminada:** mede a qualidade do registro. Não entra no modelo: os homicídios estão no seu divisor, então ela cai quando os homicídios sobem, só pela conta.

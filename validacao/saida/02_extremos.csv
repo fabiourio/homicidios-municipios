@@ -29,30 +29,12 @@
 "base","pct_urbana","maior","Cachoeirinha","RS",136258,100
 "base","pct_urbana","maior","Canoas","RS",347657,100
 "base","pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
-"base","pct_h1529","menor","Coqueiro Baixo","RS",1290,6.047
-"base","pct_h1529","menor","Barra do Rio Azul","RS",1696,6.545
-"base","pct_h1529","menor","Porto Lucena","RS",4360,6.651
-"base","pct_h1529","maior","Lavínia","SP",9689,22.634
-"base","pct_h1529","maior","Reginópolis","SP",7662,25.215
-"base","pct_h1529","maior","Pracinha","SP",2578,31.575
-"base","pct_indet","menor","Cabixi","RO",5351,0
-"base","pct_indet","menor","Cerejeiras","RO",15890,0
-"base","pct_indet","menor","Colorado do Oeste","RO",15663,0
-"base","pct_indet","maior","Pedra Dourada","MG",2757,80
-"base","pct_indet","maior","Itambé do Mato Dentro","MG",2142,100
-"base","pct_indet","maior","Araguainha","MT",1010,100
 "base","freq_15a17","menor","Veranópolis","RS",24021,43.48
 "base","freq_15a17","menor","Nova Santa Bárbara","PR",4184,43.92
 "base","freq_15a17","menor","Recursolândia","TO",3421,49.09
 "base","freq_15a17","maior","Relvado","RS",1796,100
 "base","freq_15a17","maior","Toropi","RS",2554,100
 "base","freq_15a17","maior","Nova Iguaçu de Goiás","GO",3010,100
-"base","abandono_em","menor","Santa Luzia D'Oeste","RO",7419,0
-"base","abandono_em","menor","Alvorada D'Oeste","RO",13117,0
-"base","abandono_em","menor","Seringueiras","RO",11171,0
-"base","abandono_em","maior","Tenente Ananias","RN",10262,34
-"base","abandono_em","maior","União do Sul","MT",3838,37
-"base","abandono_em","maior","Vila Flor","RN",3174,37.8
 "base","distorcao_em","menor","Campo Grande","AL",8143,0
 "base","distorcao_em","menor","Monções","SP",1937,0
 "base","distorcao_em","menor","Pedrinhas Paulista","SP",2804,0
@@ -71,9 +53,9 @@
 "base","pop","maior","Brasília","DF",2817381,2817381
 "base","pop","maior","Rio de Janeiro","RJ",6211223,6211223
 "base","pop","maior","São Paulo","SP",11451999,11451999
-"escopo","taxa","menor","Campos do Jordão","SP",46974,0.71
 "escopo","taxa","menor","Barra Bonita","SP",34346,0.971
 "escopo","taxa","menor","Pomerode","SC",34289,0.972
+"escopo","taxa","menor","São Caetano do Sul","SP",165655,1.409
 "escopo","taxa","maior","Tabatinga","AM",66764,98.356
 "escopo","taxa","maior","Vera Cruz","BA",42529,110.513
 "escopo","taxa","maior","Camamu","BA",30469,115.965
@@ -101,30 +83,12 @@
 "escopo","pct_urbana","maior","Cachoeirinha","RS",136258,100
 "escopo","pct_urbana","maior","Canoas","RS",347657,100
 "escopo","pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
-"escopo","pct_h1529","menor","São Caetano do Sul","SP",165655,8.205
-"escopo","pct_h1529","menor","Santos","SP",418608,8.722
-"escopo","pct_h1529","menor","Presidente Venceslau","SP",35201,8.724
-"escopo","pct_h1529","maior","Gurupá","PA",31786,15.954
-"escopo","pct_h1529","maior","Portel","PA",62503,16.044
-"escopo","pct_h1529","maior","Itaitinga","CE",64650,16.817
-"escopo","pct_indet","menor","Barreirinha","AM",31051,0
-"escopo","pct_indet","menor","Boca do Acre","AM",35447,0
-"escopo","pct_indet","menor","Maués","AM",61204,0
-"escopo","pct_indet","maior","Itapecerica da Serra","SP",158522,52.703
-"escopo","pct_indet","maior","Embu-Guaçu","SP",66970,54.128
-"escopo","pct_indet","maior","São Joaquim de Bicas","MG",34348,69.811
 "escopo","freq_15a17","menor","Rondon do Pará","PA",53143,63.97
 "escopo","freq_15a17","menor","Santa Maria de Jetibá","ES",41636,65.32
 "escopo","freq_15a17","menor","Afuá","PA",37765,66.63
 "escopo","freq_15a17","maior","Currais Novos","RN",41313,95.04
 "escopo","freq_15a17","maior","Tabuleiro do Norte","CE",30652,96
 "escopo","freq_15a17","maior","Alegrete","RS",72409,96.4
-"escopo","abandono_em","menor","Aliança","PE",35741,0
-"escopo","abandono_em","menor","Bom Jardim","PE",37629,0
-"escopo","abandono_em","menor","Catende","PE",32156,0
-"escopo","abandono_em","maior","Tailândia","PA",72493,26.2
-"escopo","abandono_em","maior","Rosário do Sul","RS",36630,26.3
-"escopo","abandono_em","maior","Serra do Ramalho","BA",34222,30.8
 "escopo","distorcao_em","menor","Osvaldo Cruz","SP",31272,2.6
 "escopo","distorcao_em","menor","Guararapes","SP",31043,3
 "escopo","distorcao_em","menor","Piedade","SP",52970,3.9

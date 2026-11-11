@@ -49,13 +49,14 @@ extras <- read.csv("entrega/dados/variaveis_extras.csv")
 vars_extras <- c("abandono_em", "distorcao_em", "pct_migr_10anos")
 b <- cbind(b, extras[match(b$cod_ibge, extras$cod_ibge), vars_extras])
 
-# Escopo do modelo (igual a entrega/2_modelo_preliminar.R): pop >= 30 mil
+# Escopo do modelo (igual a entrega/2_modelo_preliminar.R): pop >= 30 mil e fora Campos do Jordão
 POP_MIN <- 30000
-b$escopo <- b$pop >= POP_MIN
+FORA <- 3509700   # Campos do Jordão-SP: 1 homicídio registrado e 36 óbitos de intenção indeterminada (indício de sub-registro)
+b$escopo <- b$pop >= POP_MIN & b$cod_ibge != FORA
 cat(sprintf("Variáveis extras: %d linhas, %d sem par na base | NAs na base inteira: %s | NAs no escopo: %d\n",
             nrow(extras), sum(!extras$cod_ibge %in% b$cod_ibge),
             paste(vars_extras, colSums(is.na(b[vars_extras])), collapse = ", "), sum(is.na(b[b$escopo, vars_extras]))))
-cat(sprintf("Escopo do modelo: pop >= %d = %d municípios\n", POP_MIN, sum(b$escopo)))
+cat(sprintf("Escopo do modelo: pop >= %d, sem Campos do Jordão = %d municípios\n", POP_MIN, sum(b$escopo)))
 cat("Escopo por região:\n"); print(table(b$regiao[b$escopo]))
 
 # Dígito verificador do código IBGE (módulo 10, pesos 1-2-1-2-1-2)
@@ -115,8 +116,8 @@ print(head(b[b$escopo, ][order(b$freq_15a17[b$escopo]), c("municipio", "uf", "po
                                                           "rend_pc_media")], 4), row.names = FALSE)
 
 # Extremos de cada variável usada no modelo, na base inteira e no escopo do modelo
-vars_mod <- c("taxa", "rend_pc_media", "gini", "desocup", "pct_urbana", "pct_h1529", "pct_indet",
-              "freq_15a17", vars_extras, "pop")
+vars_mod <- c("taxa", "rend_pc_media", "gini", "desocup", "pct_urbana",
+              "freq_15a17", "distorcao_em", "pct_migr_10anos", "pop")
 extremos <- function(x, conjunto) do.call(rbind, lapply(vars_mod, function(v) {
   o <- order(x[[v]], na.last = NA)
   i <- c(head(o, 3), tail(o, 3))
@@ -345,8 +346,9 @@ d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
 d$ly <- log(d$taxa)
 d$rend_c <- d$log_rend - mean(d$log_rend)
 d$rend_c2 <- d$rend_c^2
-form <- ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + pct_h1529 + faixa_fronteira + pct_indet +
-  freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
+d$gini_c <- d$gini - mean(d$gini)
+form <- ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 + distorcao_em + pct_migr_10anos +
+  regiao + rend_c:gini_c
 m <- lm(form, data = d)
 n <- nrow(d); pp <- length(coef(m))
 cat(sprintf("Modelo: n = %d | linhas usadas no ajuste: %d | parâmetros: %d | R² = %.4f | R² ajustado = %.4f\n",
@@ -359,7 +361,7 @@ cat(sprintf("|e*| >= 4: %d | |e*| >= 3: %d (positivos: %d | negativos: %d)\n", s
             sum(abs(d$e_semi) >= 3), sum(d$e_semi >= 3), sum(d$e_semi <= -3)))
 cat(sprintf("[fora da apostila] alavancagem h > 2p/n (%.4f): %d | Cook > 4/n: %d | Cook máx = %.4f\n",
             2 * pp / n, sum(d$h > 2 * pp / n), sum(d$cook > 4 / n), max(d$cook)))
-cols <- c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "taxa_24", "gini", "desocup", "pct_h1529", "pct_indet",
+cols <- c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "taxa_24", "gini", "desocup", "pct_indet",
           "intencao_indeterminada", "pct_fora_dpp", "e_semi", "h", "cook")
 if ("h21" %in% names(d)) cols <- c(cols, "h21", "h22", "h23", "hom_ocor", "pct_mal_def")
 out <- d[abs(d$e_semi) >= 3 | d$cook > 8 / n | d$h > 4 * pp / n, cols]
@@ -370,10 +372,10 @@ cat("|e*| >= 3:\n")
 print(d[abs(d$e_semi) >= 3, c("municipio", "uf", "pop", "hom", "hom_24", "taxa", "pct_indet", "e_semi")][
   order(d$e_semi[abs(d$e_semi) >= 3]), ], row.names = FALSE)
 cat("[fora da apostila] 10 maiores distâncias de Cook:\n")
-print(head(d[order(-d$cook), c("municipio", "uf", "pop", "taxa", "desocup", "gini", "pct_h1529", "e_semi",
+print(head(d[order(-d$cook), c("municipio", "uf", "pop", "taxa", "desocup", "gini", "e_semi",
                                "h", "cook")], 10), row.names = FALSE)
 cat("[fora da apostila] 10 maiores alavancagens:\n")
-print(head(d[order(-d$h), c("municipio", "uf", "pop", "taxa", "desocup", "gini", "pct_h1529", "pct_indet",
+print(head(d[order(-d$h), c("municipio", "uf", "pop", "taxa", "desocup", "gini", "pct_indet",
                             "e_semi", "h")], 10), row.names = FALSE)
 
 # -----------------------------------------------------------------------------

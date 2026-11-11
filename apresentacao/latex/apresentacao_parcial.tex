@@ -155,15 +155,15 @@ Y_i = \frac{H_i^{2021} + H_i^{2022} + H_i^{2023}}{3\,P_i} \times 10^5
 \textbf{Bloco} & \textbf{Dimensão} & \textbf{Explicativas}\\
 \midrule
 A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade (índice de Gini), desocupação\\
-B & Demográfica & \% urbana, \% homens 15--29\\
-C & Contexto e registro & faixa de fronteira, \% óbitos de intenção indeterminada\\
-D & Educação e migração & frequência escolar 15--17, abandono e distorção no EM, migração\\
-E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
+B & Urbanização & \% urbana\\
+C & Educação e migração & frequência escolar 15--17, distorção idade-série no EM, migração recente\\
+D & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
+E & Interação & Gini $\times$ renda: o efeito da desigualdade muda com a renda\\
 \bottomrule
 \end{tabularx}
 \vspace{0.6em}
 
-{\scriptsize\color{black!70}Desigualdade: índice de Gini da renda domiciliar per capita, calculado pelas classes de renda do Censo 2022: área sob a curva de Lorenz, com a renda de cada classe no ponto médio (Gastwirth, 1972). O IBGE só publica o Gini por região e UF; nas 27 UFs, a correlação do calculado com o oficial é \nGiniCorUF. Migração: \% de moradores há menos de 10 anos no município.}
+{\scriptsize\color{black!70}Desigualdade: índice de Gini da renda domiciliar per capita, calculado pelas classes de renda do Censo 2022: área sob a curva de Lorenz, com a renda de cada classe no ponto médio (Gastwirth, 1972). O IBGE só publica o Gini por região e UF; nas 27 UFs, a correlação do calculado com o oficial é \nGiniCorUF. Migração: \% de moradores há menos de 10 anos no município. Variáveis testadas e retiradas: Apêndice D.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -171,9 +171,9 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \begin{itemize}
 \setlength{\itemsep}{0.45em}
 \item \textbf{Desenho observacional e ecológico:} associações entre municípios; sem interpretação causal nem individual (falácia ecológica)
-\item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios
+\item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios. \nForaNome{} ficou fora do estudo: \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada
 \item \textbf{Denominador:} a população prisional é recenseada no município do presídio
-\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os \textbf{\nMunEsc{} municípios com \nPopMin{} mil hab. ou mais} (\nPctPopEsc\% da população)
+\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os \textbf{municípios com \nPopMin{} mil hab. ou mais}: \nMunEsc, com \nPctPopEsc\% da população
 \end{itemize}
 \end{frame}
 
@@ -191,7 +191,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \item Cada município recebe o percentil da sua população, entre os \nMunBR
 \item Ficam os de \nPopMin{} mil hab. ou mais: perto do percentil \nPercCorte, os \nPctMaiores\% maiores
 \item Nesse porte, a taxa nacional dá pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos
-\item Ficam \nMunEsc{} municípios, com \nPctPopEsc\% da população
+\item Ficam \nMunEsc{} municípios, com \nPctPopEsc\% da população (\nForaNome{} sai por indício de sub-registro)
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -209,7 +209,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \column{0.27\textwidth}
 \begin{itemize}\small
 \item Escalas e dispersões bem diferentes entre as variáveis
-\item Densidade (ln, padronizada): testada e não significativa ($F = \nFDens$; $p = \nPDens$). Fica fora do modelo
+\item Densidade (ln, padronizada): testada e não significativa ($p = \nPDens$). Fica fora do modelo, com outras cinco variáveis (Apêndice D)
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -315,13 +315,14 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 % -----------------------------------------------------------------------------
 \begin{frame}{Especificação do modelo}
 \[
-\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumReg} \gamma_k D_{ik} + \varepsilon_i,
+\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \beta_3 g_i + \beta_4 g_i r_i + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumReg} \gamma_k D_{ik} + \varepsilon_i,
 \qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2)
 \]
 \begin{itemize}\small
 \setlength{\itemsep}{0.3em}
 \item $r_i$: ln da renda per capita, centrada na média (reduz a correlação entre $r$ e $r^2$ de \nCorQuadSem{} para \nCorQuadCen)
-\item $\mathbf{x}_i$: as demais \nNumX{} explicativas dos blocos A a D
+\item $g_i$: índice de Gini, centrado na média; $g_i r_i$: o efeito da desigualdade muda com a renda
+\item $\mathbf{x}_i$: as demais \nNumX{} explicativas (desocupação, \% urbana, frequência escolar, distorção idade-série e migração)
 \item $D_{ik}$: indicadora da região $k$ (referência: Sudeste)
 \item Mínimos quadrados ordinários; $n = \nMunEsc$ municípios e \nNumPar{} parâmetros
 \end{itemize}
@@ -339,7 +340,8 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \column{0.40\textwidth}
 \begin{itemize}\small
 \item $H_0$: os coeficientes do bloco são nulos; rejeitada em todos os blocos
-\item Maior ganho de $R^2_a$ com a região (bloco E)
+\item Maior ganho de $R^2_a$ com a região (bloco D)
+\item O termo Gini $\times$ renda entra por último: $F$ = \nFInter
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -358,7 +360,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \item Região: \nNumPar{} parâmetros; $R^2_a$ = \nRdoisA; VIF máximo \nVIFrendaFinal
 \item Estado: \nNumParEstado{} parâmetros; $R^2_a$ = \nRdoisAestado; VIF máximo \nVIFmaxEstado
 \item $F$ parcial do estado além da região: \nFEstado{} (\nGlEstado{} gl), $p$ \nPEstado
-\item H1, H2 e H3 valem nos dois; o abandono escolar só é significativo com estado
+\item O termo Gini $\times$ renda (H1) e as medidas de escola (H2) são significativos nos dois
 \item \nNumUFpoucos{} estados têm menos de 10 municípios no estudo
 \item Escolhemos a região; o modelo com estado fica como comparação
 \end{itemize}
@@ -376,11 +378,26 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \fonte{Elaboração própria. Efeito $= 100\,[\exp(b\,\Delta) - 1]\%$, demais variáveis constantes.}
 \column{0.24\textwidth}
 \begin{itemize}\footnotesize
-\item Sinais consistentes com H1, H2 e H3
-\item Abandono (H2): não significativo
+\item H1: o efeito do Gini cresce com a renda
+\item H2: sinais esperados
+\item H3 (migração): não significativa ($p$ = \nPMigr)
 \item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
 \item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
-\item \textcolor{black!65}{Não significativas (5\%): \nNaoSig}
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{A desigualdade depende da renda}
+\begin{columns}[c]
+\column{0.6\textwidth}
+\fig{m8_efeito_gini_renda.png}
+\fonte{Elaboração própria. Efeito de $+0{,}05$ no Gini sobre a taxa, demais variáveis constantes. Faixa: IC 95\%.}
+\column{0.38\textwidth}
+\begin{itemize}\small
+\item Termo Gini $\times$ renda: $F$ = \nFInter; $R^2_a$ de \nRdoisAsemInter{} para \nRdoisA
+\item Na renda mediana: \nGiniEfMediana\% na taxa. Nos 10\% mais ricos: \nGiniEfNoventa\%
+\item Abaixo de R\$ \nGiniZero{} (\nGiniZeroPct\% dos municípios), o efeito não é positivo
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -394,7 +411,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \column{0.38\textwidth}
 \begin{itemize}\small
 \item $\hat\beta_2$ = \nBetaDois{} ($p$ \nBetaDoisP): concavidade
-\item Máximo em $r^{*} = -\hat\beta_1 / (2\hat\beta_2)$: renda de \alert{R\$ \nPico}
+\item Máximo em $r^{*} = -\hat\beta_1 / (2\hat\beta_2)$, no Gini médio: renda de \alert{R\$ \nPico}
 \item Taxa esperada menor nos extremos de renda
 \end{itemize}
 \end{columns}
@@ -411,7 +428,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \fonte{Elaboração própria. À esquerda, resíduos semi-studentizados; linhas vermelhas em $\pm 4$.}
 \vspace{0.3em}
 \begin{itemize}\small
-\item Resíduos em torno de zero, sem curvatura; além de $\pm 4$: \nOutNomes
+\item Resíduos em torno de zero, sem curvatura; nenhum além de $\pm 4$
 \item Resíduos maiores nos municípios menores: variância não constante (Breusch-Pagan = \nBP, $p$ \nBPp)
 \end{itemize}
 \end{frame}
@@ -426,8 +443,8 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \column{0.34\textwidth}
 \begin{itemize}\small
 \item Histograma em forma de sino, centrado em zero
-\item No gráfico de quantis, o centro segue a reta; a cauda esquerda é mais pesada que a normal
-\item Shapiro-Wilk: $W = \nSW$, $p$ \nSWp
+\item No gráfico de quantis, os pontos seguem a reta
+\item Shapiro-Wilk: $W = \nSW$, $p$ = \nSWp: não rejeita a normalidade
 \end{itemize}
 \end{columns}
 \fonte{Elaboração própria. Resíduos padronizados do modelo preliminar.}
@@ -450,11 +467,11 @@ Multicolinearidade & VIF máximo & \nVIFrendaFinal{} (renda) & ---\\
 Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \bottomrule
 \end{tabular}
-\par\vspace{0.1em}{\tiny\color{black!60}VIF das demais variáveis $\leq$ \nVIFdemaisMax. Além de $\pm 4$: \nOutNomes.\\VIF com ln renda centralizada, sem dividir pelo DP; padronizar não muda o VIF. Sem centralizar: \nVIFrendaCru.}
+\par\vspace{0.1em}{\tiny\color{black!60}VIF das demais variáveis $\leq$ \nVIFdemaisMax.\\VIF com ln renda centralizada, sem dividir pelo DP; padronizar não muda o VIF. Sem centralizar: \nVIFrendaCru.}
 \column{0.40\textwidth}
 \begin{itemize}\footnotesize
 \item Breusch-Pagan rejeita $H_0$: erros-padrão e valores $p$ são aproximados
-\item Shapiro-Wilk rejeita com $W$ próximo de 1 ($n$ grande); cauda esquerda mais pesada que a normal
+\item Shapiro-Wilk não rejeita a normalidade; nenhum resíduo além de $\pm 4$
 \item Independência: dados em corte transversal, sem ordem de coleta; não há sequência a testar
 \end{itemize}
 \end{columns}
@@ -468,13 +485,13 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \renewcommand{\arraystretch}{1.1}
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/com_sem_renda.tex}
-\fonte{Elaboração própria. Indicadoras de região omitidas. Em negrito: a significância a 5\% muda.}
+\fonte{Elaboração própria. Indicadoras de região omitidas; sem a renda sai também o termo Gini $\times$ renda. Em negrito: a significância a 5\% muda.}
 \column{0.42\textwidth}
 \begin{itemize}\footnotesize
 \item A renda tem o maior VIF: \nVIFrendaFinal. Sem ela, o VIF máximo é \nVIFmaxSemRenda
 \item $F$ parcial da renda: \nFRenda{} (\nGlRenda{} gl), $p$ \nPRenda
 \item $R^2_a$: \nRdoisA{} com a renda; \nRdoisAsemRenda{} sem
-\item Sem a renda, desigualdade (H1) e migração (H3) deixam de ser significativas; as medidas de escola (H2) continuam
+\item Sem a renda, desigualdade (H1) e desocupação deixam de ser significativas; as medidas de escola (H2) continuam
 \item A renda fica no modelo
 \end{itemize}
 \end{columns}
@@ -487,7 +504,8 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \column{0.49\textwidth}
 \textbf{\color{navy}Resposta preliminar à pergunta}
 \begin{itemize}\small
-\item Mais homicídios com mais desigualdade (H1), exclusão escolar (H2) e migração recente (H3)
+\item Mais homicídios com mais exclusão escolar (H2) e com mais desigualdade (H1); a desigualdade pesa nos municípios de renda média e alta
+\item Migração recente (H3): não confirmada
 \item Renda em U invertido: pico em R\$ \nPico
 \item Também mais homicídios com mais urbanização
 \item Taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste
@@ -501,7 +519,7 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \vspace{0.3em}
 \textbf{\color{navy}Próximos passos}
 \begin{itemize}\small
-\item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
+\item Conferir a seleção de variáveis por $C_p$, AIC, BIC e PRESS
 \item Tratar a variância não constante
 \end{itemize}
 \end{columns}
@@ -565,8 +583,8 @@ WANZINACK, C.; SIGNORELLI, M. C.; REIS, C. Violence and social determinants of h
 
 % -----------------------------------------------------------------------------
 \begin{frame}{Apêndice C · O que vem de fora da apostila}
-\footnotesize
-\renewcommand{\arraystretch}{1.25}
+\scriptsize
+\renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.36\textwidth}>{\raggedright\arraybackslash}p{0.2\textwidth}>{\raggedright\arraybackslash}X@{}}
 \toprule
 \textbf{Item} & \textbf{Origem} & \textbf{Para que serve}\\
@@ -578,11 +596,23 @@ VIF generalizado & Escolha do grupo & VIF de variável com várias categorias (r
 Efeito em \%: $100\,[\exp(b\,\Delta) - 1]$ & Escolha do grupo & Ler os coeficientes com a resposta em ln\\
 Intervalo de confiança de $\lambda$ no Box-Cox & Escolha do grupo & Dizer se $\lambda = 0$ é compatível com os dados\\
 Oscilação da taxa por porte: $1/\sqrt{\text{casos esperados}}$ & Escolha do grupo & Justificar o corte em \nPopMin{} mil habitantes\\
+Intervalo de confiança do efeito do Gini em cada renda (soma de dois coeficientes) & Escolha do grupo & Mostrar o efeito da desigualdade por faixa de renda\\
 \bottomrule
 \end{tabularx}
 \vspace{0.4em}
 
 {\scriptsize\color{black!70}Regra do trabalho: só técnicas da apostila. O que é de fora fica sinalizado aqui e no LEIA-ME do código.}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Apêndice D · Variáveis testadas e retiradas}
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\input{tabelas/retiradas.tex}
+\fonte{Elaboração própria. $F$ parcial de cada variável somada ao modelo final ($H_0$: coeficiente nulo).}
+\vspace{0.4em}
+
+{\scriptsize\color{black!70}Município retirado: \nForaNome, com \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada em 3 anos (indício de sub-registro).}
 \end{frame}
 
 \end{document}

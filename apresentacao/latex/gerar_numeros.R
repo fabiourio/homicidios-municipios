@@ -57,10 +57,12 @@ m <- with(mod, c(
     R2_E = comp$R2[5], sigma = sf_$sigma,
     F_global_p = unname(pf(sf_$fstatistic[1], sf_$fstatistic[2], sf_$fstatistic[3], lower.tail = FALSE)),
     vif_renda_final = unname(vif_final["rend_c"]), vif_demais_max = max(vif_final[names(vif_final) != "rend_c"]),
-    n_reg = nlevels(d$regiao) - 1, n_x = length(coef(final)) - 3 - (nlevels(d$regiao) - 1),
+    n_reg = nlevels(d$regiao) - 1, n_x = length(coef(final)) - 5 - (nlevels(d$regiao) - 1),
     cor_quad_sem = unname(cor_quad[1]), cor_quad_cen = unname(cor_quad[2])))
-out_nomes <- with(mod$outliers, paste0(municipio, "-", uf))
-efe <- mod$mudancas; coefs <- mod$coefs
+out_nomes <- if (nrow(mod$outliers)) with(mod$outliers, paste0(municipio, "-", uf)) else character(0)
+efe <- mod$mudancas; coefs <- mod$coefs; gr <- mod$gini_renda; ret <- mod$retiradas
+p_ret <- function(t) ret$p[match(t, ret$termo)]
+fora <- br[br$cod_ibge == eda$FORA, ]
 
 dir.create("tabelas", showWarnings = FALSE)
 
@@ -77,9 +79,10 @@ confere(m[["lambda"]] < 0.25, "Box-Cox: lambda mais perto de 0 (log) do que de 0
 confere(m[["lambda_ic_inf"]] > 0, "lambda = 0 fica fora do IC 95% de Box-Cox")
 confere(all(c(m[["p_B"]], m[["p_C"]], m[["p_D"]], m[["p_E"]]) < 0.001), "todos os blocos entram (p < 0,001)")
 ganho <- diff(c(m[["R2a_A"]], m[["R2a_B"]], m[["R2a_C"]], m[["R2a_D"]], m[["R2a_E"]]))
-confere(which.max(ganho) == 4, "maior ganho de R² ajustado com a região (bloco E)")
+confere(which.max(ganho) == 3, "maior ganho de R² ajustado com a região (bloco D)")
 confere(coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "mais frequência escolar, menos homicídios")
-confere(all(sapply(c("distorcao_em", "pct_migr_10anos"), function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05)), "mais distorção e migração recente, mais homicídios")
+confere(coef("distorcao_em", "b") > 0 && coef("distorcao_em", "p") < 0.05, "mais distorção idade-série, mais homicídios")
+confere(coef("pct_migr_10anos", "p") > 0.05, "H3: migração recente não significativa")
 confere(m[["vif_renda"]] > 10, "renda, % pobres e alfabetização juntas têm VIF alto")
 confere(e[["zeros_escopo"]] == 0, "nenhum município sem homicídio no escopo")
 confere(min(e[["taxa_n_br"]], e[["taxa_ne_br"]]) > max(e[["taxa_se_br"]], e[["taxa_s_br"]]), "Norte e Nordeste acima de Sudeste e Sul")
@@ -88,17 +91,22 @@ confere(min(med_reg[c("Norte", "Nordeste")]) > max(med_reg[c("Sudeste", "Sul")])
 confere(e[["taxa_media"]] > e[["taxa_mediana"]], "taxa: média acima da mediana")
 confere(e[["assim_taxa"]] > 0, "taxa: assimetria à direita (coeficiente positivo)")
 confere(round(e[["percentil_corte"]]) == 80 && e[["casos_esp_corte"]] >= 20, "o corte de 30 mil hab. fica no percentil 80 (arredondado) da população e dá pelo menos 20 homicídios esperados em 3 anos")
-confere(mod$POP_MIN == eda$POP_MIN && setequal(mod$d$cod_ibge, d_eda$cod_ibge), "exploratória e modelo no mesmo escopo")
-confere(mod$F_dens$`Pr(>F)`[2] > 0.05, "a densidade (ln, padronizada) não é significativa e fica fora do modelo")
+confere(mod$POP_MIN == eda$POP_MIN && mod$FORA == eda$FORA && setequal(mod$d$cod_ibge, d_eda$cod_ibge), "exploratória e modelo no mesmo escopo")
+confere(nrow(fora) == 1 && fora$pop >= eda$POP_MIN && fora$intencao_indeterminada > 10 * fora$hom, "o município retirado tem muito mais óbitos de intenção indeterminada do que homicídios")
+confere(all(p_ret(c("dens_z", "faixa_fronteira", "abandono_em", "pct_h1529", "indet_sem_hom")) > 0.05), "densidade, fronteira, abandono, % homens 15–29 e % indeterminada (corrigida) não são significativas")
+al_sem_mt <- summary(update(mod$final, . ~ . + amazonia_legal, data = mod$d[mod$d$uf != "MT", ]))$coefficients["amazonia_legal", 4]
+confere(p_ret("amazonia_legal") < 0.05 && al_sem_mt > 0.05, "a Amazônia Legal só é significativa por causa do Mato Grosso")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
-confere(sig_pos("gini") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
-          coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1, H2 e H3")
-confere(coef("abandono_em", "p") > 0.05, "H2: abandono no ensino médio não significativo")
+confere(sig_pos("gini_c") && sig_pos("rend_c:gini_c") && sig_pos("distorcao_em") &&
+          coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1 e H2; o efeito do Gini cresce com a renda")
+confere(gr$efeito_pct[gr$percentil == 50] > 0 && gr$p[gr$percentil == 50] < 0.05 && gr$ic_sup_pct[gr$percentil == 25] > 0 && gr$ic_inf_pct[gr$percentil == 25] < 0,
+        "o efeito do Gini é positivo na renda mediana e não se distingue de zero no primeiro quarto de renda")
+confere(coef("desocup", "b") < 0 && coef("desocup", "p") < 0.05, "desocupação com sinal negativo e significativa")
 confere(all(sapply(paste0("regiao", c("Norte", "Nordeste", "Centro-Oeste", "Sul")), sig_pos)), "taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste")
 confere(mean(d_eda$regiao[d_eda$amazonia_legal == 1] == "Norte") > 0.5, "a maior parte da Amazônia Legal é a região Norte")
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
-confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
+confere(m[["sw_p"]] > 0.05 && m[["n_outliers"]] == 0, "Shapiro-Wilk não rejeita a normalidade e não há resíduo além de 4")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
 # Gini calculado pelas classes de renda x Gini oficial do IBGE nas 27 UFs
 vg <- read.csv("../../entrega/dados/validacao_gini.csv"); vg <- vg[vg$nivel == "Unidade da Federação", ]
@@ -108,15 +116,14 @@ confere(nrow(vg) == 27 && cor(vg$gini_calculado, vg$gini_oficial) > 0.98 && mean
 vif2 <- function(mm) car::vif(mm)[, "GVIF^(1/(2*Df))"]^2
 z <- function(x) (x - mean(x)) / sd(x)
 dz <- transform(mod$d, rend_z = z(log_rend), rend_z2 = z(log_rend)^2, rend_cru2 = log_rend^2)
-vif_z   <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 + rend_z + rend_z2, data = dz))
-vif_cru <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 + log_rend + rend_cru2, data = dz))
+vif_z   <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 - rend_c:gini_c + rend_z + rend_z2 + rend_z:gini_c, data = dz))
+vif_cru <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 - rend_c:gini_c + log_rend + rend_cru2 + log_rend:gini_c, data = dz))
 confere(abs(vif_z[["rend_z"]] - mod$vif_final[["rend_c"]]) < 1e-6, "padronizar ln renda não muda o VIF")
 confere(vif_cru[["log_rend"]] > 100, "sem centralizar, o VIF da renda fica muito maior")
 pico_pct <- 100 * mean(mod$d$rend_pc_media < m[["pico_renda"]]); decil_pico <- which.max(eda$med_faixa$med)
 confere(m[["pico_renda"]] < median(mod$d$rend_pc_media) && e[["renda_decil_pico"]] < median(mod$d$rend_pc_media), "o pico da taxa fica abaixo da renda mediana, nos dados e no modelo")
 confere(abs(m[["pico_renda"]] - e[["renda_decil_pico"]]) / m[["pico_renda"]] < 0.15, "o pico do modelo fica perto do pico dos dados")
 confere(max(eda$med_faixa$med[c(1, 10)]) < max(eda$med_faixa$med), "a taxa cai para os dois lados do décimo do pico")
-confere(coef("abandono_em", "p") > 0.05 && coef("freq_15a17", "p") < 0.05 && coef("distorcao_em", "p") < 0.05, "H2: frequência e distorção significativas; abandono não")
 confere(lmtest::bptest(mod$m_y)$statistic > lmtest::bptest(mod$m_log)$statistic, "com ln Y a dispersão dos resíduos fica mais uniforme do que com Y")
 confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos municípios menores")
 
@@ -128,7 +135,11 @@ mac <- c(
   MunBR = fmt(e[["municipios_br"]], 0), HomBR = fmt(e[["hom_br"]], 0), TaxaBR = fmt(e[["taxa_br"]]),
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
   PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), PercCorte = fmt(e[["percentil_corte"]], 0), PctMaiores = fmt(100 - e[["percentil_corte"]], 0),
-  CasosEspCorte = fmt(e[["casos_esp_corte"]], 0), FDens = fmt(mod$F_dens$F[2], 2), PDens = fmt(mod$F_dens$`Pr(>F)`[2], 2), ZerosBR = fmt(e[["zeros_br"]], 0),
+  CasosEspCorte = fmt(e[["casos_esp_corte"]], 0), FDens = fmt(ret$F[ret$termo == "dens_z"], 2), PDens = fmt(p_ret("dens_z"), 2),
+  ForaNome = paste0(fora$municipio, "-", fora$uf), ForaHom = fmt(fora$hom, 0), ForaIndet = fmt(fora$intencao_indeterminada, 0),
+  GiniZero = fmt(mod$renda_gini_zero, 0), GiniZeroPct = fmt(100 * mean(mod$d$rend_pc_media < mod$renda_gini_zero), 0),
+  GiniEfMediana = sinal(gr$efeito_pct[gr$percentil == 50]), GiniEfNoventa = sinal(gr$efeito_pct[gr$percentil == 90]),
+  FInter = fmt(m[["F_E"]]), RdoisAsemInter = fmt(m[["R2a_D"]], 2), PMigr = fmt(coef("pct_migr_10anos", "p"), 2), ZerosBR = fmt(e[["zeros_br"]], 0),
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
   AssimTaxa = fmt(e[["assim_taxa"]], 2),
@@ -144,9 +155,9 @@ mac <- c(
   Lambda = fmt(m[["lambda"]], 2), LambdaInf = fmt(m[["lambda_ic_inf"]], 2), LambdaSup = fmt(m[["lambda_ic_sup"]], 2),
   SWy = fmt(m[["sw_y"]], 2), SWln = fmt(m[["sw_ln"]], 2), VIFrenda = fmt(m[["vif_renda"]], 0),
   RdoisA = fmt(m[["R2a"]], 2),
-  FblocoEd = fmt(m[["F_D"]]), RdoisAsemEd = fmt(m[["R2a_C"]], 2), RdoisAcomEd = fmt(m[["R2a_D"]], 2), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
+  FblocoEd = fmt(m[["F_C"]]), RdoisAsemEd = fmt(m[["R2a_B"]], 2), RdoisAcomEd = fmt(m[["R2a_C"]], 2), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
   Pico = fmt(m[["pico_renda"]], 0), BP = fmt(m[["bp"]], 0),
-  SW = fmt(m[["sw"]], 2), Nout = fmt(m[["n_outliers"]], 0),
+  SW = fmt(m[["sw"]], 3), Nout = fmt(m[["n_outliers"]], 0),
   SWp = fp(m[["sw_p"]]), BPgl = fmt(m[["bp_gl"]], 0), BPp = fp(m[["bp_p"]]),
   RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
   FglobalP = fp(m[["F_global_p"]]), VIFrendaFinal = fmt(m[["vif_renda_final"]]), VIFdemaisMax = fmt(m[["vif_demais_max"]]), VIFrendaCru = fmt(vif_cru[["log_rend"]], 0),
@@ -167,12 +178,10 @@ writeLines(c("\\begin{tabular}{@{}lrrr@{}}", "\\toprule",
 
 # Tabela-resumo da exploratória: resposta e explicativas do modelo (casas decimais por variável)
 casas <- c(taxa = 1, rend_pc_media = 0, gini = 3, desocup = 1, pct_urbana = 1,
-           pct_h1529 = 1, pct_indet = 1, freq_15a17 = 1, abandono_em = 1, distorcao_em = 1, pct_migr_10anos = 1)
+           freq_15a17 = 1, distorcao_em = 1, pct_migr_10anos = 1)
 rotulo <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R\\$)",
             gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
-            pct_h1529 = "Homens 15--29 (\\%)",
-            pct_indet = "Intenção indeterminada (\\%)", freq_15a17 = "Frequência escolar 15--17 (\\%)",
-            abandono_em = "Abandono no ensino médio (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
+            freq_15a17 = "Frequência escolar 15--17 (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
 ds <- as.data.frame(eda$desc)[match(names(casas), eda$desc$name), ]
 stopifnot(!anyNA(ds$name))
@@ -185,10 +194,8 @@ writeLines(c("\\begin{tabular}{@{}lrrrrr@{}}", "\\toprule",
 
 # Tabela do modelo com e sem a renda (sem as indicadoras de região); em negrito, onde a significância a 5% muda
 cs <- mod$com_sem[!grepl("^regiao", mod$com_sem$termo), ]
-rot_cs <- c(gini = "Desigualdade (Gini)", desocup = "Desocupação", pct_urbana = "\\% urbana",
-            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
-            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
-            pct_migr_10anos = "Migração recente")
+rot_cs <- c(gini_c = "Desigualdade (Gini)", desocup = "Desocupação", pct_urbana = "\\% urbana",
+            freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração recente")
 stopifnot(all(cs$termo %in% names(rot_cs)))
 muda <- (cs$p_com < 0.05) != (cs$p_sem < 0.05)
 cel <- cbind(rot_cs[cs$termo], gsub("-", "$-$", fmt(cs$b_com, 3)), fp(cs$p_com), gsub("-", "$-$", fmt(cs$b_sem, 3)), fp(cs$p_sem))
@@ -200,8 +207,8 @@ writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
 p_cs <- function(t, col) cs[cs$termo == t, col]
 confere(mod$F_renda$`Pr(>F)`[2] < 0.001 && mod$sf_$adj.r.squared > mod$ss_$adj.r.squared, "a renda contribui para o modelo (F parcial) e o R² ajustado cai sem ela")
 confere(max(mod$vif_sem_renda) < max(mod$vif_final) && max(mod$vif_final) < 10, "VIF máximo abaixo de 10 com a renda e menor sem ela")
-confere(p_cs("gini", "p_sem") > 0.05 && p_cs("pct_migr_10anos", "p_sem") > 0.05 && p_cs("gini", "p_com") < 0.05 && p_cs("pct_migr_10anos", "p_com") < 0.05,
-        "sem a renda, desigualdade e migração deixam de ser significativas")
+confere(all(sapply(c("gini_c", "desocup"), function(t) p_cs(t, "p_sem") > 0.05 && p_cs(t, "p_com") < 0.05)),
+        "sem a renda, desigualdade e desocupação deixam de ser significativas")
 confere(p_cs("freq_15a17", "p_sem") < 0.05 && p_cs("distorcao_em", "p_sem") < 0.05, "sem a renda, frequência escolar e distorção continuam significativas")
 cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcommand{\\nPRenda}{%s}\n\\newcommand{\\nRdoisAsemRenda}{%s}\n\\newcommand{\\nVIFmaxSemRenda}{%s}\n",
             fmt(mod$F_renda$F[2]), fmt(mod$F_renda$Df[2], 0), fp(mod$F_renda$`Pr(>F)`[2]), fmt(mod$ss_$adj.r.squared, 2), fmt(max(mod$vif_sem_renda))),
@@ -209,7 +216,7 @@ cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcom
 
 # Tabela dos dois modelos lado a lado: região x estado; em negrito, onde a significância a 5% muda
 re <- mod$regiao_estado
-rot_re <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", rot_cs)
+rot_re <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", rot_cs, `rend_c:gini_c` = "Gini $\\times$ renda")
 stopifnot(all(re$termo %in% names(rot_re)))
 muda <- (re$p_regiao < 0.05) != (re$p_estado < 0.05)
 cel <- cbind(rot_re[re$termo], gsub("-", "$-$", fmt(re$b_regiao, 3)), fp(re$p_regiao), gsub("-", "$-$", fmt(re$b_estado, 3)), fp(re$p_estado))
@@ -221,9 +228,9 @@ writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
 p_re <- function(t, col) re[re$termo == t, col]
 confere(mod$F_estado$`Pr(>F)`[2] < 0.001 && mod$se_$adj.r.squared > mod$sf_$adj.r.squared, "o estado explica mais que a região (F parcial e R² ajustado)")
 confere(max(mod$vif_estado) > 10 && max(mod$vif_final) < 10, "VIF máximo acima de 10 com estado e abaixo de 10 com região")
-confere(all(sapply(c("gini", "distorcao_em", "pct_migr_10anos"), function(t) p_re(t, "p_estado") < 0.05 && p_re(t, "b_estado") > 0)) &&
-          p_re("freq_15a17", "p_estado") < 0.05 && p_re("freq_15a17", "b_estado") < 0, "H1, H2 e H3 valem nos dois modelos")
-confere(p_re("abandono_em", "p_regiao") > 0.05 && p_re("abandono_em", "p_estado") < 0.05, "o abandono escolar só é significativo com estado")
+confere(all(sapply(c("rend_c:gini_c", "distorcao_em"), function(t) p_re(t, "p_estado") < 0.05 && p_re(t, "b_estado") > 0)) &&
+          p_re("freq_15a17", "p_estado") < 0.05 && p_re("freq_15a17", "b_estado") < 0, "o termo Gini x renda e as medidas de escola são significativos nos dois modelos")
+confere(p_re("gini_c", "p_regiao") < 0.05 && p_re("gini_c", "p_estado") > 0.05, "na renda média, o Gini só é significativo com região")
 cat(sprintf("\\newcommand{\\nNumParEstado}{%s}\n\\newcommand{\\nRdoisAestado}{%s}\n\\newcommand{\\nVIFmaxEstado}{%s}\n\\newcommand{\\nFEstado}{%s}\n\\newcommand{\\nGlEstado}{%s}\n\\newcommand{\\nPEstado}{%s}\n\\newcommand{\\nNumUFpoucos}{%s}\n",
             fmt(length(stats::coef(mod$com_estado)), 0), fmt(mod$se_$adj.r.squared, 2), fmt(max(mod$vif_estado)), fmt(mod$F_estado$F[2]), fmt(mod$F_estado$Df[2], 0),
             fp(mod$F_estado$`Pr(>F)`[2]), fmt(sum(table(mod$d$uf) < 10), 0)), file = "numeros.tex", append = TRUE)
@@ -236,9 +243,9 @@ bloco <- function(nome, k, neg = FALSE) {
 }
 writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
              "\\textbf{Bloco} & \\textbf{gl} & \\textbf{$F$ parcial} & \\textbf{$p$} & \\textbf{$R^2_a$}\\\\", "\\midrule",
-             sprintf("A: renda e desigualdade & --- & --- & --- & %s\\\\", fmt(m[["R2a_A"]], 2)),
-             bloco("B: + demografia", "B"), bloco("C: + fronteira e registro", "C"),
-             bloco("D: + educação e migração", "D"), bloco("E: + região", "E", neg = TRUE),
+             sprintf("A: socioeconômico & --- & --- & --- & %s\\\\", fmt(m[["R2a_A"]], 2)),
+             bloco("B: + urbanização", "B"), bloco("C: + educação e migração", "C"),
+             bloco("D: + região", "D", neg = TRUE), bloco("E: + Gini $\\times$ renda", "E"),
              "\\bottomrule", "\\end{tabular}"), "tabelas/blocos.tex")
 
 # Tabela de efeitos na taxa (%): só as significativas; as n.s. viram a macro \nNaoSig
@@ -248,20 +255,23 @@ cat(sprintf("\\newcommand{\\nNaoSig}{%s}\n", paste(tolower(gsub("%", "\\\\%", ef
     file = "numeros.tex", append = TRUE)
 efe <- efe[!ns, ]
 # Hipótese do slide da questão de pesquisa que cada variável testa (H1 desigualdade, H2 escola, H3 migração)
-hip <- c(gini = "H1", freq_15a17 = "H2", abandono_em = "H2", distorcao_em = "H2", pct_migr_10anos = "H3")
+hip <- c(freq_15a17 = "H2", distorcao_em = "H2", pct_migr_10anos = "H3")
 efe$hip <- ifelse(efe$termo %in% names(hip), hip[efe$termo], "")
+# Gini: o efeito depende da renda; a tabela mostra os percentis 10, 50 e 90 da renda
+g3 <- gr[gr$percentil %in% c(10, 50, 90), ]
+lin_gini <- sprintf("H1 & Gini (renda de R\\$ %s) & +0,05 & %s\\%% & [%s; %s] & %s\\\\", fmt(g3$renda, 0),
+                    sinal(g3$efeito_pct, 1), sinal(g3$ic_inf_pct, 1), sinal(g3$ic_sup_pct, 1), fp(g3$p))
 lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", efe$hip, gsub("%", "\\\\%", efe$variavel), efe$mudanca,
                sinal(efe$efeito_pct, 1), sinal(efe$ic_inf_pct, 1), sinal(efe$ic_sup_pct, 1), fp(efe$p))
 writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
              "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Mudança} & \\textbf{Taxa} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\", "\\midrule",
              sprintf(" & Renda & --- & U invertido & --- & %s\\\\", fp(coef("rend_c2", "p"))),
-             lin, "\\bottomrule", "\\end{tabular}"), "tabelas/efeitos.tex")
+             lin_gini, lin, "\\bottomrule", "\\end{tabular}"), "tabelas/efeitos.tex")
 
 # Apêndice: coeficientes
-nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", gini = "Desigualdade (Gini)", desocup = "Desocupação",
-           pct_urbana = "\\% urbana",
-           pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
-           freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
+nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ renda",
+           desocup = "Desocupação", pct_urbana = "\\% urbana",
+           freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
            `regiaoCentro-Oeste` = "Centro-Oeste", regiaoSul = "Sul")
 cc <- coefs[match(names(nomes), coefs$termo), ]
@@ -272,5 +282,15 @@ writeLines(c("\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}lrrrlrrr@{}
              paste0("\\textbf{Termo} & \\textbf{$b$} & \\textbf{EP} & \\textbf{$p$} & ",
                     "\\textbf{Termo} & \\textbf{$b$} & \\textbf{EP} & \\textbf{$p$}\\\\"), "\\midrule",
              paste0(lin, "\\\\"), "\\bottomrule", "\\end{tabular*}"), "tabelas/coeficientes.tex")
+
+# Apêndice: variáveis testadas e retiradas (F parcial de cada uma somada ao modelo final)
+motivo <- c(dens_z = "Sem efeito", faixa_fronteira = "Sem efeito", abandono_em = "Sem efeito", pct_h1529 = "Sem efeito",
+            amazonia_legal = "O efeito vem só do Mato Grosso",
+            indet_sem_hom = "A medida original tinha os homicídios no divisor; corrigida, não tem efeito")
+stopifnot(all(ret$termo %in% names(motivo)))
+lin <- sprintf("%s & %s & %s & %s\\\\", gsub("%", "\\%", gsub("–", "--", ret$variavel), fixed = TRUE), fmt(ret$F, 2), fp(ret$p), motivo[ret$termo])
+writeLines(c("\\begin{tabular}{@{}p{0.36\\textwidth}rrp{0.40\\textwidth}@{}}", "\\toprule",
+             "\\textbf{Variável} & \\textbf{$F$} & \\textbf{$p$} & \\textbf{Motivo da retirada}\\\\", "\\midrule",
+             lin, "\\bottomrule", "\\end{tabular}"), "tabelas/retiradas.tex")
 
 cat("numeros.tex e tabelas/ gerados. Variável de maior correlação com ln(taxa):", var_max, "\n")
