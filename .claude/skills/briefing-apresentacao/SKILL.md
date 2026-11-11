@@ -29,7 +29,7 @@ Os briefings devem bater com o código e com os slides. Nenhum número é digita
    - `notas.json`: uma nota por página, na ordem; `[Nome]` em cada uma, exceto o apêndice. Confira se o número de notas é igual ao de páginas.
    - `comum.tex`: decisões novas entram na tabela de decisões com o porquê e o capítulo da apostila. Remova decisões revertidas.
    - `parte_<nome>.tex`: para cada apresentador presente em `notas.json`. Se alguém novo entrar, crie a parte dele; se alguém sair, apague a dele.
-4. **Gerar:** `cd apresentacao/briefings && Rscript gerar_briefings.R [<deck>]` (padrão: `apresentacao_parcial`).
+4. **Gerar:** `cd apresentacao/briefings && Rscript gerar_briefings.R [<deck>]` (padrão: `apresentacao_final`).
 5. **Conferir:**
    - nenhum número digitado em `comum.tex`, `parte_*.tex` e `notas.json`: `grep -nE '[0-9]+,[0-9]+' ...` só pode achar macros ou nada;
    - cada PDF abre, com a capa "Você apresenta / Antes de você / Depois de você" certa;

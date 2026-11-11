@@ -49,7 +49,7 @@ extras <- read.csv("entrega/dados/variaveis_extras.csv")
 vars_extras <- c("abandono_em", "distorcao_em", "pct_migr_10anos")
 b <- cbind(b, extras[match(b$cod_ibge, extras$cod_ibge), vars_extras])
 
-# Escopo do modelo (igual a entrega/2_modelo_preliminar.R): pop >= 30 mil e fora Campos do Jordão
+# Escopo do modelo (igual a entrega/2_modelo.R): pop >= 30 mil e fora Campos do Jordão
 POP_MIN <- 30000
 FORA <- 3509700   # Campos do Jordão-SP: 1 homicídio registrado e 36 óbitos de intenção indeterminada (indício de sub-registro)
 b$escopo <- b$pop >= POP_MIN & b$cod_ibge != FORA
@@ -337,7 +337,7 @@ if (file.exists(arq_extra)) {
 }
 
 # -----------------------------------------------------------------------------
-# 5. Outliers e pontos influentes no modelo preliminar (entrega/2_modelo_preliminar.R)
+# 5. Outliers e pontos influentes no modelo final (entrega/2_modelo.R)
 # -----------------------------------------------------------------------------
 cat("\n== 5. Outliers e pontos influentes ==\n")
 d <- b[b$escopo, ]

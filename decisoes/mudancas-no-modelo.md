@@ -52,7 +52,7 @@ ln(taxa de homicídios) explicada por: renda e renda² · Gini · Gini × renda 
 | 9 | Fronteira, abandono escolar e % homens 15–29 saem | Sem efeito (p = 0,31; 0,67; 0,14). O modelo não perde nada sem elas |
 | 13 | Entra o termo Gini × renda | Único acréscimo que melhora o modelo fora da amostra (F = 64,6). Vale com corte de 20, 30, 50 e 100 mil habitantes |
 | 14 | "% de mortes sem causa definida" sai | Defeito na conta (acima) |
-| 10 | Esta é a entrega final | Falta trocar "parcial" e "preliminar" nos nomes e na capa |
+| 10 | Esta é a entrega final | "Parcial" e "preliminar" saíram dos nomes dos arquivos e da capa |
 
 Adiada: tamanho do deck e divisão das falas (pergunta 11). Em aberto: citar a vizinhança como limitação (pergunta 15).
 

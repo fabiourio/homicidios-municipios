@@ -2,7 +2,7 @@
 # USO INTERNO (não faz parte do código de entrega)
 # Monta um briefing em PDF por apresentador, a partir de:
 #   ../notas.json                      falas e quem apresenta cada slide ("[Nome] ...")
-#   ../latex/<deck>.tex e <deck>.pdf  títulos e imagens dos slides (deck padrão: apresentacao_parcial)
+#   ../latex/<deck>.tex e <deck>.pdf  títulos e imagens dos slides (deck padrão: apresentacao_final)
 #   ../latex/numeros.tex               números (gerados pelo código)
 #   comum.tex e parte_<nome>.tex       texto do briefing
 # Saída: briefing_<nome>.pdf nesta pasta.
@@ -12,9 +12,9 @@
 
 library(jsonlite)
 
-# Nome do deck (sem extensão); padrão: apresentacao_parcial. Ex.: Rscript gerar_briefings.R apresentacao_final
+# Nome do deck (sem extensão); padrão: apresentacao_final
 deck <- commandArgs(trailingOnly = TRUE)[1]
-if (is.na(deck)) deck <- "apresentacao_parcial"
+if (is.na(deck)) deck <- "apresentacao_final"
 notas <- fromJSON("../notas.json")
 tex   <- readLines(sprintf("../latex/%s.tex", deck), encoding = "UTF-8")
 

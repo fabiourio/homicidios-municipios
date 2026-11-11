@@ -9,7 +9,7 @@ Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16
 - **Unidade de análise:** o município. O modelo usa os municípios com 30 mil habitantes ou mais (perto do percentil 80 da população): 1.133, sem Campos do Jordão-SP
 - **Resposta:** taxa de homicídios (agressão X85–Y09 + intervenção legal Y35–Y36), por residência, média anual 2021–2023
 - **Explicativas:** Censo Demográfico 2022 (renda, desigualdade pelo índice de Gini, trabalho, urbanização, frequência escolar, migração), INEP 2022 (distorção idade-série no ensino médio) e região
-- **Modelo (preliminar):** regressão linear múltipla para ln(taxa), por mínimos quadrados ordinários
+- **Modelo:** regressão linear múltipla para ln(taxa), por mínimos quadrados ordinários
 - **Regras do trabalho:** ver `CLAUDE.md` (código só em R; só técnicas da apostila de GED)
 
 ## Estrutura
@@ -29,7 +29,7 @@ scripts/
   instalar_pacotes.R       instala os pacotes de R
 entrega/                   CÓDIGO DA ANÁLISE para entregar (ver entrega/LEIA-ME.md)
   1_analise_exploratoria.R estatísticas, mapa, correlações, gráficos -> entrega/resultados/eda/
-  2_modelo_preliminar.R    Box-Cox, VIF, blocos com F parcial, modelo, comparação com e sem a renda e diagnóstico -> entrega/resultados/modelagem/
+  2_modelo.R    Box-Cox, VIF, blocos com F parcial, modelo, comparação com e sem a renda e diagnóstico -> entrega/resultados/modelagem/
   dados/                   cópia da base analítica e das variáveis extras (geradas pelos scripts 01 e 02)
 validacao/                 validação da qualidade dos dados (validar_dados.R e RELATORIO.md)
 relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv)
@@ -49,7 +49,7 @@ Rscript scripts/01_preparar_dados.R       # gera dados/tabelas/ e copia a base p
 Rscript scripts/03_preparar_relatorio.R   # gera dados/tabelas/base_relatorio.csv, usada pelo relatorio/relatorio.qmd
 cd entrega
 Rscript 1_analise_exploratoria.R          # gera entrega/resultados/eda/
-Rscript 2_modelo_preliminar.R             # gera entrega/resultados/modelagem/
+Rscript 2_modelo.R             # gera entrega/resultados/modelagem/
 ```
 
 Slides (sempre depois de rodar os dois scripts da entrega, para os números baterem com o código):
@@ -57,7 +57,7 @@ Slides (sempre depois de rodar os dois scripts da entrega, para os números bate
 ```bash
 cd apresentacao/latex
 Rscript gerar_numeros.R                   # roda a análise da entrega e gera numeros.tex e tabelas/
-tectonic -X compile apresentacao_parcial.tex
+tectonic -X compile apresentacao_final.tex
 cd ..
 Rscript exportar_pptx_html.R              # .pdf, .pptx e .html iguais, com as notas (notas.json)
 cd briefings
