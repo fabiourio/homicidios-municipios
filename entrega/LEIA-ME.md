@@ -34,6 +34,7 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 - ln(densidade) entra no modelo padronizado (média 0, desvio-padrão 1).
 - Desigualdade: índice de Gini de cada município, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; a conferência com o oficial está em `dados/validacao_gini.csv`.
 - Resposta do modelo: ln(taxa), escolhida pelo procedimento de Box-Cox.
+- O modelo é montado em 5 blocos, cada um testado pelo F parcial: A renda e desigualdade; B demografia; C fronteira e registro; D educação e migração; E região.
 - A região (5 classes, base Sudeste) entra como variável categórica.
 
 ## Dados

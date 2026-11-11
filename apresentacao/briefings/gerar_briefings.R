@@ -55,14 +55,13 @@ for (nome in unique(na.omit(quem))) {
   pags <- which(quem == nome)
   antes <- quem[max(1, min(pags) - 1)]; depois <- quem[min(length(quem), max(pags) + 1)]
 
+  topicos <- function(x) paste0("\\item ", strsplit(para_tex(x), "(?<=[.!?])\\s+(?=[[:upper:]%\\\\])", perl = TRUE)[[1]])
   slides <- unlist(lapply(pags, function(k) c(
-    "\\noindent\\begin{minipage}[t]{0.46\\linewidth}\\vspace{0pt}",
-    sprintf("\\includegraphics[page=%d,width=\\linewidth]{../latex/%s.pdf}", k, deck),
-    "\\end{minipage}\\hfill",
-    "\\begin{minipage}[t]{0.5\\linewidth}\\vspace{0pt}\\small",
-    sprintf("\\textbf{\\color{navy}%s}\\par\\vspace{0.3em}", titulos_tex[k]),
-    para_tex(fala[k]),
-    "\\end{minipage}\\par\\vspace{1em}")))
+    "\\noindent\\begin{minipage}{\\linewidth}",
+    sprintf("\\textbf{\\large\\color{navy}%s}\\par\\vspace{0.4em}", titulos_tex[k]),
+    sprintf("\\begin{center}\\fbox{\\includegraphics[page=%d,width=0.56\\linewidth]{../latex/%s.pdf}}\\end{center}", k, deck),
+    "\\textbf{O que dizer:}", "\\begin{itemize}", topicos(fala[k]), "\\end{itemize}",
+    "\\end{minipage}\\par\\vspace{1.6em}")))
   writeLines(c("\\section{Seus slides e o que dizer em cada um}", slides), sprintf("fala_%s.tex", s))
 
   writeLines(c(
