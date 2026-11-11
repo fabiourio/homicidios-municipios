@@ -18,18 +18,21 @@ Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16
 dados/
   raw/                  extrações originais (JSON) — SIDRA e TabNet
   candidatos/           fontes e scripts de download das variáveis candidatas (ver FONTES.md)
-  tabelas/              tabelas limpas em CSV + dicionários (geradas pelo script 01)
+  tabelas/              tabelas limpas em CSV + dicionários (geradas pelos scripts 01, 02 e 03)
   malha_mun.geojson     malha municipal 2022 (IBGE)
 scripts/
   00_coletar_dados.R       baixa tudo de novo das fontes (opcional; os dados já estão no repo)
   01_preparar_dados.R      limpeza, checagens de consistência, cálculo do Gini e montagem da base analítica
   02_integrar_candidatas.R integra as variáveis candidatas (educação e migração entram no modelo)
+  03_preparar_relatorio.R  junta o Gini, as variáveis candidatas e os recortes do IBGE (RM/RIDE) -> dados/tabelas/base_relatorio.csv
+  funcoes_desigualdade.R   cálculo do Gini pelas classes de renda (usado pelo 03 e pelo relatório)
   instalar_pacotes.R       instala os pacotes de R
 entrega/                   CÓDIGO DA ANÁLISE para entregar (ver entrega/LEIA-ME.md)
   1_analise_exploratoria.R estatísticas, mapa, correlações, gráficos -> entrega/resultados/eda/
   2_modelo_preliminar.R    Box-Cox, VIF, blocos com F parcial, modelo, comparação com e sem a renda e diagnóstico -> entrega/resultados/modelagem/
   dados/                   cópia da base analítica e das variáveis extras (geradas pelos scripts 01 e 02)
 validacao/                 validação da qualidade dos dados (validar_dados.R e RELATORIO.md)
+relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv)
 apresentacao/              INTERNO: slides (latex/), notas.json, exportação .pptx/.html e briefings/ por apresentador
 ```
 
@@ -42,6 +45,7 @@ Rscript scripts/instalar_pacotes.R
 
 Rscript scripts/01_preparar_dados.R       # gera dados/tabelas/ e copia a base para entrega/dados/
 # (opcional) Rscript scripts/02_integrar_candidatas.R   # regera entrega/dados/variaveis_extras.csv; ver a nota abaixo
+Rscript scripts/03_preparar_relatorio.R   # gera dados/tabelas/base_relatorio.csv, usada pelo relatorio/relatorio.qmd
 cd entrega
 Rscript 1_analise_exploratoria.R          # gera entrega/resultados/eda/
 Rscript 2_modelo_preliminar.R             # gera entrega/resultados/modelagem/

@@ -22,10 +22,10 @@ dados/candidatos/*
 !dados/candidatos/baixar_candidatos.R
 !dados/candidatos/baixar_siconfi.R
 
-# Tabela das candidatas: gerada pelo script 02 (só as 3 variáveis usadas vão para entrega/dados/variaveis_extras.csv)
-dados/tabelas/candidatas.csv
-dados/tabelas/dicionario_candidatas.csv
-
 # Intermediários do LaTeX
 *.fls
 *.fdb_latexmk
+
+# Saídas intermediárias do Quarto (o HTML final já embute as figuras)
+relatorio/relatorio_files/
+relatorio/*.rmarkdown
