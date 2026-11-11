@@ -30,6 +30,7 @@ cv <- eda$cv
 e <- c(
   municipios_br = nrow(br), hom_br = sum(br$hom), taxa_br = eda$taxa_br, pop_min = eda$POP_MIN,
   municipios_escopo = nrow(d_eda), pct_pop_escopo = 100 * sum(d_eda$pop) / sum(br$pop),
+  dens_extremos = sum(br$dens_extrema),
   zeros_escopo = sum(d_eda$hom == 0), zeros_br = sum(br$hom == 0),
   taxa_media = mean(d_eda$taxa), taxa_mediana = median(d_eda$taxa),
   assim_taxa = eda$assimetria(d_eda$taxa), assim_ln_taxa = eda$assimetria(d_eda$ln_taxa),
@@ -91,14 +92,15 @@ med_reg <- tapply(d_eda$taxa, d_eda$regiao, median)
 confere(min(med_reg[c("Norte", "Nordeste")]) > max(med_reg[c("Sudeste", "Sul")]), "boxplot: Norte e Nordeste acima de Sudeste e Sul no escopo")
 confere(e[["taxa_media"]] > e[["taxa_mediana"]], "taxa: média acima da mediana")
 confere(e[["assim_taxa"]] > 0, "taxa: assimetria à direita (coeficiente positivo)")
-confere(mean(d_eda$dens) > 3 * median(d_eda$dens), "densidade: média muito acima da mediana")
+confere(e[["dens_extremos"]] > 0 && max(abs(mod$d$dens_z)) < 3, "densidade: sem os extremos, nenhum município a mais de 3 desvios-padrão da média")
 confere(m[["n"]] == e[["municipios_escopo"]], "exploratória e modelo no mesmo escopo")
 confere(e[["porte_zero_20a50mil"]] == 0, "a partir de 20 mil hab. nenhum município tem taxa zero")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
-confere(sig_pos("pct_negra") && sig_pos("pct_urbana") && sig_pos("desig"), "mais homicídios com mais % preta ou parda, urbanização e desigualdade")
-confere(all(sapply(c("faixa_fronteira", "log_dens", "pct_h1529"), function(t) coef(t, "p") > 0.05)), "fronteira, densidade e % homens 15-29 não significativas")
-confere(sig_pos("desig") && sig_pos("abandono_em") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
-          coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1, H2 e H3")
+confere(sig_pos("pct_negra") && sig_pos("pct_urbana"), "mais homicídios com mais % preta ou parda e urbanização")
+confere(all(sapply(c("faixa_fronteira", "dens_z", "pct_h1529"), function(t) coef(t, "p") > 0.05)), "fronteira, densidade e % homens 15-29 não significativas")
+confere(sig_pos("abandono_em") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
+          coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H2 e H3")
+confere(coef("desig", "b") > 0 && coef("desig", "p") > 0.05, "H1: desigualdade com o sinal esperado, mas não significativa")
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
@@ -115,7 +117,7 @@ var_max <- names(which.max(abs(r_resp)))
 mac <- c(
   MunBR = fmt(e[["municipios_br"]], 0), HomBR = fmt(e[["hom_br"]], 0), TaxaBR = fmt(e[["taxa_br"]]),
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
-  PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), ZerosBR = fmt(e[["zeros_br"]], 0),
+  PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), DensExt = fmt(e[["dens_extremos"]], 0), ZerosBR = fmt(e[["zeros_br"]], 0),
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
   AssimTaxa = fmt(e[["assim_taxa"]], 2), AssimLn = fmt(e[["assim_ln_taxa"]], 2),
@@ -160,11 +162,11 @@ writeLines(c("\\begin{tabular}{@{}lrrr@{}}", "\\toprule",
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/porte.tex")
 
 # Tabela-resumo da exploratória: resposta e explicativas do modelo (casas decimais por variável)
-casas <- c(taxa = 1, rend_pc_media = 0, desig = 2, desocup = 1, pct_urbana = 1, dens = 1, pct_negra = 1,
+casas <- c(taxa = 1, rend_pc_media = 0, desig = 2, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2, pct_negra = 1,
            pct_h1529 = 1, pct_indet = 1, freq_15a17 = 1, abandono_em = 1, distorcao_em = 1, pct_migr_10anos = 1)
 rotulo <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R\\$)",
             desig = "Desigualdade (média/mediana)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
-            dens = "Densidade (hab./km²)", pct_negra = "Preta ou parda (\\%)", pct_h1529 = "Homens 15--29 (\\%)",
+            dens = "Densidade (hab./km²)", log_dens = "ln Densidade", pct_negra = "Preta ou parda (\\%)", pct_h1529 = "Homens 15--29 (\\%)",
             pct_indet = "Intenção indeterminada (\\%)", freq_15a17 = "Frequência escolar 15--17 (\\%)",
             abandono_em = "Abandono no ensino médio (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
@@ -208,7 +210,7 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
 
 # Apêndice: coeficientes (sem as 26 indicadoras de estado)
 nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", desig = "Desigualdade", desocup = "Desocupação",
-           pct_urbana = "\\% urbana", log_dens = "ln densidade", pct_negra = "\\% preta ou parda",
+           pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)", pct_negra = "\\% preta ou parda",
            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente")

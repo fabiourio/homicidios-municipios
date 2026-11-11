@@ -6,8 +6,8 @@
 # Saída:   resultados/eda/ (figuras e tabelas)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 #
-# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais (o mesmo do modelo).
-# Só a definição do escopo e o mapa usam todos os 5.570 municípios.
+# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais, sem os extremos de densidade
+# (o mesmo do modelo). Só a definição do escopo e o mapa usam todos os 5.570 municípios.
 # =============================================================================
 
 rm(list = ls())
@@ -30,6 +30,11 @@ str(br)
 
 POP_MIN <- 20000                                   # escopo: municípios com 20 mil hab. ou mais
 br$escopo <- br$pop >= POP_MIN
+
+# Densidade: saem do escopo os valores extremos de ln(densidade) pelo critério do boxplot (além de 1,5 x IQR dos quartis)
+q_dens <- quantile(br$log_dens[br$escopo], c(.25, .75))
+br$dens_extrema <- br$escopo & (br$log_dens < q_dens[1] - 1.5 * diff(q_dens) | br$log_dens > q_dens[2] + 1.5 * diff(q_dens))
+br$escopo <- br$escopo & !br$dens_extrema
 taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os municípios)
 
 # Paleta igual à dos slides: azul do ODS 16, vermelho de destaque e azul-claro de preenchimento
@@ -92,7 +97,7 @@ summary(d[, c("taxa", "rend_pc_media", "desig", "pct_pobres", "desocup", "alfabe
 rot <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R$)",
          desig = "Desigualdade (média/mediana)", pct_pobres = "% pobres (14+)",
          desocup = "Desocupação (%)", alfabet = "Alfabetização (%)", pct_urbana = "% urbana",
-         dens = "Densidade (hab/km²)", pct_negra = "% preta ou parda", pct_h1529 = "% homens 15–29",
+         dens = "Densidade (hab/km²)", log_dens = "ln Densidade", pct_negra = "% preta ou parda", pct_h1529 = "% homens 15–29",
          pct_indet = "% intenção indeterminada", freq_15a17 = "Frequência escolar 15–17 (%)",
          abandono_em = "Abandono no ensino médio (%)", distorcao_em = "Distorção idade-série EM (%)",
          pct_migr_10anos = "Migração recente (%)", pop = "População")
@@ -138,9 +143,8 @@ ggsave("resultados/eda/e3_box_regiao.png", p, width = 4.8, height = 2.7, dpi = 2
 xs <- c("rend_pc_media", "desig", "pct_pobres", "desocup", "alfabet",
         "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet",
         "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")
-rot4 <- c(rot, log_dens = "ln Densidade")
 e4 <- d %>% select(all_of(xs)) %>% pivot_longer(everything()) %>%
-  mutate(var = factor(rot4[name], levels = rot4[xs]))
+  mutate(var = factor(rot[name], levels = rot[xs]))
 p <- ggplot(e4, aes(value)) +
   geom_histogram(bins = 40, fill = AZUL, colour = FUNDO, linewidth = .15) +
   facet_wrap(~var, scales = "free", ncol = 5) + labs(x = NULL, y = NULL) + th +

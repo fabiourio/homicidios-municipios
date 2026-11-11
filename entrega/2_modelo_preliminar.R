@@ -27,9 +27,16 @@ d <- read.csv("dados/base_analitica.csv")
 extras <- read.csv("dados/variaveis_extras.csv")
 d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10anos")], by = "cod_ibge")
 
-# Escopo do modelo: municípios com 20 mil habitantes ou mais (1.710, 84% da população).
+# Escopo do modelo: municípios com 20 mil habitantes ou mais.
 # Abaixo disso a taxa é dominada pelo acaso (poucos casos, muitos zeros): ver confiabilidade_porte.csv
 d <- d[d$pop >= 20000, ]
+
+# Densidade: saem os valores extremos de ln(densidade) pelo critério do boxplot (além de 1,5 x IQR dos quartis)
+q_dens <- quantile(d$log_dens, c(.25, .75))
+d <- d[d$log_dens >= q_dens[1] - 1.5 * diff(q_dens) & d$log_dens <= q_dens[2] + 1.5 * diff(q_dens), ]
+
+# ln(densidade) padronizado: média 0 e desvio-padrão 1
+d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
 
 # Ordem do código IBGE: municípios do mesmo estado ficam vizinhos na sequência (usado no Durbin-Watson)
 d <- d[order(d$cod_ibge), ]
@@ -57,7 +64,7 @@ summary(rls)
 # -----------------------------------------------------------------------------
 # 2. Transformação da resposta (Box-Cox)
 # -----------------------------------------------------------------------------
-f_base <- ~ log_rend + desig + desocup + pct_urbana + log_dens + pct_negra + pct_h1529 +
+f_base <- ~ log_rend + desig + desocup + pct_urbana + dens_z + pct_negra + pct_h1529 +
   faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + uf
 
 m_y <- lm(update(f_base, y ~ .), data = d)
@@ -79,7 +86,7 @@ sw_log  <- shapiro.test(rstandard(m_log))
 # -----------------------------------------------------------------------------
 # 3. Multicolinearidade: renda, % pobres e alfabetização juntas
 # -----------------------------------------------------------------------------
-m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + desig + desocup + pct_urbana + log_dens +
+m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + desig + desocup + pct_urbana + dens_z +
                 pct_negra + pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em +
                 pct_migr_10anos + uf, data = d)
 summary(m_colin)
@@ -96,7 +103,7 @@ cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend
 # 4. Construção em blocos: somas de quadrados extras e teste F parcial
 # -----------------------------------------------------------------------------
 mA <- lm(ly ~ rend_c + rend_c2 + desig + desocup, data = d)                    # socioeconômico
-mB <- update(mA, . ~ . + pct_urbana + log_dens + pct_negra + pct_h1529)         # + demografia
+mB <- update(mA, . ~ . + pct_urbana + dens_z + pct_negra + pct_h1529)         # + demografia
 mC <- update(mB, . ~ . + faixa_fronteira + pct_indet)                           # + contexto
 mD <- update(mC, . ~ . + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos)   # + educação e migração
 mE <- update(mD, . ~ . + uf)                                                    # + estado
@@ -142,14 +149,14 @@ pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 
 # Efeitos na escala da taxa: com ln(taxa), uma mudança delta em X multiplica a taxa por exp(b * delta)
 mudancas <- data.frame(
-  termo   = c("desig", "pct_urbana", "pct_negra", "log_dens", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
+  termo   = c("desig", "pct_urbana", "pct_negra", "dens_z", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
               "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos"),
   variavel = c("Desigualdade", "% urbana", "% preta ou parda", "Densidade", "Desocupação",
                "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira",
                "Frequência escolar 15–17", "Abandono no ensino médio", "Distorção idade-série (EM)", "Migração recente"),
-  mudanca = c("+0,1", "+10 pontos", "+10 pontos", "dobra", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
+  mudanca = c("+0,1", "+10 pontos", "+10 pontos", "+1 desvio-padrão", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
               "+5 pontos", "+5 pontos", "+10 pontos", "+5 pontos"),
-  delta   = c(0.1, 10, 10, log(2), 1, 1, 1, 1, 5, 5, 10, 5))
+  delta   = c(0.1, 10, 10, 1, 1, 1, 1, 1, 5, 5, 10, 5))
 mudancas$b <- b[mudancas$termo]
 mudancas$p <- sf_$coefficients[mudancas$termo, 4]
 mudancas$efeito_pct <- 100 * (exp(mudancas$b * mudancas$delta) - 1)
@@ -161,7 +168,7 @@ write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = 
 # (fronteira = não, estado = SP, a referência). O nível depende do estado; a forma não.
 grade <- data.frame(rend = exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
-for (v in c("desig", "desocup", "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet",
+for (v in c("desig", "desocup", "pct_urbana", "dens_z", "pct_negra", "pct_h1529", "pct_indet",
            "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
 grade$faixa_fronteira <- 0
 grade$uf <- factor("SP", levels = levels(d$uf))
