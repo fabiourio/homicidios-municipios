@@ -104,6 +104,14 @@ confere(coef("desig", "b") > 0 && coef("desig", "p") > 0.05, "H1: desigualdade c
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
+# VIF da renda no modelo final com ln renda padronizado (média 0, DP 1) e com ln renda cru (sem centralizar)
+vif2 <- function(mm) car::vif(mm)[, "GVIF^(1/(2*Df))"]^2
+z <- function(x) (x - mean(x)) / sd(x)
+dz <- transform(mod$d, rend_z = z(log_rend), rend_z2 = z(log_rend)^2, rend_cru2 = log_rend^2)
+vif_z   <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 + rend_z + rend_z2, data = dz))
+vif_cru <- vif2(update(mod$final, . ~ . - rend_c - rend_c2 + log_rend + rend_cru2, data = dz))
+confere(abs(vif_z[["rend_z"]] - mod$vif_final[["rend_c"]]) < 1e-6, "padronizar ln renda não muda o VIF")
+confere(vif_cru[["log_rend"]] > 100, "sem centralizar, o VIF da renda fica muito maior")
 confere(lmtest::bptest(mod$m_y)$statistic > lmtest::bptest(mod$m_log)$statistic, "com ln Y a dispersão dos resíduos fica mais uniforme do que com Y")
 confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos municípios menores")
 
@@ -140,7 +148,7 @@ mac <- c(
   SW = fmt(m[["sw"]], 2), Nout = fmt(m[["n_outliers"]], 0),
   SWp = fp(m[["sw_p"]]), BPgl = fmt(m[["bp_gl"]], 0), BPp = fp(m[["bp_p"]]),
   GlUF = fmt(m[["gl_uf"]], 0), PUF = fp(m[["p_uf"]]), RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
-  FglobalP = fp(m[["F_global_p"]]), VIFrendaFinal = fmt(m[["vif_renda_final"]]), VIFdemaisMax = fmt(m[["vif_demais_max"]]),
+  FglobalP = fp(m[["F_global_p"]]), VIFrendaFinal = fmt(m[["vif_renda_final"]]), VIFdemaisMax = fmt(m[["vif_demais_max"]]), VIFrendaCru = fmt(vif_cru[["log_rend"]], 0),
   NumUF = fmt(m[["n_uf"]], 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
   CorQuadSem = fmt(m[["cor_quad_sem"]], 4), CorQuadCen = fmt(m[["cor_quad_cen"]], 2),
   BetaDois = fmt(coef("rend_c2", "b"), 3), BetaDoisP = fp(coef("rend_c2", "p")),

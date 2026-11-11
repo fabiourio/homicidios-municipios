@@ -14,6 +14,7 @@
 \begin{description}[leftmargin=0pt]
 \item[Por que \% intenção indeterminada tem efeito negativo?] Ela mede subnotificação: onde muitas mortes ficam como indeterminadas, parte dos homicídios some do registro. É um controle de qualidade do registro, não um fator de risco.
 \item[A variância não constante invalida o modelo?] Não invalida os coeficientes (continuam certos na média), mas deixa os valores p aproximados; está nos próximos passos.
+\item[O VIF foi calculado com ln renda padronizado ou cru?] Na escolha entre renda, \% pobres e alfabetização, com ln renda cru (VIF \nVIFrenda). No modelo final, com ln renda centralizado na média (VIF \nVIFrendaFinal). Padronizar não muda o VIF, porque ele só depende da correlação entre as explicativas. Centralizar muda, por causa do termo ao quadrado: sem centralizar, o VIF seria \nVIFrendaCru.
 \item[E o gasto da prefeitura com segurança?] Testamos: não tem efeito. Segurança é sobretudo do estado, que já está no modelo, e muitas prefeituras não gastam nada nessa função.
 \end{description}
 
