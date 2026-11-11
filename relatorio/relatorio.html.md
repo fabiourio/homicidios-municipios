@@ -81,11 +81,11 @@ Quase tudo é de 2022, o ano do Censo. A resposta usa os três anos em torno del
 | Grupo | Variável | Descrição | Ano | Fonte | Uso |
 |----|----|----|----|----|----|
 | Resposta | `taxa` | Homicídios (agressão + intervenção legal) por 100 mil hab./ano, por residência | 2021–2023 | SIM/DATASUS; população do Censo | Resposta; em ln, provisório (Box-Cox a refazer no modelo) |
-| Renda e trabalho | `rend_pc_media` | Renda domiciliar per capita média (R$) | 2022 | SIDRA 10295 | Interesse (H1); ln, centralizada e ao quadrado |
-| Renda e trabalho | `pct_pobres` | % de pessoas de 14+ anos sem rendimento ou com até 1/4 SM per capita | 2022 | SIDRA 10300 | Controle |
+| Renda e trabalho | `rend_pc_media` | Renda domiciliar per capita média (R\$) | 2022 | SIDRA 10295 | Interesse (H1); ln, centralizada e ao quadrado |
+| Renda e trabalho | `pct_pobres` | \% de pessoas de 14+ anos sem rendimento ou com até 1/4 SM per capita | 2022 | SIDRA 10300 | Controle |
 | Renda e trabalho | `desocup` | Taxa de desocupação (% da força de trabalho) | 2022 | SIDRA 9517 | Controle |
-| Renda e trabalho | `pct_informal` | % dos ocupados que não contribuem para a previdência | 2022 | SIDRA 10264 | Alternativa à desocupação |
-| Renda e trabalho | `ln_pib_pc` | ln do PIB per capita (R$) | 2022 | SIDRA 5938 | Alternativa à renda [@ouimet2012] |
+| Renda e trabalho | `pct_informal` | \% dos ocupados que não contribuem para a previdência | 2022 | SIDRA 10264 | Alternativa à desocupação |
+| Renda e trabalho | `ln_pib_pc` | ln do PIB per capita (R\$) | 2022 | SIDRA 5938 | Alternativa à renda [@ouimet2012] |
 | Desigualdade | `gini` | Gini da renda domiciliar per capita, calculado das classes de renda | 2022 | SIDRA 10300 (cálculo nosso) | Interesse (H2); medida principal |
 | Desigualdade | `gini_2010` | Gini oficial da renda domiciliar per capita | 2010 | IBGE via DATASUS (ginibr) | Alternativa e validação |
 | Educação e família | `freq_15a17` | Frequência escolar bruta de 15 a 17 anos (%) | 2022 | SIDRA 10056 | Controle |
@@ -178,7 +178,9 @@ ggplot(lor, aes(P, L, colour = municipio)) + geom_abline(linetype = 2, colour = 
 
 O gráfico mostra a curva de Lorenz de três municípios de 20 mil habitantes ou mais: o de menor Gini calculado, o mais próximo da mediana e o de maior. Cada ponto é o limite de uma classe; a linha tracejada é a igualdade perfeita.
 
-Usar o ponto médio no lugar da renda média de cada classe tem dois custos. Com as médias das classes, ligar os pontos por retas daria um limite inferior do Gini [@gastwirth1972]; com pontos médios, é só aproximadamente um limite inferior. E o valor da classe aberta continua sendo uma escolha, ainda que com precedente. Os dois são avaliados na validação abaixo.
+Cada classe recebe a renda do seu ponto médio, em salários mínimos ("sem rendimento" recebe zero). A classe aberta, acima de 20 SM, não tem ponto médio: ela recebe 50 SM, o valor com que o mesmo cálculo reproduz o Gini oficial do Brasil (0,542; o calculado dá 0,542). O cálculo está em `scripts/01_preparar_dados.R`.
+
+Usar o ponto médio no lugar da renda média de cada classe tem dois custos. Com as médias das classes, ligar os pontos por retas daria um limite inferior do Gini [@gastwirth1972]; com pontos médios, é só aproximadamente um limite inferior. E o valor da classe aberta foi ajustado ao Brasil como um todo, e não a cada UF. Os dois são avaliados na validação abaixo.
 
 ### Validação do Gini calculado
 
@@ -188,18 +190,14 @@ Para ter uma ideia da qualidade da nossa estimativa, comparamos o Gini que o nos
 ::: {.cell}
 
 ```{.r .cell-code}
-j <- jsonlite::fromJSON(gini_uf_json)$resultados[[1]]$series[[1]]
+val_gini <- read.csv(val_gini_csv)                                   # written by scripts/01_preparar_dados.R
 uf_sigla <- unique(data.frame(uf_cod = as.numeric(substr(d_all$cod_ibge, 1, 2)), uf = d_all$uf))
-gini_off <- merge(data.frame(uf_cod = as.numeric(j$localidade$id), oficial = as.numeric(unlist(j$serie))), uf_sigla)
+v <- val_gini[val_gini$nivel == "Unidade da Federação", ]
+val_uf <- merge(data.frame(uf_cod = v$codigo, oficial = v$gini_oficial, calculado = v$gini_calculado), uf_sigla)
 cnt_uf <- rowsum(counts, as.numeric(substr(income_classes$cod_ibge, 1, 2)))
-gini_calc <- data.frame(uf_cod = as.numeric(rownames(cnt_uf)), calculado = apply(cnt_uf, 1, function(n) grouped_ineq(n, mids)[["gini"]]))
-val_uf <- merge(gini_off, gini_calc)
 val_uf$dif <- val_uf$calculado - val_uf$oficial
 val_r <- cor(val_uf$calculado, val_uf$oficial)
-worst <- val_uf[order(val_uf$dif), ][1:3, ]
-top_share <- 100 * cnt_uf[, 11] / rowSums(cnt_uf)                   # % of people above 20 SM, by UF
-top_rank <- rank(-top_share)[as.character(worst$uf_cod)]               # rank of the worst UFs in that share
-r_top <- cor(d_all$gini_top20, d_all$gini_top40)   # open class at 20 vs 40 SM, municipal level
+worst <- val_uf[order(-abs(val_uf$dif)), ][1:3, ]
 ggplot(val_uf, aes(oficial, calculado, label = uf)) + geom_abline(linetype = 2, colour = "grey50") + geom_text(size = 3) +
   labs(x = "Gini oficial 2022 da UF (SIDRA 10301)", y = "Gini calculado (SIDRA 10300)")
 ```
@@ -210,7 +208,7 @@ ggplot(val_uf, aes(oficial, calculado, label = uf)) + geom_abline(linetype = 2, 
 :::
 
 
-O resultado é aceitável. Nas 27 UFs, a correlação entre o nosso Gini e o oficial é de 0,988, e o nosso fica, em média, 0,006 abaixo dele. Ficar abaixo é o esperado de um limite inferior, e acontece em 25 das 27 UFs. As maiores diferenças estão em DF (-0,018), RJ (-0,017), SP (-0,016), que ocupam as posições 1, 3, 2 entre as UFs com mais gente na classe aberta, acima de 20 SM.
+O resultado é aceitável. Nas 27 UFs, a correlação entre o nosso Gini e o oficial é de 0,995, e a diferença média, em módulo, é de 0,003. As maiores diferenças estão em TO (+0,008), CE (+0,007), AL (+0,006). Com a classe aberta em 50 SM, o cálculo fica ora um pouco acima, ora um pouco abaixo do oficial (abaixo em 7 das 27 UFs). A comparação é feita por UF, então não mede o erro amostral do Censo nos municípios pequenos.
 
 # Análise exploratória
 
@@ -388,7 +386,7 @@ round(sd_by_pop, 2)
 
 
 - **Forma:** a taxa tem cauda longa à direita (assimetria 1,36); em ln, fica quase simétrica (-0,49).
-- **Transformação:** o Box-Cox indica λ = 0,23 (IC 95%: 0,18 a 0,28), mais perto de uma raiz quarta do que do ln (λ = 0). É só um indicativo: a escolha final vem do Box-Cox com as explicativas, no modelo (apostila, 4.7).
+- **Transformação:** o Box-Cox indica $\lambda$ = 0,23 (IC 95%: 0,18 a 0,28), mais perto de uma raiz quarta do que do ln ($\lambda$ = 0). É só um indicativo: a escolha final vem do Box-Cox com as explicativas, no modelo (apostila, 4.7).
 - **Variância:** o desvio-padrão de ln(taxa) cai de 0,86 nos municípios menores para 0,77 nos maiores; a variância pode não ser constante.
 
 ## Distribuição das explicativas
@@ -632,10 +630,10 @@ round(reg_q, 2)
 ```
    municipios taxa_mediana renda_p10 renda_p90 gini_p10 gini_p90
 N         182        29.70    508.38   1370.93     0.45     0.54
-NE        592        33.78    621.20   1072.76     0.42     0.50
-CO        124        24.04   1168.30   2049.51     0.42     0.49
-SE        541        10.73   1122.43   1983.62     0.39     0.49
-S         271        14.16   1477.03   2303.59     0.37     0.47
+NE        592        33.78    621.20   1072.76     0.43     0.51
+CO        124        24.04   1168.30   2049.51     0.43     0.51
+SE        541        10.73   1122.43   1983.62     0.40     0.49
+S         271        14.16   1477.03   2303.59     0.38     0.48
 ```
 
 
@@ -711,92 +709,6 @@ up_down <- function(b) if (b > 0) "sobe" else "desce"
 
 
 Os números abaixo dos gráficos são as inclinações das retas. A reta sobe em N, NE e desce em CO, SE, S: no Norte e no Nordeste, os municípios de renda maior são mais violentos; no Sudeste e no Sul, é o contrário. Na Amazônia Legal, a reta sobe, e fora dela desce; na faixa de fronteira, desce, e fora dela desce. São retas sem controles: a diferença entre os grupos pode vir de outras variáveis, e só o modelo pode dizer se ela continua.
-
-### Estados
-
-Para avaliar modelos por estado, contamos os municípios de cada UF em cada corte e medimos quanto da variação da taxa está entre as UFs.
-
-
-::: {.cell}
-
-```{.r .cell-code}
-uf_reg <- unique(d_all[c("uf", "regiao")])
-uf_n <- sapply(c(`10 mil` = 1e4, `20 mil` = 2e4, `50 mil` = 5e4), function(k) table(factor(d_all$uf[d_all$pop >= k], levels = uf_reg$uf)))
-uf_tab <- data.frame(uf_reg, uf_n, check.names = FALSE)
-uf_tab <- uf_tab[order(uf_tab$regiao, -uf_tab$`20 mil`), ]
-knitr::kable(uf_tab, row.names = FALSE, caption = "Municípios por UF com população acima de cada corte.")
-```
-
-::: {.cell-output-display}
-
-
-Table: Municípios por UF com população acima de cada corte.
-
-|uf |regiao | 10 mil| 20 mil| 50 mil|
-|:--|:------|------:|------:|------:|
-|PA |N      |    132|    104|     42|
-|AM |N      |     60|     36|     12|
-|RO |N      |     30|     17|      7|
-|TO |N      |     28|      9|      5|
-|AC |N      |     19|      7|      2|
-|AP |N      |     10|      5|      2|
-|RR |N      |     13|      4|      1|
-|BA |NE     |    341|    160|     42|
-|PE |NE     |    166|     99|     33|
-|CE |NE     |    163|     97|     37|
-|MA |NE     |    175|     88|     22|
-|AL |NE     |     69|     39|     10|
-|PB |NE     |     82|     32|     10|
-|RN |NE     |     68|     27|      9|
-|PI |NE     |     63|     26|      5|
-|SE |NE     |     47|     24|      7|
-|GO |CO     |     96|     55|     24|
-|MT |CO     |     74|     36|     13|
-|MS |CO     |     54|     32|      6|
-|DF |CO     |      1|      1|      1|
-|SP |SE     |    372|    252|    137|
-|MG |SE     |    371|    187|     72|
-|RJ |SE     |     86|     66|     37|
-|ES |SE     |     68|     36|     11|
-|RS |S      |    162|    107|     43|
-|PR |S      |    193|     92|     35|
-|SC |S      |    133|     72|     32|
-
-
-:::
-
-```{.r .cell-code}
-between_share <- function(s) { m <- ave(s$ln_taxa, s$uf); sum((m - mean(s$ln_taxa))^2) / sum((s$ln_taxa - mean(s$ln_taxa))^2) }
-share_uf <- c(Brasil = between_share(d), sapply(split(d, d$regiao), between_share))
-round(share_uf, 2)
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-Brasil      N     NE     CO     SE      S 
-  0.50   0.04   0.08   0.24   0.37   0.31 
-```
-
-
-:::
-
-```{.r .cell-code}
-nne_big <- uf_tab$uf[uf_tab$regiao %in% c("N", "NE") & uf_tab$`20 mil` >= 30]
-s_uf <- d[d$uf %in% nne_big, ]
-ggplot(rbind(data.frame(var = "ln renda", uf = s_uf$uf, x = s_uf$log_rend, y = s_uf$ln_taxa),
-             data.frame(var = "Gini", uf = s_uf$uf, x = s_uf$gini, y = s_uf$ln_taxa)), aes(x, y)) +
-  geom_point(alpha = .3, size = .5) + geom_smooth(method = "lm", formula = y ~ x, se = FALSE, colour = "red") +
-  facet_wrap(vars(var, uf), nrow = 2, scales = "free_x") + labs(x = NULL, y = "ln(taxa)") + scale_x_continuous(n.breaks = 3)
-```
-
-::: {.cell-output-display}
-![](relatorio_files/figure-html/recorte-uf-1.png){width=768}
-:::
-:::
-
-
-No Norte, com o corte de 20 mil habitantes, só PA e AM têm mais de 30 municípios; TO, AC, AP, RR têm menos de 10. 50% da variação de ln(taxa) no Brasil está **entre** as UFs; dentro de cada região, essa parcela vai de 4% a 37%. Os painéis mostram as UFs do Norte e do Nordeste com pelo menos 30 municípios no escopo (PA, AM, BA, PE, CE, MA, AL, PB), com uma reta por UF só como guia visual; nenhum coeficiente é reportado.
 
 ### Região metropolitana
 
@@ -912,9 +824,9 @@ round(cor_terc, 3)
 
 ```
             municipios r_bruta r_dentro_uf dp_gini
-renda baixa        570  -0.135      -0.151   0.035
-renda média        570   0.378       0.054   0.039
-renda alta         570   0.304       0.134   0.047
+renda baixa        570  -0.132      -0.148   0.036
+renda média        570   0.367       0.054   0.041
+renda alta         570   0.292       0.118   0.050
 ```
 
 
@@ -944,9 +856,9 @@ h2_gap <- diff(range(cor_terc[, "r_dentro_uf"]))
 :::
 
 
-A correlação de ln(taxa) com o Gini em cada terço é renda baixa: -0,14; renda média: 0,38; renda alta: 0,30. Há um problema para ler isso: os terços de renda quase coincidem com as regiões. 98% do terço de renda baixa está no Norte ou no Nordeste, e 85% do de renda alta, no Sudeste ou no Sul. Uma diferença entre os terços pode ser, então, uma diferença entre regiões.
+A correlação de ln(taxa) com o Gini em cada terço é renda baixa: -0,13; renda média: 0,37; renda alta: 0,29. Há um problema para ler isso: os terços de renda quase coincidem com as regiões. 98% do terço de renda baixa está no Norte ou no Nordeste, e 85% do de renda alta, no Sudeste ou no Sul. Uma diferença entre os terços pode ser, então, uma diferença entre regiões.
 
-Para reduzir isso, centramos o Gini e a taxa na média de cada UF, o que tira a diferença de nível entre os estados. As correlações ficam em -0,15; 0,05; 0,13, e a maior diferença entre elas é de 0,29, acima do limite de 0,2 que usamos para chamar uma diferença de relevante (escolha nossa). Mesmo assim, a exploração não separa uma interação Gini × renda de uma relação do Gini que muda entre regiões; só o modelo pode comparar as duas. O Gini varia o suficiente dentro de cada terço para isso: o desvio-padrão vai de 0,035 a 0,047.
+Para reduzir isso, centramos o Gini e a taxa na média de cada UF, o que tira a diferença de nível entre os estados. As correlações ficam em -0,15; 0,05; 0,12, e a maior diferença entre elas é de 0,27, acima do limite de 0,2 que usamos para chamar uma diferença de relevante (escolha nossa). Mesmo assim, a exploração não separa uma interação Gini × renda de uma relação do Gini que muda entre regiões; só o modelo pode comparar as duas. O Gini varia o suficiente dentro de cada terço para isso: o desvio-padrão vai de 0,036 a 0,050.
 
 Por fim, a taxa contra cada controle, para ver se alguma relação é curva e pede transformação (apostila, 4.7).
 
@@ -974,17 +886,15 @@ A tabela reúne o que a exploração sugere para o modelo. São hipóteses e dec
 | observação | chunk | implicação para a modelagem | status |
 |----|----|----|----|
 | Abaixo de 20.000 habitantes há taxas zero e poucos homicídios por município | `scope-explore`, `scope-rule` | Escopo de 20.000 habitantes ou mais; checar a variância dos resíduos por porte | hipótese |
-| ln(taxa) é quase simétrica, mas o Box-Cox marginal dá λ = 0,23 (IC 0,18–0,28) | `outcome` | Refazer o Box-Cox com as explicativas antes de fixar ln | hipótese |
+| ln(taxa) é quase simétrica, mas o Box-Cox marginal dá $\lambda$ = 0,23 (IC 0,18–0,28) | `outcome` | Refazer o Box-Cox com as explicativas antes de fixar ln | hipótese |
 | O desvio-padrão de ln(taxa) vai de 0,86 a 0,77 do menor para o maior quartil de população | `outcome` | Checar variância constante nos resíduos mesmo assim (Breusch-Pagan, apostila 4.8) | hipótese |
 | pct_pobres, desocup, pct_indet, pct_presos são assimétricas à direita | `predictors` | Avaliar ln(1 + x); presos como indicadora + ln(1 + %) | hipótese |
 | Renda e pobreza quase colineares (r = -0,92) | `correlation` | Grupo decide como tratar (apostila, 6.5) | decisão pendente |
 | Indicadoras de UF custam 26 parâmetros, 5 UFs têm menos de 10 municípios e, com elas, a Amazônia Legal só varia dentro de MA | `categorical` | Usar indicadoras de região, Amazônia Legal e faixa de fronteira no lugar das de UF | decidido |
-| O Gini calculado recupera o oficial por UF (r = 0,988) | `gini-validation-uf` | Usar como medida principal; Gini 2010 como alternativa | hipótese |
-| Dentro das UFs, a correlação do Gini varia 0,29 entre os terços de renda (limite: 0,2); os terços acompanham as regiões | `h2-effect` | Interação Gini × renda é candidata (H2), mas se confunde com Gini × região; comparar as duas no modelo | hipótese |
+| O Gini calculado recupera o oficial por UF (r = 0,995) | `gini-validation-uf` | Usar como medida principal; Gini 2010 como alternativa | hipótese |
+| Dentro das UFs, a correlação do Gini varia 0,27 entre os terços de renda (limite: 0,2); os terços acompanham as regiões | `h2-effect` | Interação Gini × renda é candidata (H2), mas se confunde com Gini × região; comparar as duas no modelo | hipótese |
 | A mediana da taxa vai de 10,7 a 33,8 entre regiões, e as faixas de renda pouco se sobrepõem | `recorte-niveis` | Recorte ou indicadoras de região/UF | decisão pendente |
 | A reta de ln(taxa) contra a renda sobe em N, NE e desce em CO, SE, S | `recorte-relacoes` | Interação região × renda ou modelos por região (apostila, cap. 7) | decisão pendente |
-| 50% da variação de ln(taxa) está entre UFs | `recorte-uf` | Com indicadoras de região, a parte entre estados da mesma região fica no resíduo; checar os resíduos por UF | hipótese |
-| Poucas UFs do Norte têm municípios suficientes | `recorte-uf` | Modelo por UF só é viável nas maiores | hipótese |
 | Concentração urbana se confunde com o porte | `metro` | Escolher entre RM/RIDE e concentração urbana; checar VIF com porte | decisão pendente |
 
 # Informações da sessão {.unnumbered}
@@ -1008,7 +918,7 @@ BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dy
 LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+[1] C.UTF-8/UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
 
 time zone: America/Sao_Paulo
 tzcode source: internal
@@ -1028,10 +938,10 @@ loaded via a namespace (and not attached):
 [21] pillar_1.11.1      RColorBrewer_1.1-3 rlang_1.3.0        xfun_0.60         
 [25] S7_0.2.2           otel_0.2.0         cli_3.6.6          mgcv_1.9-4        
 [29] withr_3.0.3        magrittr_2.0.5     class_7.3-23       digest_0.6.39     
-[33] grid_4.6.1         rstudioapi_0.19.0  nlme_3.1-169       lifecycle_1.0.5   
-[37] vctrs_0.7.3        KernSmooth_2.23-26 proxy_0.4-29       evaluate_1.0.5    
-[41] glue_1.8.1         farver_2.1.2       e1071_1.7-17       rmarkdown_2.31    
-[45] tools_4.6.1        pkgconfig_2.0.3    htmltools_0.5.9   
+[33] grid_4.6.1         nlme_3.1-169       lifecycle_1.0.5    vctrs_0.7.3       
+[37] KernSmooth_2.23-26 proxy_0.4-29       evaluate_1.0.5     glue_1.8.1        
+[41] farver_2.1.2       e1071_1.7-17       rmarkdown_2.31     tools_4.6.1       
+[45] pkgconfig_2.0.3    htmltools_0.5.9   
 ```
 
 

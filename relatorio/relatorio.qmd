@@ -31,7 +31,7 @@ while (!file.exists(file.path(root, "homicidios-municipios.Rproj")) && dirname(r
 repo <- function(...) file.path(root, ...)
 source(repo("scripts/funcoes_desigualdade.R"))   # grouped Gini, shared with scripts/03_preparar_relatorio.R
 income_classes <- read.csv(repo("dados/tabelas/sidra_10300.csv"), colClasses = "character")  # people 14+ by per capita income class
-gini_uf_json <- repo("dados/raw/sidra_10301_gini_uf.json")                                   # official 2022 Gini, UF level only
+val_gini_csv <- repo("dados/tabelas/validacao_gini.csv")                                     # official x computed Gini (script 01)
 
 # Portuguese number formatting for inline results
 f <- function(x, d = 2) formatC(round(x, d), format = "f", digits = d, big.mark = ".", decimal.mark = ",")
@@ -56,7 +56,7 @@ uf_centre <- function(x, g) x - ave(x, g)   # centre a variable on its UF mean (
 # Revisão de literatura
 
 | Estudo | O que estuda | Escopo e dados | Método | Principais resultados | O que levamos |
-|------------|------------|------------|------------|------------|------------|
+|----|----|----|----|----|----|
 | Blau e Blau [-@blau1982] | Desigualdade e violência (privação relativa) | 125 áreas metropolitanas dos EUA | Não informado no texto salvo | A desigualdade aumenta a violência; com ela controlada, a pobreza deixa de importar | A hipótese central: a desigualdade importa mais que a pobreza |
 | Pridemore [-@pridemore2011] | Desigualdade contra pobreza | Réplica de dois estudos entre países | Os mesmos modelos, com e sem pobreza | Pobreza positiva; a desigualdade desaparece em dois de três modelos | Incluir % pobres junto da desigualdade |
 | Ouimet [-@ouimet2012] | Fatores socioeconômicos do homicídio | 165 países, 2010 | Regressão, com subamostras por nível de desenvolvimento | A desigualdade prediz o homicídio no desenvolvimento médio | Motiva a H2: o efeito da desigualdade depende da renda |
@@ -101,13 +101,13 @@ A resposta é a taxa de homicídios. As explicativas estão em sete grupos:
 Quase tudo é de 2022, o ano do Censo. A resposta usa os três anos em torno dele.
 
 | Grupo | Variável | Descrição | Ano | Fonte | Uso |
-|------------|------------|------------|------------|------------|------------|
+|----|----|----|----|----|----|
 | Resposta | `taxa` | Homicídios (agressão + intervenção legal) por 100 mil hab./ano, por residência | 2021–2023 | SIM/DATASUS; população do Censo | Resposta; em ln, provisório (Box-Cox a refazer no modelo) |
-| Renda e trabalho | `rend_pc_media` | Renda domiciliar per capita média (R$) | 2022 | SIDRA 10295 | Interesse (H1); ln, centralizada e ao quadrado |
-| Renda e trabalho | `pct_pobres` | % de pessoas de 14+ anos sem rendimento ou com até 1/4 SM per capita | 2022 | SIDRA 10300 | Controle |
+| Renda e trabalho | `rend_pc_media` | Renda domiciliar per capita média (R\$) | 2022 | SIDRA 10295 | Interesse (H1); ln, centralizada e ao quadrado |
+| Renda e trabalho | `pct_pobres` | \% de pessoas de 14+ anos sem rendimento ou com até 1/4 SM per capita | 2022 | SIDRA 10300 | Controle |
 | Renda e trabalho | `desocup` | Taxa de desocupação (% da força de trabalho) | 2022 | SIDRA 9517 | Controle |
-| Renda e trabalho | `pct_informal` | % dos ocupados que não contribuem para a previdência | 2022 | SIDRA 10264 | Alternativa à desocupação |
-| Renda e trabalho | `ln_pib_pc` | ln do PIB per capita (R$) | 2022 | SIDRA 5938 | Alternativa à renda [@ouimet2012] |
+| Renda e trabalho | `pct_informal` | \% dos ocupados que não contribuem para a previdência | 2022 | SIDRA 10264 | Alternativa à desocupação |
+| Renda e trabalho | `ln_pib_pc` | ln do PIB per capita (R\$) | 2022 | SIDRA 5938 | Alternativa à renda [@ouimet2012] |
 | Desigualdade | `gini` | Gini da renda domiciliar per capita, calculado das classes de renda | 2022 | SIDRA 10300 (cálculo nosso) | Interesse (H2); medida principal |
 | Desigualdade | `gini_2010` | Gini oficial da renda domiciliar per capita | 2010 | IBGE via DATASUS (ginibr) | Alternativa e validação |
 | Educação e família | `freq_15a17` | Frequência escolar bruta de 15 a 17 anos (%) | 2022 | SIDRA 10056 | Controle |
@@ -140,7 +140,7 @@ Quase tudo é de 2022, o ano do Censo. A resposta usa os três anos em torno del
 A medida de desigualdade é central para a H2. Nos estudos revisados, ela é medida assim:
 
 | Estudo | Medida de desigualdade | Unidade |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Blau e Blau [-@blau1982] | Gini da renda familiar, segundo fontes secundárias (o método do artigo não foi lido) | Áreas metropolitanas dos EUA |
 | Pridemore [-@pridemore2011] | Gini, segundo os artigos que o citam (não verificado); testa várias medidas | Países |
 | Ouimet [-@ouimet2012] | Gini | Países |
@@ -193,7 +193,9 @@ ggplot(lor, aes(P, L, colour = municipio)) + geom_abline(linetype = 2, colour = 
 
 O gráfico mostra a curva de Lorenz de três municípios de 20 mil habitantes ou mais: o de menor Gini calculado, o mais próximo da mediana e o de maior. Cada ponto é o limite de uma classe; a linha tracejada é a igualdade perfeita.
 
-Usar o ponto médio no lugar da renda média de cada classe tem dois custos. Com as médias das classes, ligar os pontos por retas daria um limite inferior do Gini [@gastwirth1972]; com pontos médios, é só aproximadamente um limite inferior. E o valor da classe aberta continua sendo uma escolha, ainda que com precedente. Os dois são avaliados na validação abaixo.
+Cada classe recebe a renda do seu ponto médio, em salários mínimos ("sem rendimento" recebe zero). A classe aberta, acima de 20 SM, não tem ponto médio: ela recebe 50 SM, o valor com que o mesmo cálculo reproduz o Gini oficial do Brasil (`r f(val_gini$gini_oficial[val_gini$nivel == "Brasil"], 3)`; o calculado dá `r f(val_gini$gini_calculado[val_gini$nivel == "Brasil"], 3)`). O cálculo está em `scripts/01_preparar_dados.R`.
+
+Usar o ponto médio no lugar da renda média de cada classe tem dois custos. Com as médias das classes, ligar os pontos por retas daria um limite inferior do Gini [@gastwirth1972]; com pontos médios, é só aproximadamente um limite inferior. E o valor da classe aberta foi ajustado ao Brasil como um todo, e não a cada UF. Os dois são avaliados na validação abaixo.
 
 ### Validação do Gini calculado
 
@@ -202,23 +204,19 @@ Para ter uma ideia da qualidade da nossa estimativa, comparamos o Gini que o nos
 ```{r}
 #| label: gini-validation-uf
 #| fig-height: 3.5
-j <- jsonlite::fromJSON(gini_uf_json)$resultados[[1]]$series[[1]]
+val_gini <- read.csv(val_gini_csv)                                   # written by scripts/01_preparar_dados.R
 uf_sigla <- unique(data.frame(uf_cod = as.numeric(substr(d_all$cod_ibge, 1, 2)), uf = d_all$uf))
-gini_off <- merge(data.frame(uf_cod = as.numeric(j$localidade$id), oficial = as.numeric(unlist(j$serie))), uf_sigla)
+v <- val_gini[val_gini$nivel == "Unidade da Federação", ]
+val_uf <- merge(data.frame(uf_cod = v$codigo, oficial = v$gini_oficial, calculado = v$gini_calculado), uf_sigla)
 cnt_uf <- rowsum(counts, as.numeric(substr(income_classes$cod_ibge, 1, 2)))
-gini_calc <- data.frame(uf_cod = as.numeric(rownames(cnt_uf)), calculado = apply(cnt_uf, 1, function(n) grouped_ineq(n, mids)[["gini"]]))
-val_uf <- merge(gini_off, gini_calc)
 val_uf$dif <- val_uf$calculado - val_uf$oficial
 val_r <- cor(val_uf$calculado, val_uf$oficial)
-worst <- val_uf[order(val_uf$dif), ][1:3, ]
-top_share <- 100 * cnt_uf[, 11] / rowSums(cnt_uf)                   # % of people above 20 SM, by UF
-top_rank <- rank(-top_share)[as.character(worst$uf_cod)]               # rank of the worst UFs in that share
-r_top <- cor(d_all$gini_top20, d_all$gini_top40)   # open class at 20 vs 40 SM, municipal level
+worst <- val_uf[order(-abs(val_uf$dif)), ][1:3, ]
 ggplot(val_uf, aes(oficial, calculado, label = uf)) + geom_abline(linetype = 2, colour = "grey50") + geom_text(size = 3) +
   labs(x = "Gini oficial 2022 da UF (SIDRA 10301)", y = "Gini calculado (SIDRA 10300)")
 ```
 
-O resultado é aceitável. Nas `r nrow(val_uf)` UFs, a correlação entre o nosso Gini e o oficial é de `r f(val_r, 3)`, e o nosso fica, em média, `r f(abs(mean(val_uf$dif)), 3)` abaixo dele. Ficar abaixo é o esperado de um limite inferior, e acontece em `r sum(val_uf$dif < 0)` das `r nrow(val_uf)` UFs. As maiores diferenças estão em `r paste0(worst$uf, " (", f(worst$dif, 3), ")", collapse = ", ")`, que ocupam as posições `r paste(top_rank, collapse = ", ")` entre as UFs com mais gente na classe aberta, acima de 20 SM.
+O resultado é aceitável. Nas `r nrow(val_uf)` UFs, a correlação entre o nosso Gini e o oficial é de `r f(val_r, 3)`, e a diferença média, em módulo, é de `r f(mean(abs(val_uf$dif)), 3)`. As maiores diferenças estão em `r paste0(worst$uf, " (", ifelse(worst$dif > 0, "+", ""), f(worst$dif, 3), ")", collapse = ", ")`. Com a classe aberta em 50 SM, o cálculo fica ora um pouco acima, ora um pouco abaixo do oficial (abaixo em `r sum(val_uf$dif < 0)` das `r nrow(val_uf)` UFs). A comparação é feita por UF, então não mede o erro amostral do Censo nos municípios pequenos.
 
 # Análise exploratória
 
@@ -303,7 +301,7 @@ round(sd_by_pop, 2)
 ```
 
 - **Forma:** a taxa tem cauda longa à direita (assimetria `r f(skew(d$taxa))`); em ln, fica quase simétrica (`r f(skew(d$ln_taxa))`).
-- **Transformação:** o Box-Cox indica λ = `r f(bc_lambda)` (IC `r f(100 * ci_level, 0)`%: `r f(bc_ci[1])` a `r f(bc_ci[2])`)`r if (bc_ci[1] > 0) ", mais perto de uma raiz quarta do que do ln (λ = 0)" else ", compatível com o ln (λ = 0)"`. É só um indicativo: a escolha final vem do Box-Cox com as explicativas, no modelo (apostila, 4.7).
+- **Transformação:** o Box-Cox indica $\lambda$ = `r f(bc_lambda)` (IC `r f(100 * ci_level, 0)`%: `r f(bc_ci[1])` a `r f(bc_ci[2])`)`r if (bc_ci[1] > 0) ", mais perto de uma raiz quarta do que do ln ($\\lambda$ = 0)" else ", compatível com o ln ($\\lambda$ = 0)"`. É só um indicativo: a escolha final vem do Box-Cox com as explicativas, no modelo (apostila, 4.7).
 - **Variância:** o desvio-padrão de ln(taxa) cai de `r f(sd_by_pop[1])` nos municípios menores para `r f(sd_by_pop[4])` nos maiores; a variância pode não ser constante.
 
 ## Distribuição das explicativas
@@ -509,9 +507,9 @@ ggplot(long, aes(x, ln_taxa)) + geom_point(alpha = .15, size = .5) +
 A tabela reúne o que a exploração sugere para o modelo. São hipóteses e decisões pendentes, não conclusões.
 
 | observação | chunk | implicação para a modelagem | status |
-|------------------|------------------|------------------|------------------|
+|----|----|----|----|
 | Abaixo de `r n_fmt(chosen)` habitantes há taxas zero e poucos homicídios por município | `scope-explore`, `scope-rule` | Escopo de `r n_fmt(chosen)` habitantes ou mais; checar a variância dos resíduos por porte | hipótese |
-| ln(taxa) é quase simétrica, mas o Box-Cox marginal dá λ = `r f(bc_lambda)` (IC `r f(bc_ci[1])`–`r f(bc_ci[2])`) | `outcome` | Refazer o Box-Cox com as explicativas antes de fixar ln | hipótese |
+| ln(taxa) é quase simétrica, mas o Box-Cox marginal dá $\lambda$ = `r f(bc_lambda)` (IC `r f(bc_ci[1])`–`r f(bc_ci[2])`) | `outcome` | Refazer o Box-Cox com as explicativas antes de fixar ln | hipótese |
 | O desvio-padrão de ln(taxa) vai de `r f(max(sd_by_pop))` a `r f(min(sd_by_pop))` do menor para o maior quartil de população | `outcome` | Checar variância constante nos resíduos mesmo assim (Breusch-Pagan, apostila 4.8) | hipótese |
 | `r paste(setdiff(skewed, "freq_15a17"), collapse = ", ")` são assimétricas à direita | `predictors` | Avaliar ln(1 + x); presos como indicadora + ln(1 + %) | hipótese |
 | Renda e pobreza quase colineares (r = `r f(r["log_rend", "pct_pobres"])`) | `correlation` | Grupo decide como tratar (apostila, 6.5) | decisão pendente |
@@ -520,8 +518,6 @@ A tabela reúne o que a exploração sugere para o modelo. São hipóteses e dec
 | Dentro das UFs, a correlação do Gini varia `r f(h2_gap)` entre os terços de renda (limite: `r f(r_min, 1)`); os terços acompanham as regiões | `h2-effect` | `r if (h2_gap >= r_min) "Interação Gini × renda é candidata (H2), mas se confunde com Gini × região; comparar as duas no modelo" else "Pouco indício de interação Gini × renda dentro das UFs; H2 segue como hipótese do plano"` | hipótese |
 | A mediana da taxa vai de `r f(min(reg_q[, "taxa_mediana"]), 1)` a `r f(max(reg_q[, "taxa_mediana"]), 1)` entre regiões, e as faixas de renda pouco se sobrepõem | `recorte-niveis` | Recorte ou indicadoras de região/UF | decisão pendente |
 | A reta de ln(taxa) contra a renda sobe em `r paste(reg_up, collapse = ", ")` e desce em `r paste(reg_down, collapse = ", ")` | `recorte-relacoes` | Interação região × renda ou modelos por região (apostila, cap. 7) | decisão pendente |
-| `r f(100 * share_uf["Brasil"], 0)`% da variação de ln(taxa) está entre UFs | `recorte-uf` | Com indicadoras de região, a parte entre estados da mesma região fica no resíduo; checar os resíduos por UF | hipótese |
-| Poucas UFs do Norte têm municípios suficientes | `recorte-uf` | Modelo por UF só é viável nas maiores | hipótese |
 | Concentração urbana se confunde com o porte | `metro` | Escolher entre RM/RIDE e concentração urbana; checar VIF com porte | decisão pendente |
 
 # Informações da sessão {.unnumbered}
