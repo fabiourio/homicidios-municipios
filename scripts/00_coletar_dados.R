@@ -3,7 +3,7 @@
 #   1. SIDRA/IBGE (Censo 2022)  -> dados/raw/sidra_raw.json
 #   2. TabNet/DATASUS (SIM)      -> dados/raw/tabnet_raw.json
 #   3. Malha municipal do IBGE   -> dados/malha_mun.geojson
-#   4. Extras: frequência escolar (SIDRA 10056) e garimpo (MapBiomas) -> dados/raw/
+#   4. Extras: frequência escolar (SIDRA 10056), Gini oficial (SIDRA 10301) e garimpo (MapBiomas) -> dados/raw/
 # Uso: Rscript scripts/00_coletar_dados.R              (baixa tudo)
 #      Rscript scripts/00_coletar_dados.R sidra        (só uma parte: sidra | tabnet | malha | extras)
 # =============================================================================
@@ -36,12 +36,11 @@ UFS <- c(11:17, 21:29, 31:33, 35, 41:43, 50:53)
 SIDRA <- list(  # tabela, variáveis, classificações
   c("4709",  "93",                "")                                                         ,  # população
   c("4714",  "93|6318|614",       "")                                                         ,  # pop, área, densidade
-  c("10295", "13604|13431|13534", "2[6794]|86[95251]|58[95253]")                              ,  # renda pc média e mediana
+  c("10295", "13604|13431",       "2[6794]|86[95251]|58[95253]")                              ,  # renda pc média
   c("10300", "13432",             "629[32385]|386[all]")                                      ,  # pessoas 14+ por classe de renda pc
   c("9517",  "1641",              "629[32385,32386,32387,32446,32447]|2[6794]|86[95251]|1568[120704]"),  # força de trabalho
   c("9543",  "2513",              "2[6794]|86[95251]|287[100362]")                            ,  # alfabetização
   c("9923",  "93",                "1[6795,1,2]")                                              ,  # situação urbana/rural
-  c("9605",  "93",                "86[95251,2776,2777,2778,2779,2780]")                       ,  # cor ou raça
   c("9606",  "93",                "86[95251]|2[4]|287[93086,93087,93088]"))                      # homens 15-29
 
 coletar_sidra <- function() {
@@ -136,6 +135,10 @@ coletar_extras <- function() {
   message("Frequência escolar (SIDRA 10056)...")
   url <- "https://apisidra.ibge.gov.br/values/t/10056/n6/all/v/3795/p/2022/c58/2792,100052/c2/6794/c86/95251"
   writeBin(content(baixa(url), "raw"), "dados/raw/sidra_10056_freq_escolar.json")
+  message("Gini oficial do Brasil, das regiões e das UFs (SIDRA 10301)...")
+  url <- paste0("https://servicodados.ibge.gov.br/api/v3/agregados/10301/periodos/2022/variaveis/13418",
+                "?localidades=N1[all]|N2[all]|N3[all]")
+  writeBin(content(baixa(URLencode(url)), "raw"), "dados/raw/sidra_10301_gini.json")
   message("MapBiomas - substância minerada por município (Coleção 11)...")
   url <- paste0("https://brasil.mapbiomas.org/wp-content/uploads/sites/3/2026/10/",
                 "MAPBIOMAS-BRAZIL-MINED-SUBSTANCES-MUNICIPALITY-COLLECTION_11.xlsx")

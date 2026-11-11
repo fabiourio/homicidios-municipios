@@ -1,20 +1,21 @@
 \section{Sua parte: resultados, diagnóstico e conclusão}
-\textbf{Mensagem principal:} os sinais são consistentes com as três hipóteses (desigualdade, escola e migração), a renda tem efeito em U invertido e os estados diferem muito; isso está de acordo com a literatura. A variância não constante e a correlação entre vizinhos são as principais pendências.
+\textbf{Mensagem principal:} os sinais são consistentes com as três hipóteses (desigualdade, escola e migração), a renda tem efeito em U invertido e as regiões diferem muito; isso está de acordo com a literatura. A variância não constante é a principal pendência.
 
 \subsection{O que enfatizar}
 \begin{itemize}
 \item \textbf{Efeitos em \%:} como a resposta está em log, cada efeito é a variação da taxa para a mudança indicada, com as outras variáveis constantes. A primeira coluna liga cada variável à hipótese (H1, H2, H3). As não significativas aparecem em cinza, ao lado da tabela.
-\item \textbf{Escola (H2):} mais jovens de 15--17 na escola, menos homicídios; mais abandono e atraso no ensino médio, mais homicídios. É associação, não causa.
+\item \textbf{Escola (H2):} mais jovens de 15--17 na escola, menos homicídios; mais atraso no ensino médio, mais homicídios. O abandono não é significativo. É associação, não causa.
 \item \textbf{Curva da renda:} pico em R\$ \nPico{} quando as outras variáveis estão controladas (diferente do pico dos dados brutos, que não controla nada).
-\item \textbf{Diagnóstico:} Shapiro-Wilk rejeita com $W$ = \nSW{} (cauda esquerda mais pesada), variância não constante (Breusch-Pagan = \nBP), \nNout{} outlier mantido. O Durbin-Watson (\nDW) está na ordem do código IBGE, quase alfabética dentro da UF: não diz nada sobre vizinhos geográficos.
-\item \textbf{Conclusão:} responder a pergunta do início e comparar com os estudos do slide do Kauan: urbanização e desigualdade com o mesmo sinal de Wanzinack et al.; diferença entre estados como em Castellucci e Silva; a correlação entre vizinhos de Barros et al. fica para a próxima etapa.
+\item \textbf{Diagnóstico:} são três slides. Primeiro os gráficos (resíduos contra valores ajustados e contra a população; depois histograma e gráfico de quantis), por último a tabela dos testes. Mostrar no gráfico o que o teste diz. Shapiro-Wilk rejeita com $W$ = \nSW{} (cauda esquerda mais pesada), variância não constante (Breusch-Pagan = \nBP), além de 4 desvios-padrão: \nOutNomes{} (ficam no modelo). Independência: dados em corte transversal, sem ordem de coleta; não há sequência a testar.
+\item \textbf{Com e sem a renda:} a renda tem o maior VIF (\nVIFrendaFinal). O $F$ parcial (\nFRenda) mostra que ela contribui; sem ela o $R^2_a$ cai para \nRdoisAsemRenda. Mostrar na tabela, em negrito, onde a significância muda: é o efeito da correlação entre as explicativas.
+\item \textbf{Conclusão:} responder a pergunta do início e comparar com os estudos do slide do Kauan: urbanização e desigualdade com o mesmo sinal de Wanzinack et al.; diferença entre regiões como em Barros et al.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
 \item[Por que \% intenção indeterminada tem efeito negativo?] Ela mede subnotificação: onde muitas mortes ficam como indeterminadas, parte dos homicídios some do registro. É um controle de qualidade do registro, não um fator de risco.
 \item[A variância não constante invalida o modelo?] Não invalida os coeficientes (continuam certos na média), mas deixa os valores p aproximados; está nos próximos passos.
-\item[O Durbin-Watson perto de 2 não mostra que os vizinhos são independentes?] Não: ele compara cada município com o seguinte na ordem do código IBGE, que dentro do estado é quase alfabética. Verificar a correlação entre vizinhos geográficos está nos próximos passos.
+\item[O VIF foi calculado com ln renda padronizado ou cru?] Na escolha entre renda, \% pobres e alfabetização, com ln renda cru (VIF \nVIFrenda). No modelo final, com ln renda centralizado na média (VIF \nVIFrendaFinal). Padronizar não muda o VIF, porque ele só depende da correlação entre as explicativas. Centralizar muda, por causa do termo ao quadrado: sem centralizar, o VIF seria \nVIFrendaCru.
 \item[E o gasto da prefeitura com segurança?] Testamos: não tem efeito. Segurança é sobretudo do estado, que já está no modelo, e muitas prefeituras não gastam nada nessa função.
 \end{description}
 

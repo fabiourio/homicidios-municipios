@@ -6,8 +6,8 @@
 # Saída:   resultados/eda/ (figuras e tabelas)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 #
-# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais (o mesmo do modelo).
-# Só a definição do escopo e o mapa usam todos os 5.570 municípios.
+# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais, sem os extremos de densidade de cada região
+# (o mesmo do modelo). Só a definição do escopo e o mapa usam todos os 5.570 municípios.
 # =============================================================================
 
 rm(list = ls())
@@ -30,6 +30,27 @@ str(br)
 
 POP_MIN <- 20000                                   # escopo: municípios com 20 mil hab. ou mais
 br$escopo <- br$pop >= POP_MIN
+
+# Percentil da densidade (população / área) de cada município dentro da sua região (0 a 100), entre os de 20 mil hab. ou mais.
+# Saem do escopo os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
+P_CORTE <- 2.5
+percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
+br$p_dens <- NA
+br$p_dens[br$escopo] <- ave((br$pop / br$area_km2)[br$escopo], br$regiao[br$escopo], FUN = percentil)
+br$dens_extrema <- br$escopo & (br$p_dens <= P_CORTE | br$p_dens >= 100 - P_CORTE)
+
+# Percentil de cada município e resumo do corte por região (para decidir quais considerar)
+perc <- br[br$escopo, c("cod_ibge", "municipio", "uf", "regiao", "pop", "dens", "p_dens")]
+perc$considerado <- ifelse(br$dens_extrema[br$escopo], "não", "sim")
+perc$regiao <- factor(perc$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                      labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
+perc <- perc[order(perc$regiao, perc$p_dens), ]
+write.csv(perc, "resultados/eda/percentis_municipios.csv", row.names = FALSE)
+corte_regiao <- perc %>% group_by(regiao) %>%
+  summarise(municipios = n(), fora = sum(considerado == "não"), considerados = sum(considerado == "sim"),
+            dens_min = min(dens[considerado == "sim"]), dens_max = max(dens[considerado == "sim"]), .groups = "drop")
+write.csv(corte_regiao, "resultados/eda/corte_regiao.csv", row.names = FALSE)
+br$escopo <- br$escopo & !br$dens_extrema
 taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os municípios)
 
 # Paleta igual à dos slides: azul do ODS 16, vermelho de destaque e azul-claro de preenchimento
@@ -86,13 +107,13 @@ d$regiao <- factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
                    labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
 d$ln_taxa <- log(d$taxa)
 
-summary(d[, c("taxa", "rend_pc_media", "desig", "pct_pobres", "desocup", "alfabet", "pct_urbana",
-              "dens", "pct_negra", "pct_h1529", "pct_indet", "regiao", "amazonia_legal", "faixa_fronteira")])
+summary(d[, c("taxa", "rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet", "pct_urbana",
+              "dens", "pct_h1529", "pct_indet", "regiao", "amazonia_legal", "faixa_fronteira")])
 
 rot <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R$)",
-         desig = "Desigualdade (média/mediana)", pct_pobres = "% pobres (14+)",
+         gini = "Desigualdade (índice de Gini)", pct_pobres = "% pobres (14+)",
          desocup = "Desocupação (%)", alfabet = "Alfabetização (%)", pct_urbana = "% urbana",
-         dens = "Densidade (hab/km²)", pct_negra = "% preta ou parda", pct_h1529 = "% homens 15–29",
+         dens = "Densidade (hab/km²)", log_dens = "ln Densidade", pct_h1529 = "% homens 15–29",
          pct_indet = "% intenção indeterminada", freq_15a17 = "Frequência escolar 15–17 (%)",
          abandono_em = "Abandono no ensino médio (%)", distorcao_em = "Distorção idade-série EM (%)",
          pct_migr_10anos = "Migração recente (%)", pop = "População")
@@ -135,12 +156,11 @@ ggsave("resultados/eda/e3_box_regiao.png", p, width = 4.8, height = 2.7, dpi = 2
 # -----------------------------------------------------------------------------
 # E4. Histogramas das explicativas numéricas (assimetria e bimodalidade)
 # -----------------------------------------------------------------------------
-xs <- c("rend_pc_media", "desig", "pct_pobres", "desocup", "alfabet",
-        "pct_urbana", "log_dens", "pct_negra", "pct_h1529", "pct_indet",
+xs <- c("rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet",
+        "pct_urbana", "log_dens", "pct_h1529", "pct_indet",
         "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")
-rot4 <- c(rot, log_dens = "ln Densidade")
 e4 <- d %>% select(all_of(xs)) %>% pivot_longer(everything()) %>%
-  mutate(var = factor(rot4[name], levels = rot4[xs]))
+  mutate(var = factor(rot[name], levels = rot[xs]))
 p <- ggplot(e4, aes(value)) +
   geom_histogram(bins = 40, fill = AZUL, colour = FUNDO, linewidth = .15) +
   facet_wrap(~var, scales = "free", ncol = 5) + labs(x = NULL, y = NULL) + th +
@@ -150,9 +170,9 @@ ggsave("resultados/eda/e4_hist_explicativas.png", p, width = 7, height = 3.2, dp
 # -----------------------------------------------------------------------------
 # E5. Correlações: de cada explicativa com ln(taxa), e entre as explicativas (matriz completa em CSV)
 # -----------------------------------------------------------------------------
-cv <- c(log_rend = "ln Renda", desig = "Desigualdade", pct_pobres = "% pobres", desocup = "Desocupação",
+cv <- c(log_rend = "ln Renda", gini = "Desigualdade", pct_pobres = "% pobres", desocup = "Desocupação",
         alfabet = "Alfabetização", pct_urbana = "% urbana", log_dens = "ln Densidade",
-        pct_negra = "% preta/parda", pct_h1529 = "% homens 15–29", pct_indet = "% indeterminada",
+        pct_h1529 = "% homens 15–29", pct_indet = "% indeterminada",
         freq_15a17 = "Freq. escolar 15–17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração recente")
 R <- cor(d[, c("ln_taxa", names(cv))])
 dimnames(R) <- list(c("ln Taxa", cv), c("ln Taxa", cv))
@@ -173,8 +193,8 @@ ggsave("resultados/eda/e5_correlacao.png", p, width = 4.8, height = 4.0, dpi = 2
 # -----------------------------------------------------------------------------
 # E6. Dispersão: ln(taxa) x cada explicativa, com reta de mínimos quadrados
 # -----------------------------------------------------------------------------
-xs6 <- c(log_rend = "ln Renda per capita", desig = "Desigualdade (média/mediana)", desocup = "Desocupação (%)",
-         pct_urbana = "% urbana", log_dens = "ln Densidade", pct_negra = "% preta ou parda",
+xs6 <- c(log_rend = "ln Renda per capita", gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (%)",
+         pct_urbana = "% urbana", log_dens = "ln Densidade",
          pct_h1529 = "% homens 15–29", pct_indet = "% intenção indeterminada")
 e6 <- d %>% select(ln_taxa, all_of(names(xs6))) %>% pivot_longer(-ln_taxa) %>%
   mutate(var = factor(xs6[name], levels = xs6))
@@ -203,7 +223,7 @@ ggsave("resultados/eda/e7_box_renda.png", p, width = 4.8, height = 3.2, dpi = 25
 # E8. Matriz de gráficos de dispersão de um subconjunto de variáveis
 # -----------------------------------------------------------------------------
 sub <- d %>% transmute(`ln Taxa` = ln_taxa, `ln Renda` = log_rend, `% pobres` = pct_pobres,
-                       `Alfabetização` = alfabet, `% urbana` = pct_urbana, `% preta/parda` = pct_negra)
+                       `Alfabetização` = alfabet, `% urbana` = pct_urbana)
 p <- ggpairs(sub, lower = list(continuous = wrap("points", size = .25, alpha = .25, colour = AZUL)),
              diag = list(continuous = wrap("densityDiag", fill = CLARO, colour = AZUL))) + th +
   theme(axis.text = element_text(size = 5.5), strip.text = element_text(size = 7.5))

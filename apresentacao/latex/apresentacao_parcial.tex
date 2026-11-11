@@ -84,7 +84,7 @@
 \end{tabularx}
 \vspace{0.5em}
 
-\scriptsize\textbf{Lacuna:} os estudos nacionais usam variáveis explicativas de 2010. Este trabalho usa o Censo 2022 completo, educação (INEP 2022) e migração, com controle pelo estado.
+\scriptsize\textbf{Lacuna:} os estudos nacionais usam variáveis explicativas de 2010. Este trabalho usa o Censo 2022 completo, educação (INEP 2022) e migração, com controle pela região.
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -110,7 +110,7 @@
 \textbf{Fonte} & \textbf{Conteúdo} & \textbf{Período}\\
 \midrule
 SIM / DATASUS (TabNet) & Óbitos por causas externas, por município de residência (CID-10) & 2021--2023\\
-Censo Demográfico / IBGE (SIDRA) & Renda, trabalho, cor ou raça, idade, urbanização, escola, migração & 2022\\
+Censo Demográfico / IBGE (SIDRA) & Renda, trabalho, idade, urbanização, escola, migração & 2022\\
 Censo Escolar / INEP & Abandono e distorção idade-série no ensino médio & 2022\\
 DATASUS (TabNet) & Recortes territoriais: Amazônia Legal e faixa de fronteira & ---\\
 \bottomrule
@@ -154,16 +154,16 @@ Y_i = \frac{H_i^{2021} + H_i^{2022} + H_i^{2023}}{3\,P_i} \times 10^5
 \toprule
 \textbf{Bloco} & \textbf{Dimensão} & \textbf{Explicativas}\\
 \midrule
-A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade, desocupação\\
-B & Demográfica & \% urbana, ln densidade, \% preta ou parda, \% homens 15--29\\
+A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade (índice de Gini), desocupação\\
+B & Demográfica & \% urbana, ln densidade (padronizado), \% homens 15--29\\
 C & Contexto e registro & faixa de fronteira, \% óbitos de intenção indeterminada\\
 D & Educação e migração & frequência escolar 15--17, abandono e distorção no EM, migração\\
-E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
+E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \bottomrule
 \end{tabularx}
 \vspace{0.6em}
 
-{\scriptsize\color{black!70}Desigualdade: razão média/mediana da renda (o Gini municipal de 2022 não foi publicado). Migração: \% de moradores há menos de 10 anos no município.}
+{\scriptsize\color{black!70}Desigualdade: índice de Gini da renda domiciliar per capita, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; nas 27 UFs, a correlação do calculado com o oficial é \nGiniCorUF. Migração: \% de moradores há menos de 10 anos no município.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -173,8 +173,26 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \item \textbf{Desenho observacional e ecológico:} associações entre municípios; sem interpretação causal nem individual (falácia ecológica)
 \item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios
 \item \textbf{Denominador:} a população prisional é recenseada no município do presídio
-\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os \textbf{\nMunEsc{} municípios com \nPopMin{} mil hab. ou mais} (\nPctPopEsc\% da população)
+\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os municípios com \nPopMin{} mil hab. ou mais. Sem os \nDensExt{} extremos de densidade de cada região, ficam \textbf{\nMunEsc{} municípios} (\nPctPopEsc\% da população)
 \end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Municípios considerados: percentil por região}
+\begin{columns}[c]
+\column{0.64\textwidth}
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{4pt}
+\input{tabelas/corte_regiao.tex}
+\fonte{IBGE, Censo 2022. Municípios com \nPopMin{} mil hab. ou mais. Densidade em hab./km².}
+\column{0.34\textwidth}
+\begin{itemize}\small
+\item Cada município recebe o percentil da sua densidade dentro da sua região
+\item Ficam os que estão entre os percentis \nPCorte{} e \nPCorteSup: os \nPctCentral\% centrais de cada região
+\item Saem \nDensExt{} municípios; ficam \nMunEsc
+\end{itemize}
+\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -189,7 +207,8 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \fonte{SIM/DATASUS; IBGE; INEP. \nMunEsc{} municípios do escopo. DP: desvio-padrão. Elaboração própria.}
 \column{0.27\textwidth}
 \begin{itemize}\small
-\item Densidade muito assimétrica (média muito acima da mediana): entra em ln no modelo
+\item Densidade: saem os \nDensExt{} municípios fora dos \nPctCentral\% centrais da sua região
+\item No modelo, ln densidade entra padronizado (média 0, DP 1)
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -219,7 +238,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \vspace{0.3em}
 \begin{itemize}\footnotesize
 \item Norte e Nordeste acima de Sudeste e Sul
-\item No modelo: estado (UF) como variável categórica
+\item No modelo: região como variável categórica
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -266,7 +285,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m1_boxcox.png}
-\fonte{Elaboração própria; modelo com todas as explicativas e a UF.}
+\fonte{Elaboração própria; modelo com todas as explicativas e a região.}
 \column{0.38\textwidth}
 \begin{itemize}\small
 \item Box e Cox (1964): $\hat\lambda = \nLambda$; IC 95\%: [\nLambdaInf; \nLambdaSup]
@@ -277,16 +296,32 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \end{frame}
 
 % -----------------------------------------------------------------------------
+\begin{frame}{Resíduos antes e depois da transformação}
+\begin{columns}[c]
+\column{0.49\textwidth}
+\includegraphics[width=\linewidth]{m2a_residuos_y_transformada.png}
+\column{0.49\textwidth}
+\includegraphics[width=\linewidth]{m2b_qq_y_transformada.png}
+\end{columns}
+\fonte{Elaboração própria. Resíduos padronizados do modelo com todas as explicativas e a região.}
+\vspace{0.3em}
+\begin{itemize}\small
+\item Com $Y$: a dispersão cresce com o valor ajustado e a cauda direita foge da reta
+\item Com $\ln Y$: dispersão mais uniforme e pontos mais próximos da reta
+\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
 \begin{frame}{Especificação do modelo}
 \[
-\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumUF} \gamma_k D_{ik} + \varepsilon_i,
+\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{\nNumReg} \gamma_k D_{ik} + \varepsilon_i,
 \qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2)
 \]
 \begin{itemize}\small
 \setlength{\itemsep}{0.3em}
 \item $r_i$: ln da renda per capita, centrada na média (reduz a correlação entre $r$ e $r^2$ de \nCorQuadSem{} para \nCorQuadCen)
 \item $\mathbf{x}_i$: as demais \nNumX{} explicativas dos blocos A a D
-\item $D_{ik}$: indicadora da UF $k$ (referência: SP)
+\item $D_{ik}$: indicadora da região $k$ (referência: Sudeste)
 \item Mínimos quadrados ordinários; $n = \nMunEsc$ municípios e \nNumPar{} parâmetros
 \end{itemize}
 \end{frame}
@@ -303,8 +338,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \column{0.40\textwidth}
 \begin{itemize}\small
 \item $H_0$: os coeficientes do bloco são nulos; rejeitada em todos os blocos
-\item Maior ganho de $R^2_a$ com o estado (bloco E)
-\item UF além da região: $F = \nFuf$ (\nGlUF{} gl), $p$ \nPUF; $R^2_a$ de \nRdoisAregiao{} para \nRdoisA
+\item Maior ganho de $R^2_a$ com a região (bloco E)
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -321,6 +355,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \column{0.24\textwidth}
 \begin{itemize}\footnotesize
 \item Sinais consistentes com H1, H2 e H3
+\item Abandono (H2): não significativo
 \item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
 \item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
 \item \textcolor{gray}{Não significativas (5\%): \nNaoSig}
@@ -333,7 +368,7 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \begin{columns}[c]
 \column{0.6\textwidth}
 \fig{m7_efeito_renda.png}
-\fonte{Elaboração própria. Demais variáveis na média; UF = SP. Faixa: IC 95\% da resposta esperada.}
+\fonte{Elaboração própria. Demais variáveis na média; região = Sudeste. Faixa: IC 95\% da resposta esperada.}
 \column{0.38\textwidth}
 \begin{itemize}\small
 \item $\hat\beta_2$ = \nBetaDois{} ($p$ \nBetaDoisP): concavidade
@@ -344,13 +379,43 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{Diagnóstico dos resíduos}
+\begin{frame}{Diagnóstico: linearidade e variância}
+\begin{columns}[c]
+\column{0.37\textwidth}
+\includegraphics[width=\linewidth]{m3a_residuos_ajustados.png}
+\column{0.61\textwidth}
+\includegraphics[width=\linewidth]{m4_residuo_pop.png}
+\end{columns}
+\fonte{Elaboração própria. À esquerda, resíduos semi-studentizados; linhas vermelhas em $\pm 4$.}
+\vspace{0.3em}
+\begin{itemize}\small
+\item Resíduos em torno de zero, sem curvatura; além de $\pm 4$: \nOutNomes
+\item Resíduos maiores nos municípios menores: variância não constante (Breusch-Pagan = \nBP, $p$ \nBPp)
+\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Diagnóstico: normalidade}
 \begin{columns}[c]
 \column{0.31\textwidth}
-\includegraphics[width=\linewidth,height=0.55\textheight,keepaspectratio]{m3a_residuos_ajustados.png}
-\fonte{Elaboração própria. Resíduos semi-studentizados.}
-\column{0.67\textwidth}
-\scriptsize
+\includegraphics[width=\linewidth]{m5a_hist_residuos.png}
+\column{0.31\textwidth}
+\includegraphics[width=\linewidth]{m5b_qq_final.png}
+\column{0.34\textwidth}
+\begin{itemize}\small
+\item Histograma em forma de sino, centrado em zero
+\item No gráfico de quantis, o centro segue a reta; a cauda esquerda é mais pesada que a normal
+\item Shapiro-Wilk: $W = \nSW$, $p$ \nSWp
+\end{itemize}
+\end{columns}
+\fonte{Elaboração própria. Resíduos padronizados do modelo preliminar.}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Diagnóstico: resumo dos testes}
+\begin{columns}[c]
+\column{0.58\textwidth}
+\footnotesize
 \renewcommand{\arraystretch}{1.25}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}llrr@{}}
@@ -359,18 +424,36 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \midrule
 Normalidade & Shapiro-Wilk & $W = \nSW$ & \nSWp\\
 Homocedasticidade & Breusch-Pagan & \nBP{} (\nBPgl{} gl) & \nBPp\\
-Independência & Durbin-Watson & $d = \nDW$ & \nDWp\\
 Multicolinearidade & VIF máximo & \nVIFrendaFinal{} (renda) & ---\\
 Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \bottomrule
 \end{tabular}
-\par\vspace{0.1em}{\tiny\color{black!60}VIF das demais variáveis $\leq$ \nVIFdemaisMax. Outlier: \nOutNomes.}
-\vspace{0.3em}
-
-\begin{itemize}\scriptsize
+\par\vspace{0.1em}{\tiny\color{black!60}VIF das demais variáveis $\leq$ \nVIFdemaisMax. Além de $\pm 4$: \nOutNomes.\\VIF com ln renda centralizada, sem dividir pelo DP; padronizar não muda o VIF. Sem centralizar: \nVIFrendaCru.}
+\column{0.40\textwidth}
+\begin{itemize}\footnotesize
 \item Breusch-Pagan rejeita $H_0$: erros-padrão e valores $p$ são aproximados
 \item Shapiro-Wilk rejeita com $W$ próximo de 1 ($n$ grande); cauda esquerda mais pesada que a normal
-\item Durbin-Watson na ordem do código IBGE (quase alfabética dentro da UF): não avalia a dependência entre vizinhos geográficos
+\item Independência: dados em corte transversal, sem ordem de coleta; não há sequência a testar
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\begin{frame}{Modelo com e sem a renda}
+\begin{columns}[c]
+\column{0.56\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{4pt}
+\input{tabelas/com_sem_renda.tex}
+\fonte{Elaboração própria. Indicadoras de região omitidas. Em negrito: a significância a 5\% muda.}
+\column{0.42\textwidth}
+\begin{itemize}\footnotesize
+\item A renda tem o maior VIF: \nVIFrendaFinal. Sem ela, o VIF máximo é \nVIFmaxSemRenda
+\item $F$ parcial da renda: \nFRenda{} (\nGlRenda{} gl), $p$ \nPRenda
+\item $R^2_a$: \nRdoisA{} com a renda; \nRdoisAsemRenda{} sem
+\item Sem a renda, a desigualdade continua significativa, com efeito menor; migração e densidade deixam de ser
+\item A renda fica no modelo
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -384,21 +467,20 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \begin{itemize}\small
 \item Mais homicídios com mais desigualdade (H1), exclusão escolar (H2) e migração recente (H3)
 \item Renda em U invertido: pico em R\$ \nPico
-\item Também mais homicídios com mais \% preta ou parda e urbanização
-\item Grande diferença entre estados
+\item Também mais homicídios com mais urbanização
+\item Taxa esperada maior no Norte, Nordeste, Centro-Oeste e Sul do que no Sudeste
 \end{itemize}
 \column{0.49\textwidth}
 \textbf{\color{navy}Em relação à literatura}
 \begin{itemize}\small
 \item Urbanização e desigualdade: mesmo sinal de Wanzinack et al. (2022)
-\item Diferença entre estados: como em Castellucci e Silva (2026)
+\item Diferença entre regiões: como em Barros et al. (2020)
 \end{itemize}
 \vspace{0.3em}
 \textbf{\color{navy}Próximos passos}
 \begin{itemize}\small
 \item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
 \item Variância não constante
-\item Correlação dos resíduos entre vizinhos, como em Barros et al. (2020)
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -419,7 +501,7 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \input{tabelas/coeficientes.tex}
 \vspace{0.5em}
 
-Resposta $\ln Y$; MQO; $n = \nMunEsc$. Mais \nNumUF{} indicadoras de UF (referência: SP), omitidas.
+Resposta $\ln Y$; MQO; $n = \nMunEsc$. Região: referência Sudeste.
 $\hat\sigma = \nSigma$; $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$. EP: erro-padrão.
 \end{frame}
 
