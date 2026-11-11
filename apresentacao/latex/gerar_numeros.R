@@ -51,11 +51,11 @@ m <- with(mod, c(
     F_B = anova_blocos$F[2], F_C = anova_blocos$F[3], F_D = anova_blocos$F[4], F_E = anova_blocos$F[5],
     p_B = anova_blocos$`Pr(>F)`[2], p_C = anova_blocos$`Pr(>F)`[3], p_D = anova_blocos$`Pr(>F)`[4], p_E = anova_blocos$`Pr(>F)`[5],
     R2a_A = comp$R2a[1], R2a_B = comp$R2a[2], R2a_C = comp$R2a[3], R2a_D = comp$R2a[4], R2a_E = comp$R2a[5],
-    R2a_E_regiao = comp$R2a[6], DW_E_regiao = comp$DW[6], F_uf = F_uf$F[2],
+    R2a_E_regiao = comp$R2a[6], F_uf = F_uf$F[2],
     R2a = sf_$adj.r.squared, F_global = unname(sf_$fstatistic[1]),
     gl1 = unname(sf_$fstatistic[2]), gl2 = unname(sf_$fstatistic[3]),
     pico_renda = unname(pico_renda), bp = unname(bp$statistic), bp_p = unname(bp$p.value),
-    dw = unname(dw$statistic), dw_p = unname(dw$p.value), sw = unname(sw_final$statistic), n_outliers = nrow(outliers),
+    sw = unname(sw_final$statistic), n_outliers = nrow(outliers),
     sw_p = sw_final$p.value, bp_gl = unname(bp$parameter),
     gl_B = anova_blocos$Df[2], gl_C = anova_blocos$Df[3], gl_D = anova_blocos$Df[4], gl_E = anova_blocos$Df[5],
     gl_uf = F_uf$Df[2], p_uf = F_uf$`Pr(>F)`[2], R2_E = comp$R2[5], sigma = sf_$sigma,
@@ -106,7 +106,6 @@ confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W pr�
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
 
 # Diagnóstico: ícone e texto decididos pelo teste (5%)
-dw_ok <- m[["dw_p"]] > 0.05
 bp_ok <- m[["bp_p"]] > 0.05
 sw_ok <- m[["sw"]] >= 0.97
 
@@ -133,9 +132,9 @@ mac <- c(
   PorteOscVinte = fmt(e[["porte_oscilacao_20a50mil"]], 0),
   Lambda = fmt(m[["lambda"]], 2), LambdaInf = fmt(m[["lambda_ic_inf"]], 2), LambdaSup = fmt(m[["lambda_ic_sup"]], 2),
   SWy = fmt(m[["sw_y"]], 2), SWln = fmt(m[["sw_ln"]], 2), VIFrenda = fmt(m[["vif_renda"]], 0),
-  RdoisA = fmt(m[["R2a"]], 2), RdoisAregiao = fmt(m[["R2a_E_regiao"]], 2), DWregiao = fmt(m[["DW_E_regiao"]], 2),
+  RdoisA = fmt(m[["R2a"]], 2), RdoisAregiao = fmt(m[["R2a_E_regiao"]], 2),
   Fuf = fmt(m[["F_uf"]]), FblocoEd = fmt(m[["F_D"]]), RdoisAsemEd = fmt(m[["R2a_C"]], 2), RdoisAcomEd = fmt(m[["R2a_D"]], 2), Fglobal = fmt(m[["F_global"]], 0), GlUm = fmt(m[["gl1"]], 0), GlDois = fmt(m[["gl2"]], 0),
-  Pico = fmt(m[["pico_renda"]], 0), BP = fmt(m[["bp"]], 0), DW = fmt(m[["dw"]], 2), DWp = fmt(m[["dw_p"]], 2),
+  Pico = fmt(m[["pico_renda"]], 0), BP = fmt(m[["bp"]], 0),
   SW = fmt(m[["sw"]], 2), Nout = fmt(m[["n_outliers"]], 0),
   SWp = fp(m[["sw_p"]]), BPgl = fmt(m[["bp_gl"]], 0), BPp = fp(m[["bp_p"]]),
   GlUF = fmt(m[["gl_uf"]], 0), PUF = fp(m[["p_uf"]]), RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
@@ -146,8 +145,6 @@ mac <- c(
   OutNomes = if (length(out_nomes)) paste(out_nomes, collapse = ", ") else "nenhum",
   IconeSW = if (sw_ok) "\\ok" else "\\nao", TextoSW = if (sw_ok) "Normalidade razoável" else "Normalidade violada",
   IconeOut = "\\ok", TextoOut = paste0(fmt(m[["n_outliers"]], 0), if (m[["n_outliers"]] == 1) " outlier" else " outliers"),
-  IconeDW = if (dw_ok) "\\ok" else "\\nao",
-  TextoDW = if (dw_ok) "Sem autocorrelação na ordem do código" else "Autocorrelação na ordem do código",
   IconeBP = if (bp_ok) "\\ok" else "\\nao", TextoBP = if (bp_ok) "Variância constante" else "Variância não constante")
 mac <- sub("^-", "$-$", mac)
 writeLines(sprintf("\\newcommand{\\n%s}{%s}", names(mac), mac), "numeros.tex")

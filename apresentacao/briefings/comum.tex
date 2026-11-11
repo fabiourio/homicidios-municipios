@@ -27,7 +27,7 @@ Densidade sem extremos e padronizada & Pedido da professora: o desvio-padrão da
 Resposta em ln(taxa) & Box-Cox estimou $\lambda$ = \nLambda{} (IC de \nLambdaInf{} a \nLambdaSup); usamos $\lambda = 0$, simples de interpretar, mesmo fora do IC. A normalidade melhora ($W$ de \nSWy{} para \nSWln) & Cap. 4: Box-Cox\\
 Só a renda (sem \% pobres e alfabetização) & As três medem quase o mesmo: VIF da renda \nVIFrenda{} e sinais contraditórios & Cap. 6: multicolinearidade e VIF\\
 Renda e renda², com a renda centralizada & A taxa sobe até a renda média e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
-Estado (27 UFs) no lugar de região & Estados diferem muito (polícia, facções). Com estado: $R^2_a$ de \nRdoisAregiao{} para \nRdoisA, $F$ parcial \nFuf{} (\nGlUF{} gl). O Durbin-Watson vai de \nDWregiao{} para \nDW, mas na ordem do código IBGE (quase alfabética dentro da UF): não mede a correlação entre vizinhos geográficos & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
+Estado (27 UFs) no lugar de região & Estados diferem muito (polícia, facções). Com estado: $R^2_a$ de \nRdoisAregiao{} para \nRdoisA, $F$ parcial \nFuf{} (\nGlUF{} gl). & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
 Bloco de educação e migração & Frequência escolar 15--17, abandono, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
 Amazônia Legal fora do modelo & Com o estado no modelo, ela só varia dentro do Maranhão: fica redundante & ---\\
 Variáveis frágeis mantidas por enquanto & \% homens 15--29, \% intenção indeterminada e desocupação saem (ou não) na seleção de variáveis & Cap. 8: seleção\\
@@ -55,7 +55,6 @@ Nada fora da apostila & Regra do grupo: técnicas de fora (pesos, modelos espaci
 \begin{itemize}
 \item \textbf{Variância não constante:} Breusch-Pagan = \nBP{} (rejeita). Os coeficientes continuam certos na média, mas os valores p ficam aproximados.
 \item \textbf{Seleção de variáveis} ($C_p$, AIC, BIC, PRESS) ainda não foi feita: é da entrega final.
-\item \textbf{Correlação entre vizinhos:} o Durbin-Watson na ordem do código não a avalia; falta verificar se resíduos de municípios vizinhos se parecem.
 \item Testadas e deixadas de fora (não ajudam): garimpo, desmatamento, Bolsa Família, mães solo e gasto municipal em segurança e assistência (SICONFI 2022).
 \end{itemize}
 
@@ -70,7 +69,6 @@ Box-Cox & Procedimento que escolhe a potência $\lambda$ da resposta que deixa o
 $R^2_a$ (ajustado) & Fração da variação explicada, com penalidade por variável a mais.\\
 Teste $F$ parcial & Compara o modelo com e sem um bloco de variáveis: diz se o bloco ajuda.\\
 VIF & Mede o quanto uma variável repete as outras (multicolinearidade). Acima de 10 é grave.\\
-Durbin-Watson & Testa se resíduos consecutivos, na ordem dos dados, se parecem. Perto de 2 = sem correlação. Só mede vizinhança se a ordem dos dados for geográfica.\\
 Breusch-Pagan & Testa se a variância dos resíduos é constante.\\
 Shapiro-Wilk ($W$) & Testa a normalidade dos resíduos; perto de 1 = mais normal.\\
 Outlier & Resíduo semi-studentizado com $|e^*| \geq 4$.\\

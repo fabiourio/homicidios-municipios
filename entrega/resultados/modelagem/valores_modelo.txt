@@ -54,13 +54,13 @@ F parcial renda²: F = 36.7 | p = 1.8e-09
 F parcial estado além da região: F = 14.98 (gl 22) | p = 5.5e-51
 
 R² e R² ajustado por bloco:
-                  modelo  p     R2    R2a    MSE    DW
-        A socioeconômico  4 0.2775 0.2758 0.4731 1.481
-          B + demografia  8 0.3478 0.3447 0.4281 1.373
-            C + contexto 10 0.3934 0.3897 0.3987 1.507
- D + educação e migração 14 0.4353 0.4305 0.3721 1.582
-              E + estado 40 0.5924 0.5823 0.2729 2.020
-            E com região 18 0.5094 0.5041 0.3240 1.728
+                  modelo  p     R2    R2a    MSE
+        A socioeconômico  4 0.2775 0.2758 0.4731
+          B + demografia  8 0.3478 0.3447 0.4281
+            C + contexto 10 0.3934 0.3897 0.3987
+ D + educação e migração 14 0.4353 0.4305 0.3721
+              E + estado 40 0.5924 0.5823 0.2729
+            E com região 18 0.5094 0.5041 0.3240
 
 == 5. Modelo preliminar (D) ==
 
@@ -179,7 +179,6 @@ Renda per capita do pico da taxa esperada: R$ 1124
 
 == 6. Diagnóstico ==
 Breusch-Pagan = 97.5 (gl 40) | p = 1e-06
-Durbin-Watson = 2.020 | p = 0.85
 Shapiro-Wilk = 0.982 | p = 1.5e-13
 Possíveis outliers (|e*| >= 4): 1
  municipio uf   pop    taxa ajustado  res_semi

@@ -31,7 +31,7 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 - Saem os 50 municípios com valor extremo de ln(densidade), pelo critério do boxplot. Ficam 1.660 municípios (65% da população).
 - ln(densidade) entra no modelo padronizado (média 0, desvio-padrão 1).
 - Resposta do modelo: ln(taxa), escolhida pelo procedimento de Box-Cox.
-- Estado (27 UFs, base SP) entra como variável categórica no lugar da região: absorve diferenças entre estados e elimina a correlação entre resíduos de municípios vizinhos (Durbin-Watson 2,01).
+- Estado (27 UFs, base SP) entra como variável categórica no lugar da região: absorve diferenças entre estados.
 
 ## Dados
 

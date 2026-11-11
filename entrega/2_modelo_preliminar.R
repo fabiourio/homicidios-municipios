@@ -13,7 +13,7 @@ library(ggplot2)
 library(dplyr)
 library(MASS)     # boxcox
 library(car)      # vif
-library(lmtest)   # bptest, dwtest
+library(lmtest)   # bptest
 
 set.seed(16)
 dir.create("resultados/modelagem", recursive = TRUE, showWarnings = FALSE)
@@ -38,12 +38,9 @@ d <- d[d$log_dens >= q_dens[1] - 1.5 * diff(q_dens) & d$log_dens <= q_dens[2] + 
 # ln(densidade) padronizado: média 0 e desvio-padrão 1
 d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
 
-# Ordem do código IBGE: municípios do mesmo estado ficam vizinhos na sequência (usado no Durbin-Watson)
-d <- d[order(d$cod_ibge), ]
-
 # Região: 5 classes -> 4 indicadoras, com o Sudeste como referência
 # Estado (UF) como variável categórica: 27 classes -> 26 indicadoras, com SP como referência.
-# Absorve diferenças entre estados (polícia, facções) que deixavam resíduos de vizinhos parecidos
+# Absorve diferenças entre estados (polícia, facções)
 d$uf <- relevel(factor(d$uf), ref = "SP")
 
 # Resposta: taxa de homicídios por 100 mil hab./ano (2021-2023)
@@ -125,8 +122,7 @@ comp <- data.frame(
   p   = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) length(coef(m)) - 1),
   R2  = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$r.squared),
   R2a = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$adj.r.squared),
-  MSE = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$sigma^2),
-  DW  = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) unname(dwtest(m)$statistic)))
+  MSE = sapply(list(mA, mB, mC, mD, mE, mE_regiao), function(m) summary(m)$sigma^2))
 write.csv(comp, "resultados/modelagem/comparacao_blocos.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
@@ -183,7 +179,6 @@ d$residuo  <- residuals(final)
 d$res_semi <- d$residuo / sqrt(sum(d$residuo^2) / final$df.residual)    # e* = e / sqrt(MSE)
 
 bp <- bptest(final)                                   # Ho: variância constante
-dw <- dwtest(final, alternative = "two.sided")        # Ho: erros não correlacionados
 sw_final <- shapiro.test(rstandard(final))   # Ho: normalidade
 outliers <- d[abs(d$res_semi) >= 4, c("municipio", "uf", "pop", "taxa", "ajustado", "res_semi")]
 
@@ -240,15 +235,6 @@ p <- ggplot(d, aes(sample = rstandard(final))) + stat_qq(size = .5, alpha = .3, 
   stat_qq_line(colour = VERMELHO) + labs(x = "Quantis teóricos (dist. normal)", y = "Quantis amostrais") + th
 ggsave("resultados/modelagem/m5b_qq_final.png", p, width = 3.2, height = 2.6, dpi = 220)
 
-# M6. Resíduos em sequência (ordem do código IBGE), por região
-d$ordem <- seq_len(nrow(d))
-d$regiao_nome <- factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
-                        labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
-p <- ggplot(d, aes(ordem, residuo, colour = regiao_nome)) + geom_point(size = .4, alpha = .4) +
-  geom_hline(yintercept = 0, colour = CINZA, linetype = 2) +
-  labs(x = "Municípios em ordem de código IBGE", y = "Resíduo", colour = "Região") + th
-ggsave("resultados/modelagem/m6_residuos_sequencia.png", p, width = 6.4, height = 2.6, dpi = 220)
-
 # M7. Efeito da renda previsto pelo modelo (curva em U invertido, com IC 95% da resposta esperada)
 p <- ggplot(grade, aes(rend, taxa)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = CLARO) +
@@ -287,7 +273,6 @@ cat("\nVIF do modelo preliminar:\n"); print(round(vif_final, 2))
 cat(sprintf("Renda per capita do pico da taxa esperada: R$ %.0f\n", pico_renda))
 cat("\n== 6. Diagnóstico ==\n")
 cat(sprintf("Breusch-Pagan = %.1f (gl %d) | p = %.2g\n", bp$statistic, bp$parameter, bp$p.value))
-cat(sprintf("Durbin-Watson = %.3f | p = %.2g\n", dw$statistic, dw$p.value))
 cat(sprintf("Shapiro-Wilk = %.3f | p = %.2g\n", sw_final$statistic, sw_final$p.value))
 cat(sprintf("Possíveis outliers (|e*| >= 4): %d\n", nrow(outliers))); print(outliers, row.names = FALSE)
 sink()

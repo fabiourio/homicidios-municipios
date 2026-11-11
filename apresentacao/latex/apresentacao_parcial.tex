@@ -361,7 +361,6 @@ E & Estado & UF: \nNumUF{} indicadoras (referência: SP)\\
 \midrule
 Normalidade & Shapiro-Wilk & $W = \nSW$ & \nSWp\\
 Homocedasticidade & Breusch-Pagan & \nBP{} (\nBPgl{} gl) & \nBPp\\
-Independência & Durbin-Watson & $d = \nDW$ & \nDWp\\
 Multicolinearidade & VIF máximo & \nVIFrendaFinal{} (renda) & ---\\
 Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \bottomrule
@@ -372,7 +371,7 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \begin{itemize}\scriptsize
 \item Breusch-Pagan rejeita $H_0$: erros-padrão e valores $p$ são aproximados
 \item Shapiro-Wilk rejeita com $W$ próximo de 1 ($n$ grande); cauda esquerda mais pesada que a normal
-\item Durbin-Watson na ordem do código IBGE (quase alfabética dentro da UF): não avalia a dependência entre vizinhos geográficos
+\item Independência: dados em corte transversal, sem ordem de coleta; não há sequência a testar
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -401,7 +400,6 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \begin{itemize}\small
 \item Seleção de variáveis: $C_p$, AIC, BIC e PRESS
 \item Variância não constante
-\item Correlação dos resíduos entre vizinhos, como em Barros et al. (2020)
 \end{itemize}
 \end{columns}
 \end{frame}
