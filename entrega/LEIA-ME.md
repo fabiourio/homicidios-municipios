@@ -33,7 +33,8 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 - Cada município recebe o percentil da sua densidade dentro da sua região (`resultados/eda/percentis_municipios.csv`). Ficam os que estão entre os percentis 2,5 e 97,5 da região: saem 88 e ficam 1.622 municípios (66% da população).
 - ln(densidade) entra no modelo padronizado (média 0, desvio-padrão 1).
 - Desigualdade: índice de Gini de cada município, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; a conferência com o oficial está em `dados/validacao_gini.csv`.
-- Resposta do modelo: ln(taxa), escolhida pelo procedimento de Box-Cox.
+- Resposta do modelo: ln(taxa). O Box-Cox estima λ perto de 0; adotamos o logaritmo (λ = 0), mais simples de interpretar, embora 0 fique fora do intervalo de confiança de λ.
+- Os números citados no trabalho ficam em `resultados/modelagem/valores_modelo.txt`; as tabelas e figuras, em `resultados/eda/` e `resultados/modelagem/`.
 - O modelo é montado em 5 blocos, cada um testado pelo F parcial: A renda e desigualdade; B demografia; C fronteira e registro; D educação e migração; E região.
 - A região (5 classes, base Sudeste) entra como variável categórica. O script também ajusta o modelo com o estado (27 UFs, base SP) e grava os dois lado a lado em `resultados/modelagem/regiao_x_estado.csv`; a escolha está em aberto.
 

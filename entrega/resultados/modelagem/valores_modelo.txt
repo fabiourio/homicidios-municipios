@@ -58,7 +58,7 @@ R² e R² ajustado por bloco:
  D + educação e migração 13 0.3890 0.3840 0.4053
               E + região 17 0.4602 0.4545 0.3589
 
-== 5. Modelo preliminar (D) ==
+== 5. Modelo preliminar (E) ==
 
 Call:
 lm(formula = ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + 

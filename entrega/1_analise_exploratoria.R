@@ -2,7 +2,7 @@
 # Fatores associados aos homicídios nos municípios brasileiros
 # Parte 1 - Análise exploratória
 #
-# Entrada: dados/base_analitica.csv (1 linha por município) e dados/malha_mun.geojson
+# Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv (1 linha por município) e dados/malha_mun.geojson
 # Saída:   resultados/eda/ (figuras e tabelas)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 #
@@ -226,8 +226,8 @@ sub <- d %>% transmute(`ln Taxa` = ln_taxa, `ln Renda` = log_rend, `% pobres` = 
                        `Alfabetização` = alfabet, `% urbana` = pct_urbana)
 p <- ggpairs(sub, lower = list(continuous = wrap("points", size = .25, alpha = .25, colour = AZUL)),
              diag = list(continuous = wrap("densityDiag", fill = CLARO, colour = AZUL))) + th +
-  theme(axis.text = element_text(size = 5.5), strip.text = element_text(size = 7.5))
-ggsave("resultados/eda/e8_pares.png", p, width = 7, height = 6.2, dpi = 200)
+  theme(axis.text = element_text(size = 6.5), strip.text = element_text(size = 10))
+ggsave("resultados/eda/e8_pares.png", p, width = 5.4, height = 4.6, dpi = 220)
 
 # -----------------------------------------------------------------------------
 # Resumo no console

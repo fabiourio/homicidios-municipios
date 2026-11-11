@@ -2,7 +2,8 @@
 # Fatores associados aos homicídios nos municípios brasileiros
 # Parte 2 - Ajuste preliminar do modelo de regressão linear múltipla
 #
-# Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv (modelo nos municípios com 20 mil hab. ou mais)
+# Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv
+#          (municípios com 20 mil hab. ou mais, sem os extremos de densidade de cada região)
 # Saída:   resultados/modelagem/ (figuras, tabelas e valores_modelo.txt)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 # =============================================================================
@@ -123,7 +124,7 @@ comp <- data.frame(
 write.csv(comp, "resultados/modelagem/comparacao_blocos.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5. Modelo preliminar (D): teste F global, coeficientes e intervalos de confiança
+# 5. Modelo preliminar (E): teste F global, coeficientes e intervalos de confiança
 # -----------------------------------------------------------------------------
 final <- mE
 sf_ <- summary(final)
@@ -157,14 +158,17 @@ mudancas$ic_inf_pct <- 100 * (exp(ic[mudancas$termo, 1] * mudancas$delta) - 1)
 mudancas$ic_sup_pct <- 100 * (exp(ic[mudancas$termo, 2] * mudancas$delta) - 1)
 write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = FALSE)
 
-# Gráfico de efeito da renda: taxa esperada (IC 95%) ao longo da renda, demais variáveis na média
-# (fronteira = não, região = Sudeste, a referência). O nível depende da região; a forma não.
-grade <- data.frame(rend = exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
+# Gráfico de efeito da renda: taxa prevista (IC 95%) ao longo da renda, demais variáveis na média, fronteira = não.
+# Uma curva para o Nordeste e outra para o Sudeste, cada uma só na faixa de renda observada na região (sem extrapolar).
+grade <- do.call(rbind, lapply(c("Nordeste", "Sudeste"), function(rg) {
+  lr <- d$log_rend[d$regiao == rg]
+  data.frame(regiao = rg, rend = exp(seq(quantile(lr, .02), quantile(lr, .98), length.out = 100)))
+}))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
 for (v in c("gini", "desocup", "pct_urbana", "dens_z", "pct_h1529", "pct_indet",
            "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
 grade$faixa_fronteira <- 0
-grade$regiao <- factor("Sudeste", levels = levels(d$regiao))
+grade$regiao <- factor(grade$regiao, levels = levels(d$regiao))
 pr <- predict(final, newdata = grade, interval = "confidence", level = 0.95)
 grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
 
@@ -219,18 +223,18 @@ p <- ggplot(data.frame(l = bc$x, ll = bc$y), aes(l, ll)) +
   labs(x = "λ", y = "Log-verossimilhança") + th
 ggsave("resultados/modelagem/m1_boxcox.png", p, width = 4.8, height = 3.0, dpi = 250)
 
-# M2. Resíduos x ajustados e gráfico de quantis: Y original x √Y
+# M2. Resíduos x ajustados e gráfico de quantis: Y original x ln Y
 dd <- rbind(data.frame(m = "Y (taxa original)", fit = fitted(m_y), es = rstandard(m_y)),
             data.frame(m = "ln Y", fit = fitted(m_log), es = rstandard(m_log)))
 dd$m <- factor(dd$m, levels = c("Y (taxa original)", "ln Y"))
 p <- ggplot(dd, aes(fit, es)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
   geom_hline(yintercept = 0, colour = CINZA, linetype = 2) + facet_wrap(~m, scales = "free_x") +
   labs(x = "Valor ajustado", y = "Resíduo padronizado") + th
-ggsave("resultados/modelagem/m2a_residuos_y_transformada.png", p, width = 6.4, height = 2.6, dpi = 220)
+ggsave("resultados/modelagem/m2a_residuos_y_transformada.png", p, width = 4.6, height = 2.6, dpi = 220)
 p <- ggplot(dd, aes(sample = es)) + stat_qq(size = .5, alpha = .3, colour = AZUL) +
   stat_qq_line(colour = VERMELHO) + facet_wrap(~m) +
   labs(x = "Quantis teóricos (dist. normal)", y = "Quantis amostrais") + th
-ggsave("resultados/modelagem/m2b_qq_y_transformada.png", p, width = 6.4, height = 2.6, dpi = 220)
+ggsave("resultados/modelagem/m2b_qq_y_transformada.png", p, width = 4.6, height = 2.6, dpi = 220)
 
 # M3. Resíduos semi-studentizados x ajustados e x ln(renda)
 p <- ggplot(d, aes(ajustado, res_semi)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
@@ -257,15 +261,16 @@ p <- ggplot(d, aes(sample = rstandard(final))) + stat_qq(size = .5, alpha = .3, 
   stat_qq_line(colour = VERMELHO) + labs(x = "Quantis teóricos (dist. normal)", y = "Quantis amostrais") + th
 ggsave("resultados/modelagem/m5b_qq_final.png", p, width = 3.2, height = 2.6, dpi = 220)
 
-# M7. Efeito da renda previsto pelo modelo (curva em U invertido, com IC 95% da resposta esperada)
-p <- ggplot(grade, aes(rend, taxa)) +
-  geom_ribbon(aes(ymin = lo, ymax = hi), fill = CLARO) +
-  geom_line(colour = AZUL, linewidth = 1) +
+# M7. Efeito da renda previsto pelo modelo, no Nordeste e no Sudeste (IC 95% da resposta esperada)
+p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = CLARO, alpha = .7) +
+  geom_line(aes(colour = regiao), linewidth = 1) +
+  scale_colour_manual(values = c(Nordeste = AZUL, Sudeste = MARINHO), name = NULL) +
   geom_vline(xintercept = pico_renda, colour = VERMELHO, linetype = 2) +
   annotate("text", x = pico_renda * 1.05, y = max(grade$hi), hjust = 0, vjust = 1, size = 3.5, colour = VERMELHO,
            label = paste0("pico: R$ ", milhar(round(pico_renda)))) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Taxa esperada (/100 mil)") + th
+  labs(x = "Renda per capita (R$, escala log)", y = "Taxa prevista (/100 mil)") + th + theme(legend.position = "bottom")
 ggsave("resultados/modelagem/m7_efeito_renda.png", p, width = 4.8, height = 3.0, dpi = 250)
 
 # -----------------------------------------------------------------------------
@@ -288,7 +293,7 @@ cat(sprintf("cor(X, X²): sem centrar = %.4f | centrado = %.4f\n", cor_quad[1], 
 cat("\n== 4. Blocos (F parcial) ==\n"); print(anova_blocos)
 cat(sprintf("\nF parcial renda²: F = %.1f | p = %.2g\n", F_quad$F[2], F_quad$`Pr(>F)`[2]))
 cat("\nR² e R² ajustado por bloco:\n"); print(comp, digits = 4, row.names = FALSE)
-cat("\n== 5. Modelo preliminar (D) ==\n"); print(sf_)
+cat("\n== 5. Modelo preliminar (E) ==\n"); print(sf_)
 cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))
 cat("\nVIF do modelo preliminar:\n"); print(round(vif_final, 2))
 cat(sprintf("Renda per capita do pico da taxa esperada: R$ %.0f\n", pico_renda))
