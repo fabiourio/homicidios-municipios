@@ -3,7 +3,7 @@
 Script: `validacao/validar_dados.R` (roda do início ao fim; números em `saida/valores_validacao.txt`).
 Usa 3 consultas extras ao TabNet (homicídios por ano, homicídios por local de ocorrência e óbitos por capítulo da CID), guardadas em `saida/tabnet_extra.json`. O script lê esse arquivo e não acessa a rede. Nenhum dado nem script do projeto foi alterado.
 
-As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cada problema cai no **escopo do modelo**. As seções 5 e 6 usam o modelo atual (`entrega/2_modelo_preliminar.R`): resposta ln(taxa), 1.133 municípios com 30 mil habitantes ou mais (percentil 80 da população), sem Campos do Jordão-SP. Campos do Jordão ficou fora por indício de sub-registro: 1 homicídio registrado e 36 óbitos de intenção indeterminada em 3 anos. A densidade foi testada e ficou fora do modelo (F = 1,74; p = 0,19).
+As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cada problema cai no **escopo do modelo**. As seções 5 e 6 usam o modelo atual (`entrega/2_modelo.R`): resposta ln(taxa), 1.133 municípios com 30 mil habitantes ou mais (percentil 80 da população), sem Campos do Jordão-SP. Campos do Jordão ficou fora por indício de sub-registro: 1 homicídio registrado e 36 óbitos de intenção indeterminada em 3 anos. A densidade foi testada e ficou fora do modelo (F = 1,74; p = 0,19).
 
 ## Resumo
 

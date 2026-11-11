@@ -2,7 +2,7 @@
 # USO INTERNO (não faz parte do código de entrega)
 # Exporta o deck em PDF para .pptx e .html com o mesmo visual: cada slide vira uma imagem,
 # e as notas do apresentador (notas.json, números tirados de latex/numeros.tex) vão junto.
-# Uso (na pasta apresentacao/): Rscript exportar_pptx_html.R [deck]   (padrão: apresentacao_parcial)
+# Uso (na pasta apresentacao/): Rscript exportar_pptx_html.R [deck]   (padrão: apresentacao_final)
 # =============================================================================
 
 library(jsonlite)
@@ -11,7 +11,7 @@ library(officer)
 library(base64enc)
 
 deck <- commandArgs(trailingOnly = TRUE)[1]
-if (is.na(deck)) deck <- "apresentacao_parcial"
+if (is.na(deck)) deck <- "apresentacao_final"
 pdf <- sprintf("latex/%s.pdf", deck)
 
 # Notas: troca {Macro} pelo valor de \nMacro em numeros.tex

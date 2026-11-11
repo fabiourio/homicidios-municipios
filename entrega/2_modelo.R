@@ -1,6 +1,6 @@
 # =============================================================================
 # Fatores associados aos homicídios nos municípios brasileiros
-# Parte 2 - Ajuste preliminar do modelo de regressão linear múltipla
+# Parte 2 - Ajuste do modelo de regressão linear múltipla
 #
 # Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv
 #          (municípios com 30 mil hab. ou mais)
@@ -123,7 +123,7 @@ comp <- data.frame(
 write.csv(comp, "resultados/modelagem/comparacao_blocos.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5. Modelo preliminar (E): teste F global, coeficientes e intervalos de confiança
+# 5. Modelo final (E): teste F global, coeficientes e intervalos de confiança
 # -----------------------------------------------------------------------------
 final <- mE
 sf_ <- summary(final)
@@ -220,7 +220,7 @@ retiradas <- do.call(rbind, lapply(names(testadas), function(v) {
 write.csv(retiradas, "resultados/modelagem/testadas_retiradas.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 6. Diagnóstico preliminar pela análise dos resíduos
+# 6. Diagnóstico pela análise dos resíduos
 # -----------------------------------------------------------------------------
 d$ajustado <- fitted(final)
 d$residuo  <- residuals(final)
@@ -328,9 +328,9 @@ cat(sprintf("cor(X, X²): sem centrar = %.4f | centrado = %.4f\n", cor_quad[1], 
 cat("\n== 4. Blocos (F parcial) ==\n"); print(anova_blocos)
 cat(sprintf("\nF parcial renda²: F = %.1f | p = %.2g\n", F_quad$F[2], F_quad$`Pr(>F)`[2]))
 cat("\nR² e R² ajustado por bloco:\n"); print(comp, digits = 4, row.names = FALSE)
-cat("\n== 5. Modelo preliminar (E) ==\n"); print(sf_)
+cat("\n== 5. Modelo final (E) ==\n"); print(sf_)
 cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))
-cat("\nVIF do modelo preliminar:\n"); print(round(vif_final, 2))
+cat("\nVIF do modelo final:\n"); print(round(vif_final, 2))
 cat(sprintf("Renda per capita do pico da taxa esperada (no Gini médio): R$ %.0f\n", pico_renda))
 cat(sprintf("\nEfeito de +0,05 no Gini conforme a renda (zero em R$ %.0f; %.0f%% dos municípios abaixo):\n",
             renda_gini_zero, 100 * mean(d$rend_pc_media < renda_gini_zero)))

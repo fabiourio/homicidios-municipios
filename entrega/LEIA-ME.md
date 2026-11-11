@@ -1,4 +1,4 @@
-# Código da análise — apresentação parcial
+# Código da análise — apresentação final
 
 Fatores associados aos homicídios nos municípios brasileiros (GED-16 · ITA · ODS 16).
 Grupo: Douglas Bergamim Fernandes, Fabio Eiiti Kobayashi Urio, Kauan Alves Aragão, Luiz Felipe de Brito Ramos e Willian Nelton Teleken.
@@ -9,7 +9,7 @@ Abra o R com esta pasta (`entrega/`) como diretório de trabalho e rode, nesta o
 
 ```r
 source("1_analise_exploratoria.R")   # gera resultados/eda/
-source("2_modelo_preliminar.R")      # gera resultados/modelagem/
+source("2_modelo.R")      # gera resultados/modelagem/
 ```
 
 Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
@@ -19,7 +19,7 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 | Arquivo | O que faz |
 |---|---|
 | `1_analise_exploratoria.R` | Resumos numéricos, distribuição da resposta, mapa, boxplots, correlações e dispersões |
-| `2_modelo_preliminar.R` | Box-Cox, multicolinearidade (VIF), construção em blocos com teste F parcial, modelo com o termo Gini × renda, comparação com e sem a renda, variáveis testadas e retiradas e diagnóstico dos resíduos |
+| `2_modelo.R` | Box-Cox, multicolinearidade (VIF), construção em blocos com teste F parcial, modelo com o termo Gini × renda, comparação com e sem a renda, variáveis testadas e retiradas e diagnóstico dos resíduos |
 | `dados/base_analitica.csv` | Base pronta: 1 linha por município (5.570) |
 | `dados/dicionario.csv` | Descrição de cada coluna da base |
 | `dados/variaveis_extras.csv` | Abandono e distorção idade-série no ensino médio (INEP 2022) e migração recente (Censo 2022); descrição em `dados/dicionario_extras.csv` |

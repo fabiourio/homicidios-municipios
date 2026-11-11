@@ -18,7 +18,7 @@ roda <- function(script) {
 }
 atual <- setwd("../../entrega")
 eda <- roda("1_analise_exploratoria.R")
-mod <- roda("2_modelo_preliminar.R")
+mod <- roda("2_modelo.R")
 setwd(atual)
 
 br <- eda$br; d_eda <- eda$d; porte <- as.data.frame(eda$porte); R <- eda$R
