@@ -223,7 +223,7 @@ ggsave("resultados/modelagem/m3b_residuos_renda.png", p, width = 3.2, height = 2
 # M4. |Resíduo| x população (variável fora do modelo): variância não constante
 p <- ggplot(d, aes(pop, abs(residuo))) + geom_point(size = .5, alpha = .2, colour = AZUL) +
   scale_x_log10(labels = milhar) +
-  labs(x = "População (escala log)", y = "|resíduo|") + th
+  labs(x = "População (escala log)", y = "|resíduo|") + th + theme(plot.margin = margin(5, 20, 5, 5))
 ggsave("resultados/modelagem/m4_residuo_pop.png", p, width = 6.4, height = 2.6, dpi = 220)
 
 # M5. Histograma e gráfico de quantis dos resíduos padronizados

@@ -104,6 +104,8 @@ confere(coef("desig", "b") > 0 && coef("desig", "p") > 0.05, "H1: desigualdade c
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
+confere(lmtest::bptest(mod$m_y)$statistic > lmtest::bptest(mod$m_log)$statistic, "com ln Y a dispersão dos resíduos fica mais uniforme do que com Y")
+confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos municípios menores")
 
 # Diagnóstico: ícone e texto decididos pelo teste (5%)
 bp_ok <- m[["bp_p"]] > 0.05
