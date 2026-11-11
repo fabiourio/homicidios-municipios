@@ -3,7 +3,7 @@
 # Parte 2 - Ajuste preliminar do modelo de regressão linear múltipla
 #
 # Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv
-#          (municípios com 20 mil hab. ou mais, sem os extremos de densidade de cada região)
+#          (municípios com 30 mil hab. ou mais)
 # Saída:   resultados/modelagem/ (figuras, tabelas e valores_modelo.txt)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 # =============================================================================
@@ -27,18 +27,12 @@ d <- read.csv("dados/base_analitica.csv")
 extras <- read.csv("dados/variaveis_extras.csv")
 d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10anos")], by = "cod_ibge")
 
-# Escopo do modelo: municípios com 20 mil habitantes ou mais.
-# Abaixo disso a taxa é dominada pelo acaso (poucos casos, muitos zeros): ver confiabilidade_porte.csv
-d <- d[d$pop >= 20000, ]
+# Escopo do modelo: municípios com 30 mil habitantes ou mais (percentil 80 da população).
+# Abaixo disso a taxa é dominada pelo acaso (poucos casos): ver confiabilidade_porte.csv
+POP_MIN <- 30000
+d <- d[d$pop >= POP_MIN, ]
 
-# Percentil da densidade (população / área) de cada município dentro da sua região (0 a 100).
-# Saem os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
-P_CORTE <- 2.5
-percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
-d$p_dens <- ave(d$pop / d$area_km2, d$regiao, FUN = percentil)
-d <- d[d$p_dens > P_CORTE & d$p_dens < 100 - P_CORTE, ]
-
-# ln(densidade) padronizado: média 0 e desvio-padrão 1
+# ln(densidade) padronizado (média 0 e desvio-padrão 1): só para o teste da seção 5.3; a densidade não entra no modelo
 d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
 
 # Região como variável categórica: 5 classes -> 4 indicadoras, com o Sudeste como referência
@@ -63,7 +57,7 @@ summary(rls)
 # -----------------------------------------------------------------------------
 # 2. Transformação da resposta (Box-Cox)
 # -----------------------------------------------------------------------------
-f_base <- ~ log_rend + gini + desocup + pct_urbana + dens_z + pct_h1529 +
+f_base <- ~ log_rend + gini + desocup + pct_urbana + pct_h1529 +
   faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
 
 m_y <- lm(update(f_base, y ~ .), data = d)
@@ -85,7 +79,7 @@ sw_log  <- shapiro.test(rstandard(m_log))
 # -----------------------------------------------------------------------------
 # 3. Multicolinearidade: renda, % pobres e alfabetização juntas
 # -----------------------------------------------------------------------------
-m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + gini + desocup + pct_urbana + dens_z +
+m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + gini + desocup + pct_urbana +
                 pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em +
                 pct_migr_10anos + regiao, data = d)
 summary(m_colin)
@@ -102,7 +96,7 @@ cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend
 # 4. Construção em blocos: somas de quadrados extras e teste F parcial
 # -----------------------------------------------------------------------------
 mA <- lm(ly ~ rend_c + rend_c2 + gini + desocup, data = d)                    # socioeconômico
-mB <- update(mA, . ~ . + pct_urbana + dens_z + pct_h1529)         # + demografia
+mB <- update(mA, . ~ . + pct_urbana + pct_h1529)                               # + demografia
 mC <- update(mB, . ~ . + faixa_fronteira + pct_indet)                           # + contexto
 mD <- update(mC, . ~ . + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos)   # + educação e migração
 mE <- update(mD, . ~ . + regiao)                                                # + região
@@ -142,14 +136,14 @@ pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 
 # Efeitos na escala da taxa: com ln(taxa), uma mudança delta em X multiplica a taxa por exp(b * delta)
 mudancas <- data.frame(
-  termo   = c("gini", "pct_urbana", "dens_z", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
+  termo   = c("gini", "pct_urbana", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
               "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos"),
-  variavel = c("Desigualdade (Gini)", "% urbana", "ln densidade", "Desocupação",
+  variavel = c("Desigualdade (Gini)", "% urbana", "Desocupação",
                "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira",
                "Frequência escolar 15–17", "Abandono no ensino médio", "Distorção idade-série (EM)", "Migração recente"),
-  mudanca = c("+0,05", "+10 pontos", "+1 DP", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
+  mudanca = c("+0,05", "+10 pontos", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
               "+5 pontos", "+5 pontos", "+10 pontos", "+5 pontos"),
-  delta   = c(0.05, 10, 1, 1, 1, 1, 1, 5, 5, 10, 5))
+  delta   = c(0.05, 10, 1, 1, 1, 1, 5, 5, 10, 5))
 mudancas$b <- b[mudancas$termo]
 mudancas$p <- sf_$coefficients[mudancas$termo, 4]
 mudancas$efeito_pct <- 100 * (exp(mudancas$b * mudancas$delta) - 1)
@@ -164,7 +158,7 @@ grade <- do.call(rbind, lapply(c("Nordeste", "Sudeste"), function(rg) {
   data.frame(regiao = rg, rend = exp(seq(quantile(lr, .02), quantile(lr, .98), length.out = 100)))
 }))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
-for (v in c("gini", "desocup", "pct_urbana", "dens_z", "pct_h1529", "pct_indet",
+for (v in c("gini", "desocup", "pct_urbana", "pct_h1529", "pct_indet",
            "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
 grade$faixa_fronteira <- 0
 grade$regiao <- factor(grade$regiao, levels = levels(d$regiao))
@@ -184,7 +178,7 @@ com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficient
 write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5.2 Região x estado: os dois modelos lado a lado (a escolha está em aberto)
+# 5.2 Região x estado: os dois modelos lado a lado (o grupo escolheu a região)
 # -----------------------------------------------------------------------------
 d$uf <- relevel(factor(d$uf), ref = "SP")
 com_estado <- update(mD, . ~ . + uf)                  # estado (26 indicadoras) no lugar da região
@@ -195,6 +189,12 @@ termos_x <- grep("^regiao|Intercept", rownames(sf_$coefficients), value = TRUE, 
 regiao_estado <- data.frame(termo = termos_x, b_regiao = b[termos_x], p_regiao = sf_$coefficients[termos_x, 4],
                             b_estado = se_$coefficients[termos_x, 1], p_estado = se_$coefficients[termos_x, 4], row.names = NULL)
 write.csv(regiao_estado, "resultados/modelagem/regiao_x_estado.csv", row.names = FALSE)
+
+# -----------------------------------------------------------------------------
+# 5.3 Densidade: testada (ln, padronizada) e fora do modelo
+# -----------------------------------------------------------------------------
+com_dens <- update(final, . ~ . + dens_z)
+F_dens <- anova(final, com_dens)                      # Ho: beta_densidade = 0
 
 # -----------------------------------------------------------------------------
 # 6. Diagnóstico preliminar pela análise dos resíduos
@@ -308,6 +308,9 @@ cat(sprintf("VIF máximo: região = %.2f | estado = %.2f\n", max(vif_final), max
 cat(sprintf("F parcial do estado além da região: F = %.1f (gl %d) | p = %.2g\n", F_estado$F[2], F_estado$Df[2], F_estado$`Pr(>F)`[2]))
 cat(sprintf("Estados com menos de 10 municípios no estudo: %d\n", sum(table(d$uf) < 10)))
 print(regiao_estado, digits = 3, row.names = FALSE)
+cat("\n== 5.3 Densidade (fora do modelo) ==\n")
+cat(sprintf("F parcial de ln(densidade) padronizado: F = %.2f (gl %d) | p = %.3f | R² ajustado com ela = %.3f\n",
+            F_dens$F[2], F_dens$Df[2], F_dens$`Pr(>F)`[2], summary(com_dens)$adj.r.squared))
 cat("\n== 6. Diagnóstico ==\n")
 cat(sprintf("Breusch-Pagan = %.1f (gl %d) | p = %.2g\n", bp$statistic, bp$parameter, bp$p.value))
 cat(sprintf("Shapiro-Wilk = %.3f | p = %.2g\n", sw_final$statistic, sw_final$p.value))

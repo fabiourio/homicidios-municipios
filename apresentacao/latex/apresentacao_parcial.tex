@@ -155,7 +155,7 @@ Y_i = \frac{H_i^{2021} + H_i^{2022} + H_i^{2023}}{3\,P_i} \times 10^5
 \textbf{Bloco} & \textbf{Dimensão} & \textbf{Explicativas}\\
 \midrule
 A & Socioeconômica & ln renda per capita e seu quadrado, desigualdade (índice de Gini), desocupação\\
-B & Demográfica & \% urbana, ln densidade (padronizado), \% homens 15--29\\
+B & Demográfica & \% urbana, \% homens 15--29\\
 C & Contexto e registro & faixa de fronteira, \% óbitos de intenção indeterminada\\
 D & Educação e migração & frequência escolar 15--17, abandono e distorção no EM, migração\\
 E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
@@ -163,7 +163,7 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \end{tabularx}
 \vspace{0.6em}
 
-{\scriptsize\color{black!70}Desigualdade: índice de Gini da renda domiciliar per capita, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; nas 27 UFs, a correlação do calculado com o oficial é \nGiniCorUF. Migração: \% de moradores há menos de 10 anos no município.}
+{\scriptsize\color{black!70}Desigualdade: índice de Gini da renda domiciliar per capita, calculado pelas classes de renda do Censo 2022: área sob a curva de Lorenz, com a renda de cada classe no ponto médio (Gastwirth, 1972). O IBGE só publica o Gini por região e UF; nas 27 UFs, a correlação do calculado com o oficial é \nGiniCorUF. Migração: \% de moradores há menos de 10 anos no município.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -173,24 +173,25 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \item \textbf{Desenho observacional e ecológico:} associações entre municípios; sem interpretação causal nem individual (falácia ecológica)
 \item \textbf{Sub-registro:} óbitos de intenção indeterminada podem ocultar homicídios
 \item \textbf{Denominador:} a população prisional é recenseada no município do presídio
-\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os municípios com \nPopMin{} mil hab. ou mais. Sem os \nDensExt{} extremos de densidade de cada região, ficam \textbf{\nMunEsc{} municípios} (\nPctPopEsc\% da população)
+\item \textbf{Contagens pequenas:} em municípios pequenos há poucos casos e \nZerosBR{} municípios com taxa zero; a taxa oscila por acaso. Por isso o estudo usa os \textbf{\nMunEsc{} municípios com \nPopMin{} mil hab. ou mais} (\nPctPopEsc\% da população)
 \end{itemize}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-\begin{frame}{Municípios considerados: percentil por região}
+\begin{frame}{Municípios considerados: percentil \nPercCorte{} da população}
 \begin{columns}[c]
 \column{0.64\textwidth}
 \footnotesize
 \renewcommand{\arraystretch}{1.25}
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/corte_regiao.tex}
-\fonte{IBGE, Censo 2022. Municípios com \nPopMin{} mil hab. ou mais. Densidade em hab./km².}
+\fonte{IBGE, Censo 2022. Ficam os municípios com \nPopMin{} mil hab. ou mais. Elaboração própria.}
 \column{0.34\textwidth}
 \begin{itemize}\small
-\item Cada município recebe o percentil da sua densidade dentro da sua região
-\item Ficam os que estão entre os percentis \nPCorte{} e \nPCorteSup: os \nPctCentral\% centrais de cada região
-\item Saem \nDensExt{} municípios; ficam \nMunEsc
+\item Cada município recebe o percentil da sua população, entre os \nMunBR
+\item Ficam os que estão acima do percentil \nPercCorte: os \nPctMaiores\% maiores, com \nPopMin{} mil hab. ou mais
+\item Nesse porte, a taxa nacional dá pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos
+\item Ficam \nMunEsc{} municípios, com \nPctPopEsc\% da população
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -207,8 +208,8 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \fonte{SIM/DATASUS; IBGE; INEP. \nMunEsc{} municípios do escopo. DP: desvio-padrão. Elaboração própria.}
 \column{0.27\textwidth}
 \begin{itemize}\small
-\item Densidade: saem os \nDensExt{} municípios fora dos \nPctCentral\% centrais da sua região
-\item No modelo, ln densidade entra padronizado (média 0, DP 1)
+\item Escalas e dispersões bem diferentes entre as variáveis
+\item Densidade (ln, padronizada): testada e não significativa ($F = \nFDens$; $p = \nPDens$). Fica fora do modelo
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -357,9 +358,9 @@ E & Região & \nNumReg{} indicadoras (referência: Sudeste)\\
 \item Região: \nNumPar{} parâmetros; $R^2_a$ = \nRdoisA; VIF máximo \nVIFrendaFinal
 \item Estado: \nNumParEstado{} parâmetros; $R^2_a$ = \nRdoisAestado; VIF máximo \nVIFmaxEstado
 \item $F$ parcial do estado além da região: \nFEstado{} (\nGlEstado{} gl), $p$ \nPEstado
-\item H1, H2 e H3 valem nos dois; a densidade só é significativa com região
+\item H1, H2 e H3 valem nos dois; o abandono escolar só é significativo com estado
 \item \nNumUFpoucos{} estados têm menos de 10 municípios no estudo
-\item Escolha em aberto; os demais slides usam região
+\item Escolhemos a região; o modelo com estado fica como comparação
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -473,7 +474,7 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \item A renda tem o maior VIF: \nVIFrendaFinal. Sem ela, o VIF máximo é \nVIFmaxSemRenda
 \item $F$ parcial da renda: \nFRenda{} (\nGlRenda{} gl), $p$ \nPRenda
 \item $R^2_a$: \nRdoisA{} com a renda; \nRdoisAsemRenda{} sem
-\item Sem a renda, a desigualdade continua significativa, com efeito menor; migração e densidade deixam de ser
+\item Sem a renda, desigualdade (H1) e migração (H3) deixam de ser significativas; as medidas de escola (H2) continuam
 \item A renda fica no modelo
 \end{itemize}
 \end{columns}
@@ -540,6 +541,8 @@ CASTELLUCCI, L. V.; SILVA, É. M. Fatores socioeconômicos da violência letal u
 
 FAJNZYLBER, P.; LEDERMAN, D.; LOAYZA, N. Inequality and violent crime. \textit{Journal of Law and Economics}, v. 45, n. 1, p. 1--39, 2002.
 
+GASTWIRTH, J. L. The estimation of the Lorenz curve and Gini index. \textit{The Review of Economics and Statistics}, v. 54, n. 3, p. 306--316, 1972.
+
 FERRARI, D. \textit{GED-16: Análise de Regressão} (apostila). São José dos Campos: ITA. Disponível em: \texttt{www.ief.ita.br/\~{}denise/GED16/Apostila/}.
 
 IBGE. \textit{Censo Demográfico 2022}. Rio de Janeiro: IBGE. Sistema IBGE de Recuperação Automática (SIDRA).
@@ -569,8 +572,8 @@ WANZINACK, C.; SIGNORELLI, M. C.; REIS, C. Violence and social determinants of h
 \textbf{Item} & \textbf{Origem} & \textbf{Para que serve}\\
 \midrule
 Índice de Gini por município, calculado pelas classes de renda & Revisão da professora & Medir a desigualdade (H1); o IBGE só publica o Gini por região e UF\\
-Corte por percentil da densidade dentro da região & Revisão da professora & Tirar os municípios de densidade extrema\\
-Padronização de ln densidade & Revisão da professora & A apostila cita a padronização (cap. 6), sem detalhar\\
+Corte no percentil \nPercCorte{} da população & Revisão da professora & Escolher os municípios do estudo (\nPopMin{} mil hab. ou mais)\\
+Padronização de ln densidade & Revisão da professora & Usada no teste da densidade, que ficou fora do modelo\\
 VIF generalizado & Escolha do grupo & VIF de variável com várias categorias (região e estado)\\
 Efeito em \%: $100\,[\exp(b\,\Delta) - 1]$ & Escolha do grupo & Ler os coeficientes com a resposta em ln\\
 Intervalo de confiança de $\lambda$ no Box-Cox & Escolha do grupo & Dizer se $\lambda = 0$ é compatível com os dados\\

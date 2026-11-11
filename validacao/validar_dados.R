@@ -49,18 +49,13 @@ extras <- read.csv("entrega/dados/variaveis_extras.csv")
 vars_extras <- c("abandono_em", "distorcao_em", "pct_migr_10anos")
 b <- cbind(b, extras[match(b$cod_ibge, extras$cod_ibge), vars_extras])
 
-# Escopo do modelo (igual a entrega/2_modelo_preliminar.R): pop >= 20 mil e densidade entre os percentis da região
-P_CORTE <- 2.5
-percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
-b$escopo <- b$pop >= 20000
-b$p_dens <- NA
-b$p_dens[b$escopo] <- ave((b$pop / b$area_km2)[b$escopo], b$regiao[b$escopo], FUN = percentil)
-b$escopo <- b$escopo & b$p_dens > P_CORTE & b$p_dens < 100 - P_CORTE
+# Escopo do modelo (igual a entrega/2_modelo_preliminar.R): pop >= 30 mil
+POP_MIN <- 30000
+b$escopo <- b$pop >= POP_MIN
 cat(sprintf("Variáveis extras: %d linhas, %d sem par na base | NAs na base inteira: %s | NAs no escopo: %d\n",
             nrow(extras), sum(!extras$cod_ibge %in% b$cod_ibge),
             paste(vars_extras, colSums(is.na(b[vars_extras])), collapse = ", "), sum(is.na(b[b$escopo, vars_extras]))))
-cat(sprintf("Escopo do modelo: pop >= 20 mil = %d | depois do corte da densidade (percentis %.1f a %.1f da região) = %d\n",
-            sum(b$pop >= 20000), P_CORTE, 100 - P_CORTE, sum(b$escopo)))
+cat(sprintf("Escopo do modelo: pop >= %d = %d municípios\n", POP_MIN, sum(b$escopo)))
 cat("Escopo por região:\n"); print(table(b$regiao[b$escopo]))
 
 # Dígito verificador do código IBGE (módulo 10, pesos 1-2-1-2-1-2)
@@ -345,13 +340,12 @@ if (file.exists(arq_extra)) {
 # -----------------------------------------------------------------------------
 cat("\n== 5. Outliers e pontos influentes ==\n")
 d <- b[b$escopo, ]
-d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
 d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
                            labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")), ref = "Sudeste")
 d$ly <- log(d$taxa)
 d$rend_c <- d$log_rend - mean(d$log_rend)
 d$rend_c2 <- d$rend_c^2
-form <- ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + dens_z + pct_h1529 + faixa_fronteira + pct_indet +
+form <- ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + pct_h1529 + faixa_fronteira + pct_indet +
   freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
 m <- lm(form, data = d)
 n <- nrow(d); pp <- length(coef(m))

@@ -1,177 +1,175 @@
-n = 1622 municípios | zeros: 0
+n = 1134 municípios | zeros: 0
 
 == 1. Regressão simples: taxa ~ ln(renda) ==
              Estimate Std. Error   t value     Pr(>|t|)
-(Intercept) 151.83931  6.9263773  21.92189 1.700835e-93
-log_rend    -17.95408  0.9789117 -18.34086 2.027439e-68
-R² = 0.172
+(Intercept) 156.03267   8.003292  19.49606 3.226448e-73
+log_rend    -18.40418   1.119732 -16.43624 1.325353e-54
+R² = 0.193
 
 == 2. Box-Cox ==
-lambda = 0.22 | IC 95%: 0.17 a 0.26 | adotado: 0 (ln)
-Shapiro-Wilk: Y W = 0.928 | ln Y W = 0.988
-Breusch-Pagan: Y = 131.0 | ln Y = 68.3
+lambda = 0.23 | IC 95%: 0.17 a 0.28 | adotado: 0 (ln)
+Shapiro-Wilk: Y W = 0.941 | ln Y W = 0.990
+Breusch-Pagan: Y = 116.8 | ln Y = 59.5
 
 == 3. Multicolinearidade ==
 VIF com renda, % pobres e alfabetização juntas:
        log_rend      pct_pobres         alfabet            gini         desocup 
-          18.95           15.89            7.12            2.52            2.08 
-     pct_urbana          dens_z       pct_h1529 faixa_fronteira       pct_indet 
-           3.51            2.44            2.37            1.29            1.25 
-     freq_15a17     abandono_em    distorcao_em pct_migr_10anos          regiao 
-           1.18            1.70            2.68            1.48            2.19 
-              Estimate  Std. Error    t value     Pr(>|t|)
-log_rend   -2.13937392 0.147925998 -14.462461 1.189522e-44
-pct_pobres -0.07256887 0.005443806 -13.330538 1.594175e-38
-alfabet    -0.01362483 0.005239738  -2.600289 9.400145e-03
-cor(X, X²): sem centrar = 0.9995 | centrado = -0.1306
+          16.32           14.85            7.46            2.80            2.20 
+     pct_urbana       pct_h1529 faixa_fronteira       pct_indet      freq_15a17 
+           3.73            2.59            1.25            1.28            1.21 
+    abandono_em    distorcao_em pct_migr_10anos          regiao 
+           1.79            2.88            1.45            2.07 
+               Estimate  Std. Error    t value     Pr(>|t|)
+log_rend   -2.028385530 0.150150775 -13.508991 1.256344e-38
+pct_pobres -0.068851143 0.006111077 -11.266613 5.810161e-28
+alfabet    -0.006211326 0.006292282  -0.987134 3.237909e-01
+cor(X, X²): sem centrar = 0.9994 | centrado = -0.2053
 
 == 4. Blocos (F parcial) ==
 Analysis of Variance Table
 
 Model 1: ly ~ rend_c + rend_c2 + gini + desocup
-Model 2: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + dens_z + 
-    pct_h1529
-Model 3: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + dens_z + 
-    pct_h1529 + faixa_fronteira + pct_indet
-Model 4: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + dens_z + 
-    pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
+Model 2: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + pct_h1529
+Model 3: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + pct_h1529 + 
+    faixa_fronteira + pct_indet
+Model 4: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + pct_h1529 + 
+    faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
     distorcao_em + pct_migr_10anos
-Model 5: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + dens_z + 
-    pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
+Model 5: ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + pct_h1529 + 
+    faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
     distorcao_em + pct_migr_10anos + regiao
   Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
-1   1617 763.46                                  
-2   1614 742.62  3    20.834 19.348 2.527e-12 ***
-3   1612 711.33  2    31.292 43.589 < 2.2e-16 ***
-4   1608 651.75  4    59.581 41.498 < 2.2e-16 ***
-5   1604 575.74  4    76.009 52.940 < 2.2e-16 ***
+1   1129 473.03                                  
+2   1127 458.66  2    14.368 24.626  3.42e-11 ***
+3   1125 430.81  2    27.849 47.733 < 2.2e-16 ***
+4   1121 383.23  4    47.576 40.772 < 2.2e-16 ***
+5   1117 325.85  4    57.388 49.182 < 2.2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-F parcial renda²: F = 101.6 | p = 3.3e-23
+F parcial renda²: F = 80.2 | p = 1.4e-18
 
 R² e R² ajustado por bloco:
                   modelo  p     R2    R2a    MSE
-        A socioeconômico  4 0.2843 0.2825 0.4721
-          B + demografia  7 0.3038 0.3008 0.4601
-            C + contexto  9 0.3331 0.3294 0.4413
- D + educação e migração 13 0.3890 0.3840 0.4053
-              E + região 17 0.4602 0.4545 0.3589
+        A socioeconômico  4 0.3376 0.3353 0.4190
+          B + demografia  6 0.3577 0.3543 0.4070
+            C + contexto  8 0.3967 0.3924 0.3829
+ D + educação e migração 12 0.4633 0.4576 0.3419
+              E + região 16 0.5437 0.5372 0.2917
 
 == 5. Modelo preliminar (E) ==
 
 Call:
 lm(formula = ly ~ rend_c + rend_c2 + gini + desocup + pct_urbana + 
-    dens_z + pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + 
-    abandono_em + distorcao_em + pct_migr_10anos + regiao, data = d)
+    pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
+    distorcao_em + pct_migr_10anos + regiao, data = d)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--2.4480 -0.3499  0.0324  0.3998  2.0107 
+     Min       1Q   Median       3Q      Max 
+-2.39765 -0.34907  0.01169  0.36338  1.75478 
 
 Coefficients:
                     Estimate Std. Error t value Pr(>|t|)    
-(Intercept)         1.981071   0.408301   4.852 1.34e-06 ***
-rend_c             -0.664349   0.101026  -6.576 6.52e-11 ***
-rend_c2            -0.936102   0.092862 -10.081  < 2e-16 ***
-gini                3.004602   0.444160   6.765 1.87e-11 ***
-desocup            -0.004687   0.006738  -0.696 0.486722    
-pct_urbana          0.009856   0.001500   6.571 6.72e-11 ***
-dens_z              0.052816   0.023131   2.283 0.022537 *  
-pct_h1529          -0.032832   0.017977  -1.826 0.067992 .  
-faixa_fronteira    -0.035942   0.063999  -0.562 0.574464    
-pct_indet          -0.008352   0.002274  -3.673 0.000248 ***
-freq_15a17         -0.016177   0.003118  -5.188 2.40e-07 ***
-abandono_em        -0.002263   0.003720  -0.608 0.543103    
-distorcao_em        0.010388   0.001954   5.317 1.20e-07 ***
-pct_migr_10anos     0.009081   0.002774   3.273 0.001087 ** 
-regiaoNorte         0.636327   0.088966   7.152 1.29e-12 ***
-regiaoNordeste      0.758282   0.061430  12.344  < 2e-16 ***
-regiaoCentro-Oeste  0.648753   0.075098   8.639  < 2e-16 ***
-regiaoSul           0.366934   0.056696   6.472 1.28e-10 ***
+(Intercept)         2.002957   0.499271   4.012 6.43e-05 ***
+rend_c             -0.733512   0.108166  -6.781 1.93e-11 ***
+rend_c2            -0.857481   0.095753  -8.955  < 2e-16 ***
+gini                3.278235   0.496267   6.606 6.10e-11 ***
+desocup            -0.009585   0.008224  -1.165 0.244077    
+pct_urbana          0.012313   0.001688   7.293 5.72e-13 ***
+pct_h1529          -0.039532   0.020951  -1.887 0.059428 .  
+faixa_fronteira    -0.099837   0.068921  -1.449 0.147736    
+pct_indet          -0.008420   0.002254  -3.737 0.000196 ***
+freq_15a17         -0.020363   0.003886  -5.240 1.92e-07 ***
+abandono_em        -0.001961   0.004385  -0.447 0.654790    
+distorcao_em        0.015555   0.002259   6.885 9.65e-12 ***
+pct_migr_10anos     0.006273   0.002938   2.136 0.032933 *  
+regiaoNorte         0.530564   0.093547   5.672 1.80e-08 ***
+regiaoNordeste      0.753834   0.064680  11.655  < 2e-16 ***
+regiaoCentro-Oeste  0.616381   0.078146   7.888 7.30e-15 ***
+regiaoSul           0.404132   0.060727   6.655 4.43e-11 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.5991 on 1604 degrees of freedom
-Multiple R-squared:  0.4602,	Adjusted R-squared:  0.4545 
-F-statistic: 80.45 on 17 and 1604 DF,  p-value: < 2.2e-16
+Residual standard error: 0.5401 on 1117 degrees of freedom
+Multiple R-squared:  0.5437,	Adjusted R-squared:  0.5372 
+F-statistic: 83.19 on 16 and 1117 DF,  p-value: < 2.2e-16
 
 Intervalos de confiança 95%:
                      2.5 %  97.5 %
-(Intercept)         1.1802  2.7819
-rend_c             -0.8625 -0.4662
-rend_c2            -1.1182 -0.7540
-gini                2.1334  3.8758
-desocup            -0.0179  0.0085
-pct_urbana          0.0069  0.0128
-dens_z              0.0074  0.0982
-pct_h1529          -0.0681  0.0024
-faixa_fronteira    -0.1615  0.0896
-pct_indet          -0.0128 -0.0039
-freq_15a17         -0.0223 -0.0101
-abandono_em        -0.0096  0.0050
-distorcao_em        0.0066  0.0142
-pct_migr_10anos     0.0036  0.0145
-regiaoNorte         0.4618  0.8108
-regiaoNordeste      0.6378  0.8788
-regiaoCentro-Oeste  0.5015  0.7961
-regiaoSul           0.2557  0.4781
+(Intercept)         1.0233  2.9826
+rend_c             -0.9457 -0.5213
+rend_c2            -1.0454 -0.6696
+gini                2.3045  4.2520
+desocup            -0.0257  0.0066
+pct_urbana          0.0090  0.0156
+pct_h1529          -0.0806  0.0016
+faixa_fronteira    -0.2351  0.0354
+pct_indet          -0.0128 -0.0040
+freq_15a17         -0.0280 -0.0127
+abandono_em        -0.0106  0.0066
+distorcao_em        0.0111  0.0200
+pct_migr_10anos     0.0005  0.0120
+regiaoNorte         0.3470  0.7141
+regiaoNordeste      0.6269  0.8807
+regiaoCentro-Oeste  0.4631  0.7697
+regiaoSul           0.2850  0.5233
 
 VIF do modelo preliminar:
          rend_c         rend_c2            gini         desocup      pct_urbana 
-           8.46            1.42            1.57            2.05            3.29 
-         dens_z       pct_h1529 faixa_fronteira       pct_indet      freq_15a17 
-           2.42            2.39            1.29            1.24            1.18 
-    abandono_em    distorcao_em pct_migr_10anos          regiao 
-           1.70            2.67            1.49            1.91 
-Renda per capita do pico da taxa esperada: R$ 819
+           8.16            1.50            1.81            2.12            3.16 
+      pct_h1529 faixa_fronteira       pct_indet      freq_15a17     abandono_em 
+           2.61            1.25            1.28            1.21            1.79 
+   distorcao_em pct_migr_10anos          regiao 
+           2.87            1.45            1.81 
+Renda per capita do pico da taxa esperada: R$ 818
 
 == 5.1 Modelo com e sem a renda ==
-F parcial da renda (renda e renda²): F = 84.3 (gl 2) | p = 1.5e-35
-R² ajustado: com = 0.455 | sem = 0.398
-VIF máximo: com = 8.46 | sem = 2.52
-              termo    b_com    p_com    b_sem    p_sem
-               gini  3.00460 1.87e-11  0.85828 4.51e-02
-            desocup -0.00469 4.87e-01  0.01046 1.14e-01
-         pct_urbana  0.00986 6.72e-11  0.01052 2.13e-15
-             dens_z  0.05282 2.25e-02 -0.03386 1.46e-01
-          pct_h1529 -0.03283 6.80e-02 -0.01810 2.97e-01
-    faixa_fronteira -0.03594 5.74e-01 -0.03905 5.61e-01
-          pct_indet -0.00835 2.48e-04 -0.00512 3.10e-02
-         freq_15a17 -0.01618 2.40e-07 -0.01745 1.04e-07
-        abandono_em -0.00226 5.43e-01 -0.00446 2.50e-01
-       distorcao_em  0.01039 1.20e-07  0.01390 4.50e-12
-    pct_migr_10anos  0.00908 1.09e-03  0.00398 1.49e-01
-        regiaoNorte  0.63633 1.29e-12  0.77671 1.37e-17
-     regiaoNordeste  0.75828 1.66e-33  1.03890 6.66e-72
- regiaoCentro-Oeste  0.64875 1.35e-17  0.60174 3.72e-14
-          regiaoSul  0.36693 1.28e-10  0.15851 5.32e-03
+F parcial da renda (renda e renda²): F = 77.4 (gl 2) | p = 3.4e-32
+R² ajustado: com = 0.537 | sem = 0.474
+VIF máximo: com = 8.16 | sem = 2.64
+              termo    b_com    p_com     b_sem    p_sem
+               gini  3.27823 6.10e-11  0.308260 4.95e-01
+            desocup -0.00959 2.44e-01  0.012751 1.16e-01
+         pct_urbana  0.01231 5.72e-13  0.011184 2.17e-15
+          pct_h1529 -0.03953 5.94e-02 -0.015815 4.45e-01
+    faixa_fronteira -0.09984 1.48e-01 -0.014406 8.44e-01
+          pct_indet -0.00842 1.96e-04 -0.008271 5.79e-04
+         freq_15a17 -0.02036 1.92e-07 -0.022988 3.34e-08
+        abandono_em -0.00196 6.55e-01 -0.004332 3.50e-01
+       distorcao_em  0.01555 9.65e-12  0.019510 9.35e-17
+    pct_migr_10anos  0.00627 3.29e-02  0.000313 9.16e-01
+        regiaoNorte  0.53056 1.80e-08  0.757764 4.53e-15
+     regiaoNordeste  0.75383 1.05e-29  1.038226 1.49e-59
+ regiaoCentro-Oeste  0.61638 7.30e-15  0.678120 9.01e-16
+          regiaoSul  0.40413 4.43e-11  0.192244 1.89e-03
 
 == 5.2 Região x estado ==
-Parâmetros: região = 18 | estado = 40
-R² ajustado: região = 0.455 | estado = 0.556
-VIF máximo: região = 8.46 | estado = 10.79
-F parcial do estado além da região: F = 17.7 (gl 22) | p = 5.2e-61
+Parâmetros: região = 17 | estado = 39
+R² ajustado: região = 0.537 | estado = 0.632
+VIF máximo: região = 8.16 | estado = 10.46
+F parcial do estado além da região: F = 14.1 (gl 22) | p = 1.2e-45
 Estados com menos de 10 municípios no estudo: 5
            termo b_regiao p_regiao b_estado p_estado
-          rend_c -0.66435 6.52e-11 -0.41411 5.99e-05
-         rend_c2 -0.93610 3.25e-23 -0.59238 9.43e-11
-            gini  3.00460 1.87e-11  1.36724 1.34e-03
-         desocup -0.00469 4.87e-01 -0.00423 5.04e-01
-      pct_urbana  0.00986 6.72e-11  0.01131 2.42e-15
-          dens_z  0.05282 2.25e-02  0.03530 1.12e-01
-       pct_h1529 -0.03283 6.80e-02  0.00133 9.39e-01
- faixa_fronteira -0.03594 5.74e-01 -0.08223 2.03e-01
-       pct_indet -0.00835 2.48e-04 -0.00889 3.42e-05
-      freq_15a17 -0.01618 2.40e-07 -0.01033 4.33e-04
-     abandono_em -0.00226 5.43e-01  0.00641 1.07e-01
-    distorcao_em  0.01039 1.20e-07  0.00674 5.05e-03
- pct_migr_10anos  0.00908 1.09e-03  0.00862 8.30e-04
+          rend_c -0.73351 1.93e-11 -0.40488 2.20e-04
+         rend_c2 -0.85748 1.39e-18 -0.56776 1.07e-09
+            gini  3.27823 6.10e-11  1.38819 3.56e-03
+         desocup -0.00959 2.44e-01 -0.00456 5.57e-01
+      pct_urbana  0.01231 5.72e-13  0.01292 1.36e-15
+       pct_h1529 -0.03953 5.94e-02 -0.00688 7.34e-01
+ faixa_fronteira -0.09984 1.48e-01 -0.05880 3.93e-01
+       pct_indet -0.00842 1.96e-04 -0.00911 1.35e-05
+      freq_15a17 -0.02036 1.92e-07 -0.01381 1.39e-04
+     abandono_em -0.00196 6.55e-01  0.01311 6.01e-03
+    distorcao_em  0.01555 9.65e-12  0.00927 1.22e-03
+ pct_migr_10anos  0.00627 3.29e-02  0.00612 2.41e-02
+
+== 5.3 Densidade (fora do modelo) ==
+F parcial de ln(densidade) padronizado: F = 1.74 (gl 1) | p = 0.188 | R² ajustado com ela = 0.537
 
 == 6. Diagnóstico ==
-Breusch-Pagan = 56.9 (gl 17) | p = 3.4e-06
-Shapiro-Wilk = 0.989 | p = 1.3e-09
+Breusch-Pagan = 55.2 (gl 16) | p = 3.2e-06
+Shapiro-Wilk = 0.994 | p = 0.00029
 Possíveis outliers (|e*| >= 4): 2
         municipio uf   pop      taxa ajustado  res_semi
-         Nhamundá AM 20136 1.6554099 2.952024 -4.085979
- Campos do Jordão SP 46974 0.7096124 2.053625 -4.000330
+ Campos do Jordão SP 46974 0.7096124 2.054613 -4.439221
+         Pomerode SC 34289 0.9721291 2.215058 -4.153490

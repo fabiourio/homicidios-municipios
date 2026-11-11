@@ -6,7 +6,7 @@
 # Saída:   resultados/eda/ (figuras e tabelas)
 # Rodar com a pasta entrega/ como diretório de trabalho.
 #
-# Escopo: a análise é feita nos municípios com 20 mil habitantes ou mais, sem os extremos de densidade de cada região
+# Escopo: a análise é feita nos municípios com 30 mil habitantes ou mais, o percentil 80 da população
 # (o mesmo do modelo). Só a definição do escopo e o mapa usam todos os 5.570 municípios.
 # =============================================================================
 
@@ -28,30 +28,30 @@ br <- read.csv("dados/base_analitica.csv")
 br <- merge(br, read.csv("dados/variaveis_extras.csv"), by = "cod_ibge")    # educação (INEP) e migração
 str(br)
 
-POP_MIN <- 20000                                   # escopo: municípios com 20 mil hab. ou mais
-br$escopo <- br$pop >= POP_MIN
+taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os municípios)
 
-# Percentil da densidade (população / área) de cada município dentro da sua região (0 a 100), entre os de 20 mil hab. ou mais.
-# Saem do escopo os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
-P_CORTE <- 2.5
+# Escopo: municípios com 30 mil habitantes ou mais. Nesse porte, a taxa nacional dá pelo menos 20 homicídios
+# esperados em 3 anos (casos_esperados_corte)
+POP_MIN <- 30000
+br$escopo <- br$pop >= POP_MIN
+casos_esperados_corte <- POP_MIN * 3 * taxa_br / 1e5
+
+# Percentil da população de cada município (0 a 100): mostra onde o corte fica entre os 5.570 municípios
 percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
-br$p_dens <- NA
-br$p_dens[br$escopo] <- ave((br$pop / br$area_km2)[br$escopo], br$regiao[br$escopo], FUN = percentil)
-br$dens_extrema <- br$escopo & (br$p_dens <= P_CORTE | br$p_dens >= 100 - P_CORTE)
+br$p_pop <- percentil(br$pop)
+percentil_corte <- 100 * mean(br$pop < POP_MIN)
 
 # Percentil de cada município e resumo do corte por região (para decidir quais considerar)
-perc <- br[br$escopo, c("cod_ibge", "municipio", "uf", "regiao", "pop", "dens", "p_dens")]
-perc$considerado <- ifelse(br$dens_extrema[br$escopo], "não", "sim")
+perc <- br[, c("cod_ibge", "municipio", "uf", "regiao", "pop", "p_pop")]
+perc$considerado <- ifelse(br$escopo, "sim", "não")
 perc$regiao <- factor(perc$regiao, levels = c("N", "NE", "CO", "SE", "S"),
                       labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
-perc <- perc[order(perc$regiao, perc$p_dens), ]
+perc <- perc[order(-perc$pop), ]
 write.csv(perc, "resultados/eda/percentis_municipios.csv", row.names = FALSE)
 corte_regiao <- perc %>% group_by(regiao) %>%
-  summarise(municipios = n(), fora = sum(considerado == "não"), considerados = sum(considerado == "sim"),
-            dens_min = min(dens[considerado == "sim"]), dens_max = max(dens[considerado == "sim"]), .groups = "drop")
+  summarise(municipios = n(), considerados = sum(considerado == "sim"),
+            pct_pop = 100 * sum(pop[considerado == "sim"]) / sum(pop), .groups = "drop")
 write.csv(corte_regiao, "resultados/eda/corte_regiao.csv", row.names = FALSE)
-br$escopo <- br$escopo & !br$dens_extrema
-taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os municípios)
 
 # Paleta igual à dos slides: azul do ODS 16, vermelho de destaque e azul-claro de preenchimento
 AZUL <- "#00689D"; VERMELHO <- "#C8343B"; CINZA <- "#7A869A"; FUNDO <- "#FFFFFF"; CLARO <- "#D6E6F2"; MARINHO <- "#13294B"
@@ -65,8 +65,8 @@ assimetria <- function(x) mean((x - mean(x))^3) / sd(x)^3
 #    oscilacao = 1 / raiz(nº esperado de homicídios em 3 anos): variação só pelo acaso
 #    cor_2024  = correlação entre a taxa de 2021-23 e a de 2024 (estabilidade)
 # -----------------------------------------------------------------------------
-br$porte <- cut(br$pop, c(0, 5e3, 1e4, 2e4, 5e4, 1e5, Inf), right = FALSE,
-                labels = c("< 5 mil", "5–10 mil", "10–20 mil", "20–50 mil", "50–100 mil", ">= 100 mil"))
+br$porte <- cut(br$pop, c(0, 5e3, 1e4, 2e4, 3e4, 5e4, 1e5, Inf), right = FALSE,
+                labels = c("< 5 mil", "5–10 mil", "10–20 mil", "20–30 mil", "30–50 mil", "50–100 mil", ">= 100 mil"))
 porte <- br %>% group_by(porte) %>%
   summarise(municipios = n(), pct_pop = 100 * sum(pop) / sum(br$pop), hom_mediana_3anos = median(hom),
             pct_zero = 100 * mean(hom == 0), oscilacao = 100 / sqrt(median(exposure) * taxa_br / 1e5),
@@ -108,12 +108,12 @@ d$regiao <- factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
 d$ln_taxa <- log(d$taxa)
 
 summary(d[, c("taxa", "rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet", "pct_urbana",
-              "dens", "pct_h1529", "pct_indet", "regiao", "amazonia_legal", "faixa_fronteira")])
+              "pct_h1529", "pct_indet", "regiao", "amazonia_legal", "faixa_fronteira")])
 
 rot <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R$)",
          gini = "Desigualdade (índice de Gini)", pct_pobres = "% pobres (14+)",
          desocup = "Desocupação (%)", alfabet = "Alfabetização (%)", pct_urbana = "% urbana",
-         dens = "Densidade (hab/km²)", log_dens = "ln Densidade", pct_h1529 = "% homens 15–29",
+         pct_h1529 = "% homens 15–29",
          pct_indet = "% intenção indeterminada", freq_15a17 = "Frequência escolar 15–17 (%)",
          abandono_em = "Abandono no ensino médio (%)", distorcao_em = "Distorção idade-série EM (%)",
          pct_migr_10anos = "Migração recente (%)", pop = "População")
@@ -157,7 +157,7 @@ ggsave("resultados/eda/e3_box_regiao.png", p, width = 4.8, height = 2.7, dpi = 2
 # E4. Histogramas das explicativas numéricas (assimetria e bimodalidade)
 # -----------------------------------------------------------------------------
 xs <- c("rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet",
-        "pct_urbana", "log_dens", "pct_h1529", "pct_indet",
+        "pct_urbana", "pct_h1529", "pct_indet",
         "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")
 e4 <- d %>% select(all_of(xs)) %>% pivot_longer(everything()) %>%
   mutate(var = factor(rot[name], levels = rot[xs]))
@@ -171,7 +171,7 @@ ggsave("resultados/eda/e4_hist_explicativas.png", p, width = 7, height = 3.2, dp
 # E5. Correlações: de cada explicativa com ln(taxa), e entre as explicativas (matriz completa em CSV)
 # -----------------------------------------------------------------------------
 cv <- c(log_rend = "ln Renda", gini = "Desigualdade", pct_pobres = "% pobres", desocup = "Desocupação",
-        alfabet = "Alfabetização", pct_urbana = "% urbana", log_dens = "ln Densidade",
+        alfabet = "Alfabetização", pct_urbana = "% urbana",
         pct_h1529 = "% homens 15–29", pct_indet = "% indeterminada",
         freq_15a17 = "Freq. escolar 15–17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração recente")
 R <- cor(d[, c("ln_taxa", names(cv))])
@@ -194,7 +194,7 @@ ggsave("resultados/eda/e5_correlacao.png", p, width = 4.8, height = 4.0, dpi = 2
 # E6. Dispersão: ln(taxa) x cada explicativa, com reta de mínimos quadrados
 # -----------------------------------------------------------------------------
 xs6 <- c(log_rend = "ln Renda per capita", gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (%)",
-         pct_urbana = "% urbana", log_dens = "ln Densidade",
+         pct_urbana = "% urbana",
          pct_h1529 = "% homens 15–29", pct_indet = "% intenção indeterminada")
 e6 <- d %>% select(ln_taxa, all_of(names(xs6))) %>% pivot_longer(-ln_taxa) %>%
   mutate(var = factor(xs6[name], levels = xs6))

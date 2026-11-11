@@ -29,14 +29,13 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 ## Escopo e modelo
 
 - A análise exploratória e o modelo usam o mesmo escopo. Só a definição do escopo e o mapa usam os 5.570 municípios.
-- O escopo são os municípios com 20 mil habitantes ou mais: abaixo disso a taxa é dominada pelo acaso (ver `resultados/eda/confiabilidade_porte.csv`).
-- Cada município recebe o percentil da sua densidade dentro da sua região (`resultados/eda/percentis_municipios.csv`). Ficam os que estão entre os percentis 2,5 e 97,5 da região: saem 88 e ficam 1.622 municípios (66% da população).
-- ln(densidade) entra no modelo padronizado (média 0, desvio-padrão 1).
-- Desigualdade: índice de Gini de cada município, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; a conferência com o oficial está em `dados/validacao_gini.csv`.
+- O escopo são os 1.134 municípios com 30 mil habitantes ou mais (77% da população). É o percentil 80 da população dos municípios (`resultados/eda/percentis_municipios.csv`). Nesse porte, a taxa nacional dá pelo menos 20 homicídios esperados em 3 anos; abaixo disso a taxa é dominada pelo acaso (ver `resultados/eda/confiabilidade_porte.csv`).
+- A densidade não entra no modelo: testada em ln e padronizada, não é significativa neste escopo (ver a seção 5.3 de `resultados/modelagem/valores_modelo.txt`).
+- Desigualdade: índice de Gini de cada município, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF. O cálculo: cada classe de renda recebe o seu ponto médio em salários mínimos (a classe aberta, de mais de 20, recebe 50); ordenam-se as classes, acumulam-se as pessoas e a renda, e o Gini é 1 menos o dobro da área sob essa curva de Lorenz (regra do trapézio). É o método de GASTWIRTH, J. L. The estimation of the Lorenz curve and Gini index. *The Review of Economics and Statistics*, v. 54, n. 3, p. 306–316, 1972. A conferência com o oficial está em `dados/validacao_gini.csv`: nas 27 UFs a correlação é 0,995 e a maior diferença é de 0,008.
 - Resposta do modelo: ln(taxa). O Box-Cox estima λ perto de 0; adotamos o logaritmo (λ = 0), mais simples de interpretar, embora 0 fique fora do intervalo de confiança de λ.
 - Os números citados no trabalho ficam em `resultados/modelagem/valores_modelo.txt`; as tabelas e figuras, em `resultados/eda/` e `resultados/modelagem/`.
 - O modelo é montado em 5 blocos, cada um testado pelo F parcial: A renda e desigualdade; B demografia; C fronteira e registro; D educação e migração; E região.
-- A região (5 classes, base Sudeste) entra como variável categórica. O script também ajusta o modelo com o estado (27 UFs, base SP) e grava os dois lado a lado em `resultados/modelagem/regiao_x_estado.csv`; a escolha está em aberto.
+- A região (5 classes, base Sudeste) entra como variável categórica. O script também ajusta o modelo com o estado (27 UFs, base SP) e grava os dois lado a lado em `resultados/modelagem/regiao_x_estado.csv`. O grupo escolheu a região; o modelo com estado fica como comparação.
 
 ## O que vem de fora da apostila
 
@@ -45,12 +44,12 @@ A regra do trabalho é usar só técnicas da apostila de GED-16. Estes itens nã
 | Item | Origem | Para que serve |
 |---|---|---|
 | Índice de Gini por município, calculado pelas classes de renda | Revisão da professora | Medir a desigualdade; o IBGE só publica o Gini por região e UF |
-| Corte por percentil da densidade dentro da região | Revisão da professora | Tirar os municípios de densidade extrema |
-| Padronização de ln(densidade) | Revisão da professora | A apostila cita a padronização (cap. 6), sem detalhar |
+| Corte no percentil 80 da população | Revisão da professora | Escolher os municípios do estudo (30 mil habitantes ou mais) |
+| Padronização de ln(densidade) | Revisão da professora | Usada no teste da densidade, que ficou fora do modelo |
 | VIF generalizado (pacote `car`) | Escolha do grupo | VIF de variável com várias categorias (região e estado) |
 | Efeito em %: 100·[exp(b·Δ) − 1] | Escolha do grupo | Ler os coeficientes com a resposta em ln |
 | Intervalo de confiança de λ no Box-Cox | Escolha do grupo | Dizer se λ = 0 é compatível com os dados |
-| Oscilação da taxa por porte: 1/√(casos esperados) | Escolha do grupo | Justificar o corte em 20 mil habitantes |
+| Oscilação da taxa por porte: 1/√(casos esperados) | Escolha do grupo | Justificar o corte de população |
 
 ## Dados
 

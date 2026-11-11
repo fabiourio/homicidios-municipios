@@ -80,78 +80,78 @@
 "escopo","taxa","menor","Campos do Jordão","SP",46974,0.71
 "escopo","taxa","menor","Barra Bonita","SP",34346,0.971
 "escopo","taxa","menor","Pomerode","SC",34289,0.972
+"escopo","taxa","maior","Tabatinga","AM",66764,98.356
+"escopo","taxa","maior","Vera Cruz","BA",42529,110.513
 "escopo","taxa","maior","Camamu","BA",30469,115.965
-"escopo","taxa","maior","Forquilha","CE",24173,119.969
-"escopo","taxa","maior","Belmonte","BA",20121,125.905
 "escopo","rend_pc_media","menor","Bagre","PA",31892,358.65
-"escopo","rend_pc_media","menor","Manari","PE",23763,359.1
 "escopo","rend_pc_media","menor","São Paulo de Olivença","AM",32967,396.95
-"escopo","rend_pc_media","maior","Niterói","RJ",481749,3577.32
+"escopo","rend_pc_media","menor","Prainha","PA",35577,451.71
 "escopo","rend_pc_media","maior","Florianópolis","SC",537211,3636.13
+"escopo","rend_pc_media","maior","São Caetano do Sul","SP",165655,3884.58
 "escopo","rend_pc_media","maior","Nova Lima","MG",111697,4299.91
-"escopo","gini","menor","Nova Hartz","RS",20088,0.3
 "escopo","gini","menor","Forquilhinha","SC",31431,0.325
 "escopo","gini","menor","Nova Serrana","MG",105552,0.338
-"escopo","gini","maior","Santana de Parnaíba","SP",154105,0.611
+"escopo","gini","menor","São João Batista","SC",32687,0.341
+"escopo","gini","maior","Cabedelo","PB",66519,0.614
+"escopo","gini","maior","Recife","PE",1488920,0.63
 "escopo","gini","maior","Nova Lima","MG",111697,0.652
-"escopo","gini","maior","Alto Alegre","RR",21096,0.684
-"escopo","desocup","menor","Guaporé","RS",25268,0.621
-"escopo","desocup","menor","Bonito","MS",23659,0.692
-"escopo","desocup","menor","Monte Sião","MG",24089,0.707
+"escopo","desocup","menor","São João Batista","SC",32687,0.981
+"escopo","desocup","menor","Campo Verde","MT",44585,1.007
+"escopo","desocup","menor","Gaspar","SC",72570,1.015
+"escopo","desocup","maior","Exu","PE",31843,18.818
+"escopo","desocup","maior","Itaíba","PE",32650,19.075
 "escopo","desocup","maior","Santa Helena","MA",41561,20.966
-"escopo","desocup","maior","Inajá","PE",25603,21.606
-"escopo","desocup","maior","Queimadas","BA",25988,28.834
-"escopo","pct_urbana","menor","Palmeirândia","MA",21059,19.298
-"escopo","pct_urbana","menor","Igreja Nova","AL",21372,21.037
 "escopo","pct_urbana","menor","Acará","PA",59023,22.159
-"escopo","pct_urbana","maior","Mesquita","RJ",167127,100
-"escopo","pct_urbana","maior","Niterói","RJ",481749,100
-"escopo","pct_urbana","maior","Pinhais","PR",127019,100
+"escopo","pct_urbana","menor","Monte Santo","BA",47780,26.254
+"escopo","pct_urbana","menor","Araioses","MA",39052,28.646
+"escopo","pct_urbana","maior","Cachoeirinha","RS",136258,100
+"escopo","pct_urbana","maior","Canoas","RS",347657,100
+"escopo","pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
 "escopo","dens","menor","São Gabriel da Cachoeira","AM",51795,0.47
-"escopo","dens","menor","Novo Aripuanã","AM",23818,0.58
+"escopo","dens","menor","Almeirim","PA",34280,0.47
 "escopo","dens","menor","Oriximiná","PA",68294,0.63
-"escopo","dens","maior","Itaquaquecetuba","SP",369275,4469.45
-"escopo","dens","maior","Barueri","SP",316473,4816.87
-"escopo","dens","maior","Rio de Janeiro","RJ",6211223,5174.6
-"escopo","pct_h1529","menor","Nova Petrópolis","RS",23300,8.395
-"escopo","pct_h1529","menor","Santa Rita do Passa Quatro","SP",24833,8.618
+"escopo","dens","maior","São João de Meriti","RJ",440962,12521.64
+"escopo","dens","maior","Diadema","SP",393237,12795.69
+"escopo","dens","maior","Taboão da Serra","SP",273542,13416.81
+"escopo","pct_h1529","menor","São Caetano do Sul","SP",165655,8.205
 "escopo","pct_h1529","menor","Santos","SP",418608,8.722
-"escopo","pct_h1529","maior","Melgaço","PA",27881,16.05
+"escopo","pct_h1529","menor","Presidente Venceslau","SP",35201,8.724
+"escopo","pct_h1529","maior","Gurupá","PA",31786,15.954
+"escopo","pct_h1529","maior","Portel","PA",62503,16.044
 "escopo","pct_h1529","maior","Itaitinga","CE",64650,16.817
-"escopo","pct_h1529","maior","Itapissuma","PE",27749,17.889
-"escopo","pct_indet","menor","Senador Guiomard","AC",21454,0
 "escopo","pct_indet","menor","Barreirinha","AM",31051,0
-"escopo","pct_indet","menor","Beruri","AM",20718,0
+"escopo","pct_indet","menor","Boca do Acre","AM",35447,0
+"escopo","pct_indet","menor","Maués","AM",61204,0
 "escopo","pct_indet","maior","Itapecerica da Serra","SP",158522,52.703
 "escopo","pct_indet","maior","Embu-Guaçu","SP",66970,54.128
 "escopo","pct_indet","maior","São Joaquim de Bicas","MG",34348,69.811
-"escopo","freq_15a17","menor","Veranópolis","RS",24021,43.48
-"escopo","freq_15a17","menor","Alto Alegre","RR",21096,51.23
-"escopo","freq_15a17","menor","Vertentes","PE",21959,56.16
-"escopo","freq_15a17","maior","São Sepé","RS",21219,96.14
+"escopo","freq_15a17","menor","Rondon do Pará","PA",53143,63.97
+"escopo","freq_15a17","menor","Santa Maria de Jetibá","ES",41636,65.32
+"escopo","freq_15a17","menor","Afuá","PA",37765,66.63
+"escopo","freq_15a17","maior","Currais Novos","RN",41313,95.04
+"escopo","freq_15a17","maior","Tabuleiro do Norte","CE",30652,96
 "escopo","freq_15a17","maior","Alegrete","RS",72409,96.4
-"escopo","freq_15a17","maior","Conceição de Macabu","RJ",21104,96.53
-"escopo","abandono_em","menor","Novo Oriente","CE",27545,0
-"escopo","abandono_em","menor","Pindoretama","CE",23391,0
-"escopo","abandono_em","menor","Pedras de Fogo","PB",29662,0
-"escopo","abandono_em","maior","Melgaço","PA",27881,27
-"escopo","abandono_em","maior","Presidente Tancredo Neves","BA",27734,27.3
+"escopo","abandono_em","menor","Aliança","PE",35741,0
+"escopo","abandono_em","menor","Bom Jardim","PE",37629,0
+"escopo","abandono_em","menor","Catende","PE",32156,0
+"escopo","abandono_em","maior","Tailândia","PA",72493,26.2
+"escopo","abandono_em","maior","Rosário do Sul","RS",36630,26.3
 "escopo","abandono_em","maior","Serra do Ramalho","BA",34222,30.8
 "escopo","distorcao_em","menor","Osvaldo Cruz","SP",31272,2.6
 "escopo","distorcao_em","menor","Guararapes","SP",31043,3
-"escopo","distorcao_em","menor","Pirajuí","SP",22431,3.7
-"escopo","distorcao_em","maior","Anajás","PA",28011,63
+"escopo","distorcao_em","menor","Piedade","SP",52970,3.9
+"escopo","distorcao_em","maior","Curralinho","PA",33903,61.9
 "escopo","distorcao_em","maior","Turiaçu","MA",37491,64.8
 "escopo","distorcao_em","maior","Oeiras do Pará","PA",33844,66.6
 "escopo","pct_migr_10anos","menor","Itaperuçu","PR",31217,3.344
 "escopo","pct_migr_10anos","menor","Rio Branco do Sul","PR",37558,3.935
-"escopo","pct_migr_10anos","menor","Ipixuna","AM",24311,4.315
-"escopo","pct_migr_10anos","maior","Sapezal","MT",28944,47.993
-"escopo","pct_migr_10anos","maior","Satuba","AL",24278,48.789
+"escopo","pct_migr_10anos","menor","Muaná","PA",45368,4.768
+"escopo","pct_migr_10anos","maior","Barra dos Coqueiros","SE",41511,45.547
+"escopo","pct_migr_10anos","maior","Canaã dos Carajás","PA",77079,45.835
 "escopo","pct_migr_10anos","maior","Itapoá","SC",30750,52.995
-"escopo","pop","menor","Turmalina","MG",20000,20000
-"escopo","pop","menor","Rio Formoso","PE",20009,20009
-"escopo","pop","menor","Presidente Getúlio","SC",20010,20010
-"escopo","pop","maior","Manaus","AM",2063689,2063689
+"escopo","pop","menor","Floresta","PE",30137,30137
+"escopo","pop","menor","Joaçaba","SC",30146,30146
+"escopo","pop","menor","Cláudio","MG",30159,30159
 "escopo","pop","maior","Brasília","DF",2817381,2817381
 "escopo","pop","maior","Rio de Janeiro","RJ",6211223,6211223
+"escopo","pop","maior","São Paulo","SP",11451999,11451999

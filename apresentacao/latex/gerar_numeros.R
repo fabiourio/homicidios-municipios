@@ -29,7 +29,7 @@ cv <- eda$cv
 e <- c(
   municipios_br = nrow(br), hom_br = sum(br$hom), taxa_br = eda$taxa_br, pop_min = eda$POP_MIN,
   municipios_escopo = nrow(d_eda), pct_pop_escopo = 100 * sum(d_eda$pop) / sum(br$pop),
-  dens_extremos = sum(br$dens_extrema),
+  percentil_corte = eda$percentil_corte, casos_esp_corte = eda$casos_esperados_corte,
   zeros_escopo = sum(d_eda$hom == 0), zeros_br = sum(br$hom == 0),
   taxa_media = mean(d_eda$taxa), taxa_mediana = median(d_eda$taxa),
   assim_taxa = eda$assimetria(d_eda$taxa),
@@ -39,7 +39,7 @@ e <- c(
   cor_renda_pobres = R["ln Renda", "% pobres"], cor_renda_alfabet = R["ln Renda", "Alfabetização"],
   renda_decil_pico = eda$med_faixa$renda[which.max(eda$med_faixa$med)],
   porte_hom_mediana_menor5mil = porte$hom_mediana_3anos[1], porte_oscilacao_menor5mil = porte$oscilacao[1],
-  porte_oscilacao_20a50mil = porte$oscilacao[4], porte_zero_20a50mil = porte$pct_zero[4])
+  porte_oscilacao_corte = porte$oscilacao[porte$porte == "30–50 mil"], porte_zero_corte = sum(porte$pct_zero[porte$porte %in% c("30–50 mil", "50–100 mil", ">= 100 mil")]))
 
 m <- with(mod, c(
     n = nrow(d), lambda = lambda, lambda_ic_inf = unname(lambda_ic[1]), lambda_ic_sup = unname(lambda_ic[2]),
@@ -87,9 +87,10 @@ med_reg <- tapply(d_eda$taxa, d_eda$regiao, median)
 confere(min(med_reg[c("Norte", "Nordeste")]) > max(med_reg[c("Sudeste", "Sul")]), "boxplot: Norte e Nordeste acima de Sudeste e Sul no escopo")
 confere(e[["taxa_media"]] > e[["taxa_mediana"]], "taxa: média acima da mediana")
 confere(e[["assim_taxa"]] > 0, "taxa: assimetria à direita (coeficiente positivo)")
-confere(e[["dens_extremos"]] > 0, "saem municípios pelo corte de percentil da densidade")
-confere(mod$P_CORTE == eda$P_CORTE && setequal(mod$d$cod_ibge, d_eda$cod_ibge), "exploratória e modelo no mesmo escopo")
-confere(e[["porte_zero_20a50mil"]] == 0, "a partir de 20 mil hab. nenhum município tem taxa zero")
+confere(round(e[["percentil_corte"]]) == 80 && e[["casos_esp_corte"]] >= 20, "o corte de 30 mil hab. é o percentil 80 da população e dá pelo menos 20 homicídios esperados em 3 anos")
+confere(mod$POP_MIN == eda$POP_MIN && setequal(mod$d$cod_ibge, d_eda$cod_ibge), "exploratória e modelo no mesmo escopo")
+confere(e[["porte_zero_corte"]] == 0, "a partir de 30 mil hab. nenhum município tem taxa zero")
+confere(mod$F_dens$`Pr(>F)`[2] > 0.05, "a densidade (ln, padronizada) não é significativa e fica fora do modelo")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
 confere(sig_pos("gini") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
@@ -127,7 +128,8 @@ var_max <- names(which.max(abs(r_resp)))
 mac <- c(
   MunBR = fmt(e[["municipios_br"]], 0), HomBR = fmt(e[["hom_br"]], 0), TaxaBR = fmt(e[["taxa_br"]]),
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
-  PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), DensExt = fmt(e[["dens_extremos"]], 0), ZerosBR = fmt(e[["zeros_br"]], 0),
+  PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), PercCorte = fmt(e[["percentil_corte"]], 0), PctMaiores = fmt(100 - e[["percentil_corte"]], 0),
+  CasosEspCorte = fmt(e[["casos_esp_corte"]], 0), FDens = fmt(mod$F_dens$F[2], 2), PDens = fmt(mod$F_dens$`Pr(>F)`[2], 2), ZerosBR = fmt(e[["zeros_br"]], 0),
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
   AssimTaxa = fmt(e[["assim_taxa"]], 2),
@@ -139,7 +141,7 @@ mac <- c(
   RendaDecilPico = fmt(e[["renda_decil_pico"]], 0), DecilPico = fmt(decil_pico, 0), PicoPct = fmt(pico_pct, 0),
   RendaMediana = fmt(median(mod$d$rend_pc_media), 0),
   PorteHomMenor = fmt(e[["porte_hom_mediana_menor5mil"]], 0), PorteOscMenor = fmt(e[["porte_oscilacao_menor5mil"]], 0),
-  PorteOscVinte = fmt(e[["porte_oscilacao_20a50mil"]], 0),
+  PorteOscCorte = fmt(e[["porte_oscilacao_corte"]], 0),
   Lambda = fmt(m[["lambda"]], 2), LambdaInf = fmt(m[["lambda_ic_inf"]], 2), LambdaSup = fmt(m[["lambda_ic_sup"]], 2),
   SWy = fmt(m[["sw_y"]], 2), SWln = fmt(m[["sw_ln"]], 2), VIFrenda = fmt(m[["vif_renda"]], 0),
   RdoisA = fmt(m[["R2a"]], 2),
@@ -150,27 +152,26 @@ mac <- c(
   RdoisE = fmt(m[["R2_E"]], 2), Sigma = fmt(m[["sigma"]], 3),
   FglobalP = fp(m[["F_global_p"]]), VIFrendaFinal = fmt(m[["vif_renda_final"]]), VIFdemaisMax = fmt(m[["vif_demais_max"]]), VIFrendaCru = fmt(vif_cru[["log_rend"]], 0),
   GiniCorUF = fmt(cor(vg$gini_calculado, vg$gini_oficial), 3), GiniErroUF = fmt(mean(abs(vg$gini_calculado - vg$gini_oficial)), 3),
-  NumReg = fmt(m[["n_reg"]], 0), PCorte = fmt(eda$P_CORTE, 1), PCorteSup = fmt(100 - eda$P_CORTE, 1), PctCentral = fmt(100 - 2 * eda$P_CORTE, 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
+  NumReg = fmt(m[["n_reg"]], 0), NumX = fmt(m[["n_x"]], 0), NumPar = fmt(m[["gl1"]] + 1, 0),
   CorQuadSem = fmt(m[["cor_quad_sem"]], 4), CorQuadCen = fmt(m[["cor_quad_cen"]], 2),
   BetaDois = fmt(coef("rend_c2", "b"), 3), BetaDoisP = fp(coef("rend_c2", "p")),
   OutNomes = if (length(out_nomes)) paste(out_nomes, collapse = ", ") else "nenhum")
 mac <- sub("^-", "$-$", mac)
 writeLines(sprintf("\\newcommand{\\n%s}{%s}", names(mac), mac), "numeros.tex")
 
-# Tabela do corte por percentil da densidade em cada região
+# Tabela do corte de população (percentil 80) em cada região
 cr <- as.data.frame(eda$corte_regiao)
-lin <- sprintf("%s & %s & %s & %s & %s a %s\\\\", cr$regiao, fmt(cr$municipios, 0), fmt(cr$fora, 0), fmt(cr$considerados, 0),
-               fmt(cr$dens_min, 1), fmt(cr$dens_max, 1))
-writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
-             "\\textbf{Região} & \\textbf{Municípios} & \\textbf{Saem} & \\textbf{Ficam} & \\textbf{Densidade que fica}\\\\", "\\midrule",
+lin <- sprintf("%s & %s & %s & %s\\%%\\\\", cr$regiao, fmt(cr$municipios, 0), fmt(cr$considerados, 0), fmt(cr$pct_pop, 0))
+writeLines(c("\\begin{tabular}{@{}lrrr@{}}", "\\toprule",
+             "\\textbf{Região} & \\textbf{Municípios} & \\textbf{Ficam} & \\textbf{População coberta}\\\\", "\\midrule",
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/corte_regiao.tex")
 
 # Tabela-resumo da exploratória: resposta e explicativas do modelo (casas decimais por variável)
-casas <- c(taxa = 1, rend_pc_media = 0, gini = 3, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2,
+casas <- c(taxa = 1, rend_pc_media = 0, gini = 3, desocup = 1, pct_urbana = 1,
            pct_h1529 = 1, pct_indet = 1, freq_15a17 = 1, abandono_em = 1, distorcao_em = 1, pct_migr_10anos = 1)
 rotulo <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R\\$)",
             gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
-            dens = "Densidade (hab./km²)", log_dens = "ln Densidade", pct_h1529 = "Homens 15--29 (\\%)",
+            pct_h1529 = "Homens 15--29 (\\%)",
             pct_indet = "Intenção indeterminada (\\%)", freq_15a17 = "Frequência escolar 15--17 (\\%)",
             abandono_em = "Abandono no ensino médio (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
@@ -185,7 +186,7 @@ writeLines(c("\\begin{tabular}{@{}lrrrrr@{}}", "\\toprule",
 
 # Tabela do modelo com e sem a renda (sem as indicadoras de região); em negrito, onde a significância a 5% muda
 cs <- mod$com_sem[!grepl("^regiao", mod$com_sem$termo), ]
-rot_cs <- c(gini = "Desigualdade (Gini)", desocup = "Desocupação", pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)",
+rot_cs <- c(gini = "Desigualdade (Gini)", desocup = "Desocupação", pct_urbana = "\\% urbana",
             pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
             freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
             pct_migr_10anos = "Migração recente")
@@ -200,9 +201,9 @@ writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
 p_cs <- function(t, col) cs[cs$termo == t, col]
 confere(mod$F_renda$`Pr(>F)`[2] < 0.001 && mod$sf_$adj.r.squared > mod$ss_$adj.r.squared, "a renda contribui para o modelo (F parcial) e o R² ajustado cai sem ela")
 confere(max(mod$vif_sem_renda) < max(mod$vif_final) && max(mod$vif_final) < 10, "VIF máximo abaixo de 10 com a renda e menor sem ela")
-confere(p_cs("gini", "p_sem") < 0.05 && p_cs("gini", "b_sem") > 0 && p_cs("gini", "b_sem") < p_cs("gini", "b_com"), "sem a renda, a desigualdade continua significativa, com efeito menor")
-confere(p_cs("pct_migr_10anos", "p_sem") > 0.05 && p_cs("dens_z", "p_sem") > 0.05 && p_cs("pct_migr_10anos", "p_com") < 0.05 && p_cs("dens_z", "p_com") < 0.05,
-        "sem a renda, migração e densidade deixam de ser significativas")
+confere(p_cs("gini", "p_sem") > 0.05 && p_cs("pct_migr_10anos", "p_sem") > 0.05 && p_cs("gini", "p_com") < 0.05 && p_cs("pct_migr_10anos", "p_com") < 0.05,
+        "sem a renda, desigualdade e migração deixam de ser significativas")
+confere(p_cs("freq_15a17", "p_sem") < 0.05 && p_cs("distorcao_em", "p_sem") < 0.05, "sem a renda, frequência escolar e distorção continuam significativas")
 cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcommand{\\nPRenda}{%s}\n\\newcommand{\\nRdoisAsemRenda}{%s}\n\\newcommand{\\nVIFmaxSemRenda}{%s}\n",
             fmt(mod$F_renda$F[2]), fmt(mod$F_renda$Df[2], 0), fp(mod$F_renda$`Pr(>F)`[2]), fmt(mod$ss_$adj.r.squared, 2), fmt(max(mod$vif_sem_renda))),
     file = "numeros.tex", append = TRUE)
@@ -223,7 +224,7 @@ confere(mod$F_estado$`Pr(>F)`[2] < 0.001 && mod$se_$adj.r.squared > mod$sf_$adj.
 confere(max(mod$vif_estado) > 10 && max(mod$vif_final) < 10, "VIF máximo acima de 10 com estado e abaixo de 10 com região")
 confere(all(sapply(c("gini", "distorcao_em", "pct_migr_10anos"), function(t) p_re(t, "p_estado") < 0.05 && p_re(t, "b_estado") > 0)) &&
           p_re("freq_15a17", "p_estado") < 0.05 && p_re("freq_15a17", "b_estado") < 0, "H1, H2 e H3 valem nos dois modelos")
-confere(p_re("dens_z", "p_regiao") < 0.05 && p_re("dens_z", "p_estado") > 0.05, "a densidade só é significativa com região")
+confere(p_re("abandono_em", "p_regiao") > 0.05 && p_re("abandono_em", "p_estado") < 0.05, "o abandono escolar só é significativo com estado")
 cat(sprintf("\\newcommand{\\nNumParEstado}{%s}\n\\newcommand{\\nRdoisAestado}{%s}\n\\newcommand{\\nVIFmaxEstado}{%s}\n\\newcommand{\\nFEstado}{%s}\n\\newcommand{\\nGlEstado}{%s}\n\\newcommand{\\nPEstado}{%s}\n\\newcommand{\\nNumUFpoucos}{%s}\n",
             fmt(length(stats::coef(mod$com_estado)), 0), fmt(mod$se_$adj.r.squared, 2), fmt(max(mod$vif_estado)), fmt(mod$F_estado$F[2]), fmt(mod$F_estado$Df[2], 0),
             fp(mod$F_estado$`Pr(>F)`[2]), fmt(sum(table(mod$d$uf) < 10), 0)), file = "numeros.tex", append = TRUE)
@@ -259,7 +260,7 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
 
 # Apêndice: coeficientes
 nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", gini = "Desigualdade (Gini)", desocup = "Desocupação",
-           pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)",
+           pct_urbana = "\\% urbana",
            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
