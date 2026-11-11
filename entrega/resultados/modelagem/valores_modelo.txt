@@ -7,24 +7,22 @@ log_rend    -17.4673  0.9564298 -18.26303 4.864011e-68
 R² = 0.167
 
 == 2. Box-Cox ==
-lambda = 0.19 | IC 95%: 0.15 a 0.23 | adotado: 0 (ln)
-Shapiro-Wilk: Y W = 0.927 | ln Y W = 0.981
-Breusch-Pagan: Y = 178.8 | ln Y = 106.6
+lambda = 0.20 | IC 95%: 0.16 a 0.24 | adotado: 0 (ln)
+Shapiro-Wilk: Y W = 0.931 | ln Y W = 0.981
+Breusch-Pagan: Y = 195.0 | ln Y = 115.6
 
 == 3. Multicolinearidade ==
 VIF com renda, % pobres e alfabetização juntas:
        log_rend      pct_pobres         alfabet           desig         desocup 
-          29.69           17.10            8.77            2.81            2.33 
-     pct_urbana          dens_z       pct_negra       pct_h1529 faixa_fronteira 
-           3.81            2.63            8.71            2.81            1.60 
-      pct_indet      freq_15a17     abandono_em    distorcao_em pct_migr_10anos 
-           1.35            1.27            2.39            4.92            1.59 
-             uf 
-           1.30 
+          26.73           16.79            8.77            2.72            2.27 
+     pct_urbana          dens_z       pct_h1529 faixa_fronteira       pct_indet 
+           3.71            2.63            2.78            1.60            1.35 
+     freq_15a17     abandono_em    distorcao_em pct_migr_10anos              uf 
+           1.27            2.39            4.90            1.57            1.25 
               Estimate  Std. Error   t value     Pr(>|t|)
-log_rend   -0.79130530 0.163067578 -4.852622 1.335762e-06
-pct_pobres -0.03522273 0.004992486 -7.055149 2.546940e-12
-alfabet    -0.01260666 0.005125548 -2.459573 1.401420e-02
+log_rend   -1.34860038 0.160192015 -8.418649 8.266781e-17
+pct_pobres -0.04256916 0.005120678 -8.313187 1.948643e-16
+alfabet    -0.01414695 0.005304337 -2.667054 7.728172e-03
 cor(X, X²): sem centrar = 0.9995 | centrado = -0.1288
 
 == 4. Blocos (F parcial) ==
@@ -32,154 +30,152 @@ Analysis of Variance Table
 
 Model 1: ly ~ rend_c + rend_c2 + desig + desocup
 Model 2: ly ~ rend_c + rend_c2 + desig + desocup + pct_urbana + dens_z + 
-    pct_negra + pct_h1529
+    pct_h1529
 Model 3: ly ~ rend_c + rend_c2 + desig + desocup + pct_urbana + dens_z + 
-    pct_negra + pct_h1529 + faixa_fronteira + pct_indet
+    pct_h1529 + faixa_fronteira + pct_indet
 Model 4: ly ~ rend_c + rend_c2 + desig + desocup + pct_urbana + dens_z + 
-    pct_negra + pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + 
-    abandono_em + distorcao_em + pct_migr_10anos
+    pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
+    distorcao_em + pct_migr_10anos
 Model 5: ly ~ rend_c + rend_c2 + desig + desocup + pct_urbana + dens_z + 
-    pct_negra + pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + 
-    abandono_em + distorcao_em + pct_migr_10anos + uf
+    pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + 
+    distorcao_em + pct_migr_10anos + uf
   Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
 1   1655 783.06                                  
-2   1651 706.88  4    76.185 69.796 < 2.2e-16 ***
-3   1649 657.53  2    49.348 90.419 < 2.2e-16 ***
-4   1645 612.10  4    45.429 41.620 < 2.2e-16 ***
-5   1619 441.80 26   170.300 24.003 < 2.2e-16 ***
+2   1652 761.79  3    21.272 24.078 3.034e-15 ***
+3   1650 728.92  2    32.866 55.803 < 2.2e-16 ***
+4   1646 669.85  4    59.073 50.150 < 2.2e-16 ***
+5   1620 477.06 26   192.791 25.180 < 2.2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-F parcial renda²: F = 36.7 | p = 1.8e-09
-F parcial estado além da região: F = 14.98 (gl 22) | p = 5.5e-51
+F parcial renda²: F = 44.6 | p = 3.4e-11
+F parcial estado além da região: F = 18.02 (gl 22) | p = 3.3e-62
 
 R² e R² ajustado por bloco:
                   modelo  p     R2    R2a    MSE
         A socioeconômico  4 0.2775 0.2758 0.4731
-          B + demografia  8 0.3478 0.3447 0.4281
-            C + contexto 10 0.3934 0.3897 0.3987
- D + educação e migração 14 0.4353 0.4305 0.3721
-              E + estado 40 0.5924 0.5823 0.2729
-            E com região 18 0.5094 0.5041 0.3240
+          B + demografia  7 0.2972 0.2942 0.4611
+            C + contexto  9 0.3275 0.3238 0.4418
+ D + educação e migração 13 0.3820 0.3771 0.4070
+              E + estado 39 0.5599 0.5493 0.2945
+            E com região 17 0.4522 0.4465 0.3616
 
 == 5. Modelo preliminar (D) ==
 
 Call:
 lm(formula = ly ~ rend_c + rend_c2 + desig + desocup + pct_urbana + 
-    dens_z + pct_negra + pct_h1529 + faixa_fronteira + pct_indet + 
-    freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + 
-    uf, data = d)
+    dens_z + pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + 
+    abandono_em + distorcao_em + pct_migr_10anos + uf, data = d)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--2.6523 -0.3021  0.0324  0.3292  1.9745 
+     Min       1Q   Median       3Q      Max 
+-2.23867 -0.32486  0.02872  0.33871  1.84960 
 
 Coefficients:
                  Estimate Std. Error t value Pr(>|t|)    
-(Intercept)      1.477942   0.371499   3.978 7.25e-05 ***
-rend_c          -0.042225   0.111568  -0.378  0.70513    
-rend_c2         -0.542409   0.089596  -6.054 1.75e-09 ***
-desig            0.166330   0.143839   1.156  0.24770    
-desocup         -0.012985   0.006157  -2.109  0.03510 *  
-pct_urbana       0.008666   0.001369   6.329 3.19e-10 ***
-dens_z           0.038295   0.020471   1.871  0.06157 .  
-pct_negra        0.020034   0.001762  11.367  < 2e-16 ***
-pct_h1529       -0.024358   0.017037  -1.430  0.15299    
-faixa_fronteira -0.052324   0.061945  -0.845  0.39841    
-pct_indet       -0.010827   0.002079  -5.207 2.16e-07 ***
-freq_15a17      -0.010823   0.002822  -3.836  0.00013 ***
-abandono_em      0.009244   0.003755   2.462  0.01392 *  
-distorcao_em     0.005324   0.002300   2.314  0.02078 *  
-pct_migr_10anos  0.005132   0.002476   2.072  0.03838 *  
-ufAC             0.662689   0.228030   2.906  0.00371 ** 
-ufAL             0.850752   0.116950   7.274 5.40e-13 ***
-ufAM             0.776204   0.141327   5.492 4.60e-08 ***
-ufAP             1.114540   0.256692   4.342 1.50e-05 ***
-ufBA             0.736032   0.101459   7.254 6.23e-13 ***
-ufCE             0.970450   0.094505  10.269  < 2e-16 ***
-ufDF             0.376596   0.532759   0.707  0.47974    
-ufES             0.816882   0.105258   7.761 1.49e-14 ***
-ufGO             0.528644   0.093760   5.638 2.02e-08 ***
-ufMA             0.661960   0.105337   6.284 4.23e-10 ***
-ufMG            -0.024204   0.064923  -0.373  0.70934    
-ufMS             0.478031   0.117667   4.063 5.09e-05 ***
-ufMT             0.735909   0.122647   6.000 2.43e-09 ***
-ufPA             0.506462   0.119481   4.239 2.37e-05 ***
-ufPB             0.644061   0.121417   5.305 1.29e-07 ***
-ufPE             1.130281   0.090577  12.479  < 2e-16 ***
-ufPI             0.060620   0.134455   0.451  0.65215    
-ufPR             1.003833   0.069321  14.481  < 2e-16 ***
-ufRJ             0.727547   0.092488   7.866 6.62e-15 ***
-ufRN             0.922434   0.129178   7.141 1.40e-12 ***
-ufRO             0.804012   0.148098   5.429 6.53e-08 ***
-ufRR             0.769517   0.533673   1.442  0.14952    
-ufRS             0.867589   0.081003  10.711  < 2e-16 ***
-ufSC             0.263842   0.084119   3.137  0.00174 ** 
-ufSE             0.821685   0.134690   6.101 1.32e-09 ***
-ufTO             0.482740   0.192067   2.513  0.01205 *  
+(Intercept)      1.324655   0.385666   3.435 0.000608 ***
+rend_c          -0.460022   0.109429  -4.204 2.77e-05 ***
+rend_c2         -0.619550   0.092806  -6.676 3.37e-11 ***
+desig            0.408914   0.147769   2.767 0.005717 ** 
+desocup         -0.002045   0.006318  -0.324 0.746199    
+pct_urbana       0.011317   0.001402   8.075 1.31e-15 ***
+dens_z           0.041965   0.021263   1.974 0.048598 *  
+pct_h1529       -0.002309   0.017583  -0.131 0.895550    
+faixa_fronteira -0.058300   0.064347  -0.906 0.365060    
+pct_indet       -0.009181   0.002155  -4.261 2.15e-05 ***
+freq_15a17      -0.009210   0.002928  -3.146 0.001685 ** 
+abandono_em      0.007424   0.003897   1.905 0.056951 .  
+distorcao_em     0.007090   0.002384   2.973 0.002989 ** 
+pct_migr_10anos  0.008091   0.002558   3.162 0.001594 ** 
+ufAC             1.083502   0.233739   4.636 3.85e-06 ***
+ufAL             1.186095   0.117562  10.089  < 2e-16 ***
+ufAM             1.059113   0.144518   7.329 3.65e-13 ***
+ufAP             1.475786   0.264605   5.577 2.86e-08 ***
+ufBA             1.263863   0.093712  13.487  < 2e-16 ***
+ufCE             1.382275   0.090673  15.245  < 2e-16 ***
+ufDF             0.885241   0.551485   1.605 0.108646    
+ufES             1.178697   0.104225  11.309  < 2e-16 ***
+ufGO             0.965664   0.088835  10.870  < 2e-16 ***
+ufMA             1.159034   0.099552  11.643  < 2e-16 ***
+ufMG             0.313924   0.059948   5.237 1.85e-07 ***
+ufMS             0.729384   0.120057   6.075 1.54e-09 ***
+ufMT             1.277473   0.117402  10.881  < 2e-16 ***
+ufPA             1.009317   0.115299   8.754  < 2e-16 ***
+ufPB             0.911973   0.123731   7.371 2.70e-13 ***
+ufPE             1.344977   0.092025  14.615  < 2e-16 ***
+ufPI             0.560327   0.131998   4.245 2.31e-05 ***
+ufPR             0.975621   0.071966  13.557  < 2e-16 ***
+ufRJ             0.942373   0.094051  10.020  < 2e-16 ***
+ufRN             1.073710   0.133478   8.044 1.66e-15 ***
+ufRO             1.295578   0.147143   8.805  < 2e-16 ***
+ufRR             1.145456   0.553324   2.070 0.038598 *  
+ufRS             0.572767   0.079717   7.185 1.02e-12 ***
+ufSC             0.053399   0.085242   0.626 0.531113    
+ufSE             1.198803   0.135608   8.840  < 2e-16 ***
+ufTO             1.033614   0.193067   5.354 9.85e-08 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-Residual standard error: 0.5224 on 1619 degrees of freedom
-Multiple R-squared:  0.5924,	Adjusted R-squared:  0.5823 
-F-statistic: 58.82 on 40 and 1619 DF,  p-value: < 2.2e-16
+Residual standard error: 0.5427 on 1620 degrees of freedom
+Multiple R-squared:  0.5599,	Adjusted R-squared:  0.5493 
+F-statistic: 52.84 on 39 and 1620 DF,  p-value: < 2.2e-16
 
 Intervalos de confiança 95%:
                   2.5 %  97.5 %
-(Intercept)      0.7493  2.2066
-rend_c          -0.2611  0.1766
-rend_c2         -0.7181 -0.3667
-desig           -0.1158  0.4485
-desocup         -0.0251 -0.0009
-pct_urbana       0.0060  0.0114
-dens_z          -0.0019  0.0784
-pct_negra        0.0166  0.0235
-pct_h1529       -0.0578  0.0091
-faixa_fronteira -0.1738  0.0692
-pct_indet       -0.0149 -0.0067
-freq_15a17      -0.0164 -0.0053
-abandono_em      0.0019  0.0166
-distorcao_em     0.0008  0.0098
-pct_migr_10anos  0.0003  0.0100
-ufAC             0.2154  1.1100
-ufAL             0.6214  1.0801
-ufAM             0.4990  1.0534
-ufAP             0.6111  1.6180
-ufBA             0.5370  0.9350
-ufCE             0.7851  1.1558
-ufDF            -0.6684  1.4216
-ufES             0.6104  1.0233
-ufGO             0.3447  0.7125
-ufMA             0.4553  0.8686
-ufMG            -0.1515  0.1031
-ufMS             0.2472  0.7088
-ufMT             0.4953  0.9765
-ufPA             0.2721  0.7408
-ufPB             0.4059  0.8822
-ufPE             0.9526  1.3079
-ufPI            -0.2031  0.3243
-ufPR             0.8679  1.1398
-ufRJ             0.5461  0.9090
-ufRN             0.6691  1.1758
-ufRO             0.5135  1.0945
-ufRR            -0.2772  1.8163
-ufRS             0.7087  1.0265
-ufSC             0.0988  0.4288
-ufSE             0.5575  1.0859
-ufTO             0.1060  0.8595
+(Intercept)      0.5682  2.0811
+rend_c          -0.6747 -0.2454
+rend_c2         -0.8016 -0.4375
+desig            0.1191  0.6988
+desocup         -0.0144  0.0103
+pct_urbana       0.0086  0.0141
+dens_z           0.0003  0.0837
+pct_h1529       -0.0368  0.0322
+faixa_fronteira -0.1845  0.0679
+pct_indet       -0.0134 -0.0050
+freq_15a17      -0.0150 -0.0035
+abandono_em     -0.0002  0.0151
+distorcao_em     0.0024  0.0118
+pct_migr_10anos  0.0031  0.0131
+ufAC             0.6250  1.5420
+ufAL             0.9555  1.4167
+ufAM             0.7757  1.3426
+ufAP             0.9568  1.9948
+ufBA             1.0801  1.4477
+ufCE             1.2044  1.5601
+ufDF            -0.1965  1.9669
+ufES             0.9743  1.3831
+ufGO             0.7914  1.1399
+ufMA             0.9638  1.3543
+ufMG             0.1963  0.4315
+ufMS             0.4939  0.9649
+ufMT             1.0472  1.5077
+ufPA             0.7832  1.2355
+ufPB             0.6693  1.1547
+ufPE             1.1645  1.5255
+ufPI             0.3014  0.8192
+ufPR             0.8345  1.1168
+ufRJ             0.7579  1.1268
+ufRN             0.8119  1.3355
+ufRO             1.0070  1.5842
+ufRR             0.0602  2.2308
+ufRS             0.4164  0.7291
+ufSC            -0.1138  0.2206
+ufSE             0.9328  1.4648
+ufTO             0.6549  1.4123
 
 VIF do modelo preliminar:
          rend_c         rend_c2           desig         desocup      pct_urbana 
-          13.78            1.76            1.94            2.28            3.69 
-         dens_z       pct_negra       pct_h1529 faixa_fronteira       pct_indet 
-           2.55            8.60            2.80            1.60            1.35 
-     freq_15a17     abandono_em    distorcao_em pct_migr_10anos              uf 
-           1.27            2.39            4.94            1.59            1.26 
-Renda per capita do pico da taxa esperada: R$ 1124
+          12.28            1.75            1.90            2.22            3.58 
+         dens_z       pct_h1529 faixa_fronteira       pct_indet      freq_15a17 
+           2.55            2.76            1.60            1.34            1.27 
+    abandono_em    distorcao_em pct_migr_10anos              uf 
+           2.39            4.92            1.57            1.22 
+Renda per capita do pico da taxa esperada: R$ 806
 
 == 6. Diagnóstico ==
-Breusch-Pagan = 97.5 (gl 40) | p = 1e-06
-Shapiro-Wilk = 0.982 | p = 1.5e-13
-Possíveis outliers (|e*| >= 4): 1
- municipio uf   pop    taxa ajustado  res_semi
-  Nhamundá AM 20136 1.65541 3.156343 -5.077304
+Breusch-Pagan = 107.1 (gl 39) | p = 2.9e-08
+Shapiro-Wilk = 0.982 | p = 1.4e-13
+Possíveis outliers (|e*| >= 4): 2
+ municipio uf   pop     taxa ajustado  res_semi
+  Nhamundá AM 20136 1.655410 2.742722 -4.125366
+   Tanhaçu BA 21006 3.173696 3.332901 -4.013565

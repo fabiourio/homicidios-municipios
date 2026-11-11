@@ -84,7 +84,7 @@ confere(m[["R2a_E"]] > m[["R2a_E_regiao"]], "estado no lugar de região melhora 
 ganho <- diff(c(m[["R2a_A"]], m[["R2a_B"]], m[["R2a_C"]], m[["R2a_D"]], m[["R2a_E"]]))
 confere(which.max(ganho) == 4, "maior ganho de R² ajustado com o estado (bloco E)")
 confere(coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "mais frequência escolar, menos homicídios")
-confere(all(sapply(c("abandono_em", "distorcao_em", "pct_migr_10anos"), function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05)), "mais abandono, distorção e migração recente, mais homicídios")
+confere(all(sapply(c("distorcao_em", "pct_migr_10anos"), function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05)), "mais distorção e migração recente, mais homicídios")
 confere(m[["vif_renda"]] > 10, "renda, % pobres e alfabetização juntas têm VIF alto")
 confere(e[["zeros_escopo"]] == 0, "nenhum município sem homicídio no escopo")
 confere(min(e[["taxa_n_br"]], e[["taxa_ne_br"]]) > max(e[["taxa_se_br"]], e[["taxa_s_br"]]), "Norte e Nordeste acima de Sudeste e Sul")
@@ -96,11 +96,10 @@ confere(e[["dens_extremos"]] > 0 && max(abs(mod$d$dens_z)) < 3, "densidade: sem 
 confere(m[["n"]] == e[["municipios_escopo"]], "exploratória e modelo no mesmo escopo")
 confere(e[["porte_zero_20a50mil"]] == 0, "a partir de 20 mil hab. nenhum município tem taxa zero")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
-confere(sig_pos("pct_negra") && sig_pos("pct_urbana"), "mais homicídios com mais % preta ou parda e urbanização")
-confere(all(sapply(c("faixa_fronteira", "dens_z", "pct_h1529"), function(t) coef(t, "p") > 0.05)), "fronteira, densidade e % homens 15-29 não significativas")
-confere(sig_pos("abandono_em") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") &&
-          coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H2 e H3")
-confere(coef("desig", "b") > 0 && coef("desig", "p") > 0.05, "H1: desigualdade com o sinal esperado, mas não significativa")
+confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
+confere(sig_pos("desig") && sig_pos("distorcao_em") && sig_pos("pct_migr_10anos") && coef("abandono_em", "b") > 0 &&
+          coef("freq_15a17", "b") < 0 && coef("freq_15a17", "p") < 0.05, "sinais consistentes com H1, H2 e H3")
+confere(coef("abandono_em", "p") > 0.05, "H2: abandono no ensino médio com o sinal esperado, mas não significativo")
 confere(m[["bp_p"]] < 0.05, "Breusch-Pagan rejeita H0: erros-padrão e valores p são aproximados")
 confere(m[["sw_p"]] < 0.05 && m[["sw"]] >= 0.97, "Shapiro-Wilk rejeita com W próximo de 1 (n grande)")
 confere(which.max(mod$vif_final) == which(names(mod$vif_final) == "rend_c"), "VIF máximo é o da renda")
@@ -169,11 +168,11 @@ writeLines(c("\\begin{tabular}{@{}lrrr@{}}", "\\toprule",
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/porte.tex")
 
 # Tabela-resumo da exploratória: resposta e explicativas do modelo (casas decimais por variável)
-casas <- c(taxa = 1, rend_pc_media = 0, desig = 2, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2, pct_negra = 1,
+casas <- c(taxa = 1, rend_pc_media = 0, desig = 2, desocup = 1, pct_urbana = 1, dens = 1, log_dens = 2,
            pct_h1529 = 1, pct_indet = 1, freq_15a17 = 1, abandono_em = 1, distorcao_em = 1, pct_migr_10anos = 1)
 rotulo <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R\\$)",
             desig = "Desigualdade (média/mediana)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
-            dens = "Densidade (hab./km²)", log_dens = "ln Densidade", pct_negra = "Preta ou parda (\\%)", pct_h1529 = "Homens 15--29 (\\%)",
+            dens = "Densidade (hab./km²)", log_dens = "ln Densidade", pct_h1529 = "Homens 15--29 (\\%)",
             pct_indet = "Intenção indeterminada (\\%)", freq_15a17 = "Frequência escolar 15--17 (\\%)",
             abandono_em = "Abandono no ensino médio (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
@@ -217,7 +216,7 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
 
 # Apêndice: coeficientes (sem as 26 indicadoras de estado)
 nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", desig = "Desigualdade", desocup = "Desocupação",
-           pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)", pct_negra = "\\% preta ou parda",
+           pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)",
            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente")
