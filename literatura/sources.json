@@ -1,0 +1,1229 @@
+{
+  "sources": [
+    {
+      "id": "s1",
+      "kind": "paper",
+      "title": "Structural Covariates of Homicide Rates: Are There Any Invariances Across Time and Social Space?",
+      "authors": [
+        "Kenneth C. Land",
+        "Patricia L. McCall",
+        "Lawrence E. Cohen"
+      ],
+      "year": 1990,
+      "venue": "American Journal of Sociology",
+      "doi": "10.1086/229381",
+      "url": "https://doi.org/10.1086/229381",
+      "abstract": "This study demonstrate that the empirical literature on the structural convariates of homicide rates contains inconsistent findings across different time periods and different geographical units. This apparent variance of findings may be due to statistical or methodological artifacts of particular studies, such as different time periods covered, units of analysis, samples, model specification, and problems of statistical analysis and inference. A baseline regression model using 11 structural covariates is estimated for cities, metropolitan areas, and states in 1960, 1970, and 1980. The empirical estimates of this model exhibit instability because of high levels of collinearity among several regressors. Principal components analysis is applied to simplify the dimensionally of the structural covariate space. Reestimation of the regression model then indicates that the apparent inconsistencies across time and social space are greatly reduced. The theoretical significance of the findings for substantive theories of violent crime are discussed.",
+      "cited_by": 1147,
+      "editions": null,
+      "refs": {
+        "openalex": "W2131259854"
+      },
+      "role": "canon",
+      "why": "Classic US city/SMSA/state study (OLS, 1960-80): shows covariates unstable across time/units until collinearity is handled by principal-components indices; cited by McCall et al. 2010 and Pridemore & Trent 2010 as the reference point",
+      "quotes": [
+        "The empirical estimates of this model exhibit instability because of high levels of collinearity among several regressors."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s2",
+      "kind": "paper",
+      "title": "An Empirical Assessment of What We Know About Structural Covariates of Homicide Rates: A Return to a Classic 20 Years Later",
+      "authors": [
+        "Patricia L. McCall",
+        "Kenneth C. Land",
+        "Karen F. Parker"
+      ],
+      "year": 2010,
+      "venue": "Homicide Studies",
+      "doi": "10.1177/1088767910371166",
+      "url": "https://doi.org/10.1177/1088767910371166",
+      "abstract": "As the 20-year mark since the publication of an article by Kenneth C. Land, Patricia L. McCall, and Lawrence Cohen, \u201cStructural Covariates of Homicide Rates: Are There Any Invariances Across Time and Social Space?\u201d approaches, the question that these scholars originally posed is raised again: Have researchers been able to identify a set of robust structural covariates that consistently predict crime rates? Subsequent to the publication of this piece, numerous scholars have replicated and extended its conceptual, methodological, and empirical work in various ways\u2014with more than 500 citations to date. In response to this attention, the authors first review the advances made by the Land et al. article. This is followed by a review of findings from studies published over the past 20 years to determine which structural predictors identified in the Land et al. piece continue to be prominent in the study of homicide and which structural predictors have surfaced in recent years as influential to crime rates. Using data on U.S. cities for the years 1970, 1980, 1990, and 2000, the authors then present a systematic empirical assessment of the explanatory power of the covariates of homicide rates identified in the Land et al. study. Twenty years later, we find support for the claims of invariance established in Land et al. and acknowledge the contributions of this piece to the macrolevel study of homicide rates.",
+      "cited_by": 164,
+      "editions": null,
+      "refs": {
+        "openalex": "W2135943726"
+      },
+      "role": "canon",
+      "why": "McCall-Land-Parker 20-year update of the classic LMC 1990; tests population structure, % young male, density across US cities/counties",
+      "quotes": [
+        "Twenty years later, we find support for the claims of invariance established in Land et al. and acknowledge the contributions of this piece to the macrolevel study of homicide rates."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s3",
+      "kind": "paper",
+      "title": "Poverty Matters: A Reassessment of the Inequality-Homicide Relationship in Cross-National Studies",
+      "authors": [
+        "William Alex Pridemore"
+      ],
+      "year": 2011,
+      "venue": "The British Journal of Criminology",
+      "doi": "10.1093/bjc/azr019",
+      "url": "https://doi.org/10.1093/bjc/azr019",
+      "abstract": "Dozens of cross-national studies of homicide have been published. Virtually all have reported an association between inequality and homicide, leading scholars to draw strong conclusions about this relationship. Unfortunately, each of these studies failed to control for poverty, even though poverty is the most consistent predictor of area homicide rates in the US empirical literature and a main confounder of the inequality\u2013homicide association. The cross-national findings are also incongruent with US studies, which have yielded inconsistent results for the inequality\u2013homicide association. In the present study, I replicated two prior studies in which a significant inequality\u2013homicide association was found. After the original results were replicated, models that included a measure of poverty were estimated to see whether its inclusion had an impact on the inequality\u2013homicide association. When effects for poverty and inequality were estimated in the same model, there was a positive and significant poverty\u2013homicide association, while the inequality\u2013homicide association disappeared in two of three models. These findings were consistent across different samples, data years, measures of inequality, dependent variables (overall and sex-specific homicide rates) and estimation procedures. The new results are congruent with what we know about poverty, inequality and homicide from the US empirical literature and suggest that the strong conclusions drawn about the inequality\u2013homicide association may need to be reassessed, as the association may be a spurious result of model misspecification.",
+      "cited_by": 201,
+      "editions": null,
+      "refs": {
+        "openalex": "W2117881141"
+      },
+      "role": "critique",
+      "why": "Reassessment showing poverty (infant mortality proxy) displaces Gini in cross-national homicide models; directly answers inequality-vs-poverty",
+      "quotes": [
+        "When effects for poverty and inequality were estimated in the same model, there was a positive and significant poverty\u2013homicide association, while the inequality\u2013homicide association disappeared in two of three models."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s4",
+      "kind": "survey",
+      "title": "Cross-National Predictors of Crime: A Meta-Analysis",
+      "authors": [
+        "Amy E. Nivette"
+      ],
+      "year": 2011,
+      "venue": "Homicide Studies",
+      "doi": "10.1177/1088767911406397",
+      "url": "https://doi.org/10.1177/1088767911406397",
+      "abstract": "Cross-national research has increased in the past few decades, resulting in a large body of empirical research. In particular, cross-national studies are often limited in data sources, which restrict variable selection to debatable proxy indicators. This study therefore uses meta-analytic techniques to examine major cross-national predictors of homicide to determine strengths and weaknesses in theory and design. The findings indicate several critical limitations to cross-national research, including biased sample composition, a lack of theoretical clarity in predictor operationalizations, and an overwhelming reliance on cross-sectional design. The predictors that showed the strongest mean effects were Latin American regional dummy variables, income inequality indicators and the Decommodification Index. Conversely, static population indicators, democracy indices, and measures of economic development had the weakest effects on homicide.",
+      "cited_by": 323,
+      "editions": null,
+      "refs": {
+        "openalex": "W2112330297"
+      },
+      "role": "canon",
+      "why": "Meta-analysis of cross-national predictors: inequality strongest homicide predictor; unemployment/GDP weak",
+      "quotes": [
+        "The findings indicate several critical limitations to cross-national research, including biased sample composition, a lack of theoretical clarity in predictor operationalizations, and an overwhelming reliance on cross-sectional design.",
+        "The predictors that showed the strongest mean effects were Latin American regional dummy variables, income inequality indicators and the Decommodification Index. Conversely, static population indicators, democracy indices, and measures of economic development had the weakest effects on homicide."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s5",
+      "kind": "paper",
+      "title": "Variations in Homicide Rates in Brazil: An Explanation Centred on Criminal Group Conflicts",
+      "authors": [
+        "Gabriel Feltr\u00e1n",
+        "Cecilia Lero",
+        "Marcelli Cipriani",
+        "Janaina Maldonado",
+        "Fernando de Jesus Rodrigues"
+      ],
+      "year": 2022,
+      "venue": "Dilemas - Revista de Estudos de Conflito e Controle Social",
+      "doi": "10.4322/dilemas.v15esp4.52509",
+      "url": "https://doi.org/10.4322/dilemas.v15esp4.52509",
+      "abstract": "This paper proposes an explanation for the variations in homicide rates in Brazil in the past two decades. Based on the comparison of ethnographic experiences lived in the criminal universe of four capital cities (S\u00e3o Paulo, Porto Alegre, S\u00e3o Lu\u00eds and Macei\u00f3), we propose two analytical strategies: 1) the breakdown of quantitative homicide rate data by victim profile, and 2) the construction of historical synopses of conflicts between factions at the local level. We demonstrate how homicide rates, in specific socio-demographic profiles, oscillate based on changes in conflicts between factions at the local level conflicts, and influence variations in the aggregate rates.",
+      "cited_by": 6,
+      "editions": null,
+      "refs": {
+        "openalex": "W4285150830"
+      },
+      "role": "critique",
+      "why": "Brazil: explains homicide variation by criminal group conflicts (PCC/CV wars) rather than socioeconomic drivers",
+      "quotes": [
+        "We demonstrate how homicide rates, in specific socio-demographic profiles, oscillate based on changes in conflicts between factions at the local level conflicts, and influence variations in the aggregate rates."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s6",
+      "kind": "paper",
+      "title": "The \u201cS\u00e3o Paulo Mystery\u201d: The role of the criminal organization PCC in reducing the homicide in 2000s",
+      "authors": [
+        "Marcelo Justus",
+        "Daniel Ricardo de Castro Cerqueira",
+        "T\u00falio Kahn",
+        "Gustavo Carvalho Moreira"
+      ],
+      "year": 2018,
+      "venue": "EconomiA",
+      "doi": "10.1016/j.econ.2018.02.003",
+      "url": "https://doi.org/10.1016/j.econ.2018.02.003",
+      "abstract": "We move forward in identifying the causes of the marked and systematic reduction in the homicide rate in S\u00e3o Paulo state in the 2000s. Its main objective was that of investigating the role of the criminal organization PCC in this process. We constructed a first-difference fixed effects model with a spatial structure where we controlled for various socioeconomic and demographic measures and for the presence of firearms and law-enforcement, among other measures. Our results do not support the PCC hypothesis at the level of the state of S\u00e3o Paulo.",
+      "cited_by": 27,
+      "editions": null,
+      "refs": {
+        "openalex": "W2790353803"
+      },
+      "role": "critique",
+      "why": "Brazil (Cerqueira, Justus et al.): tests the PCC 'pax monopolista' explanation for S\u00e3o Paulo's homicide decline vs. structural factors",
+      "quotes": [
+        "Our results do not support the PCC hypothesis at the level of the state of S\u00e3o Paulo."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s7",
+      "kind": "paper",
+      "title": "Assessing Macro-Level Predictors and Theories of Crime: A Meta-Analysis",
+      "authors": [
+        "Travis C. Pratt",
+        "Francis T. Cullen"
+      ],
+      "year": 2005,
+      "venue": "Crime and Justice",
+      "doi": "10.1086/655357",
+      "url": "https://doi.org/10.1086/655357",
+      "abstract": "The macro-level approach reemerged as a salient criminological paradigm in the late 1970s and early 1980s. Prompted by new theories and reformulations of existing ones, over 200 empirical studies explored ecological correlates of crime. Few efforts have been made, however, to \"make sense\" of this literature. A \"meta-analysis\" was undertaken to determine the relative effects of macro-level predictors of crime. Indicators of \"concentrated disadvantage\" (e.g., racial heterogeneity, poverty, and family disruption) are among the strongest and most stable predictors. Except for incarceration, variables indicating increased use of the criminal justice system (e.g., policing and get-tough policy effects) are among the weakest. Across all studies, social disorganization and resource/economic deprivation theories receive strong empirical support; anomie/strain, social support/social altruism, and routine activity theories receive moderate support; and deterrence/rational choice and subcultural theories receive weak support.",
+      "cited_by": 995,
+      "editions": null,
+      "refs": {
+        "openalex": "W2206026147"
+      },
+      "role": "canon",
+      "why": "Standard macro-level meta-analysis (214 studies); cited across criminology as baseline on poverty/inequality/unemployment as predictors",
+      "quotes": [
+        "Indicators of \"concentrated disadvantage\" (e.g., racial heterogeneity, poverty, and family disruption) are among the strongest and most stable predictors."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s8",
+      "kind": "paper",
+      "title": "Inequality and Violent Crime",
+      "authors": [
+        "Pablo R. Fajnzylber",
+        "Daniel Lederman",
+        "Norman Loayza"
+      ],
+      "year": 2002,
+      "venue": "The Journal of Law and Economics",
+      "doi": "10.1086/338347",
+      "url": "https://doi.org/10.1086/338347",
+      "abstract": "We investigate the robustness and causality of the link between income inequality and violent crime across countries. First, we study the correlation between the Gini index and homicide and robbery rates within and between countries. Second, we examine the partial correlation by considering other crime determinants. Third, we control for the endogeneity of inequality by isolating its exogenous impact on these crime rates. Fourth, we control for measurement error in crime rates by modeling it as both unobserved country effects and random noise. Finally, we examine the robustness of this partial correlation to alternative measures of inequality. The panel data consist of nonoverlapping 5\u2010year averages for 39 countries during 1965\u201395 for homicides and 37 countries during 1970\u201394 for robberies. Crime rates and inequality are positively correlated within countries and, particularly, between countries, and this correlation reflects causation from inequality to crime rates, even after controlling for other crime determinants.",
+      "cited_by": 1165,
+      "editions": null,
+      "refs": {
+        "openalex": "W2126564173"
+      },
+      "role": "canon",
+      "why": "Most-cited cross-country panel (GMM) linking Gini to homicide, World Bank; cited by Brazilian economists of crime",
+      "quotes": [
+        "Crime rates and inequality are positively correlated within countries and, particularly, between countries, and this correlation reflects causation from inequality to crime rates, even after controlling for other crime determinants."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s9",
+      "kind": "paper",
+      "title": "Crime social, castigo social: desigualdade de renda e taxas de criminalidade nos grandes munic\u00edpios brasileiros",
+      "authors": [
+        "Jo\u00e3o Paulo de Resende",
+        "M\u00f4nica Vi\u00e9gas Andrade"
+      ],
+      "year": 2011,
+      "venue": "Estudos Econ\u00f4micos (S\u00e3o Paulo)",
+      "doi": "10.1590/s0101-41612011000100007",
+      "url": "https://doi.org/10.1590/s0101-41612011000100007",
+      "abstract": "A teoria econ\u00f4mica sugere que a desigualdade de renda contribui para o aumento da criminalidade. Esse resultado \u00e9 observado em estudos nacionais que utilizam dados de taxas de homic\u00eddio. Na literatura internacional, no entanto, em que os trabalhos buscam desagregar os diferentes tipos de crimes, os resultados nem sempre s\u00e3o significativos. Este trabalho explora base in\u00e9dita de dados de boletins de ocorr\u00eancia da Secretaria Nacional de Seguran\u00e7a P\u00fablica para os munic\u00edpios brasileiros com popula\u00e7\u00e3o superior a cem mil habitantes, o que permitiu a an\u00e1lise de diferentes tipos de crimes. Os resultados revelam que o efeito da desigualdade apresenta correla\u00e7\u00e3o positiva e robusta, principalmente para os crimes contra o patrim\u00f4nio. Como esse tipo de crime responde pela grande maioria dos crimes registrados, a desigualdade de renda assume papel central como determinante da criminalidade urbana no Brasil, induzindo, nesse sentido, a substanciais perdas de bem-estar social.",
+      "cited_by": 40,
+      "editions": null,
+      "refs": {
+        "openalex": "W1978412355"
+      },
+      "role": "critique",
+      "why": "Large-municipality (100k+) study: inequality effect is robust mainly for property crime, weaker for violent crime; counterweight to inequality-homicide claims",
+      "quotes": [
+        "Os resultados revelam que o efeito da desigualdade apresenta correla\u00e7\u00e3o positiva e robusta, principalmente para os crimes contra o patrim\u00f4nio."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s10",
+      "kind": "survey",
+      "title": "Homicides and socio-environmental determinants of health in Brazil: a systematic literature review",
+      "authors": [
+        "Cl\u00f3vis Wanzinack",
+        "Marcos Cla\u00fadio Signorelli",
+        "Cl\u00f3vis Reis"
+      ],
+      "year": 2018,
+      "venue": "Cadernos de Sa\u00fade P\u00fablica",
+      "doi": "10.1590/0102-311x00012818",
+      "url": "https://doi.org/10.1590/0102-311x00012818",
+      "abstract": "Brazil currently has the highest absolute number of homicides in the world, which results from a complex range of factors. This study aimed at understanding the associations between socio-environmental determinants of health (SDH) and homicides in Brazil through a systematic literature review. The review followed PRISMA guidelines, selecting quantitative and qualitative studies published in Portuguese, English, and Spanish carried out between 2002 and 2017, available in the PubMed, MEDLINE, LILACS, SciELO and BVS-BIREME databases. Two trilingual reviewers tracked studies independently by basing on the eligibility criteria. We critically assessed the selected studies with the Critical Appraisal Skills Programme (CASP) or the Checklist for Analytical Cross-Sectional Studies, depending on the study design. We considered 60 studies and grouped their SDH into categories to develop a narrative synthesis about each SDH. These categories were: territory; race/ethnicity; gender; age; social inequalities and economic factors; development; education; work and employment; drugs and trafficking; other SDH. We found some SDH were more associated with homicides, such as being young, black, male, of low education level, and also people who lived in places of high social inequality, such as urban suburbs and agricultural frontiers. Unemployment and drug trafficking, as well as intersections between various SDH were also prominent. Education seems to be a protective factor for homicide. Despite the limited capacity of interpretation due to the high range of methodological approaches, this review shows the importance of considering SDH and their intersections when developing homicide prevention policies.",
+      "cited_by": 65,
+      "editions": null,
+      "refs": {
+        "openalex": "W2902840192"
+      },
+      "role": "anchor",
+      "why": "Systematic review of socio-environmental determinants of homicide in Brazil; tallies which covariates come out associated across studies",
+      "quotes": [
+        "We found some SDH were more associated with homicides, such as being young, black, male, of low education level, and also people who lived in places of high social inequality, such as urban suburbs and agricultural frontiers. Unemployment and drug trafficking, as well as intersections between various SDH were also prominent.",
+        "Despite the limited capacity of interpretation due to the high range of methodological approaches, this review shows the importance of considering SDH and their intersections when developing homicide prevention policies."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s11",
+      "kind": "paper",
+      "title": "Age Structure Explaining a Large Shift in Homicides: The Case of the State of S\u00e3o Paulo",
+      "authors": [
+        "Jo\u00e3o Manoel Pinho de Mello",
+        "Alexandre A Schneider"
+      ],
+      "year": 2007,
+      "venue": "RePEc: Research Papers in Economics",
+      "doi": "",
+      "url": "https://econpapers.repec.org/paper/riotexdis/549.htm",
+      "abstract": "After reaching a historic peak by the end of the 1990s, homicides in large cities in the state of S\u00e3o Paulo dropped sharply. Several explanations have been advanced, most prominently improvements in policing, adoption of policies such as dry laws, and increased incarceration. In this paper, we show that demographic changes play a large role in explaining the dynamics of homicide. More specifically, we present evidence of a strong co-movement between the proportion of males on the 15-25 age bracket and homicides at the statewide and at city levels, and argue that the relationship is causal. We estimate that a 1% increase in the proportion of 15-to-24-year-old males causes a 4.5% increase in homicides.",
+      "cited_by": 4,
+      "editions": null,
+      "refs": {
+        "openalex": "W1993890491"
+      },
+      "role": "anchor",
+      "why": "Brazil's standard citation for age structure: share of young men explains much of S\u00e3o Paulo homicide rise/fall",
+      "quotes": [
+        "We estimate that a 1% increase in the proportion of 15-to-24-year-old males causes a 4.5% increase in homicides."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s12",
+      "kind": "paper",
+      "title": "Associa\u00e7\u00e3o ecol\u00f3gica entre caracter\u00edsticas dos munic\u00edpios e o risco de homic\u00eddios em homens adultos de 20-39 anos de idade no Brasil, 1999-2010",
+      "authors": [
+        "Elisabeth Carmen Duarte",
+        "Leila Posenato Garc\u00eda",
+        "L\u00facia Rolim Santana de Freitas",
+        "Nereu Henrique Mansano",
+        "Rosane Aparecida Monteiro"
+      ],
+      "year": 2012,
+      "venue": "Ci\u00eancia & Sa\u00fade Coletiva",
+      "doi": "10.1590/s1413-81232012000900008",
+      "url": "https://doi.org/10.1590/s1413-81232012000900008",
+      "abstract": "Homicide mortality remains a major public health problem in Brazil, especially among young adult males. The aim of this study was to assess the homicide mortality risk (HMR) among males aged 20 to 39, and its association with selected socio-demographic characteristics of the Brazilian municipalities. This is an ecologic study in which all the municipalities in Brazil were the unit of analysis. Time trends (from 1999-2002) and adjusted associations between HMR and socio-demographic characteristics of municipalities were estimated in a cross-sectional analysis for 2007-2010 in this study. Between 1999-2002 and 2007-2010, an increasing trend of mean HMR rates from 22.7 to 35.5 per 100,000 inhabitants was observed in Brazil. In 2007-2010, HMR rates were significantly higher (p<0.001) in the largest cities, with higher fertility rates, lower literacy rates, higher social inequality (as estimated by the 20/40 income ratio) and more-urbanized municipalities. Considering the proportion of low income population and the average per capita income, associations with HMR identified greater risks in the intermediary categories of these independent variables. Findings from this study may support the implementation of focal policies directed to more vulnerable municipalities.",
+      "cited_by": 26,
+      "editions": null,
+      "refs": {
+        "openalex": "W2145035240"
+      },
+      "role": "anchor",
+      "why": "Ecological study of all Brazilian municipalities (men 20-39, 1999-2010): population size, urbanization, literacy, inequality; Poisson/multilevel",
+      "quotes": [
+        "In 2007-2010, HMR rates were significantly higher (p<0.001) in the largest cities, with higher fertility rates, lower literacy rates, higher social inequality (as estimated by the 20/40 income ratio) and more-urbanized municipalities."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s13",
+      "kind": "paper",
+      "title": "Social disorganization and homicide mortality rate trajectories in Brazil between 1991 and 2010",
+      "authors": [
+        "Maria Fernanda Tourinho Peres",
+        "Amy E. Nivette"
+      ],
+      "year": 2017,
+      "venue": "Social Science & Medicine",
+      "doi": "10.1016/j.socscimed.2017.08.013",
+      "url": "https://doi.org/10.1016/j.socscimed.2017.08.013",
+      "abstract": "",
+      "cited_by": 35,
+      "editions": null,
+      "refs": {
+        "openalex": "W2749826508"
+      },
+      "role": "canon",
+      "why": "Municipal-level (5,500+ municipalities) social disorganization test of homicide trajectories 1991-2010; found via OpenAlex, Peres is a leading NEV-USP homicide researcher",
+      "quotes": [
+        "We found that SD is associated with an ascending homicide trajectory."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s14",
+      "kind": "paper",
+      "title": "THE LIMITED ROLE OF CHANGING AGE STRUCTURE IN EXPLAINING AGGREGATE CRIME RATES*",
+      "authors": [
+        "Steven D. Levitt"
+      ],
+      "year": 1999,
+      "venue": "Criminology",
+      "doi": "10.1111/j.1745-9125.1999.tb00497.x",
+      "url": "https://doi.org/10.1111/j.1745-9125.1999.tb00497.x",
+      "abstract": "Changes in the age structure are shown to have a limited impact on aggregate crime rates. Even the dramatic transformation of the age distribution accompanying the baby boom shifted crime rates by no more than 1 % per year. Projected changes in the age distribution between 1995 and 2010 will lead to slight declines in per capita crime rates. These results are at odds with recent predictions of an impending demographically driven crime wave. Such predictions have focused exclusively on a rise in juvenile crime and ignored the offsetting decreases among adults.",
+      "cited_by": 119,
+      "editions": null,
+      "refs": {
+        "openalex": "W1985036919"
+      },
+      "role": "critique",
+      "why": "Levitt: changing age structure explains little of aggregate crime changes; the counterweight to the young-men hypothesis",
+      "quotes": [
+        "Even the dramatic transformation of the age distribution accompanying the baby boom shifted crime rates by no more than 1 % per year."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s15",
+      "kind": "paper",
+      "title": "Uma an\u00e1lise do efeito dos gastos p\u00fablicos em educa\u00e7\u00e3o sobre a criminalidade no Brasil",
+      "authors": [
+        "Kalinca L\u00e9ia Becker",
+        "Ana L\u00facia Kassouf"
+      ],
+      "year": 2017,
+      "venue": "Economia e Sociedade",
+      "doi": "10.1590/1982-3533.2017v26n1art8",
+      "url": "https://doi.org/10.1590/1982-3533.2017v26n1art8",
+      "abstract": "Resumo O objetivo do estudo \u00e9 analisar se o gasto p\u00fablico em educa\u00e7\u00e3o pode contribuir para reduzir a taxa de homic\u00eddios e se \u00e9 necess\u00e1rio um per\u00edodo para que esse resultado seja observado. Para isso, foram utilizados dados socioecon\u00f4micos dos estados brasileiros e um modelo de painel din\u00e2mico (GMM-SYS) com uma defasagem para os gastos com educa\u00e7\u00e3o por habitante, al\u00e9m da rela\u00e7\u00e3o contempor\u00e2nea. Os resultados indicaram uma elasticidade negativa de aproximadamente 0,1 na primeira defasagem, ou seja, se os gastos com educa\u00e7\u00e3o aumentarem 10%, a taxa de homic\u00eddios diminuiria 1% no per\u00edodo seguinte, evidenciando que investir em educa\u00e7\u00e3o pode ser uma forma de pol\u00edtica p\u00fablica de longo prazo para reduzir a criminalidade.",
+      "cited_by": 23,
+      "editions": null,
+      "refs": {
+        "openalex": "W2729362223"
+      },
+      "role": "anchor",
+      "why": "Brazilian state panel on education (spending, schooling) and homicide; GMM dynamic panel",
+      "quotes": [
+        "Os resultados indicaram uma elasticidade negativa de aproximadamente 0,1 na primeira defasagem, ou seja, se os gastos com educa\u00e7\u00e3o aumentarem 10%, a taxa de homic\u00eddios diminuiria 1% no per\u00edodo seguinte"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s16",
+      "kind": "survey",
+      "title": "Determinantes da criminalidade: arcabou\u00e7os te\u00f3ricos e resultados emp\u00edricos",
+      "authors": [
+        "Daniel Ricardo de Castro Cerqueira",
+        "Waldir Jesus Ara\u00fajo Lob\u00e3o"
+      ],
+      "year": 2004,
+      "venue": "Dados",
+      "doi": "10.1590/s0011-52582004000200002",
+      "url": "https://doi.org/10.1590/s0011-52582004000200002",
+      "abstract": "Qu'est-ce qui m\u00e8ne les gens \u00e0 perp\u00e9trer des crimes et \u00e0 adopter des conduites d\u00e9viantes? Ces conduites seraient-elles le fruit de traits personnels et d'idiosyncrasies, ou bien le r\u00e9sultat d'un processus d\u00e9form\u00e9 d'acculturation au stade pr\u00e9-adulte? Ou encore seraient-elles le r\u00e9sultat d'une ambiance de d\u00e9sagr\u00e9gation et d'injustices sociales ? On peut proposer, par ailleurs, l'hypoth\u00e8se selon laquelle le dit ph\u00e9nom\u00e8ne n'est que l'aboutissement d'un processus de rationalisation, o\u00f9 la culture moderne de l'individualisation serait la base \u00e9thique qui s'opposerait \u00e0 la Loi de l'Or. Dans ce cas, comment pourrait-on expliquer l'existence de ces ph\u00e9nom\u00e8nes tout au long de l'histoire dans des lieux et cultures aussi divers? Dans cet article, on cherche \u00e0 examiner quelques-unes de ces contributions et sch\u00e9mas th\u00e9oriques ainsi que leur rapport avec des travaux empiriques quantitatifs, tout en discutant certaines de leurs limitations et la port\u00e9e de leurs r\u00e9sultats face aux restrictions des donn\u00e9es.",
+      "cited_by": 67,
+      "editions": null,
+      "refs": {
+        "openalex": "W1534598900"
+      },
+      "role": "anchor",
+      "why": "Cerqueira & Lobao (IPEA), the most cited Brazilian review of crime-determinant theories and empirical results; cited across Brazilian crime-economics papers",
+      "quotes": [
+        "Dans cet article, on cherche \u00e0 examiner quelques-unes de ces contributions et sch\u00e9mas th\u00e9oriques ainsi que leur rapport avec des travaux empiriques quantitatifs, tout en discutant certaines de leurs limitations et la port\u00e9e de leurs r\u00e9sultats face aux restrictions des donn\u00e9es."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s17",
+      "kind": "doc",
+      "title": "Atlas da Viol\u00eancia 2025",
+      "authors": [
+        "Cerqueira, D.; Bueno, S. (coords.), Ipea/FBSP"
+      ],
+      "year": 2025,
+      "venue": "",
+      "doi": "",
+      "url": "https://repositorio.ipea.gov.br/bitstreams/12f49ebe-cb2f-4f86-bf95-c563bc29f920/download",
+      "abstract": "",
+      "cited_by": null,
+      "editions": null,
+      "refs": {},
+      "role": "anchor",
+      "why": "Official Ipea/FBSP annual report on SIM homicides by state and municipality; standard reference cited by Brazilian homicide literature; documents faction wars and interiorization in North/Northeast",
+      "quotes": [
+        "Entre eles, a continuidade da transi\u00e7\u00e3o demogr\u00e1fica rumo ao envelhecimento da popula\u00e7\u00e3o (que come\u00e7ou antes e com mais intensidade nos estados do Sudeste e Sul); o armist\u00edcio na grande guerra do narcotr\u00e1fico entre as duas maiores fa\u00e7\u00f5es criminais; e o amadurecimento e aprimoramento das pol\u00edticas de seguran\u00e7a p\u00fablica em algumas UFs e munic\u00edpios"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s18",
+      "kind": "paper",
+      "title": "Growth of Lethal Violence in Brazil 2000\u20132017: A Space-Temporal Analysis of Homicides",
+      "authors": [
+        "Temidayo James Aransiola",
+        "Vania Aparecida Ceccato",
+        "Marcelo Justus"
+      ],
+      "year": 2021,
+      "venue": "Journal of Contemporary Criminal Justice",
+      "doi": "10.1177/10439862211034343",
+      "url": "https://doi.org/10.1177/10439862211034343",
+      "abstract": "This study investigates the space-temporal growth of homicide rates in Brazil from 2000 to 2017 and identifies determinants of the country\u2019s growth of homicide rates. Data from the Brazilian Information System on Mortality and Censuses are used to estimate growth models combined with spatial statistics and Geographical Information Systems (GIS). Findings show evidence of change in the geographical distribution of lethal violence over time, characterized by a steady increase in the North and Northeast regions and a reduction in growth in the South and Southeast regions of Brazil. Social disorganization factors namely deprivation, ethnic heterogeneity, and urbanization are significant positive determinants of the growth of homicide rates. The results show a reduction of the predictive strength of income inequality and an increase in that of unemployment from the year 2010 to 2017. The theoretical and policy implications of these results are discussed.",
+      "cited_by": 11,
+      "editions": null,
+      "refs": {
+        "openalex": "W3195042989"
+      },
+      "role": "anchor",
+      "why": "Municipal space-time analysis 2000-2017 of homicide growth (interiorization, North/Northeast hotspots); Ceccato is a leading spatial criminologist on Brazil",
+      "quotes": [
+        "Findings show evidence of change in the geographical distribution of lethal violence over time, characterized by a steady increase in the North and Northeast regions and a reduction in growth in the South and Southeast regions of Brazil."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s19",
+      "kind": "paper",
+      "title": "Pax Monopolista and Crime: The Case of the Emergence of the Primeiro Comando da Capital in S\u00e3o Paulo",
+      "authors": [
+        "Ciro Biderman",
+        "Jo\u00e3o Manoel Pinho de Mello",
+        "Renato S\u00e9rgio de Lima",
+        "Alexandre Schneider"
+      ],
+      "year": 2018,
+      "venue": "Journal of Quantitative Criminology",
+      "doi": "10.1007/s10940-018-9393-x",
+      "url": "https://doi.org/10.1007/s10940-018-9393-x",
+      "abstract": "",
+      "cited_by": 65,
+      "editions": null,
+      "refs": {
+        "openalex": "W2284722561"
+      },
+      "role": "canon",
+      "why": "Most-cited quantitative test (diff-in-diff, SP districts/municipalities) of the PCC 'pax monopolista' explanation of the S\u00e3o Paulo decline; de Mello is a leading crime economist",
+      "quotes": [
+        "PCC presence is associated with an 11% reduction in violent crime in the favelas that PCC enteredduring the period 2005\u20132009."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s20",
+      "kind": "paper",
+      "title": "The Great S\u00e3o Paulo Homicide Drop",
+      "authors": [
+        "Ted George Goertzel",
+        "T\u00falio Kahn"
+      ],
+      "year": 2009,
+      "venue": "Homicide Studies",
+      "doi": "10.1177/1088767909348711",
+      "url": "https://doi.org/10.1177/1088767909348711",
+      "abstract": "The homicide rates in the city and state of S\u00e3o Paulo were cut in half in the years from 2001 to 2007. The decline in the city of S\u00e3o Paulo was especially striking and parallels the decline in New York City in the 1990s. It can be confirmed with a number of independent data sources and was significantly larger than in other Brazilian cities. The decline may be attributed to more effective policing methods including the better enforcement of strict gun-control legislation. It demonstrates that effective measures can be taken to reduce lethal crime in a developing country without waiting to solve underlying socioeconomic problems.",
+      "cited_by": 49,
+      "editions": null,
+      "refs": {
+        "openalex": "W1973335641"
+      },
+      "role": "critique",
+      "why": "Rival explanation of SP drop: policing, gun control, demography and municipal policies rather than PCC; Kahn was SP security statistics coordinator",
+      "quotes": [
+        "The decline may be attributed to more effective policing methods including the better enforcement of strict gun-control legislation."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s21",
+      "kind": "paper",
+      "title": "Evaluating a National Anti-Firearm Law and Estimating the Causal Effect of Guns on Crime",
+      "authors": [
+        "Cerqueira, Daniel",
+        "Joao De Mello"
+      ],
+      "year": 2013,
+      "venue": "RePEc: Research Papers in Economics",
+      "doi": "10.13140/rg.2.2.14868.91522",
+      "url": "http://www.econ.puc-rio.br/uploads/adm/trabalhos/files/td607.pdf",
+      "abstract": "We report two results. First, we evaluate the impact of a nationwide anti-firearm legislation passedby the Brazilian Congress in December 2003 (Estatuto do Desarmamento, henceforth ED). Our identificationstrategy hinges on the hypothesis that the law had stronger impact in places where gun prevalence washigher in the baseline. We find evidence that homicides (reduced form) and firearms prevalence(mechanism or first-stage) dropped faster in places with higher gun prevalence after the 2003. Using ourpreferred estimates, the ED saved between 2,000 and 2,750 lives from 2004 through 2007 in cities withmore than 50,000 inhabitants in the state of S\u00e3o Paulo. Second, assuming the ED causes homicide onlythrough its impact on firearms prevalence, we recover a causal estimate of the impact of firearms onhomicides. One standard deviation in the prevalence of firearms reduces homicides by quarter of astandard deviation. We find no impact of both ED and firearms on property crime in general or onrobberies.",
+      "cited_by": 15,
+      "editions": null,
+      "refs": {
+        "openalex": "W145823227"
+      },
+      "role": "canon",
+      "why": "Causal test of the 2003 Disarmament Statute using SP municipalities; Cerqueira coordinates the Atlas da Viol\u00eancia; basis for firearm prevalence as homicide determinant",
+      "quotes": [
+        "We find evidence that homicides (reduced form) and firearms prevalence(mechanism or first-stage) dropped faster in places with higher gun prevalence after the 2003."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s22",
+      "kind": "paper",
+      "title": "Landing on Water: Air Interdiction, Drug-Trafficking Displacement, and Violence in the Brazilian Amazon",
+      "authors": [
+        "Leila Pereira",
+        "Rafael Pucci",
+        "Rodrigo R. Soares"
+      ],
+      "year": 2024,
+      "venue": "SSRN Electronic Journal",
+      "doi": "10.2139/ssrn.5009812",
+      "url": "http://dx.doi.org/10.2139/ssrn.5009812",
+      "abstract": "",
+      "cited_by": 1,
+      "editions": null,
+      "refs": {
+        "openalex": "W4404109690"
+      },
+      "role": "frontier",
+      "why": "Amazon municipal evidence that drug-trafficking route displacement raises homicides; links Amazon/border variables to trafficking",
+      "quotes": [
+        "we provide evidence that violence increased in municipalities along river routes originating from Andean producing countries after the policy."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s23",
+      "kind": "doc",
+      "title": "Atlas da Viol\u00eancia 2024: Retrato dos Munic\u00edpios Brasileiros",
+      "authors": [
+        "IPEA; FBSP"
+      ],
+      "year": 2024,
+      "venue": "",
+      "doi": "",
+      "url": "https://repositorio.ipea.gov.br/bitstream/11058/14031/5/AtlasViolencia2024_Retrato_dos_municipios_brasileros.pdf",
+      "abstract": "",
+      "cited_by": null,
+      "editions": null,
+      "refs": {},
+      "role": "anchor",
+      "why": "Official IPEA/FBSP municipal edition of the Atlas da Viol\u00eancia, the reference Brazilian source for municipal homicide patterns (SIM-based, estimated hidden homicides)",
+      "quotes": [
+        "Evidencia-se que a preval\u00eancia relativa de homic\u00eddios \u00e9 tanto maior quanto maior o tamanho das cidades, o que j\u00e1 foi discutido por Glaeser, Sacerdote e Scheinkman (1996) e no Atlas da Viol\u00eancia \u2013 Retrato dos Munic\u00edpios Brasileiros 2019."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s24",
+      "kind": "paper",
+      "title": "Socioeconomic Structure, Self-fulfilment, Homicides and Spatial Dependence in Brazil",
+      "authors": [
+        "Alexandre Carvalho; Daniel Cerqueira; Waldir Lob\u00e3o"
+      ],
+      "year": 2015,
+      "venue": "",
+      "doi": "",
+      "url": "https://ideas.repec.org/p/ipe/ipetds/0151.html",
+      "abstract": "",
+      "cited_by": null,
+      "editions": null,
+      "refs": {},
+      "role": "canon",
+      "why": "IPEA discussion paper (orig. TD 1105, 2005): Bayesian spatial model on 5,507 municipalities 1999-2001 with inequality, youth share and vulnerability; the Cerqueira line behind the Atlas",
+      "quotes": [
+        "In all cases, the parameters were statistically significant and confirmed expectations. An increase in social disorganization leads to an increase in the rate of homicide"
+      ],
+      "group": "cerqueira-ipea"
+    },
+    {
+      "id": "s25",
+      "kind": "paper",
+      "title": "STRUCTURAL COVARIATES OF U.S. COUNTY HOMICIDE RATES: INCORPORATING SPATIAL EFFECTS*",
+      "authors": [
+        "Robert D. Baller",
+        "Luc Anselin",
+        "Steven F. Messner",
+        "Glenn Deane",
+        "Darnell F. Hawkins"
+      ],
+      "year": 2001,
+      "venue": "Criminology",
+      "doi": "10.1111/j.1745-9125.2001.tb00933.x",
+      "url": "https://doi.org/10.1111/j.1745-9125.2001.tb00933.x",
+      "abstract": "Spatial analysis is statistically and substantively important for macrolevel criminological inquiry. Using county\u2010level data for the decennial years in the 1960 to 1990 time period, we reexamine the impact of conventional structural covariates on homicide rates and explicitly model spatial effects. Important findings are: (1) homicide is strongly clustered in space; (2) this clustering cannot be completely explained by common measures of the structural similarity of neighboring counties; (3) noteworthy regional differences are observed in the effects of structural covariates on homicide rates; and (4) evidence consistent with a diffusion process for homicide is observed in the South throughout the 1960\u20131990 period.",
+      "cited_by": 482,
+      "editions": null,
+      "refs": {
+        "openalex": "W2096844058"
+      },
+      "role": "canon",
+      "why": "Classic US county study (Baller, Anselin, Messner, Deane, Hawkins 2001) showing spatial dependence in homicide and regional heterogeneity of structural covariates; cited by Brazilian spatial homicide studies",
+      "quotes": [
+        "this clustering cannot be completely explained by common measures of the structural similarity of neighboring counties"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s26",
+      "kind": "survey",
+      "title": "Poverty, Income Inequality, and Violent Crime: A Meta-Analysis of Recent Aggregate Data Studies",
+      "authors": [
+        "Ching-Chi Hsieh",
+        "M. D. Pugh"
+      ],
+      "year": 1993,
+      "venue": "Criminal Justice Review",
+      "doi": "10.1177/073401689301800203",
+      "url": "https://doi.org/10.1177/073401689301800203",
+      "abstract": "In the late 1970s and early 1980s, several important reviews of the literature failed to establish a clear consensus on the relationship between economic conditions and violent crime. The research presented here applies the procedures of meta-analysis to 34 aggregate data studies reporting on violent crime, poverty, and income inequality. These studies reported a total of 76 zero-order correlation coefficients for all measures of violent crime with either poverty or income inequality. Of the 76 coefficients, all but 2, or 97 percent, were positive. Of the positive coefficients, nearly 80 percent were of at least moderate strength (>.25). It is concluded that poverty and income inequality are each associated with violent crime. The analysis, however, shows considerable variation in the estimated size of the relationships and suggests that homicide and assault may be more closely associated with poverty or income inequality than are rape and robbery.",
+      "cited_by": 646,
+      "editions": null,
+      "refs": {
+        "openalex": "W2167619661"
+      },
+      "role": "canon",
+      "why": "Hsieh & Pugh 1993 meta-analysis of 34 aggregate studies: poverty and income inequality positively associated with violent crime; cited in Land et al. and Pratt & Cullen",
+      "quotes": [
+        "Of the 76 coefficients, all but 2, or 97 percent, were positive. Of the positive coefficients, nearly 80 percent were of at least moderate strength (>.25)."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s27",
+      "kind": "book",
+      "title": "Din\u00e2micas da viol\u00eancia na Regi\u00e3o Norte do Brasil: reflex\u00f5es sobre suas origens e persist\u00eancia",
+      "authors": [
+        "Ana Clara Figueiredo",
+        "Angelina Parreiras",
+        "Camila Caldeira Nunes Dias",
+        "Karolina Chacon Armstrong",
+        "Maria Paula Santos"
+      ],
+      "year": 2024,
+      "venue": "Instituto de Pesquisa Econ\u00f4mica Aplicada (Ipea) eBooks",
+      "doi": "10.38116/978-65-5635-072-1/capitulo1",
+      "url": "http://doi.org/10.38116/978-65-5635-072-1/capitulo1",
+      "abstract": "INTRODU\u00c7\u00c3ONos \u00faltimos quarenta anos, as taxas de homic\u00eddio no Brasil t\u00eam se mantido extremamente elevadas, tendo atingido seu \u00e1pice em 2017, quando foram registrados 30,9 homic\u00eddios por 100 mil habitantes.No entanto, a distribui\u00e7\u00e3o dessas taxas no territ\u00f3rio nacional n\u00e3o \u00e9 homog\u00eanea, e se alterou bastante nesse per\u00edodo: na d\u00e9cada de 1990, elas se concentravam sobretudo na regi\u00e3o Sudeste; mas, desde meados da d\u00e9cada de 2000, tornaram-se mais importantes nas regi\u00f5es Nordeste e Norte.Os dados dispon\u00edveis indicam ainda a ocorr\u00eancia, ao longo desse tempo, de um processo de interioriza\u00e7\u00e3o da viol\u00eancia, isto \u00e9, o deslocamento da viol\u00eancia letal \"das grandes regi\u00f5es metropolitanas para os munic\u00edpios do interior do pa\u00eds\" (Cerqueira et al., 2016, p. 10).",
+      "cited_by": 0,
+      "editions": null,
+      "refs": {
+        "openalex": "W4400234267"
+      },
+      "role": "anchor",
+      "why": "Ipea 2024 synthesis of the Norte violence dynamics (faction war, drug routes, interiorization); suggested by lead",
+      "quotes": [
+        "desde meados da d\u00e9cada de 2000, tornaram-se mais importantes nas regi\u00f5es Nordeste e Norte.Os dados dispon\u00edveis indicam ainda a ocorr\u00eancia, ao longo desse tempo, de um processo de interioriza\u00e7\u00e3o da viol\u00eancia"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s28",
+      "kind": "survey",
+      "title": "Crime and violence in Brazil: Systematic review of time trends, prevalence rates and risk factors",
+      "authors": [
+        "Joseph Murray",
+        "Daniel Ricardo de Castro Cerqueira",
+        "T\u00falio Kahn"
+      ],
+      "year": 2013,
+      "venue": "Aggression and Violent Behavior",
+      "doi": "10.1016/j.avb.2013.07.003",
+      "url": "https://doi.org/10.1016/j.avb.2013.07.003",
+      "abstract": "Between 1980 and 2010 there were 1 million homicides in Brazil. Dramatic increases in homicide rates followed rises in inequality, more young men in the population, greater availability of firearms, and increased drug use. Nevertheless, disarmament legislation may have helped reduce homicide rates in recent years. Despite its very high rate of lethal violence, Brazil appears to have similar levels of general criminal victimization as several other Latin American and North American countries. Brazil has lower rates of drug use compared to other countries such as the United States, but the prevalence of youth drug use in Brazil has increased substantially in recent years. Since 1990, the growth of the Brazilian prison population has been enormous, resulting in the fourth largest prison population in the world. Through a systematic review of the literature, we identified 10 studies assessing the prevalence of self-reported offending in Brazil and 9 studies examining risk factors. Levels of self-reported offending seem quite high among school students in Brazil. Individual and family-level risk factors identified in Brazil are very similar to those found in high-income countries.",
+      "cited_by": 232,
+      "editions": null,
+      "refs": {
+        "openalex": "W2144498450"
+      },
+      "role": "canon",
+      "why": "Most-cited systematic review of Brazilian crime trends and risk factors (Murray, Cerqueira & Kahn 2013), incl. firearm evidence",
+      "quotes": [
+        "Dramatic increases in homicide rates followed rises in inequality, more young men in the population, greater availability of firearms, and increased drug use. Nevertheless, disarmament legislation may have helped reduce homicide rates in recent years."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s29",
+      "kind": "paper",
+      "title": "Legal gun ownership and carrying are not associated with homicides in Brazil: a Bayesian analysis of state-level longitudinal data",
+      "authors": [
+        "Joe Eleuterio-da-Rocha",
+        "Frederico Martins De Paula Neto",
+        "Steevan Oliveira"
+      ],
+      "year": 2026,
+      "venue": "International Journal of Comparative and Applied Criminal Justice",
+      "doi": "10.1080/01924036.2026.2731244",
+      "url": "https://doi.org/10.1080/01924036.2026.2731244",
+      "abstract": "The academic debate on the relationship between gun ownership and violence remains unresolved, with recent studies highlighting its complexity. In Brazil, most research has concluded that greater civilian access to firearms is associated with higher levels of violence, typically reflected in rising homicide rates. However, this literature relies heavily on proxy measures of gun ownership. While some of these proxies have been validated in the United States, their validity in the Brazilian context is uncertain. Moreover, prior studies have not examined how gun ownership relates to homicides, while accounting for state-level variation. This study addresses these gaps by analysing the association between legal gun ownership and number of homicides using official data on firearm possession and carrying rather than proxy measures. To capture regional heterogeneity, we employed Bayesian multilevel models with state-level variation explicitly modelled. The results suggest that legal gun ownership is unlikely to be a significant driver of the number of homicides. Instead, the substantial differences observed across states indicate that state-specific criminal justice policies and institutional contexts may play a more decisive role than the prevalence of legally owned and carried firearms.",
+      "cited_by": 0,
+      "editions": null,
+      "refs": {
+        "openalex": "W7213352735"
+      },
+      "role": "critique",
+      "why": "Counter-evidence: Bayesian state-level panel finds legal guns not associated with homicide; suggested by lead",
+      "quotes": [
+        "The results suggest that legal gun ownership is unlikely to be a significant driver of the number of homicides. Instead, the substantial differences observed across states indicate that state-specific criminal justice policies and institutional contexts may play a more decisive role than the prevalence of legally owned and carried firearms."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s30",
+      "kind": "doc",
+      "title": "Cartografias da Viol\u00eancia na Amaz\u00f4nia 2025: sum\u00e1rio executivo",
+      "authors": [],
+      "year": 2025,
+      "venue": "",
+      "doi": "",
+      "url": "https://forumseguranca.org.br/wp-content/uploads/2025/11/cartografias-violencia-amazonia-2025-sumario-executivo.pdf",
+      "abstract": "",
+      "cited_by": null,
+      "editions": null,
+      "refs": {},
+      "role": "anchor",
+      "why": "FBSP municipal mapping of faction presence/disputes and homicide in the Legal Amazon; suggested by lead, widely cited in press",
+      "quotes": [
+        "organiza\u00e7\u00f5es como o Comando Vermelho (CV) e o Primeiro Comando da Capital (PCC) se articulam com fac\u00e7\u00f5es regionais, ora cooperando, ora competindo por rotas, mercados e territ\u00f3rios"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s31",
+      "kind": "paper",
+      "title": "Mapping disparities in homicide trends across Brazil: 2000\u20132014",
+      "authors": [
+        "Elaine Okanyene Nsoesie",
+        "Antonio S. Lima Neto",
+        "Jonathan S. Jay",
+        "Hailun Wang",
+        "Kate Zinszer"
+      ],
+      "year": 2020,
+      "venue": "Injury Epidemiology",
+      "doi": "10.1186/s40621-020-00273-y",
+      "url": "https://doi.org/10.1186/s40621-020-00273-y",
+      "abstract": "BACKGROUND: Homicides are a major problem in Brazil. Drugs and arms trafficking, and land conflicts are three of the many factors driving homicide rates in Brazil. Understanding long-term spatiotemporal trends and social structural factors associated with homicides in Brazil would be useful for designing policies aimed at reducing homicide rates. METHODS: We obtained data from 2000 to 2014 from the Brazil Ministry of Health (MOH) Mortality Information System and sociodemographic data from the Brazil Institute of Geography and Statistics (IBGE). First, we quantified the rate of change in homicides at the municipality and state levels. Second, we used principal component regression and k-medoids clustering to examine differences in temporal trends across municipalities. Lastly, we used Bayesian hierarchical space-time models to describe spatio-temporal patterns and to assess the contribution of structural factors. RESULTS: There were significant variations in homicide rates across states and municipalities. We noted the largest decrease in homicide rates in the western and southeastern states of Sao Paulo, Rio de Janeiro and Espirito Santo, which coincided with an increase in homicide rates in the northeastern states of Cear\u00e1, Alagoas, Paraiba, Rio Grande Norte, Sergipe and Bahia during the fifteen-year period. The decrease in homicides in municipalities with populations of at least 250,000 coincided with an increase in municipalities with 25,000 people or less. Structural factors that predicted municipality-level homicide rates included crude domestic product, urbanization, border with neighboring countries and proportion of population aged fifteen to twenty-nine. CONCLUSIONS: Our findings support both a dissemination hypothesis and an interiorization hypothesis. These findings should be considered when designing interventions to curb homicide rates.",
+      "cited_by": 17,
+      "editions": null,
+      "refs": {
+        "openalex": "W3083272138"
+      },
+      "_referenced": [
+        "W588132920",
+        "W1540089290",
+        "W1562577129",
+        "W1747046542",
+        "W1785769184",
+        "W1964131545",
+        "W2004014822",
+        "W2029702842",
+        "W2039860492",
+        "W2047741328",
+        "W2079350494",
+        "W2092087072",
+        "W2101681437",
+        "W2103302101",
+        "W2144498450",
+        "W2157227312",
+        "W2179969155",
+        "W2220201602",
+        "W2319678323",
+        "W2513253589",
+        "W2614114362",
+        "W2749826508",
+        "W2769481076",
+        "W2902840192",
+        "W2945104471",
+        "W3010454849"
+      ],
+      "role": "frontier",
+      "why": "National municipal study (Nsoesie et al. 2020, Injury Epidemiology): Bayesian hierarchical space-time model with neighbour-borrowing random effects; GDP, metro region, border and share aged 15-29 predict homicide; supports interiorization",
+      "quotes": [
+        "Structural factors that predicted municipality-level homicide rates included crude domestic product, urbanization, border with neighboring countries and proportion of population aged fifteen to twenty-nine."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s32",
+      "kind": "paper",
+      "title": "Taxas bayesianas para o mapeamento de homic\u00eddios nos munic\u00edpios brasileiros",
+      "authors": [
+        "Alexandre Xavier Ywata de Carvalho",
+        "Gabriela Drummond Marques da Silva",
+        "Gilberto Rezende de Almeida",
+        "Pedro Henrique Melo Albuquerque"
+      ],
+      "year": 2012,
+      "venue": "Cadernos de Sa\u00fade P\u00fablica",
+      "doi": "10.1590/s0102-311x2012000700004",
+      "url": "https://doi.org/10.1590/s0102-311x2012000700004",
+      "abstract": "This study analyzes homicide incidence per municipality (county) in Brazil in the year 2008. The authors estimate and compare homicide rates according to different methods, finding evidence that depending on the method employed, the results can differ significantly, especially for small municipalities. Bayesian spatial procedures were employed, allowing minimization of variation in the rate estimates. The methods consider a priori distributions and information on contiguity of municipalities. According to the findings, the impact of corrective procedures is not relevant for large municipalities, but such estimates present significant differences for small municipalities. Comparing the different estimates, the authors conclude that there may be distortions in the rates published in the literature. To overcome such potential distortions, it is necessary to take the main goal in each analysis into account. When the emphasis is on overall visualization of the homicide phenomenon, the best option is spatial corrections. However, to obtain more accurate local estimates, Bayesian methods are more appropriate.",
+      "cited_by": 37,
+      "editions": null,
+      "refs": {
+        "openalex": "W2049292217"
+      },
+      "role": "practical",
+      "why": "Carvalho et al. 2012 (Cad Saude Publica, IPEA authors): compares raw vs empirical/full Bayes homicide rates for all Brazilian municipalities, showing how small-population instability distorts rates; directly informs outcome choice",
+      "quotes": [
+        "the impact of corrective procedures is not relevant for large municipalities, but such estimates present significant differences for small municipalities"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s33",
+      "kind": "paper",
+      "title": "Inequality and Crime",
+      "authors": [
+        "Morgan Kelly"
+      ],
+      "year": 2000,
+      "venue": "The Review of Economics and Statistics",
+      "doi": "10.1162/003465300559028",
+      "url": "https://doi.org/10.1162/003465300559028",
+      "abstract": "This paper considers the relationship between inequality and crime using data from urban counties. The behavior of property and violent crime are quite different. Inequality has no effect on property crime but a strong and robust impact on violent crime, with an elasticity above 0.5. By contrast, poverty and police activity have significant effects on property crime, but little on violent crime. Property crime is well explained by the economic theory of crime, while violent crime is better explained by strain and social disorganization theories.",
+      "cited_by": 804,
+      "editions": null,
+      "refs": {
+        "openalex": "W2066017161"
+      },
+      "_referenced": [
+        "W1514138193",
+        "W1527986854",
+        "W1545796493",
+        "W1557992426",
+        "W1582788481",
+        "W1598799425",
+        "W1606964474",
+        "W1973628995",
+        "W1980412904",
+        "W1992854984",
+        "W1998194071",
+        "W2003498865",
+        "W2005515645",
+        "W2021948138",
+        "W2036693624",
+        "W2051528258",
+        "W2051821701",
+        "W2075426298",
+        "W2079032770",
+        "W2079976834",
+        "W2082958872",
+        "W2090241969",
+        "W2099315902",
+        "W2100440978",
+        "W2112111445",
+        "W2114108580",
+        "W2131259854",
+        "W2139113542",
+        "W2141402212",
+        "W2144592869",
+        "W2189821821",
+        "W2319178948",
+        "W2325530759",
+        "W2339740280",
+        "W2796590271",
+        "W2797338014",
+        "W2890366629",
+        "W2891943110",
+        "W2892030650",
+        "W3021314177",
+        "W3021373317",
+        "W3123133606",
+        "W3123538530",
+        "W4238040836",
+        "W4248601564",
+        "W4292402584",
+        "W4297902082"
+      ],
+      "role": "canon",
+      "why": "Tests economic, strain and social-disorganization theories against each other on US urban counties: inequality drives violent, not property, crime",
+      "quotes": [
+        "Inequality has no effect on property crime but a strong and robust impact on violent crime, with an elasticity above 0.5."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s34",
+      "kind": "paper",
+      "title": "The Cost of Inequality: Metropolitan Structure and Violent Crime",
+      "authors": [
+        "Judith R. Blau",
+        "Peter M. Blau"
+      ],
+      "year": 1982,
+      "venue": "American Sociological Review",
+      "doi": "10.2307/2095046",
+      "url": "https://doi.org/10.2307/2095046",
+      "abstract": "The hypothesis tested is that variations in rates of urban criminal violence largely result from differences in racial inequality in socioeconomic conditions. Data on the 125 largest American metropolitan areas (SMSAs) are used to ascertain whether this hypothesis can account for three correlates of violent crime differently interpreted in the literature. Criminal violence is positively related to location in the South, which has been interpreted as the result of the Southern tradition of violence. It is positively related to the proportion of blacks in an SMSA, which has been interpreted as reflecting a subculture of violence in ghettos. And it is positively related to poverty, which has been interpreted as the emphasis on toughness and excitement in the culture of poverty. The analysis reveals that socioeconomic inequality between races, as well as economic inequality generally, increases rates of criminal violence, but once economic inequalities are controlled poverty no longer influences these rates, neither does Southern location, and the proportion of blacks in the population hardly does. These results imply that if there is a culture of violence, its roots are pronounced economic inequalities, especially if associated with ascribed position.",
+      "cited_by": 1508,
+      "editions": null,
+      "refs": {
+        "openalex": "W1998194071"
+      },
+      "role": "canon",
+      "why": "Primary relative-deprivation test on 125 US metropolitan areas; the most-cited origin of the inequality-violence hypothesis, reassessed in s1, s2, s26",
+      "quotes": [
+        "The analysis reveals that socioeconomic inequality between races, as well as economic inequality generally, increases rates of criminal violence, but once economic inequalities are controlled poverty no longer influences these rates"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s35",
+      "kind": "paper",
+      "title": "Community Structure and Crime: Testing Social-Disorganization Theory",
+      "authors": [
+        "Robert J. Sampson",
+        "W. Byron Groves"
+      ],
+      "year": 1989,
+      "venue": "American Journal of Sociology",
+      "doi": "10.1086/229068",
+      "url": "https://doi.org/10.1086/229068",
+      "abstract": "Shaw and McKay's influential theory of community social disorganization has never been directly tested. To address this, a community-level theory that builds on Shaw and McKay's original model is formulated and tested. The general hypothesis is that low economic status, ethnic heterogeneity, residential mobility, and family disruption lead to community social disorganization, which, in turn, increases crime and delinquency rates. A community's level of social organization is measure in terms of local friendship networks, control of street-corner teenage peer groups, and prevalence of organizational participation. The model is first tested by analyzing data for 238 localities in Great Britain constructed from a 1982 national survey of 10,905 residents. The model is then replicated on an independent national sample of 11,030 residents of 300 British localities in 1984. Results from both surveys support the theory and show that between-community variations in social disorganization transmit much of the effect of community structural characteristics on rates of both criminal victimization and criminal offending.",
+      "cited_by": 4401,
+      "editions": null,
+      "refs": {
+        "openalex": "W2050771246"
+      },
+      "role": "canon",
+      "why": "Canonical empirical test of Shaw and McKay's social-disorganization theory (British Crime Survey, 238 localities); basis for the Brazilian test in s13",
+      "quotes": [
+        "The general hypothesis is that low economic status, ethnic heterogeneity, residential mobility, and family disruption lead to community social disorganization, which, in turn, increases crime and delinquency rates."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s36",
+      "kind": "paper",
+      "title": "Political Restraint of the Market and Levels of Criminal Homicide: A Cross- National Application of Institutional-Anomie Theory",
+      "authors": [
+        "Steven F. Messner",
+        "Richard M. Rosenfeld"
+      ],
+      "year": 1997,
+      "venue": "Social Forces",
+      "doi": "10.2307/2580676",
+      "url": "https://doi.org/10.2307/2580676",
+      "abstract": "Steven F. Messner, Richard Rosenfeld, Political Restraint of the Market and Levels of Criminal Homicide: A Cross- National Application of Institutional-Anomie Theory, Social Forces, Vol. 75, No. 4 (Jun., 1997), pp. 1393-1416",
+      "cited_by": 129,
+      "editions": null,
+      "refs": {
+        "openalex": "W4301738343"
+      },
+      "role": "canon",
+      "why": "Messner and Rosenfeld's own cross-national homicide test of institutional-anomie theory (decommodification index)",
+      "quotes": [
+        "we hypothesize that levels of homicide will vary inversely with the \"decommodification of labor.\""
+      ],
+      "group": ""
+    },
+    {
+      "id": "s37",
+      "kind": "paper",
+      "title": "Crime and Punishment: An Economic Approach",
+      "authors": [
+        "Gary S. Becker"
+      ],
+      "year": 1968,
+      "venue": "Journal of Political Economy",
+      "doi": "10.1086/259394",
+      "url": "https://doi.org/10.1086/259394",
+      "abstract": "",
+      "cited_by": 14061,
+      "editions": null,
+      "refs": {
+        "openalex": "W2189821821"
+      },
+      "role": "canon",
+      "why": "Founding paper of the economic (rational-choice) theory of crime, Journal of Political Economy 1968; the framework Kelly (s33) and Cerqueira and Lobao (s16) set against strain theories",
+      "quotes": [
+        "a person commits an offense if the expected utility to him exceeds the utility he could get by using his time and other resources at other activities"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s38",
+      "kind": "paper",
+      "title": "Societal Development, Social Equality, and Homicide: A Cross-National Test of a Durkheimian Model",
+      "authors": [
+        "Steven F. Messner"
+      ],
+      "year": 1982,
+      "venue": "Social Forces",
+      "doi": "10.1093/sf/61.1.225",
+      "url": "https://doi.org/10.1093/sf/61.1.225",
+      "abstract": "The purpose of this paper is to formulate and test a Durkheimian model of societal development and homicide. Relying heavily on Anthony Giddens' recent reinterpretation of the Division of Labor, we argue that development has no overall effect on the societal homicide rate primarily because the egalitarian changes accompanying development make for new forms of social solidarity. Our theory leads us to predict that there will be no significant zero-order relationship between development and homicide, a positive partial effect of measures of moral individualism on homicide, and a negative partial effect of a measure of equality on homicide. The results of a cross-sectional analysis for a sample of 50 nations provide partial support for the theory.",
+      "cited_by": 192,
+      "editions": null,
+      "refs": {
+        "openalex": "W2165268712"
+      },
+      "role": "canon",
+      "why": "Classic cross-national test of the Durkheimian/modernization model of development and homicide; cited in Pratt & Cullen and Nivette meta-analyses",
+      "quotes": [
+        "we argue that development has no overall effect on the societal homicide rate primarily because the egalitarian changes accompanying development make for new forms of social solidarity"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s39",
+      "kind": "paper",
+      "title": "The Crime Kuznets Curve",
+      "authors": [
+        "Paolo Buonanno",
+        "Leopoldo Fergusson",
+        "Juan Fernando Vargas"
+      ],
+      "year": 2016,
+      "venue": "Journal of Quantitative Criminology",
+      "doi": "10.1007/s10940-016-9310-0",
+      "url": "https://doi.org/10.1007/s10940-016-9310-0",
+      "abstract": "",
+      "cited_by": 16,
+      "editions": null,
+      "refs": {
+        "openalex": "W1660766067"
+      },
+      "role": "canon",
+      "why": "Formal test of an inverted-U (Crime Kuznets Curve) between income and crime within US states; surfaced in web search on nonlinear income-crime",
+      "quotes": [
+        "The Crime Kuznets Curve exists for property crime and for some categories of violent crime."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s40",
+      "kind": "paper",
+      "title": "A World of Homicides",
+      "authors": [
+        "Marc Ouimet"
+      ],
+      "year": 2012,
+      "venue": "Homicide Studies",
+      "doi": "10.1177/1088767912442500",
+      "url": "https://doi.org/10.1177/1088767912442500",
+      "abstract": "The current study contrasts and compares the role of socioeconomic factors that explain variations in the homicide rate for 165 countries in 2010. Regression analyses demonstrate that economic development (GNI), inequality (Gini), and poverty (excess infant mortality) are significant predictors of the homicide rate for all countries. However, subsample analyses shows that income inequality, not economic development or poverty, predicts homicide for countries with a medium level of human development. Also, the variations in homicide for developing countries are inadequately explained by our model. To conclude, an analysis of the countries that exhibited significant discrepancies between their predicted and observed homicide rate is discussed.",
+      "cited_by": 112,
+      "editions": null,
+      "refs": {
+        "openalex": "W2125818355"
+      },
+      "role": "critique",
+      "why": "165-country test: development effect on homicide weakens once inequality and infant mortality are controlled; Homicide Studies, widely cited",
+      "quotes": [
+        "However, subsample analyses shows that income inequality, not economic development or poverty, predicts homicide for countries with a medium level of human development."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s41",
+      "kind": "paper",
+      "title": "Economic growth, income inequality and lethal violence in developed countries",
+      "authors": [
+        "Temidayo James Aransiola",
+        "Marcelo Justus",
+        "Vania Aparecida Ceccato"
+      ],
+      "year": 2024,
+      "venue": "EconomiA",
+      "doi": "10.1108/econ-10-2023-0163",
+      "url": "https://doi.org/10.1108/econ-10-2023-0163",
+      "abstract": "Purpose The paper aims to investigate the effect of GDP growth on crime and to test the hypothesis of nonlinearity. Additionally, we estimate the interaction between GDP and income inequality and examine its impact on the relationship between GDP and homicide rates. Design/methodology/approach The study utilizes panel data from the Organization for Economic Cooperation and Development (OECD), spanning the period from 2000 to 2018 and estimates dynamic panel GMM models. Findings We found a nonlinear relationship between GDP and homicide rates, indicating a dual effect of GDP on the occurrence of lethal crimes. Moreover, income inequality conditions the effect of GDP on homicide rates, exerting a significant influence. We conclude that in contexts characterized by high levels of income inequality, GDP growth is more effective in reducing crime, as there is greater potential for improvement. Originality/value This paper contributes to the existing literature by providing insights into the complex nonlinearity between economic conditions, income inequality and homicide rates.",
+      "cited_by": 9,
+      "editions": null,
+      "refs": {
+        "openalex": "W4402762585"
+      },
+      "role": "frontier",
+      "why": "Tests GDP x inequality interaction on homicide in developed countries (panel); by Aransiola & Justus, Brazilian authors of s18",
+      "quotes": [
+        "We conclude that in contexts characterized by high levels of income inequality, GDP growth is more effective in reducing crime, as there is greater potential for improvement."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s42",
+      "kind": "paper",
+      "title": "Violence and social determinants of health in Brazil: association between homicides, urbanization, population, inequality, and development",
+      "authors": [
+        "Cl\u00f3vis Wanzinack",
+        "Marcos Cla\u00fadio Signorelli",
+        "Cl\u00f3vis Reis"
+      ],
+      "year": 2022,
+      "venue": "Cadernos de Sa\u00fade P\u00fablica",
+      "doi": "10.1590/0102-311xen282621",
+      "url": "https://doi.org/10.1590/0102-311xen282621",
+      "abstract": "The aim was to analyze the relations between homicidal violence, human development, inequality, population size, and urbanization rates in Brazilian municipalities. This is a retrospective ecological study of 5,570 Brazilian municipalities which analyzes the relations between the average rate of homicides registered in the Brazilian Mortality Information System (from 2005 to 2015) and selected indicators: municipal human development indices (HDI-M), Gini index, urbanization rates, and quantitative population. Analysis of the relative effect (%) of the variables on the risk for homicidal violence showed a greater association with more populous municipalities (log 10) (80.8%, 95%CI: 73.0; 88.8), more urbanized ones (8%, 95%CI: 6.7; 9.2), with higher Gini index (6%, 95%CI: 2.6; 9.5); whereas the relation with HDI-M is inverse (-17.1%, 95%CI: -21.4; -12.6). National policies which aim to limit population growth and the urbanization of the most populous Brazilian cities could reduce homicide rates across the country. Reducing inequalities and investing in municipal social education, health, and income policies could also reduce the number of homicides. We estimated that improving the HDI-M of the municipalities by 0.1 would cause a national reduction between 7,560 and 12,834 annual homicides, whereas decreasing income inequality (Gini index) by 0.1 would mean saving between 1,569 to 5,448 lives per year.",
+      "cited_by": 13,
+      "editions": null,
+      "refs": {
+        "openalex": "W4310599986"
+      },
+      "role": "anchor",
+      "why": "Ecological study of all 5,570 Brazilian municipalities: homicide vs HDI-M (inverse), Gini, urbanization, population; Cad. Saude Publica",
+      "quotes": [
+        "with higher Gini index (6%, 95%CI: 2.6; 9.5); whereas the relation with HDI-M is inverse (-17.1%, 95%CI: -21.4; -12.6)"
+      ],
+      "group": ""
+    },
+    {
+      "id": "s43",
+      "kind": "paper",
+      "title": "Good Policy Can Lower Violent Crime: Evidence from a Cross-National Panel of Homicide Rates, 1980\u201397",
+      "authors": [
+        "Eric Neumayer"
+      ],
+      "year": 2003,
+      "venue": "Journal of Peace Research",
+      "doi": "10.1177/00223433030406001",
+      "url": "https://doi.org/10.1177/00223433030406001",
+      "abstract": "Abstract This article provides empirical evidence that good political governance and good economic policies can lower homicide rates. Therefore, violent crime is not simply determined by modernization, population characteristics, and cultural factors. This result follows from rigorous econometric testing based on a cross-national panel of homicide data from up to 117 countries over the period 1980\u201397. Contrary to most existing studies, which have applied ordinary least squares on data drawn from one time period only, this analysis uses a fixed-effects estimator with fully robust standard errors. A fixed-effects estimator elegantly controls for time-invariant determinants, such as cultural factors, and allows the pooling of homicide data from otherwise incompatible sources. This is complemented by randomeffects estimation in sensitivity analysis. The results suggest that economic growth, higher income levels, respect for human rights, and the abolition of the death penalty are all associated with lower homicide rates. The same is true for democracy at high levels of democracy. The transition from autocracy to democracy is likely to be accompanied by a rising homicide rate, however, until full democracy has been reached. Results also indicate that policies aimed at improving equity have no effect on violent crime. In particular, there is evidence that the positive effect of income inequality on homicide rates found in many studies might be spurious. The results reported here are strikingly similar to those found for the causes of civil war.",
+      "cited_by": 262,
+      "editions": null,
+      "refs": {
+        "openalex": "W2163959869"
+      },
+      "role": "critique",
+      "why": "Cross-national fixed-effects panel 1980-97: income and inequality vs homicide, showing which effects survive country fixed effects",
+      "quotes": [
+        "In particular, there is evidence that the positive effect of income inequality on homicide rates found in many studies might be spurious."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s44",
+      "kind": "paper",
+      "title": "Social Structure and Anomie",
+      "authors": [
+        "Robert K. Merton"
+      ],
+      "year": 1938,
+      "venue": "American Sociological Review",
+      "doi": "10.2307/2084686",
+      "url": "https://doi.org/10.2307/2084686",
+      "abstract": "",
+      "cited_by": 4234,
+      "editions": null,
+      "refs": {
+        "openalex": "W3021314177"
+      },
+      "_referenced": [],
+      "role": "canon",
+      "why": "Merton's original strain/anomie statement (American Sociological Review 1938), the root of relative-deprivation and institutional-anomie theories (s34, s36)",
+      "quotes": [
+        "Our primary aim lies in discovering how some social structures exert a definite pressure upon certain persons in the society to engage in nonconformist rather than conformist conduct."
+      ],
+      "group": ""
+    },
+    {
+      "id": "s45",
+      "kind": "doc",
+      "title": "SIDRA tabela 10301: Gini do rendimento, Censo 2022",
+      "authors": [],
+      "year": null,
+      "venue": "",
+      "doi": "",
+      "url": "https://sidra.ibge.gov.br/tabela/10301",
+      "abstract": "",
+      "cited_by": null,
+      "editions": null,
+      "refs": {},
+      "role": "practical",
+      "why": "Gini oficial 2022 so ate UF; usado para validar o Gini agrupado",
+      "quotes": [],
+      "group": ""
+    },
+    {
+      "id": "s46",
+      "kind": "doc",
+      "title": "IBGE Municipios_BR_Recortes_Territoriais_2022 (RM/RIDE, concentracao urbana)",
+      "authors": [],
+      "year": null,
+      "venue": "",
+      "doi": "",
+      "url": "https://www.ibge.gov.br/geociencias/organizacao-do-territorio/estrutura-territorial/",
+      "abstract": "",
+      "cited_by": null,
+      "editions": null,
+      "refs": {},
+      "role": "practical",
+      "why": "indicadora de regiao metropolitana por municipio",
+      "quotes": [],
+      "group": ""
+    }
+  ]
+}
