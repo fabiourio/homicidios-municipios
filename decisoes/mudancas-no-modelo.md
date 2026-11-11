@@ -2,11 +2,11 @@
 
 Diferenças entre o modelo da apresentação parcial e o modelo final, com as decisões do grupo. Situação em 11/11/2026. O detalhe de cada decisão, com opções, prós e contras, está em `decisoes-do-grupo.pdf`.
 
-A coluna "Final" já tem todas as decisões. O código tem hoje a coluna do meio; a aplicação das decisões 8, 9, 13 e 14 no código, nos slides e nas falas está em andamento.
+A coluna "Final" tem todas as decisões e é o que o código faz hoje. A coluna do meio é o modelo de antes das decisões 8, 9, 13 e 14.
 
 ## As três versões
 
-| | Apresentação parcial (28/10) | Hoje no código | Final |
+| | Apresentação parcial (28/10) | Antes das decisões 8, 9, 13 e 14 | Final |
 |---|---|---|---|
 | Municípios | 1.710 (20 mil hab. ou mais) | 1.134 (30 mil hab. ou mais) | 1.133 (sai Campos do Jordão) |
 | Variável de lugar | 27 estados | 5 regiões | 5 regiões |
@@ -42,7 +42,7 @@ ln(taxa de homicídios) explicada por: renda e renda² · Gini · Gini × renda 
 |---|---|---|
 | — | Os 9 pedidos da professora: Gini, região, sem raça, sem teste de vizinhos, gráficos de diagnóstico, percentil, comparação com e sem a renda, entre outros | Revisão da apresentação parcial |
 | 16 | Corte de população em 30 mil habitantes | Fica perto do percentil 80 da população; menos ruído nas cidades pequenas |
-| 1 e 4 | Densidade fora do modelo, sem corte de densidade | Com 30 mil habitantes ela não tem efeito (p = 0,19) |
+| 1 e 4 | Densidade fora do modelo, sem corte de densidade | Com 30 mil habitantes ela não tem efeito (p = 0,78 no modelo final) |
 | 2 | Sem teste de independência dos erros | Pedido da professora |
 | 3 | Região, e não estado | Pedido da professora; modelo menor |
 | 5 | A renda fica | Contribui para o modelo; VIF abaixo de 10 |
@@ -83,5 +83,5 @@ A renda continua com efeito em U invertido: a taxa esperada é máxima perto de 
 
 - A variância dos erros não é constante (teste de Breusch-Pagan). Os valores p são aproximados.
 - O Gini municipal é uma aproximação pelas faixas de renda do Censo.
-- O sinal negativo da desocupação não tem explicação testada.
+- O efeito negativo da desocupação não tem explicação testada e é frágil: perde a significância sem os 31 municípios com muitas mortes sem causa definida.
 - O estudo é observacional: mostra associação entre municípios, não causa.

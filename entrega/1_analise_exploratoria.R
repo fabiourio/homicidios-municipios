@@ -33,7 +33,9 @@ taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os mun
 # Escopo: municípios com 30 mil habitantes ou mais. Nesse porte, a taxa nacional dá pelo menos 20 homicídios
 # esperados em 3 anos (casos_esperados_corte)
 POP_MIN <- 30000
-br$escopo <- br$pop >= POP_MIN
+# Campos do Jordão-SP fica fora: 1 homicídio registrado e 36 óbitos de intenção indeterminada (indício de sub-registro)
+FORA <- 3509700
+br$escopo <- br$pop >= POP_MIN & br$cod_ibge != FORA
 casos_esperados_corte <- POP_MIN * 3 * taxa_br / 1e5
 
 # Percentil da população de cada município (0 a 100): mostra onde o corte fica entre os 5.570 municípios
@@ -108,13 +110,12 @@ d$regiao <- factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
 d$ln_taxa <- log(d$taxa)
 
 summary(d[, c("taxa", "rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet", "pct_urbana",
-              "pct_h1529", "pct_indet", "regiao", "amazonia_legal", "faixa_fronteira")])
+              "pct_h1529", "regiao", "amazonia_legal", "faixa_fronteira")])
 
 rot <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R$)",
          gini = "Desigualdade (índice de Gini)", pct_pobres = "% pobres (14+)",
          desocup = "Desocupação (%)", alfabet = "Alfabetização (%)", pct_urbana = "% urbana",
-         pct_h1529 = "% homens 15–29",
-         pct_indet = "% intenção indeterminada", freq_15a17 = "Frequência escolar 15–17 (%)",
+         pct_h1529 = "% homens 15–29", freq_15a17 = "Frequência escolar 15–17 (%)",
          abandono_em = "Abandono no ensino médio (%)", distorcao_em = "Distorção idade-série EM (%)",
          pct_migr_10anos = "Migração recente (%)", pop = "População")
 
@@ -157,7 +158,7 @@ ggsave("resultados/eda/e3_box_regiao.png", p, width = 4.8, height = 2.7, dpi = 2
 # E4. Histogramas das explicativas numéricas (assimetria e bimodalidade)
 # -----------------------------------------------------------------------------
 xs <- c("rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet",
-        "pct_urbana", "pct_h1529", "pct_indet",
+        "pct_urbana", "pct_h1529",
         "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")
 e4 <- d %>% select(all_of(xs)) %>% pivot_longer(everything()) %>%
   mutate(var = factor(rot[name], levels = rot[xs]))
@@ -172,7 +173,7 @@ ggsave("resultados/eda/e4_hist_explicativas.png", p, width = 7, height = 3.2, dp
 # -----------------------------------------------------------------------------
 cv <- c(log_rend = "ln Renda", gini = "Desigualdade", pct_pobres = "% pobres", desocup = "Desocupação",
         alfabet = "Alfabetização", pct_urbana = "% urbana",
-        pct_h1529 = "% homens 15–29", pct_indet = "% indeterminada",
+        pct_h1529 = "% homens 15–29",
         freq_15a17 = "Freq. escolar 15–17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração recente")
 R <- cor(d[, c("ln_taxa", names(cv))])
 dimnames(R) <- list(c("ln Taxa", cv), c("ln Taxa", cv))
@@ -195,7 +196,7 @@ ggsave("resultados/eda/e5_correlacao.png", p, width = 4.8, height = 4.0, dpi = 2
 # -----------------------------------------------------------------------------
 xs6 <- c(log_rend = "ln Renda per capita", gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (%)",
          pct_urbana = "% urbana",
-         pct_h1529 = "% homens 15–29", pct_indet = "% intenção indeterminada")
+         pct_h1529 = "% homens 15–29")
 e6 <- d %>% select(ln_taxa, all_of(names(xs6))) %>% pivot_longer(-ln_taxa) %>%
   mutate(var = factor(xs6[name], levels = xs6))
 p <- ggplot(e6, aes(value, ln_taxa)) +

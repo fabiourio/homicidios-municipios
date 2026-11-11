@@ -10,8 +10,8 @@
 \item \textbf{Literatura:} os estudos nacionais com municípios (Wanzinack et al., 2022; Barros et al., 2020; Aransiola et al., 2022; Castellucci e Silva, 2026) usam dados de 2010. Nós usamos o Censo 2022 completo.
 \item \textbf{Unidade de análise:} o município. São \nMunBR{} municípios, com \nHomBR{} homicídios em 2021--2023 (\nTaxaBR{} por 100 mil hab./ano).
 \item \textbf{Resposta:} taxa de homicídios (agressão + intervenção legal, por residência da vítima), média de 2021 a 2023, do SIM/DATASUS.
-\item \textbf{Explicativas:} Censo 2022 do IBGE (renda, desigualdade, trabalho, frequência escolar, urbanização, idade, migração), INEP 2022 (abandono e distorção idade-série no ensino médio), mais região e faixa de fronteira.
-\item \textbf{Modelo:} regressão linear múltipla para ln(taxa), por mínimos quadrados, nos \nMunEsc{} municípios com \nPopMin{} mil habitantes ou mais.
+\item \textbf{Explicativas:} Censo 2022 do IBGE (renda, desigualdade, trabalho, frequência escolar, urbanização, idade, migração), INEP 2022 (distorção idade-série no ensino médio), mais região.
+\item \textbf{Modelo:} regressão linear múltipla para ln(taxa), por mínimos quadrados, nos \nMunEsc{} municípios com \nPopMin{} mil habitantes ou mais (\nForaNome{} ficou fora por indício de sub-registro).
 \end{itemize}
 
 \section{As decisões e o porquê de cada uma}
@@ -23,16 +23,19 @@
 \midrule
 Violência medida pela taxa de homicídios do SIM & Indicador 16.1.1 do ODS 16; estatística de violência local mais confiável do país e correlacionada com outros crimes (Murray et al., 2013); o SIM cobre todos os municípios com a mesma codificação (CID-10). Pela residência da vítima, média de 2021--2023 & ---\\
 Escopo: municípios com \nPopMin{} mil hab. ou mais & Nos pequenos o homicídio é raro: abaixo de 5 mil hab. a mediana é \nPorteHomMenor{} caso em 3 anos e a taxa oscila $\pm$\nPorteOscMenor\% só pelo acaso; \nZerosBR{} municípios têm taxa zero. O corte fica perto do percentil \nPercCorte{} da população (pedido da professora: percentil por município): a partir dele não há nenhum zero e há pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos. Ficam \nMunEsc{} municípios (\nPctPopEsc\% da população) & Cap. 1: escopo do modelo\\
+\nForaNome{} fora do estudo & Indício de sub-registro: \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada em 3 anos & ---\\
 Densidade fora do modelo & Pedido da professora: padronizar a densidade e tirar os extremos, porque o desvio-padrão era muito maior que a média. Com o corte de \nPopMin{} mil hab., a densidade (em ln, padronizada) não é significativa: $F$ = \nFDens, $p$ = \nPDens. Ela sai do modelo, e não é preciso cortar municípios por densidade & Cap. 6: $F$ parcial e padronização\\
 Resposta em ln(taxa) & Box-Cox estimou $\lambda$ = \nLambda{} (IC de \nLambdaInf{} a \nLambdaSup); usamos $\lambda = 0$, simples de interpretar, mesmo fora do IC. A normalidade melhora ($W$ de \nSWy{} para \nSWln) & Cap. 4: Box-Cox\\
 Só a renda (sem \% pobres e alfabetização) & As três medem quase o mesmo: VIF da renda \nVIFrenda{} e sinais contraditórios & Cap. 6: multicolinearidade e VIF\\
-Renda e renda², com a renda centralizada & A taxa sobe até uma renda de cerca de R\$ \nPico{} (abaixo da renda mediana) e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
-Renda mantida, depois de comparar o modelo com e sem ela & Pedido da professora, por causa do VIF da renda (\nVIFrendaFinal). $F$ parcial da renda \nFRenda{} (\nGlRenda{} gl); sem ela o $R^2_a$ cai de \nRdoisA{} para \nRdoisAsemRenda. Sem a renda, a desigualdade e a migração deixam de ser significativas & Cap. 6: multicolinearidade e $F$ parcial\\
-Região (5 classes) como variável categórica & Pedido da professora: agrupar os municípios por região do Brasil. Entram \nNumReg{} indicadoras, com o Sudeste de referência. É o bloco com maior ganho de $R^2_a$. \textbf{Entre região e estado, o grupo escolheu a região}: um slide mostra os dois modelos lado a lado, e o modelo com estado fica como comparação (com estado: \nNumParEstado{} parâmetros, $R^2_a$ \nRdoisAestado, VIF máximo \nVIFmaxEstado) & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
-Bloco de educação e migração & Frequência escolar 15--17, abandono, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas em uma versão anterior do modelo. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
-Amazônia Legal fora do modelo & A maior parte dela é a própria região Norte, que já está no modelo & ---\\
-Variáveis não significativas mantidas por enquanto & \nNaoSig: saem (ou não) na seleção de variáveis & Cap. 8: seleção\\
-Outliers mantidos & A validação dos dados não achou erro; a apostila manda remover só com evidência de erro & Cap. 4: outliers\\
+Renda e renda², com a renda centralizada & No Gini médio, a taxa sobe até uma renda de cerca de R\$ \nPico{} (abaixo da renda mediana) e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
+Renda mantida, depois de comparar o modelo com e sem ela & Pedido da professora, por causa do VIF da renda (\nVIFrendaFinal). $F$ parcial da renda \nFRenda{} (\nGlRenda{} gl); sem ela o $R^2_a$ cai de \nRdoisA{} para \nRdoisAsemRenda. Sem a renda sai também o termo Gini $\times$ renda; a desigualdade e a desocupação deixam de ser significativas, e as medidas de escola continuam & Cap. 6: multicolinearidade e $F$ parcial\\
+Termo Gini $\times$ renda & O efeito da desigualdade muda com a renda: $F$ = \nFInter, $R^2_a$ de \nRdoisAsemInter{} para \nRdoisA. Na renda mediana, +0,05 no Gini dá \nGiniEfMediana\% na taxa; nos 10\% mais ricos, \nGiniEfNoventa\%; abaixo de R\$ \nGiniZero{} (\nGiniZeroPct\% dos municípios) o efeito não é positivo. O Gini entra centralizado & Cap. 7: modelos com interação\\
+Região (5 classes) como variável categórica & Pedido da professora: agrupar os municípios por região do Brasil. Entram \nNumReg{} indicadoras, com o Sudeste de referência. É o bloco D, com maior ganho de $R^2_a$. \textbf{Entre região e estado, o grupo escolheu a região}: um slide mostra os dois modelos lado a lado, e o modelo com estado fica como comparação (com estado: \nNumParEstado{} parâmetros, $R^2_a$ \nRdoisAestado, VIF máximo \nVIFmaxEstado) & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
+Bloco C: educação e migração & Frequência escolar 15--17, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas em uma versão anterior do modelo. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
+Amazônia Legal testada e fora do modelo & A maior parte dela é a própria região Norte, que já está no modelo; o efeito vem só do Mato Grosso & ---\\
+4 variáveis retiradas: faixa de fronteira, abandono no ensino médio, \% homens 15--29 e \% de óbitos de intenção indeterminada & As três primeiras não têm efeito. A última tinha os homicídios no divisor: caía sozinha quando os homicídios subiam; com a conta corrigida, não tem efeito. A tabela está no Apêndice D & Cap. 6: $F$ parcial\\
+Migração recente mantida (H3 não confirmada) & Não é significativa ($p$ = \nPMigr), nem com nem sem a renda. Fica no modelo para registrar o teste da hipótese H3 & Cap. 8: seleção\\
+Outliers mantidos & A validação dos dados não achou erro; a apostila manda remover só com evidência de erro. No modelo final nenhum resíduo passa de $\pm 4$ & Cap. 4: outliers\\
 Fora da apostila só com aviso & Regra do grupo: técnicas de fora (pesos, modelos espaciais, de contagem) só com decisão do grupo. O que já é de fora está listado no Apêndice C do deck: três itens vieram da revisão da professora (Gini, corte por percentil, padronização) e quatro são escolhas do grupo & ---\\
 \bottomrule
 \end{tabularx}}
@@ -41,9 +44,9 @@ Fora da apostila só com aviso & Regra do grupo: técnicas de fora (pesos, model
 \section{O que o modelo mostra}
 \begin{itemize}
 \item O modelo explica \nRdoisA{} da variação do ln(taxa) ($R^2_a$); $F$ global = \nFglobal{} com \nGlUm{} e \nGlDois{} gl.
-\item \textbf{Renda em U invertido:} a taxa esperada é máxima com renda per capita de cerca de R\$ \nPico{} e cai nos mais pobres e nos mais ricos.
-\item \textbf{Mais homicídios} com mais desigualdade, mais urbanização, mais atraso escolar e mais migração recente; \textbf{menos} com mais jovens de 15--17 na escola (efeitos em \% na tabela abaixo).
-\item \textbf{Não significativas} no modelo atual: \nNaoSig.
+\item \textbf{Renda em U invertido:} no Gini médio, a taxa esperada é máxima com renda per capita de cerca de R\$ \nPico{} e cai nos mais pobres e nos mais ricos.
+\item \textbf{Mais homicídios} com mais desigualdade (nos municípios de renda média e alta, não nos mais pobres), mais urbanização e mais atraso escolar; \textbf{menos} com mais jovens de 15--17 na escola e, sem explicação testada, com mais desocupação (efeitos em \% na tabela abaixo).
+\item \textbf{Não significativa} no modelo atual: \nNaoSig. A hipótese H3 não é confirmada.
 \end{itemize}
 
 \begin{center}\small

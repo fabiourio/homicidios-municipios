@@ -30,10 +30,14 @@ d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10
 # Escopo do modelo: municípios com 30 mil habitantes ou mais (percentil 80 da população).
 # Abaixo disso a taxa é dominada pelo acaso (poucos casos): ver confiabilidade_porte.csv
 POP_MIN <- 30000
-d <- d[d$pop >= POP_MIN, ]
+# Campos do Jordão-SP fica fora: 1 homicídio registrado e 36 óbitos de intenção indeterminada (indício de sub-registro)
+FORA <- 3509700
+d <- d[d$pop >= POP_MIN & d$cod_ibge != FORA, ]
 
-# ln(densidade) padronizado (média 0 e desvio-padrão 1): só para o teste da seção 5.3; a densidade não entra no modelo
+# Só para os testes da seção 5.3 (variáveis testadas e retiradas): ln(densidade) padronizado e
+# % de óbitos de intenção indeterminada com os homicídios fora do total de causas externas
 d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
+d$indet_sem_hom <- 100 * d$intencao_indeterminada / (d$total_causas_externas - d$hom)
 
 # Região como variável categórica: 5 classes -> 4 indicadoras, com o Sudeste como referência
 d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
@@ -57,8 +61,7 @@ summary(rls)
 # -----------------------------------------------------------------------------
 # 2. Transformação da resposta (Box-Cox)
 # -----------------------------------------------------------------------------
-f_base <- ~ log_rend + gini + desocup + pct_urbana + pct_h1529 +
-  faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos + regiao
+f_base <- ~ log_rend + gini + desocup + pct_urbana + freq_15a17 + distorcao_em + pct_migr_10anos + regiao
 
 m_y <- lm(update(f_base, y ~ .), data = d)
 
@@ -80,8 +83,7 @@ sw_log  <- shapiro.test(rstandard(m_log))
 # 3. Multicolinearidade: renda, % pobres e alfabetização juntas
 # -----------------------------------------------------------------------------
 m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + gini + desocup + pct_urbana +
-                pct_h1529 + faixa_fronteira + pct_indet + freq_15a17 + abandono_em + distorcao_em +
-                pct_migr_10anos + regiao, data = d)
+                freq_15a17 + distorcao_em + pct_migr_10anos + regiao, data = d)
 summary(m_colin)
 
 # Para a região (4 indicadoras) o car devolve o GVIF; GVIF^(1/(2*gl)) ao quadrado fica na escala do VIF
@@ -92,14 +94,18 @@ d$rend_c  <- d$log_rend - mean(d$log_rend)
 d$rend_c2 <- d$rend_c^2
 cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend_c, d$rend_c2))
 
+# O Gini também é centralizado, por causa do termo Gini x renda: o coeficiente do Gini vale na renda média,
+# e os da renda valem no Gini médio
+d$gini_c <- d$gini - mean(d$gini)
+
 # -----------------------------------------------------------------------------
 # 4. Construção em blocos: somas de quadrados extras e teste F parcial
 # -----------------------------------------------------------------------------
-mA <- lm(ly ~ rend_c + rend_c2 + gini + desocup, data = d)                    # socioeconômico
-mB <- update(mA, . ~ . + pct_urbana + pct_h1529)                               # + demografia
-mC <- update(mB, . ~ . + faixa_fronteira + pct_indet)                           # + contexto
-mD <- update(mC, . ~ . + freq_15a17 + abandono_em + distorcao_em + pct_migr_10anos)   # + educação e migração
-mE <- update(mD, . ~ . + regiao)                                                # + região
+mA <- lm(ly ~ rend_c + rend_c2 + gini_c + desocup, data = d)                  # socioeconômico
+mB <- update(mA, . ~ . + pct_urbana)                                           # + urbanização
+mC <- update(mB, . ~ . + freq_15a17 + distorcao_em + pct_migr_10anos)          # + educação e migração
+mD <- update(mC, . ~ . + regiao)                                               # + região
+mE <- update(mD, . ~ . + rend_c:gini_c)                                        # + Gini x renda (interação)
 
 anova_blocos <- anova(mA, mB, mC, mD, mE)
 anova_blocos
@@ -109,7 +115,7 @@ write.csv(as.data.frame(anova_blocos), "resultados/modelagem/anova_blocos.csv")
 F_quad  <- anova(update(mE, . ~ . - rend_c2), mE)
 
 comp <- data.frame(
-  modelo = c("A socioeconômico", "B + demografia", "C + contexto", "D + educação e migração", "E + região"),
+  modelo = c("A socioeconômico", "B + urbanização", "C + educação e migração", "D + região", "E + Gini x renda"),
   p   = sapply(list(mA, mB, mC, mD, mE), function(m) length(coef(m)) - 1),
   R2  = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$r.squared),
   R2a = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$adj.r.squared),
@@ -130,20 +136,16 @@ coefs <- data.frame(termo = rownames(sf_$coefficients), sf_$coefficients, ic, ro
 names(coefs) <- c("termo", "b", "ep", "t", "p", "ic_inf", "ic_sup")
 write.csv(coefs, "resultados/modelagem/coeficientes.csv", row.names = FALSE)
 
-# Renda em que a taxa esperada é máxima: derivada b1 + 2 b2 rend_c = 0
+# Renda em que a taxa esperada é máxima, no Gini médio: derivada b1 + 2 b2 rend_c = 0
 b <- coef(final)
 pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 
 # Efeitos na escala da taxa: com ln(taxa), uma mudança delta em X multiplica a taxa por exp(b * delta)
 mudancas <- data.frame(
-  termo   = c("gini", "pct_urbana", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
-              "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos"),
-  variavel = c("Desigualdade (Gini)", "% urbana", "Desocupação",
-               "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira",
-               "Frequência escolar 15–17", "Abandono no ensino médio", "Distorção idade-série (EM)", "Migração recente"),
-  mudanca = c("+0,05", "+10 pontos", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",
-              "+5 pontos", "+5 pontos", "+10 pontos", "+5 pontos"),
-  delta   = c(0.05, 10, 1, 1, 1, 1, 5, 5, 10, 5))
+  termo   = c("pct_urbana", "desocup", "freq_15a17", "distorcao_em", "pct_migr_10anos"),
+  variavel = c("% urbana", "Desocupação", "Frequência escolar 15–17", "Distorção idade-série (EM)", "Migração recente"),
+  mudanca = c("+10 pontos", "+1 ponto", "+5 pontos", "+10 pontos", "+5 pontos"),
+  delta   = c(10, 1, 5, 10, 5))
 mudancas$b <- b[mudancas$termo]
 mudancas$p <- sf_$coefficients[mudancas$termo, 4]
 mudancas$efeito_pct <- 100 * (exp(mudancas$b * mudancas$delta) - 1)
@@ -151,16 +153,30 @@ mudancas$ic_inf_pct <- 100 * (exp(ic[mudancas$termo, 1] * mudancas$delta) - 1)
 mudancas$ic_sup_pct <- 100 * (exp(ic[mudancas$termo, 2] * mudancas$delta) - 1)
 write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = FALSE)
 
-# Gráfico de efeito da renda: taxa prevista (IC 95%) ao longo da renda, demais variáveis na média, fronteira = não.
+# Efeito de +0,05 no Gini conforme a renda: (b_gini + b_interação * rend_c), com o erro-padrão dessa combinação linear
+V <- vcov(final)
+efeito_gini <- function(rend) {
+  rc <- log(rend) - mean(d$log_rend)
+  e  <- b["gini_c"] + b["rend_c:gini_c"] * rc
+  ep <- sqrt(V["gini_c", "gini_c"] + rc^2 * V["rend_c:gini_c", "rend_c:gini_c"] + 2 * rc * V["gini_c", "rend_c:gini_c"])
+  tc <- qt(0.975, final$df.residual)
+  data.frame(renda = rend, efeito_pct = 100 * (exp(0.05 * e) - 1), ic_inf_pct = 100 * (exp(0.05 * (e - tc * ep)) - 1),
+             ic_sup_pct = 100 * (exp(0.05 * (e + tc * ep)) - 1), p = 2 * pt(-abs(e / ep), final$df.residual))
+}
+gini_renda <- data.frame(percentil = c(10, 25, 50, 75, 90),
+                         efeito_gini(quantile(d$rend_pc_media, c(.10, .25, .50, .75, .90))), row.names = NULL)
+write.csv(gini_renda, "resultados/modelagem/efeito_gini_renda.csv", row.names = FALSE)
+renda_gini_zero <- unname(exp(mean(d$log_rend) - b["gini_c"] / b["rend_c:gini_c"]))     # renda em que o efeito do Gini é zero
+
+# Gráfico de efeito da renda: taxa prevista (IC 95%) ao longo da renda, demais variáveis na média (Gini médio).
 # Uma curva para o Nordeste e outra para o Sudeste, cada uma só na faixa de renda observada na região (sem extrapolar).
 grade <- do.call(rbind, lapply(c("Nordeste", "Sudeste"), function(rg) {
   lr <- d$log_rend[d$regiao == rg]
   data.frame(regiao = rg, rend = exp(seq(quantile(lr, .02), quantile(lr, .98), length.out = 100)))
 }))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
-for (v in c("gini", "desocup", "pct_urbana", "pct_h1529", "pct_indet",
-           "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
-grade$faixa_fronteira <- 0
+for (v in c("desocup", "pct_urbana", "freq_15a17", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
+grade$gini_c <- 0
 grade$regiao <- factor(grade$regiao, levels = levels(d$regiao))
 pr <- predict(final, newdata = grade, interval = "confidence", level = 0.95)
 grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
@@ -168,8 +184,8 @@ grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr
 # -----------------------------------------------------------------------------
 # 5.1 Modelo com e sem a renda: a renda tem o maior VIF do modelo
 # -----------------------------------------------------------------------------
-sem_renda <- update(final, . ~ . - rend_c - rend_c2)
-F_renda <- anova(sem_renda, final)                    # Ho: beta_renda = beta_renda² = 0
+sem_renda <- update(final, . ~ . - rend_c - rend_c2 - rend_c:gini_c)
+F_renda <- anova(sem_renda, final)                    # Ho: beta_renda = beta_renda² = beta_interação = 0
 vif_sem_renda <- vif(sem_renda)[, "GVIF^(1/(2*Df))"]^2
 ss_ <- summary(sem_renda)
 termos <- rownames(ss_$coefficients)[-1]
@@ -181,7 +197,7 @@ write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
 # 5.2 Região x estado: os dois modelos lado a lado (o grupo escolheu a região)
 # -----------------------------------------------------------------------------
 d$uf <- relevel(factor(d$uf), ref = "SP")
-com_estado <- update(mD, . ~ . + uf)                  # estado (26 indicadoras) no lugar da região
+com_estado <- update(final, . ~ . - regiao + uf)      # estado (26 indicadoras) no lugar da região
 F_estado <- anova(final, com_estado)                  # Ho: os estados não acrescentam nada além da região
 vif_estado <- vif(com_estado)[, "GVIF^(1/(2*Df))"]^2
 se_ <- summary(com_estado)
@@ -191,10 +207,17 @@ regiao_estado <- data.frame(termo = termos_x, b_regiao = b[termos_x], p_regiao =
 write.csv(regiao_estado, "resultados/modelagem/regiao_x_estado.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5.3 Densidade: testada (ln, padronizada) e fora do modelo
+# 5.3 Variáveis testadas e retiradas: F parcial de cada uma somada ao modelo (Ho: beta = 0)
 # -----------------------------------------------------------------------------
-com_dens <- update(final, . ~ . + dens_z)
-F_dens <- anova(final, com_dens)                      # Ho: beta_densidade = 0
+testadas <- c(dens_z = "Densidade (ln, padronizada)", faixa_fronteira = "Faixa de fronteira",
+              abandono_em = "Abandono no ensino médio", pct_h1529 = "% homens 15–29", amazonia_legal = "Amazônia Legal",
+              indet_sem_hom = "% intenção indeterminada (sem os homicídios no total)")
+retiradas <- do.call(rbind, lapply(names(testadas), function(v) {
+  m <- update(final, as.formula(paste(". ~ . +", v)))
+  a <- anova(final, m)
+  data.frame(termo = v, variavel = testadas[[v]], F = a$F[2], p = a$`Pr(>F)`[2], R2a_com = summary(m)$adj.r.squared)
+}))
+write.csv(retiradas, "resultados/modelagem/testadas_retiradas.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
 # 6. Diagnóstico preliminar pela análise dos resíduos
@@ -272,6 +295,19 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   labs(x = "Renda per capita (R$, escala log)", y = "Taxa prevista (/100 mil)") + th + theme(legend.position = "bottom")
 ggsave("resultados/modelagem/m7_efeito_renda.png", p, width = 4.8, height = 3.0, dpi = 250)
 
+# M8. Efeito de +0,05 no Gini ao longo da renda (IC 95%)
+g8 <- efeito_gini(exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
+p <- ggplot(g8, aes(renda, efeito_pct)) +
+  geom_ribbon(aes(ymin = ic_inf_pct, ymax = ic_sup_pct), fill = CLARO, alpha = .7) +
+  geom_line(colour = AZUL, linewidth = 1) +
+  geom_hline(yintercept = 0, colour = CINZA, linetype = 2) +
+  geom_vline(xintercept = renda_gini_zero, colour = VERMELHO, linetype = 2) +
+  annotate("text", x = renda_gini_zero * 1.05, y = max(g8$ic_sup_pct), hjust = 0, vjust = 1, size = 3.5, colour = VERMELHO,
+           label = paste0("efeito zero: R$ ", milhar(round(renda_gini_zero)))) +
+  scale_x_log10(labels = milhar) +
+  labs(x = "Renda per capita (R$, escala log)", y = "Efeito de +0,05 no Gini (% na taxa)") + th
+ggsave("resultados/modelagem/m8_efeito_gini_renda.png", p, width = 4.8, height = 3.0, dpi = 250)
+
 # -----------------------------------------------------------------------------
 # Números citados na apresentação
 # -----------------------------------------------------------------------------
@@ -295,9 +331,12 @@ cat("\nR² e R² ajustado por bloco:\n"); print(comp, digits = 4, row.names = FA
 cat("\n== 5. Modelo preliminar (E) ==\n"); print(sf_)
 cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))
 cat("\nVIF do modelo preliminar:\n"); print(round(vif_final, 2))
-cat(sprintf("Renda per capita do pico da taxa esperada: R$ %.0f\n", pico_renda))
+cat(sprintf("Renda per capita do pico da taxa esperada (no Gini médio): R$ %.0f\n", pico_renda))
+cat(sprintf("\nEfeito de +0,05 no Gini conforme a renda (zero em R$ %.0f; %.0f%% dos municípios abaixo):\n",
+            renda_gini_zero, 100 * mean(d$rend_pc_media < renda_gini_zero)))
+print(gini_renda, digits = 3, row.names = FALSE)
 cat("\n== 5.1 Modelo com e sem a renda ==\n")
-cat(sprintf("F parcial da renda (renda e renda²): F = %.1f (gl %d) | p = %.2g\n", F_renda$F[2], F_renda$Df[2], F_renda$`Pr(>F)`[2]))
+cat(sprintf("F parcial da renda (renda, renda² e Gini x renda): F = %.1f (gl %d) | p = %.2g\n", F_renda$F[2], F_renda$Df[2], F_renda$`Pr(>F)`[2]))
 cat(sprintf("R² ajustado: com = %.3f | sem = %.3f\n", sf_$adj.r.squared, ss_$adj.r.squared))
 cat(sprintf("VIF máximo: com = %.2f | sem = %.2f\n", max(vif_final), max(vif_sem_renda)))
 print(com_sem, digits = 3, row.names = FALSE)
@@ -308,9 +347,8 @@ cat(sprintf("VIF máximo: região = %.2f | estado = %.2f\n", max(vif_final), max
 cat(sprintf("F parcial do estado além da região: F = %.1f (gl %d) | p = %.2g\n", F_estado$F[2], F_estado$Df[2], F_estado$`Pr(>F)`[2]))
 cat(sprintf("Estados com menos de 10 municípios no estudo: %d\n", sum(table(d$uf) < 10)))
 print(regiao_estado, digits = 3, row.names = FALSE)
-cat("\n== 5.3 Densidade (fora do modelo) ==\n")
-cat(sprintf("F parcial de ln(densidade) padronizado: F = %.2f (gl %d) | p = %.3f | R² ajustado com ela = %.3f\n",
-            F_dens$F[2], F_dens$Df[2], F_dens$`Pr(>F)`[2], summary(com_dens)$adj.r.squared))
+cat("\n== 5.3 Variáveis testadas e retiradas (F parcial de cada uma somada ao modelo) ==\n")
+print(retiradas[, -1], digits = 3, row.names = FALSE)
 cat("\n== 6. Diagnóstico ==\n")
 cat(sprintf("Breusch-Pagan = %.1f (gl %d) | p = %.2g\n", bp$statistic, bp$parameter, bp$p.value))
 cat(sprintf("Shapiro-Wilk = %.3f | p = %.2g\n", sw_final$statistic, sw_final$p.value))

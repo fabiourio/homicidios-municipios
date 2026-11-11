@@ -7,11 +7,11 @@ Municípios por UF somam 5.570: TRUE | DF com 1 município: TRUE
 cod6 == cod_ibge %/% 10 em todos: TRUE
 Cópia em entrega/dados igual à base: TRUE
 Variáveis extras: 5570 linhas, 0 sem par na base | NAs na base inteira: abandono_em 7, distorcao_em 7, pct_migr_10anos 0 | NAs no escopo: 0
-Escopo do modelo: pop >= 30000 = 1134 municípios
+Escopo do modelo: pop >= 30000, sem Campos do Jordão = 1133 municípios
 Escopo por região:
 
  CO   N  NE   S  SE 
- 79 122 358 189 386 
+ 79 122 358 189 385 
 Dígito verificador confere: 5561 de 5570 (exceções conhecidas do IBGE: Bom Princípio do Piauí PI; Brejo do Piauí PI; Canavieira PI; Quixaba PE; Cônego Marinho MG; Ponto Chique MG; Coronel Barros RS; Buriti de Goiás GO; Buritinópolis GO)
 SIM 2021-23: 5566 linhas, 0 sem par na base | SIM 2024: 5446 linhas, 0 sem par na base
 cod6 duplicado no SIM: 0
@@ -118,12 +118,12 @@ Pessoas 14+ na 9517 (todos) - 10300 (só domicílio particular): mín 0 | median
 
 == 4. Qualidade da resposta ==
 Taxa zero: 655 (no escopo: 0) | municípios sem nenhum óbito externo: 4
-Homicídios em 3 anos no escopo: mín 1 | municípios com menos de 5: 19
-% intenção indeterminada >= 30%: 147 (no escopo: 32) | >= 50%: 30 (no escopo: 3) | = 100%: 2 (todos com <= 1 óbito externo: TRUE)
+Homicídios em 3 anos no escopo: mín 1 | municípios com menos de 5: 18
+% intenção indeterminada >= 30%: 147 (no escopo: 31) | >= 50%: 30 (no escopo: 3) | = 100%: 2 (todos com <= 1 óbito externo: TRUE)
 % indeterminada >= 30% no escopo, por UF:
 
 CE MG SP 
- 2 12 18 
+ 2 12 17 
 % indeterminada por UF (as 6 maiores):
  uf intencao_indeterminada total_causas_externas   hom pct_indet razao_indet_hom
  SP                  13806                 71242  9171      19.4            1.51
@@ -175,7 +175,7 @@ No escopo: mediana 4.0% | > 20%: 23 | NAs: 0
            Januária MG  65150   1582     412    26.04298 14.83755
        Belford Roxo RJ 483087  12361    2949    23.85729 32.01632
         Monte Santo BA  47780   1116     266    23.83513 17.44105
-Correlação % mal definida x taxa: 0.043 | x % indeterminada: 0.093 | no escopo: 0.126 e 0.111
+Correlação % mal definida x taxa: 0.043 | x % indeterminada: 0.093 | no escopo: 0.125 e 0.115
 Municípios com > 10% da população fora de domicílio particular (presídios etc.): 35 (no escopo: 3)
   por UF:
 
@@ -224,102 +224,89 @@ CE PE RS SC SP
        Flórida Paulista SP 12958     10.73468 13.350826   0        0  0.000000  FALSE
 
 == 5. Outliers e pontos influentes ==
-Modelo: n = 1134 | linhas usadas no ajuste: 1134 | parâmetros: 17 | R² = 0.5437 | R² ajustado = 0.5372
+Modelo: n = 1133 | linhas usadas no ajuste: 1133 | parâmetros: 14 | R² = 0.5635 | R² ajustado = 0.5585
 Coeficientes do modelo base:
-                   Estimate Std. Error t value Pr(>|t|)
-(Intercept)          2.0030     0.4993  4.0118   0.0001
-rend_c              -0.7335     0.1082 -6.7813   0.0000
-rend_c2             -0.8575     0.0958 -8.9551   0.0000
-gini                 3.2782     0.4963  6.6058   0.0000
-desocup             -0.0096     0.0082 -1.1655   0.2441
-pct_urbana           0.0123     0.0017  7.2933   0.0000
-pct_h1529           -0.0395     0.0210 -1.8869   0.0594
-faixa_fronteira     -0.0998     0.0689 -1.4486   0.1477
-pct_indet           -0.0084     0.0023 -3.7365   0.0002
-freq_15a17          -0.0204     0.0039 -5.2396   0.0000
-abandono_em         -0.0020     0.0044 -0.4472   0.6548
-distorcao_em         0.0156     0.0023  6.8845   0.0000
-pct_migr_10anos      0.0063     0.0029  2.1356   0.0329
-regiaoNorte          0.5306     0.0935  5.6716   0.0000
-regiaoNordeste       0.7538     0.0647 11.6548   0.0000
-regiaoCentro-Oeste   0.6164     0.0781  7.8875   0.0000
-regiaoSul            0.4041     0.0607  6.6549   0.0000
-|e*| >= 4: 2 | |e*| >= 3: 8 (positivos: 2 | negativos: 6)
-[fora da apostila] alavancagem h > 2p/n (0.0300): 74 | Cook > 4/n: 60 | Cook máx = 0.0232
+                   Estimate Std. Error  t value Pr(>|t|)
+(Intercept)          3.0213     0.3373   8.9562   0.0000
+rend_c              -0.8610     0.1013  -8.4960   0.0000
+rend_c2             -0.9984     0.0916 -10.9053   0.0000
+gini_c               2.2088     0.4810   4.5919   0.0000
+desocup             -0.0183     0.0079  -2.2986   0.0217
+pct_urbana           0.0112     0.0016   6.8807   0.0000
+freq_15a17          -0.0181     0.0037  -4.9290   0.0000
+distorcao_em         0.0145     0.0018   7.9751   0.0000
+pct_migr_10anos      0.0041     0.0028   1.4645   0.1433
+regiaoNorte          0.5803     0.0818   7.0903   0.0000
+regiaoNordeste       0.7309     0.0611  11.9709   0.0000
+regiaoCentro-Oeste   0.6035     0.0705   8.5623   0.0000
+regiaoSul            0.5150     0.0550   9.3690   0.0000
+rend_c:gini_c        7.3975     0.9205   8.0362   0.0000
+|e*| >= 4: 0 | |e*| >= 3: 4 (positivos: 1 | negativos: 3)
+[fora da apostila] alavancagem h > 2p/n (0.0247): 78 | Cook > 4/n: 55 | Cook máx = 0.0212
 |e*| >= 4:
-        municipio uf   pop hom hom_24      taxa  taxa_24      gini  desocup pct_h1529 pct_indet intencao_indeterminada pct_fora_dpp    e_semi          h       cook h21 h22 h23 hom_ocor pct_mal_def
- Campos do Jordão SP 46974   1      1 0.7096124 2.128837 0.4216553 2.609322  11.34670 37.500000                     36    0.6854856 -4.439221 0.01925155 0.02320145   0   1   0        0    1.518603
-         Pomerode SC 34289   1      3 0.9721291 8.749162 0.3528740 2.359912  10.44942  3.703704                      2    0.2624748 -4.153490 0.01437187 0.01501290   1   0   0        0    3.538663
+ [1] municipio              uf                     pop                    hom                    hom_24                 taxa                   taxa_24                gini                  
+ [9] desocup                pct_indet              intencao_indeterminada pct_fora_dpp           e_semi                 h                      cook                   h21                   
+[17] h22                    h23                    hom_ocor               pct_mal_def           
+<0 rows> (or 0-length row.names)
 |e*| >= 3:
-                   municipio uf    pop hom hom_24       taxa pct_indet    e_semi
-            Campos do Jordão SP  46974   1      1  0.7096124 37.500000 -4.439221
-                    Pomerode SC  34289   1      3  0.9721291  3.703704 -4.153490
-        Lavras da Mangabeira CE  30802   4      1  4.3287232  1.724138 -3.549783
-                Barra Bonita SP  34346   1      1  0.9705157 13.043478 -3.451566
-                 Dois Irmãos RS  30709   2      1  2.1709162  2.631579 -3.146239
-              Jaraguá do Sul SC 182660   9      3  1.6423957  2.510460 -3.086756
-                     Vitória ES 322869 272     99 28.0815646  3.345725  3.134402
- São Francisco de Itabapoana RJ  45059 104     26 76.9361652  2.970297  3.248954
+                   municipio uf   pop hom hom_24       taxa pct_indet    e_semi
+        Lavras da Mangabeira CE 30802   4      1  4.3287232  1.724138 -3.895476
+                    Pomerode SC 34289   1      3  0.9721291  3.703704 -3.592840
+                Barra Bonita SP 34346   1      1  0.9705157 13.043478 -3.146820
+ São Francisco de Itabapoana RJ 45059 104     26 76.9361652  2.970297  3.294407
 [fora da apostila] 10 maiores distâncias de Cook:
-             municipio uf    pop       taxa   desocup      gini pct_h1529    e_semi          h       cook
-      Campos do Jordão SP  46974  0.7096124  2.609322 0.4216553 11.346702 -4.439221 0.01925155 0.02320145
-                 Bagre PA  31892  5.2259710  6.759976 0.5135945 15.608930 -2.294264 0.06204010 0.02183443
- São Paulo de Olivença AM  32967  9.1000091  5.147826 0.5306674 14.329481 -1.934156 0.08197000 0.02140303
-               Vitória ES 322869 28.0815646  5.667443 0.5707275  9.624027  3.134402 0.03179031 0.01959821
-             Nova Lima MG 111697  6.8638071  3.309424 0.6515969  9.666329  1.677807 0.09176433 0.01842095
-               Niterói RJ 481749 18.8895047  6.022071 0.5630251  9.080662  2.584792 0.04118415 0.01760605
-              Pomerode SC  34289  0.9721291  2.359912 0.3528740 10.449415 -4.153490 0.01437187 0.01501290
-              Extremoz RN  61635 12.9796382  9.184870 0.4536608 11.347449 -2.318147 0.03614334 0.01229805
-  São Joaquim de Bicas MG  34348 17.4682660  6.613462 0.3813346 14.411319  1.346949 0.08546523 0.01090541
-                 Muaná PA  45368  5.1431258 12.327972 0.4969178 14.159760 -2.508721 0.02727490 0.01067182
+      municipio uf      pop       taxa  desocup      gini    e_semi          h       cook
+        Vitória ES   322869 28.0815646 5.667443 0.5707275  2.642458 0.03927463 0.02122275
+      São Paulo SP 11451999  2.7680757 6.115813 0.5927075 -2.895547 0.03043249 0.01938718
+       Pomerode SC    34289  0.9721291 2.359912 0.3528740 -3.592840 0.01908734 0.01829079
+          Bagre PA    31892  5.2259710 6.759976 0.5135945 -1.811121 0.06680268 0.01797272
+        Niterói RJ   481749 18.8895047 6.022071 0.5630251  2.057740 0.04709420 0.01568630
+      Nova Lima MG   111697  6.8638071 3.309424 0.6515969 -1.022781 0.14797566 0.01523083
+      Garibaldi RS    34335 22.3290132 1.688858 0.3750842  2.828268 0.02479192 0.01489460
+        Canguçu RS    49680  4.0257649 3.969366 0.4735415 -2.527368 0.03055569 0.01483390
+       Extremoz RN    61635 12.9796382 9.184870 0.4536608 -2.521725 0.02942193 0.01418657
+ Carlos Barbosa RS    30420 12.0534736 1.308627 0.3693889  2.370134 0.03250672 0.01393461
 [fora da apostila] 10 maiores alavancagens:
-             municipio uf    pop      taxa   desocup      gini pct_h1529 pct_indet     e_semi          h
-             Nova Lima MG 111697  6.863807  3.309424 0.6515969  9.666329 48.704663  1.6778071 0.09176433
-  São Joaquim de Bicas MG  34348 17.468266  6.613462 0.3813346 14.411319 69.811321  1.3469485 0.08546523
- São Paulo de Olivença AM  32967  9.100009  5.147826 0.5306674 14.329481  6.557377 -1.9341562 0.08197000
-    São Caetano do Sul SP 165655  1.408550  4.327666 0.4934950  8.205004 45.810056 -0.5243565 0.07923715
-                Itaíba PE  32650 12.251149 19.075417 0.4379628 12.030628  3.448276 -0.9759031 0.06277028
-                 Bagre PA  31892  5.225971  6.759976 0.5135945 15.608930 12.500000 -2.2942643 0.06204010
-             Itaitinga CE  64650 23.201856  3.904031 0.4125265 16.816705 27.083333  0.2686106 0.05827090
-              Tremembé SP  51173  5.862467 15.645652 0.5094628 13.233541 28.358209 -0.2025455 0.05613413
-            Turilândia MA  31638 36.875487 18.348993 0.4405561 14.419369  4.000000  1.2370363 0.05344294
-                Itapoá SC  30750 23.848238  3.370787 0.4541227  9.404878  6.153846  0.3697128 0.05228134
+             municipio uf     pop      taxa   desocup      gini pct_indet     e_semi          h
+             Nova Lima MG  111697  6.863807  3.309424 0.6515969 48.704663 -1.0227809 0.14797566
+ São Paulo de Olivença AM   32967  9.100009  5.147826 0.5306674  6.557377 -1.2016413 0.07915510
+   Santana de Parnaíba SP  154105  4.542357  5.377842 0.6113439 14.364641 -1.5437188 0.06682143
+                 Bagre PA   31892  5.225971  6.759976 0.5135945 12.500000 -1.8111208 0.06680268
+                Itaíba PE   32650 12.251149 19.075417 0.4379628  3.448276 -1.1479970 0.05962210
+    São Caetano do Sul SP  165655  1.408550  4.327666 0.4934950 45.810056 -0.7321474 0.05477733
+              Brasília DF 2817381 13.073607  6.817614 0.5835702  3.372041 -0.5425248 0.04899283
+                   Exu PE   31843 16.748841 18.817652 0.5322160  8.750000  0.1874045 0.04883942
+               Niterói RJ  481749 18.889505  6.022071 0.5630251 11.317568  2.0577401 0.04709420
+                Itapoá SC   30750 23.848238  3.370787 0.4541227  6.153846  0.5576005 0.04508297
 
 == 6. Sensibilidade do modelo ==
 Termos que mudam de sinal ou de significância (5%) em relação ao modelo base:
-                    cenario    n           termo            b           p var_pct
-              sem |e*| >= 3 1126       pct_h1529 -0.043248336 0.031674287     9.4
- sem % indeterminada >= 30% 1102       pct_indet -0.002480564 0.421472525   -70.5
- sem % indeterminada >= 30% 1102 pct_migr_10anos  0.004628823 0.119186501   -26.2
-      [fora] sem Cook > 4/n 1074       pct_h1529 -0.066745305 0.000541035    68.8
-      [fora] sem Cook > 4/n 1074 pct_migr_10anos  0.004443313 0.099586770   -29.2
+                    cenario    n   termo           b          p var_pct
+ sem % indeterminada >= 30% 1102 desocup -0.01435095 0.07239623   -21.4
 Termos que não mudam de sinal nem de significância em nenhum cenário:
-  (Intercept), rend_c, rend_c2, gini, desocup, pct_urbana, faixa_fronteira, freq_15a17, abandono_em, distorcao_em, regiaoNorte, regiaoNordeste, regiaoCentro-Oeste, regiaoSul 
+  (Intercept), rend_c, rend_c2, gini_c, pct_urbana, freq_15a17, distorcao_em, pct_migr_10anos, regiaoNorte, regiaoNordeste, regiaoCentro-Oeste, regiaoSul, rend_c:gini_c 
 Maior variação relativa de coeficiente por cenário, entre os termos significativos a 5% no modelo base (termo e %):
-  base                                 n = 1134 | R² = 0.544
-  sem |e*| >= 4                        n = 1132 | retirados = 2 | R² = 0.547 | pct_indet -13.4%
-  sem |e*| >= 3                        n = 1126 | retirados = 8 | R² = 0.559 | pct_indet -18.0%
-  sem > 10% fora de dom. particular    n = 1131 | retirados = 3 | R² = 0.543 | pct_migr_10anos -2.3%
-  sem desocupação > 20%              n = 1133 | retirados = 1 | R² = 0.544 | pct_migr_10anos +0.9%
-  sem % indeterminada >= 30%           n = 1102 | retirados = 32 | R² = 0.530 | pct_indet -70.5%
-  [fora] sem Cook > 4/n                n = 1074 | retirados = 60 | R² = 0.615 | pct_indet -45.6%
-  sem % mal definida > 20%             n = 1111 | retirados = 23 | R² = 0.543 | pct_urbana -4.4%
+  base                                 n = 1133 | R² = 0.564
+  sem |e*| >= 4                        n = 1133 | retirados = 0 | R² = 0.564 | rend_c +0.0%
+  sem |e*| >= 3                        n = 1129 | retirados = 4 | R² = 0.570 | gini_c -11.8%
+  sem > 10% fora de dom. particular    n = 1130 | retirados = 3 | R² = 0.563 | desocup -3.9%
+  sem desocupação > 20%              n = 1132 | retirados = 1 | R² = 0.564 | desocup +5.8%
+  sem % indeterminada >= 30%           n = 1102 | retirados = 31 | R² = 0.557 | desocup -21.4%
+  [fora] sem Cook > 4/n                n = 1078 | retirados = 55 | R² = 0.624 | distorcao_em +10.8%
+  sem % mal definida > 20%             n = 1110 | retirados = 23 | R² = 0.563 | pct_urbana -4.7%
 Coeficientes por cenário:
               termo     base sem |e*| >= 4 sem |e*| >= 3 sem > 10% fora de dom. particular sem desocupação > 20% sem % indeterminada >= 30% [fora] sem Cook > 4/n sem % mal definida > 20%
-        (Intercept)  2.00296       2.18510       2.31704                           1.95792               1.99982                    2.12107               2.69850                  2.07002
-             rend_c -0.73351      -0.70335      -0.70325                          -0.72715              -0.73805                   -0.71290              -0.79961                 -0.71362
-            rend_c2 -0.85748      -0.85291      -0.83477                          -0.86110              -0.85902                   -0.89198              -0.89830                 -0.85358
-               gini  3.27823       3.06274       2.74149                           3.27826               3.29440                    3.21475               3.03677                  3.26747
-            desocup -0.00959      -0.01017      -0.01097                          -0.00905              -0.01060                   -0.00724              -0.01150                 -0.00915
-         pct_urbana  0.01231       0.01205       0.01240                           0.01227               0.01238                    0.01186               0.01236                  0.01177
-          pct_h1529 -0.03953      -0.03899      -0.04325                          -0.03747              -0.04007                   -0.03844              -0.06675                 -0.03925
-    faixa_fronteira -0.09984      -0.10246      -0.10723                          -0.10287              -0.10030                   -0.09777              -0.07766                 -0.09907
-          pct_indet -0.00842      -0.00729      -0.00690                          -0.00828              -0.00838                   -0.00248              -0.00458                 -0.00842
-         freq_15a17 -0.02036      -0.02121      -0.02089                          -0.02010              -0.02036                   -0.02125              -0.02396                 -0.02061
-        abandono_em -0.00196      -0.00260      -0.00180                          -0.00199              -0.00210                   -0.00104              -0.00451                 -0.00112
-       distorcao_em  0.01555       0.01576       0.01536                           0.01563               0.01562                    0.01472               0.01704                  0.01505
-    pct_migr_10anos  0.00627       0.00589       0.00556                           0.00613               0.00633                    0.00463               0.00444                  0.00640
-        regiaoNorte  0.53056       0.55150       0.59460                           0.52917               0.53054                    0.56679               0.63185                  0.54582
-     regiaoNordeste  0.75383       0.77142       0.80553                           0.75261               0.75418                    0.75988               0.77944                  0.76357
- regiaoCentro-Oeste  0.61638       0.61821       0.63821                           0.61773               0.61490                    0.63951               0.66053                  0.61746
-          regiaoSul  0.40413       0.40970       0.43060                           0.40976               0.40383                    0.42383               0.48827                  0.40121
+        (Intercept)  3.02127       3.02127       3.03065                           2.99339               3.01626                    3.08935               3.07883                  3.07633
+             rend_c -0.86098      -0.86098      -0.82199                          -0.85904              -0.86562                   -0.89048              -0.83639                 -0.84186
+            rend_c2 -0.99845      -0.99845      -0.95925                          -1.00093              -1.00039                   -0.97284              -0.97630                 -0.99743
+             gini_c  2.20883       2.20883       1.94796                           2.19750               2.22686                    2.24222               2.07605                  2.18937
+            desocup -0.01825      -0.01825      -0.01710                          -0.01755              -0.01931                   -0.01435              -0.01798                 -0.01805
+         pct_urbana  0.01115       0.01115       0.01130                           0.01109               0.01122                    0.01145               0.01147                  0.01062
+         freq_15a17 -0.01806      -0.01806      -0.01851                          -0.01776              -0.01801                   -0.01879              -0.01916                 -0.01818
+       distorcao_em  0.01448       0.01448       0.01429                           0.01449               0.01452                    0.01362               0.01605                  0.01426
+    pct_migr_10anos  0.00406       0.00406       0.00384                           0.00435               0.00412                    0.00425               0.00159                  0.00421
+        regiaoNorte  0.58031       0.58031       0.60860                           0.58125               0.57865                    0.55105               0.57984                  0.59384
+     regiaoNordeste  0.73089       0.73089       0.76453                           0.73027               0.73061                    0.67869               0.74072                  0.73874
+ regiaoCentro-Oeste  0.60349       0.60349       0.61115                           0.60316               0.60106                    0.56841               0.59624                  0.60270
+          regiaoSul  0.51499       0.51499       0.51141                           0.51903               0.51403                    0.49821               0.55339                  0.50994
+      rend_c:gini_c  7.39753       7.39753       7.06123                           7.41391               7.40257                    8.25343               7.87761                  7.30455

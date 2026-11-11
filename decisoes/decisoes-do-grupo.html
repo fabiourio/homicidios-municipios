@@ -83,9 +83,13 @@
   <tr><td>10</td><td>Esta entrega é a final?</td><td>Sim</td><td class="ok">Decidido</td></tr>
   <tr><td>11</td><td>Tamanho do deck e divisão das falas</td><td>Fica para depois</td><td class="ab">Adiada</td></tr>
   <tr><td>12</td><td>Quem lê o deck inteiro</td><td>Sem responsável definido</td><td class="ok">Decidido</td></tr>
-  <tr><td>8, 9, 13, 14</td><td>Pontos extremos, seleção de variáveis, Gini × renda, mortes sem causa definida</td><td>Em análise</td><td class="ab">Em aberto</td></tr>
+  <tr><td>8</td><td>Pontos extremos</td><td>Campos do Jordão sai; Pomerode fica</td><td class="ok">Decidido</td></tr>
+  <tr><td>9</td><td>Seleção de variáveis</td><td>Saem fronteira, abandono escolar e % homens 15–29</td><td class="ok">Decidido</td></tr>
+  <tr><td>13</td><td>Desigualdade conforme a renda</td><td>Entra o termo Gini × renda</td><td class="ok">Decidido</td></tr>
+  <tr><td>14</td><td>% de mortes sem causa definida</td><td>Sai do modelo</td><td class="ok">Decidido</td></tr>
   <tr><td>15</td><td>Vizinhança como limitação</td><td>—</td><td class="ab">Em aberto</td></tr></table>
-  <p><b>O estudo mudou em 11/11.</b> Com a decisão 16, o modelo usa 1.134 municípios (30 mil habitantes ou mais, 77% da população) e não tem a densidade. As tabelas das perguntas 3, 5, 7, 8 e 13 já mostram os números novos. As das perguntas 4, 14 e 16 mostram os números do dia da decisão (1.622 municípios).</p>
+  <p><b>O estudo mudou em 11/11.</b> Com a decisão 16, o modelo usa 1.134 municípios (30 mil habitantes ou mais, 77% da população) e não tem a densidade. As tabelas das perguntas 3, 5, 7, 8 e 13 mostram os números desse estudo. As das perguntas 4, 14 e 16 mostram os números do dia da decisão (1.622 municípios).</p>
+  <p><b>Modelo final, depois das decisões 8, 9, 13 e 14:</b> 1.133 municípios, 14 parâmetros, R² ajustado de 0,56. O resumo está em <b>mudancas-no-modelo.md</b>, nesta pasta.</p>
 
   <h2>A. O que entendemos dos pedidos da professora</h2>
 
@@ -196,7 +200,7 @@
   <tr><td>Amazônia Legal, sem o Mato Grosso</td><td>163</td><td>+8%</td><td>não (p = 0,43)</td></tr></table>
   <p>O que os dados mostram é "o Mato Grosso é mais violento que Goiás, Mato Grosso do Sul e o DF". Não é um efeito da Amazônia Legal como um todo. Desmatamento, queimadas e assentamentos, testados juntos, não explicam a diferença (p = 0,40).</p>
   <p><b>O que os estudos dizem.</b> O Fórum Brasileiro de Segurança Pública (Cartografias das Violências na Região Amazônica, 2021) mede taxa 41% maior nos municípios da Amazônia Legal e liga isso a facções, rotas de droga e conflito por terra. Um estudo do Ipea com efeito de estado achou a marca "não tão significativa"; o risco sobe onde o desmatamento é alto.</p>
-  <p class="dec"><b>Decidido em 11/11:</b> a Amazônia Legal não entra no modelo. O efeito vem de um estado só (Mato Grosso), e o ganho no ajuste é de 0,002. O tema pode ser citado na discussão, com as fontes acima.</p></div>
+  <p class="dec"><b>Decidido em 11/11:</b> a Amazônia Legal não entra no modelo. O efeito vem de um estado só (Mato Grosso), e o ganho no ajuste é de 0,002. O tema pode ser citado na discussão, com as fontes acima. No modelo final a marca dá +22,5% (p = 0,006), mas sem o Mato Grosso o efeito some (p = 0,18).</p></div>
 
   <div class="q"><h3><b>8</b>Campos do Jordão (SP) e Pomerode (SC) ficam no estudo?</h3>
   <div class="simples"><p><b class="t">Em palavras simples.</b> Esses dois municípios têm taxa muito abaixo do que o modelo prevê: mais de 4 desvios-padrão. Cada um teve 1 homicídio em 3 anos. A apostila só permite tirar um ponto quando há evidência de erro no dado, e a validação não achou erro.</p>
@@ -208,7 +212,7 @@
   <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
   <tr><td class="o"><span class="cx"></span>Ficam <span class="rec">recomendada</span></td><td class="p">Segue a apostila. Tirar quase não muda o modelo (R² de 0,544 para 0,547; as hipóteses continuam).</td><td>Campos do Jordão pode ter taxa subestimada: 37,5% das mortes externas ficaram sem causa definida.</td></tr>
   <tr><td class="o"><span class="cx"></span>Saem</td><td class="p">Some o peso de 2 pontos extremos.</td><td>Sem base na apostila. O desvio vem do logaritmo aplicado a uma contagem muito pequena.</td></tr></table>
-  <p class="sug"><b>Sugestão:</b> manter os dois e citar o caso de Campos do Jordão.</p></div>
+  <p class="dec"><b>Decidido em 11/11:</b> Campos do Jordão sai; Pomerode fica. Campos do Jordão tem indício de erro no dado: 1 homicídio registrado e 36 mortes sem causa definida (o modelo esperava 11 homicídios). Pomerode não tem indício de erro. Sem Campos do Jordão, nenhum ponto fica a mais de 4 desvios-padrão e os erros passam no teste de normalidade.</p></div>
 
   <h2>C. O que falta para a entrega</h2>
 
@@ -218,7 +222,7 @@
   <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
   <tr><td class="o"><span class="cx"></span>Fazer para a entrega final <span class="rec">recomendada</span></td><td class="p">Usa o que a apostila ensina. Cumpre o que os slides prometem. O modelo final fica mais enxuto.</td><td>Os números mudam de novo. Slides e briefings precisam ser refeitos.</td></tr>
   <tr><td class="o"><span class="cx"></span>Entregar como está</td><td class="p">Nada muda. Está pronto hoje.</td><td>O modelo fica com 4 variáveis sem efeito e com valores p aproximados.</td></tr></table>
-  <p class="sug"><b>Sugestão:</b> fazer, se esta for a entrega final (pergunta 10).</p></div>
+  <p class="dec"><b>Decidido em 11/11:</b> saem fronteira, abandono escolar e % de homens de 15 a 29 anos. Nenhuma tem efeito (p = 0,31; 0,67; 0,14), e o modelo explica o mesmo sem elas, também em municípios que ele não viu. A desocupação fica (p = 0,02). O tratamento da variância não constante continua como próximo passo.</p></div>
 
   <div class="q"><h3><b>10</b>Esta entrega é a final?</h3>
   <div class="simples"><p><b class="t">Em palavras simples.</b> O deck ainda se chama "apresentação parcial", a capa tem a data de 28 de outubro, e o código fala em "modelo preliminar". Se a entrega agora é a final, esses nomes precisam mudar.</p></div>
@@ -251,18 +255,18 @@
   <tr><td>Alta (R$ 2.042, os 10% mais ricos)</td><td>+37%</td></tr></table>
   <p>Por região, a desigualdade só é significativa no Sudeste e no Sul. Barros et al. (2020) acharam o mesmo para o Sul.</p>
   <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
-  <tr><td class="o"><span class="cx"></span>Incluir a interação Gini × renda <span class="rec">recomendada</span></td><td class="p">Os dados mostram com folga (F = 74,6). O modelo passa a explicar mais (0,54 para 0,57). Conta a história certa.</td><td>H1 deixa de ter uma resposta única. A conclusão passa a ser "depende da renda".</td></tr>
+  <tr><td class="o"><span class="cx ck"></span>Incluir a interação Gini × renda <span class="rec">recomendada</span></td><td class="p">Os dados mostram com folga (F = 74,6). O modelo passa a explicar mais (0,54 para 0,57). Conta a história certa.</td><td>H1 deixa de ter uma resposta única. A conclusão passa a ser "depende da renda".</td></tr>
   <tr><td class="o"><span class="cx"></span>Manter o modelo e citar como limitação</td><td class="p">Modelo e slides ficam como estão.</td><td>O "+18%" esconde que, nos municípios pobres, o sinal é o contrário.</td></tr></table>
-  <p class="sug"><b>Sugestão:</b> incluir. É o achado mais forte da revisão e reforça o trabalho.</p></div>
+  <p class="dec"><b>Decidido em 11/11:</b> incluir. É o único acréscimo que melhora o modelo em municípios que ele não viu, e vale com corte de 20, 30, 50 e 100 mil habitantes. No modelo final: +16% na renda mediana, +34% nos 10% mais ricos e nenhum efeito positivo abaixo de R$ 931 (29% dos municípios).</p></div>
 
   <div class="q"><h3><b>14</b>O que fazemos com a variável "% de mortes sem causa definida"?</h3>
   <div class="simples"><p><b class="t">Em palavras simples.</b> Essa variável é a parcela das mortes violentas que ficaram sem causa definida no registro. Ela está no modelo para controlar a qualidade do registro. O problema é a conta: os homicídios entram no total que divide.</p>
   <p>Assim, quando os homicídios sobem, a parcela cai sozinha. O sinal negativo que o modelo mostra vem da conta, não da realidade. Refazendo a conta sem os homicídios, o sinal vira positivo. As três hipóteses não mudam em nenhum caso.</p></div>
   <table><tr><th>Opção</th><th>A favor</th><th>Contra</th></tr>
   <tr><td class="o"><span class="cx"></span>Refazer a conta sem os homicídios <span class="rec">recomendada</span></td><td class="p">Tira o efeito da conta. Mantém o controle da qualidade do registro.</td><td>O sinal vira positivo e precisa de nova explicação.</td></tr>
-  <tr><td class="o"><span class="cx"></span>Tirar do modelo</td><td class="p">Mais simples. As hipóteses não mudam.</td><td>Perde-se o controle do sub-registro, que os slides citam como limitação.</td></tr>
+  <tr><td class="o"><span class="cx ck"></span>Tirar do modelo</td><td class="p">Mais simples. As hipóteses não mudam.</td><td>Perde-se o controle do sub-registro, que os slides citam como limitação.</td></tr>
   <tr><td class="o"><span class="cx"></span>Manter e não interpretar o sinal</td><td class="p">Nada muda.</td><td>Fica um resultado significativo que não pode ser lido.</td></tr></table>
-  <p class="sug"><b>Sugestão:</b> refazer a conta.</p></div>
+  <p class="dec"><b>Decidido em 11/11:</b> tirar do modelo. Com a conta refeita sem os homicídios, a variável não tem efeito (p = 0,996), então não há o que manter. Consequência: a migração recente (H3) deixa de se confirmar (p = 0,14).</p></div>
 
   <div class="q"><h3><b>15</b>Citamos a semelhança entre municípios vizinhos como limitação do estudo?</h3>
   <div class="simples"><p><b class="t">Em palavras simples.</b> O slide de estudos anteriores diz que a taxa de um município se parece com a dos vizinhos. O nosso modelo supõe que os erros são independentes e não diz nada sobre isso. Citar como limitação não é fazer teste. Esta pergunta se liga à pergunta 2.</p></div>

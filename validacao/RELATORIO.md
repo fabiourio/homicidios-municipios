@@ -3,11 +3,11 @@
 Script: `validacao/validar_dados.R` (roda do início ao fim; números em `saida/valores_validacao.txt`).
 Usa 3 consultas extras ao TabNet (homicídios por ano, homicídios por local de ocorrência e óbitos por capítulo da CID), guardadas em `saida/tabnet_extra.json`. O script lê esse arquivo e não acessa a rede. Nenhum dado nem script do projeto foi alterado.
 
-As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cada problema cai no **escopo do modelo**. As seções 5 e 6 usam o modelo atual (`entrega/2_modelo_preliminar.R`): resposta ln(taxa), 1.134 municípios com 30 mil habitantes ou mais (percentil 80 da população). A densidade foi testada e ficou fora do modelo (F = 1,74; p = 0,19).
+As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cada problema cai no **escopo do modelo**. As seções 5 e 6 usam o modelo atual (`entrega/2_modelo_preliminar.R`): resposta ln(taxa), 1.133 municípios com 30 mil habitantes ou mais (percentil 80 da população), sem Campos do Jordão-SP. Campos do Jordão ficou fora por indício de sub-registro: 1 homicídio registrado e 36 óbitos de intenção indeterminada em 3 anos. A densidade foi testada e ficou fora do modelo (F = 1,74; p = 0,19).
 
 ## Resumo
 
-A base está **limpa do ponto de vista técnico**: não há chave quebrada, valor faltando, valor impossível nem erro de conta. O Gini calculado bate com o oficial do IBGE nas 27 UFs. Os problemas que existem estão **na medição**: a causa da morte às vezes fica sem registro, e com poucos homicídios a taxa oscila muito. O escopo de 30 mil habitantes ou mais já tira a maior parte dos casos ruins (desocupação de 51%, taxa zero, 32 dos 35 municípios com presídio). **Não achamos nenhum erro de dado que justifique remover município.** Há dois resultados frágeis: o coeficiente de **% homens 15–29** e o de **migração recente**. O coeficiente de **% indeterminada** depende de 32 municípios.
+A base está **limpa do ponto de vista técnico**: não há chave quebrada, valor faltando, valor impossível nem erro de conta. O Gini calculado bate com o oficial do IBGE nas 27 UFs. Os problemas que existem estão **na medição**: a causa da morte às vezes fica sem registro, e com poucos homicídios a taxa oscila muito. O escopo de 30 mil habitantes ou mais já tira a maior parte dos casos ruins (desocupação de 51%, taxa zero, 32 dos 35 municípios com presídio). **Não achamos nenhum erro de dado que justifique remover município.** No modelo atual, só o coeficiente de **desocupação** é frágil: perde a significância sem os 31 municípios de % indeterminada alta. A **migração recente** não é significativa no modelo base (p = 0,143).
 
 ## 1. Completude e chaves (ok)
 
@@ -18,7 +18,7 @@ A base está **limpa do ponto de vista técnico**: não há chave quebrada, valo
 - Boa Esperança do Norte-MT não está na base, e isso está certo: foi instalado em 2025, depois do Censo 2022.
 - O dígito verificador confere em 5.561 de 5.570. As 9 exceções são códigos oficiais conhecidos do IBGE (ex.: Quixaba-PE), não erro.
 - **Variáveis extras** (abandono e distorção idade-série no ensino médio, migração recente): 5.570 linhas, todas casam com a base. Faltam 7 valores de abandono e 7 de distorção na base inteira, mas **nenhum no escopo do modelo**.
-- **Escopo do modelo:** 1.134 municípios têm 30 mil habitantes ou mais (Sudeste 386, Nordeste 358, Sul 189, Norte 122, Centro-Oeste 79). O modelo usa as 1.134 linhas.
+- **Escopo do modelo:** 1.133 municípios têm 30 mil habitantes ou mais e não são Campos do Jordão-SP (Sudeste 385, Nordeste 358, Sul 189, Norte 122, Centro-Oeste 79). O modelo usa as 1.133 linhas.
 
 ## 2. Valores impossíveis ou suspeitos
 
@@ -50,49 +50,49 @@ Os extremos de cada variável, na base e no escopo, estão em `saida/02_extremos
 
 ## 4. Qualidade da resposta
 
-- **Contagens pequenas:** a base tem 655 municípios com taxa zero, mas **nenhum está no escopo**. No escopo o mínimo é 1 homicídio em 3 anos, e 19 municípios têm menos de 5. Com ln(taxa), 1 homicídio a mais ou a menos muda muito a resposta desses municípios (ver seção 5).
-- **Intenção indeterminada:** 147 municípios têm % indeterminada ≥ 30% (32 no escopo: 12 em MG, 18 em SP e 2 no CE) e 30 têm ≥ 50% (3 no escopo). O problema se concentra em SP (19,4% dos óbitos externos; há 1,5 óbito indeterminado para cada homicídio), MG (14,4%) e RJ (13,2%). Casos grandes, todos no escopo: São Joaquim de Bicas-MG (70%), Embu-Guaçu-SP (54%) e Itapecerica da Serra-SP (53%). Ou seja, **a taxa de SP e MG está subestimada** (homicídio escondido como "indeterminado").
+- **Contagens pequenas:** a base tem 655 municípios com taxa zero, mas **nenhum está no escopo**. No escopo o mínimo é 1 homicídio em 3 anos, e 18 municípios têm menos de 5. Com ln(taxa), 1 homicídio a mais ou a menos muda muito a resposta desses municípios (ver seção 5).
+- **Intenção indeterminada:** 147 municípios têm % indeterminada ≥ 30% (31 no escopo: 12 em MG, 17 em SP e 2 no CE) e 30 têm ≥ 50% (3 no escopo). O problema se concentra em SP (19,4% dos óbitos externos; há 1,5 óbito indeterminado para cada homicídio), MG (14,4%) e RJ (13,2%). Casos grandes, todos no escopo: São Joaquim de Bicas-MG (70%), Embu-Guaçu-SP (54%) e Itapecerica da Serra-SP (53%). Ou seja, **a taxa de SP e MG está subestimada** (homicídio escondido como "indeterminado").
 - **Causas mal definidas (cap. XVIII, todos os óbitos):** mediana de 4,7% na base e de 4,0% no escopo. 118 municípios passam de 20%, e 23 deles estão no escopo (ex.: Boca do Acre-AM 30% e Ipirá-BA 28%). No escopo, a correlação com a taxa é de só 0,13. Tirar esses 23 municípios praticamente não muda o modelo (maior mudança entre os coeficientes significativos: % urbana −4%).
 - **Instabilidade 2021–23 × 2024:** a correlação entre a taxa dos dois períodos é 0,79 no escopo. Na base inteira é 0,83 nos municípios ≥ 50 mil hab. e só 0,26 nos < 5 mil. Em 77 municípios o número de 2024 foge muito do esperado (|z| ≥ 4), e 33 deles estão no escopo. Exemplos no escopo: Itapipoca-CE (97 homicídios em 3 anos, 98 só em 2024), Manaus (3.336 em 3 anos, 743 em 2024) e São Gonçalo-RJ (849 em 3 anos, 111 em 2024).
 - **Presídios:** 35 municípios têm mais de 10% da população fora de domicílio particular, ou seja, morando em presídio, quartel ou asilo. 28 ficam em SP e 3 em PE. Entre eles estão os 10 municípios com maior % de homens 15–29 da base. **Só 3 dos 35 estão no escopo** (de 13,6% em Itaitinga-CE a 10,9% em Charqueadas-RS; o outro é Tremembé-SP), e 1 deles está entre os 10 maiores % de homens 15–29 do escopo. Esses 3 somam 61 homicídios por residência e 80 por ocorrência. No escopo inteiro, a correlação entre as duas contagens é 0,996. A regra que o SIM usa para a residência de um preso que morre dentro do presídio **não foi verificada**.
 
 ## 5. Outliers e pontos influentes (modelo atual)
 
-Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini, desocupação, % urbana, % homens 15–29, fronteira, % indeterminada, frequência escolar, abandono, distorção idade-série, migração recente e região. n = 1.134; R² = 0,544. Os coeficientes são iguais aos de `entrega/resultados/modelagem/valores_modelo.txt`.
+Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini (centralizado), desocupação, % urbana, frequência escolar, distorção idade-série, migração recente, região e o termo renda x Gini (14 parâmetros). n = 1.133; R² = 0,564; R² ajustado = 0,558. Os coeficientes são iguais aos de `entrega/resultados/modelagem/valores_modelo.txt`.
 
-- 2 municípios têm |e*| ≥ 4: Campos do Jordão-SP (e* = −4,4; taxa de 0,7) e Pomerode-SC (e* = −4,2; taxa de 1,0). **Os dois são negativos: a taxa é muito menor que a esperada.** Cada um tem 1 homicídio em 3 anos (em 2022 e em 2021), e 1 ou 3 em 2024. A contagem por ocorrência é 0 nos dois. O número é baixo de forma consistente, então **não parece erro de digitação**.
-- **Campos do Jordão é suspeito por outro motivo:** tem 1 homicídio e 36 óbitos de intenção indeterminada (37,5% dos óbitos externos). A taxa dele provavelmente está subestimada. Pomerode tem só 2 óbitos indeterminados (3,7%) e 3,5% de causas mal definidas.
-- 8 municípios têm |e*| ≥ 3, e **6 são negativos**. Os 6 têm de 1 a 9 homicídios em 3 anos. Os 2 positivos são Vitória-ES (272 homicídios; e* = 3,1) e São Francisco de Itabapoana-RJ (104; e* = 3,2). Isso é efeito da contagem pequena com ln(taxa), não problema de dado.
-- *(Fora da apostila, só descritivo)* 74 municípios têm alavancagem acima de 2p/n e 60 têm distância de Cook acima de 4/n, mas o Cook máximo é só 0,023 (Campos do Jordão-SP), ou seja, **nenhum ponto domina o ajuste**. As maiores alavancagens são Nova Lima-MG (Gini de 0,652 e 48,7% de indeterminada), São Joaquim de Bicas-MG (69,8% de indeterminada), São Paulo de Olivença-AM, São Caetano do Sul-SP (45,8% de indeterminada) e Itaíba-PE (desocupação de 19,1%).
+- **Nenhum município tem |e*| ≥ 4.** Campos do Jordão-SP (e* = −4,4 no modelo anterior) saiu do escopo por indício de sub-registro: 1 homicídio e 36 óbitos de intenção indeterminada (37,5% dos óbitos externos).
+- 4 municípios têm |e*| ≥ 3, e **3 são negativos**: Lavras da Mangabeira-CE (4 homicídios em 3 anos; e* = −3,9), Pomerode-SC (1; −3,6) e Barra Bonita-SP (1; −3,1). O positivo é São Francisco de Itabapoana-RJ (104 homicídios; e* = 3,3). Isso é efeito da contagem pequena com ln(taxa), não problema de dado. Pomerode tem só 2 óbitos indeterminados (3,7%) e 3,5% de causas mal definidas, e a contagem por ocorrência é 0: **não parece erro de digitação**.
+- *(Fora da apostila, só descritivo)* 78 municípios têm alavancagem acima de 2p/n e 55 têm distância de Cook acima de 4/n, mas o Cook máximo é só 0,021 (Vitória-ES), ou seja, **nenhum ponto domina o ajuste**. As maiores alavancagens são Nova Lima-MG (Gini de 0,652 e 48,7% de indeterminada; h = 0,148), São Paulo de Olivença-AM, Santana de Parnaíba-SP, Bagre-PA e Itaíba-PE (desocupação de 19,1%).
 - O gráfico de resíduos (`v1`) não tem mais a faixa diagonal dos zeros, porque o escopo não tem taxa zero.
 
 ## 6. Sensibilidade: o modelo reajustado sem cada grupo de casos
 
 | Cenário | n | R² | O que muda |
 |---|---|---|---|
-| base | 1.134 | 0,544 | — |
-| sem os 2 com \|e*\| ≥ 4 | 1.132 | 0,547 | nada relevante (maior mudança: `pct_indet` −13%) |
-| sem os 8 com \|e*\| ≥ 3 | 1.126 | 0,559 | `pct_h1529` passa a ser significativo (p = 0,032) |
-| sem os 3 com presídio (> 10% fora de domicílio) | 1.131 | 0,543 | nada relevante (maior mudança: `pct_migr_10anos` −2%) |
-| sem o 1 com desocupação > 20% | 1.133 | 0,544 | nada relevante (maior mudança: `pct_migr_10anos` +1%) |
-| sem os 32 com % indeterminada ≥ 30% | 1.102 | 0,530 | `pct_indet` cai 71% e perde a significância (p = 0,42); `pct_migr_10anos` cai 26% e perde a significância (p = 0,12) |
-| sem os 23 com > 20% mal definida | 1.111 | 0,543 | nada relevante (maior mudança: % urbana −4%) |
-| *(fora da apostila)* sem os 60 com Cook > 4/n | 1.074 | 0,615 | `pct_h1529` cresce 69% (de −0,040 para −0,067) e passa a ser significativo (p = 0,0005); `pct_migr_10anos` cai 29% e perde a significância (p = 0,10) |
+| base | 1.133 | 0,564 | — |
+| sem os com \|e*\| ≥ 4 (nenhum) | 1.133 | 0,564 | igual ao base (nenhum caso a retirar) |
+| sem os 4 com \|e*\| ≥ 3 | 1.129 | 0,570 | nada relevante (maior mudança: `gini_c` −12%) |
+| sem os 3 com presídio (> 10% fora de domicílio) | 1.130 | 0,563 | nada relevante (maior mudança: `desocup` −4%) |
+| sem o 1 com desocupação > 20% | 1.132 | 0,564 | nada relevante (maior mudança: `desocup` +6%) |
+| sem os 31 com % indeterminada ≥ 30% | 1.102 | 0,557 | `desocup` cai 21% e perde a significância (p = 0,072) |
+| sem os 23 com > 20% mal definida | 1.110 | 0,563 | nada relevante (maior mudança: % urbana −5%) |
+| *(fora da apostila)* sem os 55 com Cook > 4/n | 1.078 | 0,624 | nada relevante para a significância (maior mudança: `distorcao_em` +11%) |
 
 - **Nenhum coeficiente troca de sinal em nenhum cenário.**
-- Renda (com o termo ao quadrado), Gini, % urbana, frequência escolar, distorção idade-série e região **continuam significativos em todos os cenários**. O Gini fica entre 2,74 e 3,29.
-- Desocupação, fronteira e abandono não são significativos no modelo base (p = 0,24, 0,15 e 0,65) e continuam assim em todos os cenários.
-- Mudanças em relação à validação anterior: saíram os cenários "sem população < 5 mil" e "sem desocupação > 30% ou = 0", porque o escopo não tem esses casos. Entraram "sem desocupação > 20%" (o extremo dentro do escopo) e "sem |e*| ≥ 3" (com só 2 municípios em |e*| ≥ 4, o cenário antigo quase não testa nada).
+- Renda (com o termo ao quadrado), Gini (`gini_c`), renda x Gini, % urbana, frequência escolar, distorção idade-série e região **continuam significativos em todos os cenários**. O `gini_c` fica entre 1,95 e 2,24 (2,21 no base) e renda x Gini entre 7,06 e 8,25.
+- Desocupação é significativa no base (p = 0,022) e só perde a significância sem os 31 municípios de % indeterminada alta (p = 0,072).
+- Migração recente não é significativa no base (p = 0,143) e continua assim em todos os cenários.
+- Mudanças em relação à validação anterior (e o modelo mudou: saíram `pct_h1529`, fronteira, `pct_indet` e abandono; entraram renda x Gini e Gini centralizado): saíram os cenários "sem população < 5 mil" e "sem desocupação > 30% ou = 0", porque o escopo não tem esses casos. Entraram "sem desocupação > 20%" (o extremo dentro do escopo) e "sem |e*| ≥ 3" (com nenhum município em |e*| ≥ 4, o cenário antigo não testa nada).
 
 ## 7. Recomendações
 
 **DEVE ser feito**
-1. **Não remover os 2 outliers.** Não há evidência direta de erro (contagem baixa nos três anos e em 2024; ocorrência ≈ residência) e a apostila só manda remover quando há essa evidência. Se tirar os 2, o R² sobe só 0,003 e nenhum coeficiente muda de sinal ou de significância.
-2. **Tratar `pct_h1529` e `pct_migr_10anos` como frágeis.** `pct_migr_10anos` (p = 0,033) perde a significância sem os 32 municípios de % indeterminada alta e sem os 60 de Cook alto. `pct_h1529` (p = 0,059) não é significativo no modelo base e passa a ser em 2 cenários. No mínimo, citar isso no trabalho e não tirar conclusão forte dos dois.
-3. **Explicar no trabalho que `pct_indet` não é fator de risco.** Ele depende dos 32 municípios com % indeterminada alta, concentrados em MG e SP, e mede subnotificação da resposta. O valor negativo do coeficiente é coerente com isso.
+1. **Manter Campos do Jordão-SP fora do escopo e não remover mais nenhum município.** Ele tem indício de sub-registro (1 homicídio e 36 óbitos indeterminados). Nos demais, não há |e*| ≥ 4 nem evidência direta de erro, e a apostila só manda remover quando há essa evidência.
+2. **Tratar `desocup` como frágil.** Ela (p = 0,022) perde a significância sem os 31 municípios de % indeterminada alta (p = 0,072). `pct_migr_10anos` não é significativa no modelo base (p = 0,143): não tirar conclusão sobre ela.
+3. **Manter a % indeterminada só como checagem de dado.** Ela saiu do modelo (a medida tem os homicídios no divisor; corrigida, não tem efeito), mas os 31 municípios com valor alto, concentrados em MG e SP, indicam taxa subestimada.
 
 **PODE ser feito**
-4. Citar que os resíduos grandes são quase todos negativos (6 de 8) e vêm de municípios com 1 a 9 homicídios em 3 anos. É uma limitação de usar ln(taxa) com contagem pequena.
+4. Citar que os resíduos grandes são quase todos negativos (3 de 4) e vêm de municípios com 1 a 4 homicídios em 3 anos. É uma limitação de usar ln(taxa) com contagem pequena.
 5. Usar a correlação com 2024 (0,79 no escopo contra 0,26 nos municípios < 5 mil) como evidência a favor do corte em 30 mil habitantes.
 6. Dizer que o Gini municipal é uma aproximação feita pelas classes de renda. Ela bate com o oficial nas 27 UFs (erro médio de 0,003), mas o IBGE não publica o valor por município para conferir.
 7. Veranópolis-RS (frequência escolar de 43,5%) é valor estranho da fonte, mas está fora do escopo e não afeta o modelo.
@@ -108,6 +108,6 @@ Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini, desocupaç�
 - A causa das diferenças de ±1 a ±3 pessoas nas tabelas 10300 e 9517 (parece arredondamento ou sigilo do IBGE).
 - O Gini de cada município: só existe valor oficial para o Brasil, as regiões e as UFs. O erro do cálculo dentro de um município não foi medido.
 - Por que a frequência escolar de Veranópolis-RS é 43,5%. Só confirmamos que a base repete o arquivo do IBGE.
-- Se os 36 óbitos de intenção indeterminada de Campos do Jordão-SP escondem homicídios.
+- Se os 36 óbitos de intenção indeterminada de Campos do Jordão-SP escondem homicídios (o município saiu do escopo por esse indício, sem teste).
 - As 3 variáveis extras (abandono, distorção e migração) contra a fonte original. Só conferimos a junção, os valores faltantes e a faixa de 0 a 100.
-- O efeito de tirar só Nova Lima-MG ou Campos do Jordão-SP do modelo (não há cenário para isso).
+- O efeito de tirar só Nova Lima-MG do modelo (não há cenário para isso).

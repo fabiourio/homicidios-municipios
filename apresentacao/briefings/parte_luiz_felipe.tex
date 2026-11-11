@@ -5,15 +5,15 @@
 \begin{itemize}
 \item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos não são os mais pobres nem os mais ricos: são os do \nDecilPico º décimo de renda, abaixo da renda mediana. Por isso entram renda e renda² (modelo polinomial).
 \item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln. No slide seguinte, mostrar os gráficos dos resíduos antes e depois: com o log, a dispersão fica mais uniforme e os pontos ficam mais perto da reta.
-\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), os blocos A a D e a região (variação entre regiões).
-\item \textbf{Blocos:} todos entram; educação e migração dão $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem da região.
-\item \textbf{Região ou estado:} mostrar os dois modelos lado a lado. O estado explica mais ($R^2_a$ \nRdoisAestado{} contra \nRdoisA), mas usa \nNumParEstado{} parâmetros e o VIF máximo sobe para \nVIFmaxEstado. As três hipóteses valem nos dois. Dizer que escolhemos a região e que o modelo com estado fica como comparação.
+\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), Gini e Gini $\times$ renda (o efeito da desigualdade muda com a renda), as demais explicativas e a região (variação entre regiões). Renda e Gini entram centralizados na média.
+\item \textbf{Blocos:} A socioeconômico, B urbanização, C educação e migração, D região, E Gini $\times$ renda. Todos entram; o bloco C dá $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem da região (bloco D). O termo Gini $\times$ renda entra por último, com $F$ = \nFInter.
+\item \textbf{Região ou estado:} mostrar os dois modelos lado a lado. O estado explica mais ($R^2_a$ \nRdoisAestado{} contra \nRdoisA), mas usa \nNumParEstado{} parâmetros e o VIF máximo sobe para \nVIFmaxEstado. O termo Gini $\times$ renda e as medidas de escola são significativos nos dois. Dizer que escolhemos a região e que o modelo com estado fica como comparação.
 \end{itemize}
 
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
 \item[O $\lambda$ estimado não é 0, e o 0 está fora do IC; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log permite ler os efeitos em \%. Dizemos no slide que a escolha é por interpretabilidade.
-\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $\mathbf{x}$ são as outras explicativas, $D$ são as indicadoras de região e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
+\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $g$ é o Gini centralizado, $\mathbf{x}$ são as outras explicativas (desocupação, urbanização, escola e migração), $D$ são as indicadoras de região e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
 \item[Região ou estado: qual vocês vão usar?] A região. A professora pediu para agrupar por região, e esse é o modelo dos outros slides. O modelo com estado fica como comparação. O estado explica mais ($F$ parcial \nFEstado{} com \nGlEstado{} gl), mas tem \nNumParEstado{} parâmetros, VIF máximo de \nVIFmaxEstado{} e \nNumUFpoucos{} estados com menos de 10 municípios.
 \end{description}
 
