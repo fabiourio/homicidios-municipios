@@ -55,7 +55,7 @@ ln(taxa de homicídios) explicada por: renda e renda² · Gini · Gini × renda 
 | 14 | "% de mortes sem causa definida" sai | Defeito na conta (acima) |
 | 10 | Esta é a entrega final | "Parcial" e "preliminar" saíram dos nomes dos arquivos e da capa |
 
-Adiada: tamanho do deck e divisão das falas (pergunta 11). Em aberto: citar a vizinhança como limitação (pergunta 15).
+Adiada: divisão das falas (pergunta 11), ainda sem divisão nova. Em aberto: região ou estado (pergunta 3) e citar a vizinhança como limitação (pergunta 15). A capa do deck fica com "novembro de 2026".
 
 ## O que muda nas hipóteses
 
