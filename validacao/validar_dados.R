@@ -54,7 +54,7 @@ P_CORTE <- 2.5
 percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
 b$escopo <- b$pop >= 20000
 b$p_dens <- NA
-b$p_dens[b$escopo] <- ave(b$dens[b$escopo], b$regiao[b$escopo], FUN = percentil)
+b$p_dens[b$escopo] <- ave((b$pop / b$area_km2)[b$escopo], b$regiao[b$escopo], FUN = percentil)
 b$escopo <- b$escopo & b$p_dens > P_CORTE & b$p_dens < 100 - P_CORTE
 cat(sprintf("Variáveis extras: %d linhas, %d sem par na base | NAs na base inteira: %s | NAs no escopo: %d\n",
             nrow(extras), sum(!extras$cod_ibge %in% b$cod_ibge),

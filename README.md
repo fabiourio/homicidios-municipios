@@ -6,7 +6,7 @@ Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16
 
 **Pergunta:** quais fatores socioeconômicos, demográficos e geográficos estão associados à taxa de homicídios nos municípios brasileiros?
 
-- **Unidade de análise:** o município. O modelo usa os 1.623 municípios com 20 mil habitantes ou mais que ficam entre os percentis 2,5 e 97,5 da densidade da sua região
+- **Unidade de análise:** o município. O modelo usa os 1.622 municípios com 20 mil habitantes ou mais que ficam entre os percentis 2,5 e 97,5 da densidade da sua região
 - **Resposta:** taxa de homicídios (agressão X85–Y09 + intervenção legal Y35–Y36), por residência, média anual 2021–2023
 - **Explicativas:** Censo Demográfico 2022 (renda, desigualdade pelo índice de Gini, trabalho, urbanização, densidade, idade, frequência escolar, migração), INEP 2022 (abandono e distorção idade-série no ensino médio), região e faixa de fronteira
 - **Modelo (preliminar):** regressão linear múltipla para ln(taxa), por mínimos quadrados ordinários

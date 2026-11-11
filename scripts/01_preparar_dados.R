@@ -34,7 +34,7 @@ S <- fromJSON("dados/raw/sidra_raw.json", simplifyVector = FALSE)
 nomes_colunas <- list(
   "4709"  = "pop",
   "4714"  = c("pop", "area_km2", "densidade"),
-  "10295" = c("moradores_dpp", "rend_pc_media", "rend_pc_mediana"),
+  "10295" = c("moradores_dpp", "rend_pc_media"),
   "10300" = c("p14_total", "p14_ate_1_4sm", "p14_1_4_a_1_2sm", "p14_1_2_a_1sm", "p14_1_a_2sm",
               "p14_2_a_3sm", "p14_3_a_5sm", "p14_5_a_10sm", "p14_10_a_15sm", "p14_15_a_20sm",
               "p14_mais_20sm", "p14_sem_rendimento"),
@@ -103,11 +103,14 @@ val_gini <- data.frame(nivel = sapply(go, function(s) s$localidade$nivel$nome), 
                        local = sapply(go, function(s) s$localidade$nome),
                        gini_oficial = as.numeric(sapply(go, function(s) s$serie[["2022"]])))
 soma <- function(digitos) apply(rowsum(pc, substr(p$cod_ibge, 1, digitos)), 1, gini)
-val_gini$gini_calculado <- c(gini(colSums(pc)), soma(1)[val_gini$codigo[2:6]], soma(2)[val_gini$codigo[-(1:6)]])
+regioes <- val_gini$nivel == "Grande Região"; ufs <- val_gini$nivel == "Unidade da Federação"
+val_gini$gini_calculado <- gini(colSums(pc))
+val_gini$gini_calculado[regioes] <- soma(1)[val_gini$codigo[regioes]]
+val_gini$gini_calculado[ufs] <- soma(2)[val_gini$codigo[ufs]]
 write.csv(val_gini, "dados/tabelas/validacao_gini.csv", row.names = FALSE)
 cat(sprintf("\nGini calculado x oficial nas 27 UFs: correlação = %.3f | erro absoluto médio = %.3f\n",
-            cor(val_gini$gini_calculado[-(1:6)], val_gini$gini_oficial[-(1:6)]),
-            mean(abs(val_gini$gini_calculado - val_gini$gini_oficial)[-(1:6)])))
+            cor(val_gini$gini_calculado[ufs], val_gini$gini_oficial[ufs]),
+            mean(abs(val_gini$gini_calculado - val_gini$gini_oficial)[ufs])))
 t9517 <- sidra[["9517"]]
 t9517$desocup <- t9517$desocupados / t9517$forca_trabalho * 100
 u <- sidra[["9923"]]

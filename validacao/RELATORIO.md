@@ -3,7 +3,7 @@
 Script: `validacao/validar_dados.R` (roda do início ao fim; números em `saida/valores_validacao.txt`).
 Usa 3 consultas extras ao TabNet (homicídios por ano, homicídios por local de ocorrência e óbitos por capítulo da CID), guardadas em `saida/tabnet_extra.json`. O script lê esse arquivo e não acessa a rede. Nenhum dado nem script do projeto foi alterado.
 
-As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cada problema cai no **escopo do modelo**. As seções 5 e 6 usam o modelo atual (`entrega/2_modelo_preliminar.R`): resposta ln(taxa), 1.623 municípios com 20 mil habitantes ou mais e densidade entre os percentis 2,5 e 97,5 da sua região.
+As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cada problema cai no **escopo do modelo**. As seções 5 e 6 usam o modelo atual (`entrega/2_modelo_preliminar.R`): resposta ln(taxa), 1.622 municípios com 20 mil habitantes ou mais e densidade entre os percentis 2,5 e 97,5 da sua região.
 
 ## Resumo
 
@@ -18,7 +18,7 @@ A base está **limpa do ponto de vista técnico**: não há chave quebrada, valo
 - Boa Esperança do Norte-MT não está na base, e isso está certo: foi instalado em 2025, depois do Censo 2022.
 - O dígito verificador confere em 5.561 de 5.570. As 9 exceções são códigos oficiais conhecidos do IBGE (ex.: Quixaba-PE), não erro.
 - **Variáveis extras** (abandono e distorção idade-série no ensino médio, migração recente): 5.570 linhas, todas casam com a base. Faltam 7 valores de abandono e 7 de distorção na base inteira, mas **nenhum no escopo do modelo**.
-- **Escopo do modelo:** 1.710 municípios têm 20 mil habitantes ou mais. Depois do corte da densidade ficam 1.623 (Nordeste 562, Sudeste 513, Sul 257, Norte 173, Centro-Oeste 118). O modelo usa as 1.623 linhas.
+- **Escopo do modelo:** 1.710 municípios têm 20 mil habitantes ou mais. Depois do corte da densidade ficam 1.622 (Nordeste 562, Sudeste 513, Sul 257, Norte 172, Centro-Oeste 118). O modelo usa as 1.622 linhas.
 
 ## 2. Valores impossíveis ou suspeitos
 
@@ -58,37 +58,37 @@ Os extremos de cada variável, na base e no escopo, estão em `saida/02_extremos
 
 ## 5. Outliers e pontos influentes (modelo atual)
 
-Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini, desocupação, % urbana, densidade, % homens 15–29, fronteira, % indeterminada, frequência escolar, abandono, distorção idade-série, migração recente e região. n = 1.623; R² = 0,460. Os coeficientes são iguais aos de `entrega/resultados/modelagem/valores_modelo.txt`.
+Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini, desocupação, % urbana, densidade, % homens 15–29, fronteira, % indeterminada, frequência escolar, abandono, distorção idade-série, migração recente e região. n = 1.622; R² = 0,460. Os coeficientes são iguais aos de `entrega/resultados/modelagem/valores_modelo.txt`.
 
 - 2 municípios têm |e*| ≥ 4: Nhamundá-AM (e* = −4,1; taxa de 1,7) e Campos do Jordão-SP (e* = −4,0; taxa de 0,7). **Os dois são negativos: a taxa é muito menor que a esperada.** Cada um tem 1 homicídio em 3 anos (em 2022), e 0 ou 1 em 2024. A contagem por ocorrência é 1 e 0. O número é baixo de forma consistente, então **não parece erro de digitação**.
 - **Campos do Jordão é suspeito por outro motivo:** tem 1 homicídio e 36 óbitos de intenção indeterminada (37,5% dos óbitos externos). A taxa dele provavelmente está subestimada. Nhamundá não tem óbito indeterminado, mas tem 13,6% de causas mal definidas.
 - 13 municípios têm |e*| ≥ 3, e **12 são negativos**. Os 12 têm de 1 a 4 homicídios em 3 anos. O único positivo é Sooretama-ES (73 homicídios; e* = 3,4). Isso é efeito da contagem pequena com ln(taxa), não problema de dado.
-- *(Fora da apostila, só descritivo)* 96 municípios têm alavancagem acima de 2p/n e 88 têm distância de Cook acima de 4/n, mas o Cook máximo é só 0,026 (Chaves-PA), ou seja, **nenhum ponto domina o ajuste**. As maiores alavancagens são Nova Lima-MG (Gini de 0,652 e 48,7% de indeterminada), Alto Alegre-RR (Gini de 0,684), São Joaquim de Bicas-MG (69,8% de indeterminada), Queimadas-BA (desocupação de 28,8%) e Veranópolis-RS (frequência escolar de 43,5%).
+- *(Fora da apostila, só descritivo)* 97 municípios têm alavancagem acima de 2p/n e 88 têm distância de Cook acima de 4/n, mas o Cook máximo é só 0,027 (Chaves-PA), ou seja, **nenhum ponto domina o ajuste**. As maiores alavancagens são Nova Lima-MG (Gini de 0,652 e 48,7% de indeterminada), Alto Alegre-RR (Gini de 0,684), São Joaquim de Bicas-MG (69,8% de indeterminada), Queimadas-BA (desocupação de 28,8%) e Veranópolis-RS (frequência escolar de 43,5%).
 - O gráfico de resíduos (`v1`) não tem mais a faixa diagonal dos zeros, porque o escopo não tem taxa zero.
 
 ## 6. Sensibilidade: o modelo reajustado sem cada grupo de casos
 
 | Cenário | n | R² | O que muda |
 |---|---|---|---|
-| base | 1.623 | 0,460 | — |
-| sem os 2 com \|e*\| ≥ 4 | 1.621 | 0,463 | nada relevante (maior mudança: `pct_indet` −11%) |
-| sem os 13 com \|e*\| ≥ 3 | 1.610 | 0,481 | `dens_z` cai 28% e perde a significância (p = 0,081); `pct_h1529` passa a ser significativo (p = 0,025) |
-| sem os 10 com presídio (> 10% fora de domicílio) | 1.613 | 0,460 | nada relevante (maior mudança: `dens_z` −5%) |
-| sem os 4 com desocupação > 20% | 1.619 | 0,460 | nada relevante (maior mudança: `dens_z` +5%) |
-| sem os 32 com % indeterminada ≥ 30% | 1.591 | 0,454 | `pct_indet` cai 46% e perde a significância (p = 0,13) |
-| sem os 36 com > 20% mal definida | 1.587 | 0,462 | nada relevante (maior mudança: Gini +3%) |
-| *(fora da apostila)* sem os 88 com Cook > 4/n | 1.535 | 0,549 | `pct_h1529` cresce 64% (de −0,033 para −0,054) e passa a ser significativo (p = 0,0009) |
+| base | 1.622 | 0,460 | — |
+| sem os 2 com \|e*\| ≥ 4 | 1.620 | 0,463 | nada relevante (maior mudança: `pct_indet` −11%) |
+| sem os 13 com \|e*\| ≥ 3 | 1.609 | 0,481 | `dens_z` cai 28% e perde a significância (p = 0,087); `pct_h1529` passa a ser significativo (p = 0,026) |
+| sem os 10 com presídio (> 10% fora de domicílio) | 1.612 | 0,460 | nada relevante (maior mudança: `dens_z` −5%) |
+| sem os 4 com desocupação > 20% | 1.618 | 0,460 | nada relevante (maior mudança: `dens_z` +5%) |
+| sem os 32 com % indeterminada ≥ 30% | 1.590 | 0,454 | `pct_indet` cai 46% e perde a significância (p = 0,12) |
+| sem os 36 com > 20% mal definida | 1.586 | 0,462 | nada relevante (maior mudança: Gini +3%) |
+| *(fora da apostila)* sem os 88 com Cook > 4/n | 1.534 | 0,549 | `pct_h1529` cresce 64% (de −0,033 para −0,054) e passa a ser significativo (p = 0,0009) |
 
 - **Nenhum coeficiente troca de sinal em nenhum cenário.**
 - Renda (com o termo ao quadrado), Gini, % urbana, frequência escolar, distorção idade-série, migração recente e região **continuam significativos em todos os cenários**. O Gini fica entre 2,71 e 3,10.
-- Desocupação, fronteira e abandono não são significativos no modelo base (p = 0,47, 0,55 e 0,54) e continuam assim em todos os cenários.
+- Desocupação, fronteira e abandono não são significativos no modelo base (p = 0,49, 0,57 e 0,54) e continuam assim em todos os cenários.
 - Mudanças em relação à validação anterior: saíram os cenários "sem população < 5 mil" e "sem desocupação > 30% ou = 0", porque o escopo não tem esses casos. Entraram "sem desocupação > 20%" (o extremo dentro do escopo) e "sem |e*| ≥ 3" (com só 2 municípios em |e*| ≥ 4, o cenário antigo quase não testa nada).
 
 ## 7. Recomendações
 
 **DEVE ser feito**
 1. **Não remover os 2 outliers.** Não há evidência direta de erro (contagem baixa nos três anos e em 2024; ocorrência ≈ residência) e a apostila só manda remover quando há essa evidência. Se tirar os 2, o R² sobe só 0,003 e nenhum coeficiente muda de sinal ou de significância.
-2. **Tratar `dens_z` e `pct_h1529` como frágeis.** `dens_z` (p = 0,021) perde a significância sem os 13 municípios de resíduo grande. `pct_h1529` (p = 0,067) não é significativo no modelo base e passa a ser em 2 cenários. No mínimo, citar isso no trabalho e não tirar conclusão forte dos dois.
+2. **Tratar `dens_z` e `pct_h1529` como frágeis.** `dens_z` (p = 0,023) perde a significância sem os 13 municípios de resíduo grande. `pct_h1529` (p = 0,068) não é significativo no modelo base e passa a ser em 2 cenários. No mínimo, citar isso no trabalho e não tirar conclusão forte dos dois.
 3. **Explicar no trabalho que `pct_indet` não é fator de risco.** Ele depende dos 32 municípios com % indeterminada alta, concentrados em MG e SP, e mede subnotificação da resposta. O valor negativo do coeficiente é coerente com isso.
 
 **PODE ser feito**

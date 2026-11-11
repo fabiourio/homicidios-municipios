@@ -31,11 +31,11 @@ d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10
 # Abaixo disso a taxa é dominada pelo acaso (poucos casos, muitos zeros): ver confiabilidade_porte.csv
 d <- d[d$pop >= 20000, ]
 
-# Percentil da densidade de cada município dentro da sua região (0 a 100).
+# Percentil da densidade (população / área) de cada município dentro da sua região (0 a 100).
 # Saem os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
 P_CORTE <- 2.5
 percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
-d$p_dens <- ave(d$dens, d$regiao, FUN = percentil)
+d$p_dens <- ave(d$pop / d$area_km2, d$regiao, FUN = percentil)
 d <- d[d$p_dens > P_CORTE & d$p_dens < 100 - P_CORTE, ]
 
 # ln(densidade) padronizado: média 0 e desvio-padrão 1
@@ -144,7 +144,7 @@ pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 mudancas <- data.frame(
   termo   = c("gini", "pct_urbana", "dens_z", "desocup", "pct_indet", "pct_h1529", "faixa_fronteira",
               "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos"),
-  variavel = c("Desigualdade (Gini)", "% urbana", "Densidade", "Desocupação",
+  variavel = c("Desigualdade (Gini)", "% urbana", "ln densidade", "Desocupação",
                "% intenção indeterminada", "% homens 15–29", "Faixa de fronteira",
                "Frequência escolar 15–17", "Abandono no ensino médio", "Distorção idade-série (EM)", "Migração recente"),
   mudanca = c("+0,05", "+10 pontos", "+1 DP", "+1 ponto", "+1 ponto", "+1 ponto", "sim x não",

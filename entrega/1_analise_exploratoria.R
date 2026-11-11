@@ -31,12 +31,12 @@ str(br)
 POP_MIN <- 20000                                   # escopo: municípios com 20 mil hab. ou mais
 br$escopo <- br$pop >= POP_MIN
 
-# Percentil da densidade de cada município dentro da sua região (0 a 100), entre os de 20 mil hab. ou mais.
+# Percentil da densidade (população / área) de cada município dentro da sua região (0 a 100), entre os de 20 mil hab. ou mais.
 # Saem do escopo os extremos: ficam os municípios entre os percentis P_CORTE e 100 - P_CORTE da sua região
 P_CORTE <- 2.5
 percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
 br$p_dens <- NA
-br$p_dens[br$escopo] <- ave(br$dens[br$escopo], br$regiao[br$escopo], FUN = percentil)
+br$p_dens[br$escopo] <- ave((br$pop / br$area_km2)[br$escopo], br$regiao[br$escopo], FUN = percentil)
 br$dens_extrema <- br$escopo & (br$p_dens <= P_CORTE | br$p_dens >= 100 - P_CORTE)
 
 # Percentil de cada município e resumo do corte por região (para decidir quais considerar)

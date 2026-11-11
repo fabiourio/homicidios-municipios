@@ -30,7 +30,7 @@ Pacotes: `ggplot2`, `dplyr`, `tidyr`, `GGally`, `sf`, `MASS`, `car`, `lmtest`.
 
 - A análise exploratória e o modelo usam o mesmo escopo. Só a definição do escopo e o mapa usam os 5.570 municípios.
 - O escopo são os municípios com 20 mil habitantes ou mais: abaixo disso a taxa é dominada pelo acaso (ver `resultados/eda/confiabilidade_porte.csv`).
-- Cada município recebe o percentil da sua densidade dentro da sua região (`resultados/eda/percentis_municipios.csv`). Ficam os que estão entre os percentis 2,5 e 97,5 da região: saem 87 e ficam 1.623 municípios (66% da população).
+- Cada município recebe o percentil da sua densidade dentro da sua região (`resultados/eda/percentis_municipios.csv`). Ficam os que estão entre os percentis 2,5 e 97,5 da região: saem 88 e ficam 1.622 municípios (66% da população).
 - ln(densidade) entra no modelo padronizado (média 0, desvio-padrão 1).
 - Desigualdade: índice de Gini de cada município, calculado pelas classes de renda do Censo 2022. O IBGE só publica o Gini por região e UF; a conferência com o oficial está em `dados/validacao_gini.csv`.
 - Resposta do modelo: ln(taxa), escolhida pelo procedimento de Box-Cox.
