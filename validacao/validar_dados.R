@@ -115,7 +115,7 @@ print(head(b[b$escopo, ][order(b$freq_15a17[b$escopo]), c("municipio", "uf", "po
                                                           "rend_pc_media")], 4), row.names = FALSE)
 
 # Extremos de cada variável usada no modelo, na base inteira e no escopo do modelo
-vars_mod <- c("taxa", "rend_pc_media", "gini", "desocup", "pct_urbana", "dens", "pct_h1529", "pct_indet",
+vars_mod <- c("taxa", "rend_pc_media", "gini", "desocup", "pct_urbana", "pct_h1529", "pct_indet",
               "freq_15a17", vars_extras, "pop")
 extremos <- function(x, conjunto) do.call(rbind, lapply(vars_mod, function(v) {
   o <- order(x[[v]], na.last = NA)

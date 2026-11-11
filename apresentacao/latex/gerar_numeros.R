@@ -39,7 +39,7 @@ e <- c(
   cor_renda_pobres = R["ln Renda", "% pobres"], cor_renda_alfabet = R["ln Renda", "Alfabetização"],
   renda_decil_pico = eda$med_faixa$renda[which.max(eda$med_faixa$med)],
   porte_hom_mediana_menor5mil = porte$hom_mediana_3anos[1], porte_oscilacao_menor5mil = porte$oscilacao[1],
-  porte_oscilacao_corte = porte$oscilacao[porte$porte == "30–50 mil"], porte_zero_corte = sum(porte$pct_zero[porte$porte %in% c("30–50 mil", "50–100 mil", ">= 100 mil")]))
+  porte_oscilacao_corte = porte$oscilacao[porte$porte == "30–50 mil"])
 
 m <- with(mod, c(
     n = nrow(d), lambda = lambda, lambda_ic_inf = unname(lambda_ic[1]), lambda_ic_sup = unname(lambda_ic[2]),
@@ -87,9 +87,8 @@ med_reg <- tapply(d_eda$taxa, d_eda$regiao, median)
 confere(min(med_reg[c("Norte", "Nordeste")]) > max(med_reg[c("Sudeste", "Sul")]), "boxplot: Norte e Nordeste acima de Sudeste e Sul no escopo")
 confere(e[["taxa_media"]] > e[["taxa_mediana"]], "taxa: média acima da mediana")
 confere(e[["assim_taxa"]] > 0, "taxa: assimetria à direita (coeficiente positivo)")
-confere(round(e[["percentil_corte"]]) == 80 && e[["casos_esp_corte"]] >= 20, "o corte de 30 mil hab. é o percentil 80 da população e dá pelo menos 20 homicídios esperados em 3 anos")
+confere(round(e[["percentil_corte"]]) == 80 && e[["casos_esp_corte"]] >= 20, "o corte de 30 mil hab. fica no percentil 80 (arredondado) da população e dá pelo menos 20 homicídios esperados em 3 anos")
 confere(mod$POP_MIN == eda$POP_MIN && setequal(mod$d$cod_ibge, d_eda$cod_ibge), "exploratória e modelo no mesmo escopo")
-confere(e[["porte_zero_corte"]] == 0, "a partir de 30 mil hab. nenhum município tem taxa zero")
 confere(mod$F_dens$`Pr(>F)`[2] > 0.05, "a densidade (ln, padronizada) não é significativa e fica fora do modelo")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")

@@ -29,12 +29,6 @@
 "base","pct_urbana","maior","Cachoeirinha","RS",136258,100
 "base","pct_urbana","maior","Canoas","RS",347657,100
 "base","pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
-"base","dens","menor","Barcelos","AM",18834,0.15
-"base","dens","menor","Japurá","AM",8858,0.16
-"base","dens","menor","Atalaia do Norte","AM",15314,0.2
-"base","dens","maior","São João de Meriti","RJ",440962,12521.64
-"base","dens","maior","Diadema","SP",393237,12795.69
-"base","dens","maior","Taboão da Serra","SP",273542,13416.81
 "base","pct_h1529","menor","Coqueiro Baixo","RS",1290,6.047
 "base","pct_h1529","menor","Barra do Rio Azul","RS",1696,6.545
 "base","pct_h1529","menor","Porto Lucena","RS",4360,6.651
@@ -107,12 +101,6 @@
 "escopo","pct_urbana","maior","Cachoeirinha","RS",136258,100
 "escopo","pct_urbana","maior","Canoas","RS",347657,100
 "escopo","pct_urbana","maior","Valparaíso de Goiás","GO",198861,100
-"escopo","dens","menor","São Gabriel da Cachoeira","AM",51795,0.47
-"escopo","dens","menor","Almeirim","PA",34280,0.47
-"escopo","dens","menor","Oriximiná","PA",68294,0.63
-"escopo","dens","maior","São João de Meriti","RJ",440962,12521.64
-"escopo","dens","maior","Diadema","SP",393237,12795.69
-"escopo","dens","maior","Taboão da Serra","SP",273542,13416.81
 "escopo","pct_h1529","menor","São Caetano do Sul","SP",165655,8.205
 "escopo","pct_h1529","menor","Santos","SP",418608,8.722
 "escopo","pct_h1529","menor","Presidente Venceslau","SP",35201,8.724

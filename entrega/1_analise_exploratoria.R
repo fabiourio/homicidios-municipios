@@ -41,7 +41,7 @@ percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
 br$p_pop <- percentil(br$pop)
 percentil_corte <- 100 * mean(br$pop < POP_MIN)
 
-# Percentil de cada município e resumo do corte por região (para decidir quais considerar)
+# Percentil de cada município e resumo do corte por região
 perc <- br[, c("cod_ibge", "municipio", "uf", "regiao", "pop", "p_pop")]
 perc$considerado <- ifelse(br$escopo, "sim", "não")
 perc$regiao <- factor(perc$regiao, levels = c("N", "NE", "CO", "SE", "S"),

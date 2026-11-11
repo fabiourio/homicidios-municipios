@@ -14,7 +14,7 @@
 \begin{description}[leftmargin=0pt]
 \item[Por que não usar dados da polícia?] O SIM cobre todos os municípios com a mesma codificação (CID-10); o homicídio é a medida de violência local mais confiável do país (Murray et al., 2013).
 \item[Por que município de residência e não de ocorrência?] Porque o denominador é a população residente; assim taxa e população falam das mesmas pessoas.
-\item[Por que \nPopMin{} mil, e não 20 mil ou 50 mil?] É o percentil \nPercCorte{} da população. Nesse porte a taxa nacional dá pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos, e a oscilação por acaso cai para $\pm$\nPorteOscCorte\%. Com 20 mil, o modelo erra muito nas cidades com 1 a 5 homicídios; com 50 mil, perderíamos metade do país e a migração deixaria de aparecer.
+\item[Por que \nPopMin{} mil, e não 20 mil ou 50 mil?] Fica perto do percentil \nPercCorte{} da população. Nesse porte a taxa nacional dá pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos, e a oscilação por acaso cai para $\pm$\nPorteOscCorte\%. Com 20 mil, o modelo erra muito nas cidades com 1 a 5 homicídios; com 50 mil, perderíamos metade do país e a migração deixaria de aparecer.
 \item[Como vocês têm o Gini por município, se o IBGE não publica?] Calculamos pelas classes de renda do Censo 2022 (pessoas de 14 anos ou mais em cada faixa de renda domiciliar per capita), pela área sob a curva de Lorenz (método de Gastwirth, 1972). Para conferir, aplicamos o mesmo cálculo aos 27 estados: a correlação com o Gini oficial é \nGiniCorUF{} e o erro médio é \nGiniErroUF. É uma aproximação: ignora a desigualdade dentro de cada faixa.
 \end{description}
 
