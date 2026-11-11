@@ -439,6 +439,26 @@ Outliers & $|e^{*}_i| \geq 4$ & \nNout & ---\\
 \end{frame}
 
 % -----------------------------------------------------------------------------
+\begin{frame}{Modelo com e sem a renda}
+\begin{columns}[c]
+\column{0.56\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{4pt}
+\input{tabelas/com_sem_renda.tex}
+\fonte{Elaboração própria. Indicadoras de região omitidas. Em negrito: a significância a 5\% muda.}
+\column{0.42\textwidth}
+\begin{itemize}\footnotesize
+\item A renda tem o maior VIF: \nVIFrendaFinal. Sem ela, o VIF máximo é \nVIFmaxSemRenda
+\item $F$ parcial da renda: \nFRenda{} (\nGlRenda{} gl), $p$ \nPRenda
+\item $R^2_a$: \nRdoisA{} com a renda; \nRdoisAsemRenda{} sem
+\item Sem a renda, a desigualdade continua significativa, com efeito menor; migração e densidade deixam de ser
+\item A renda fica no modelo
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
 \section[Conclusão]{Considerações e próximos passos}
 \begin{frame}{Considerações e próximos passos}
 \begin{columns}[T]

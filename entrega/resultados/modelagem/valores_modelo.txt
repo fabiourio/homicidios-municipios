@@ -126,6 +126,27 @@ VIF do modelo preliminar:
            1.71            2.68            1.49            1.91 
 Renda per capita do pico da taxa esperada: R$ 818
 
+== 5.1 Modelo com e sem a renda ==
+F parcial da renda (renda e renda²): F = 84.4 (gl 2) | p = 1.4e-35
+R² ajustado: com = 0.455 | sem = 0.398
+VIF máximo: com = 8.46 | sem = 2.53
+              termo    b_com    p_com    b_sem    p_sem
+               gini  3.00566 1.81e-11  0.85803 4.51e-02
+            desocup -0.00483 4.73e-01  0.01032 1.19e-01
+         pct_urbana  0.00985 6.83e-11  0.01051 2.30e-15
+             dens_z  0.05350 2.10e-02 -0.03333 1.53e-01
+          pct_h1529 -0.03292 6.71e-02 -0.01812 2.96e-01
+    faixa_fronteira -0.03794 5.52e-01 -0.04154 5.36e-01
+          pct_indet -0.00834 2.50e-04 -0.00511 3.13e-02
+         freq_15a17 -0.01618 2.35e-07 -0.01746 1.01e-07
+        abandono_em -0.00229 5.38e-01 -0.00451 2.45e-01
+       distorcao_em  0.01037 1.25e-07  0.01389 4.66e-12
+    pct_migr_10anos  0.00908 1.08e-03  0.00397 1.50e-01
+        regiaoNorte  0.63610 1.30e-12  0.77677 1.34e-17
+     regiaoNordeste  0.75851 1.52e-33  1.03959 4.66e-72
+ regiaoCentro-Oeste  0.64981 1.13e-17  0.60301 3.16e-14
+          regiaoSul  0.36753 1.17e-10  0.15910 5.13e-03
+
 == 6. Diagnóstico ==
 Breusch-Pagan = 56.7 (gl 17) | p = 3.6e-06
 Shapiro-Wilk = 0.989 | p = 1.4e-09

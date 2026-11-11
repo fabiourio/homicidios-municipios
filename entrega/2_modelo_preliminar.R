@@ -169,6 +169,18 @@ pr <- predict(final, newdata = grade, interval = "confidence", level = 0.95)
 grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
 
 # -----------------------------------------------------------------------------
+# 5.1 Modelo com e sem a renda: a renda tem o maior VIF do modelo
+# -----------------------------------------------------------------------------
+sem_renda <- update(final, . ~ . - rend_c - rend_c2)
+F_renda <- anova(sem_renda, final)                    # Ho: beta_renda = beta_renda² = 0
+vif_sem_renda <- vif(sem_renda)[, "GVIF^(1/(2*Df))"]^2
+ss_ <- summary(sem_renda)
+termos <- rownames(ss_$coefficients)[-1]
+com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficients[termos, 4],
+                      b_sem = ss_$coefficients[termos, 1], p_sem = ss_$coefficients[termos, 4], row.names = NULL)
+write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
+
+# -----------------------------------------------------------------------------
 # 6. Diagnóstico preliminar pela análise dos resíduos
 # -----------------------------------------------------------------------------
 d$ajustado <- fitted(final)
@@ -267,6 +279,11 @@ cat("\n== 5. Modelo preliminar (D) ==\n"); print(sf_)
 cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))
 cat("\nVIF do modelo preliminar:\n"); print(round(vif_final, 2))
 cat(sprintf("Renda per capita do pico da taxa esperada: R$ %.0f\n", pico_renda))
+cat("\n== 5.1 Modelo com e sem a renda ==\n")
+cat(sprintf("F parcial da renda (renda e renda²): F = %.1f (gl %d) | p = %.2g\n", F_renda$F[2], F_renda$Df[2], F_renda$`Pr(>F)`[2]))
+cat(sprintf("R² ajustado: com = %.3f | sem = %.3f\n", sf_$adj.r.squared, ss_$adj.r.squared))
+cat(sprintf("VIF máximo: com = %.2f | sem = %.2f\n", max(vif_final), max(vif_sem_renda)))
+print(com_sem, digits = 3, row.names = FALSE)
 cat("\n== 6. Diagnóstico ==\n")
 cat(sprintf("Breusch-Pagan = %.1f (gl %d) | p = %.2g\n", bp$statistic, bp$parameter, bp$p.value))
 cat(sprintf("Shapiro-Wilk = %.3f | p = %.2g\n", sw_final$statistic, sw_final$p.value))

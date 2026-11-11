@@ -198,6 +198,30 @@ writeLines(c("\\begin{tabular}{@{}lrrrrr@{}}", "\\toprule",
              "\\textbf{Variável} & \\textbf{Média} & \\textbf{DP} & \\textbf{Mín.} & \\textbf{Mediana} & \\textbf{Máx.}\\\\",
              "\\midrule", lin, "\\bottomrule", "\\end{tabular}"), "tabelas/descritiva.tex")
 
+# Tabela do modelo com e sem a renda (sem as indicadoras de região); em negrito, onde a significância a 5% muda
+cs <- mod$com_sem[!grepl("^regiao", mod$com_sem$termo), ]
+rot_cs <- c(gini = "Desigualdade (Gini)", desocup = "Desocupação", pct_urbana = "\\% urbana", dens_z = "ln densidade (padr.)",
+            pct_h1529 = "\\% homens 15--29", faixa_fronteira = "Fronteira", pct_indet = "\\% indeterminada",
+            freq_15a17 = "Freq. escolar 15--17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM",
+            pct_migr_10anos = "Migração recente")
+stopifnot(all(cs$termo %in% names(rot_cs)))
+muda <- (cs$p_com < 0.05) != (cs$p_sem < 0.05)
+cel <- cbind(rot_cs[cs$termo], gsub("-", "$-$", fmt(cs$b_com, 3)), fp(cs$p_com), gsub("-", "$-$", fmt(cs$b_sem, 3)), fp(cs$p_sem))
+cel[muda, ] <- paste0("\\textbf{", cel[muda, ], "}")
+writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
+             " & \\multicolumn{2}{c}{\\textbf{Com renda}} & \\multicolumn{2}{c}{\\textbf{Sem renda}}\\\\",
+             "\\textbf{Termo} & \\textbf{$b$} & \\textbf{$p$} & \\textbf{$b$} & \\textbf{$p$}\\\\", "\\midrule",
+             paste0(apply(cel, 1, paste, collapse = " & "), "\\\\"), "\\bottomrule", "\\end{tabular}"), "tabelas/com_sem_renda.tex")
+p_cs <- function(t, col) cs[cs$termo == t, col]
+confere(mod$F_renda$`Pr(>F)`[2] < 0.001 && mod$sf_$adj.r.squared > mod$ss_$adj.r.squared, "a renda contribui para o modelo (F parcial) e o R² ajustado cai sem ela")
+confere(max(mod$vif_sem_renda) < max(mod$vif_final) && max(mod$vif_final) < 10, "VIF máximo abaixo de 10 com a renda e menor sem ela")
+confere(p_cs("gini", "p_sem") < 0.05 && p_cs("gini", "b_sem") > 0 && p_cs("gini", "b_sem") < p_cs("gini", "b_com"), "sem a renda, a desigualdade continua significativa, com efeito menor")
+confere(p_cs("pct_migr_10anos", "p_sem") > 0.05 && p_cs("dens_z", "p_sem") > 0.05 && p_cs("pct_migr_10anos", "p_com") < 0.05 && p_cs("dens_z", "p_com") < 0.05,
+        "sem a renda, migração e densidade deixam de ser significativas")
+cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcommand{\\nPRenda}{%s}\n\\newcommand{\\nRdoisAsemRenda}{%s}\n\\newcommand{\\nVIFmaxSemRenda}{%s}\n",
+            fmt(mod$F_renda$F[2]), fmt(mod$F_renda$Df[2], 0), fp(mod$F_renda$`Pr(>F)`[2]), fmt(mod$ss_$adj.r.squared, 2), fmt(max(mod$vif_sem_renda))),
+    file = "numeros.tex", append = TRUE)
+
 # Tabela dos blocos (F parcial e R² ajustado)
 bloco <- function(nome, k, neg = FALSE) {
   cel <- c(nome, fmt(m[[paste0("gl_", k)]], 0), fmt(m[[paste0("F_", k)]]), fp(m[[paste0("p_", k)]]), fmt(m[[paste0("R2a_", k)]], 2))
