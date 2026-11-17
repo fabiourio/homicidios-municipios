@@ -68,7 +68,7 @@ Não introduzimos métodos novos para buscar testes favoráveis.
 - Manter a sequência docente: contexto, dados, metodologia, ajuste e discussão.
 - Retirar os dois gráficos exploratórios do corpo e preservar as figuras no repositório.
 - Mostrar taxas observadas e ajustadas no slide 7.
-- Retirar os dois apêndices de referências e manter as fontes curtas dos gráficos.
+- Retirar os dois apêndices de referências e retirar as fontes visíveis da projeção. Preservar legendas técnicas e referências na documentação.
 - Manter apenas a numeração no rodapé. Renomear os diagnósticos complementares como H e I.
 - Reservar 75/90/120/180/315 segundos, na mesma ordem dos cinco apresentadores.
 - Preservar hipóteses como expectativas iniciais, com discussão posterior dos resultados.

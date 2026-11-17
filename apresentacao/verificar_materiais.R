@@ -23,6 +23,7 @@ for (k in names(num)) notas <- gsub(sprintf("{%s}", k), num[[k]], notas, fixed =
 stopifnot(!any(grepl("\\{\\w+\\}", notas)))
 stopifnot(identical(unname(tools::md5sum(pdf)), unname(tools::md5sum("latex/apresentacao_final.pdf"))))
 texto <- pdf_text(pdf)
+stopifnot(!any(grepl("Fonte:|Fontes:", texto, ignore.case = TRUE)))
 stopifnot(all(vapply(seq_along(texto), function(k) {
   linhas <- trimws(strsplit(texto[k], "\n", fixed = TRUE)[[1]])
   tail(linhas[nzchar(linhas)], 1) == as.character(k)

@@ -10,7 +10,7 @@ Data: 17/11/2026. Base: `1893e89` (`main`). Branch: `apresentacao-final-15-minut
 - Roteiro de 780 segundos: 75/90/120/180/315 segundos por pessoa.
 - Abertura de 165 segundos; dois minutos de reserva até o limite informado.
 - Marcos finais: 1min15, 2min45, 4min45, 7min45 e 13min00.
-- Último slide: 60 segundos. Rodapé apenas com numeração; fontes curtas dos gráficos preservadas.
+- Último slide: 60 segundos. Rodapé apenas com numeração; fontes retiradas da projeção; legendas técnicas preservadas.
 - As falas são metas de ensaio. A duração de uma apresentação real não foi medida.
 
 O verificador confirmou os critérios acima na geração final de 17/11/2026.
@@ -158,7 +158,7 @@ A [especificação da revisão](../decisoes/revisao-semantica-apresentacao.md) p
 Verificações desta revisão:
 
 - [x] Regenerar PDF, PowerPoint, HTML, notas e cinco briefings.
-- [x] Conferir 23 páginas, apêndices A–I, numeração e fontes curtas.
+- [x] Conferir 23 páginas, apêndices A–I, numeração e ausência de fontes visíveis.
 - [x] Conferir tempos, marcos, correspondência das falas e função de cada slide.
 - [x] Inspecionar os gráficos e as páginas alteradas.
 - [x] Executar o verificador atualizado e conferir a integridade dos dados e do modelo.
@@ -200,5 +200,17 @@ Os trabalhos foram delimitados por arquivos; a revisão visual não alterou as f
 A ferramenta não disponibilizou `subagent_tokens`; a contagem individual não pôde ser medida.
 
 A pasta `Desktop/GED-16-apresentacao-final` foi atualizada após conferir o manifesto anterior.
-O novo manifesto confere 17 arquivos; a comparação confirmou cópias idênticas à preparação temporária.
+O novo manifesto confere 18 arquivos; a comparação confirmou cópias idênticas à preparação temporária.
 Slides, cinco briefings e relatório da auditoria acompanham a mensagem pronta para o grupo.
+
+
+## Retirada das fontes visíveis — correção solicitada pelo usuário
+
+As linhas de fonte e as citações foram retiradas das 23 páginas.
+As legendas técnicas dos gráficos permanecem, incluindo eixos, intervalos e limitações.
+SIM/DATASUS, IBGE e INEP aparecem no slide de dados, conforme o roteiro docente.
+O registro `referencias-dos-slides.md` preserva as informações retiradas da projeção.
+PDF, PowerPoint, HTML e cinco briefings foram regenerados.
+O verificador passou e agora rejeita linhas “Fonte:” ou “Fontes:” no texto dos slides.
+A revisão visual conferiu o slide de dados e um gráfico com legenda técnica.
+A pasta do Desktop foi atualizada; os 18 arquivos e o manifesto coincidem com a preparação verificada.

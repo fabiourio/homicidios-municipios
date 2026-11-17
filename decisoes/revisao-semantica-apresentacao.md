@@ -15,7 +15,7 @@ O usuário também pediu que cada slide cumpra um dos cinco itens das professora
 - Não trocar uma hipótese apenas porque ela não recebeu apoio.
 - Usar exclusão escolar, medida por frequência e atraso escolar. Não chamar essa medida de exclusão social em geral.
 - Usar migração recente, não imigração internacional. A medida é residência ininterrupta inferior a dez anos.
-- Retirar os dois apêndices de referências e manter as fontes curtas junto aos gráficos.
+- Retirar os dois apêndices de referências e retirar as fontes visíveis da projeção. Preservar referências na documentação.
 - Retirar GED-16 e o título repetidos no rodapé. Preservar a numeração.
 - Retirar os dois gráficos exploratórios do corpo. As figuras permanecem disponíveis no repositório.
 - Organizar as cinco partes exatamente na sequência do enunciado docente.

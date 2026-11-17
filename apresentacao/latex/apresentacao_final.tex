@@ -15,7 +15,7 @@
 \setbeamertemplate{footline}{\hfill\scriptsize\color{black!55}\insertframenumber\hspace{1em}\vspace{0.6em}}
 \graphicspath{{figuras/}{../../entrega/resultados/eda/}{../../entrega/resultados/modelagem/}}
 \newcommand{\fig}[1]{\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{#1}}
-\newcommand{\fonte}[1]{\par\vspace{0.2em}{\tiny\color{black!65}Fonte: #1\par}}
+\newcommand{\legenda}[1]{\par\vspace{0.2em}{\tiny\color{black!65}#1\par}}
 \input{numeros.tex}
 \title{Fatores associados aos homicídios nos municípios brasileiros}
 \subtitle{Regressão linear múltipla · ODS 16}
@@ -37,14 +37,13 @@
 Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
 \end{block}
 {\small Objetivo: descrever associações no recorte estudado, sem afirmar causa. Tema relacionado ao ODS 16.}
-\fonte{SIM/DATASUS; IBGE. Média anual de 2021--2023, conforme a definição apresentada no slide seguinte.}
 \end{frame}
 
 \section{Base de dados}
-\begin{frame}{Base de dados: fontes e medida de violência}
+\begin{frame}{Base de dados e medida de violência}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}X@{}}
 \toprule
-\textbf{Fonte} & \textbf{O que utilizamos}\\
+\textbf{Base} & \textbf{O que utilizamos}\\
 \midrule
 SIM/DATASUS & Óbitos por residência, média anual de 2021--2023\\[0.4em]
 IBGE, Censo 2022 & População, renda, desigualdade, trabalho, urbanização, frequência escolar e migração\\[0.4em]
@@ -56,7 +55,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \text{Taxa anual} = \frac{\text{óbitos em 2021--2023}}{3\,\times\,\text{população de 2022}}\,\times\,100\,000
 \]
 {\small Agressões (X85--Y09) + intervenções legais/operações de guerra (Y35--Y36).}
-\fonte{SIM/DATASUS; IBGE; INEP. Medida relacionada ao ODS 16; a definição difere do indicador oficial 16.1.1.}
+\legenda{A definição difere do indicador oficial 16.1.1 da ODS 16.}
 \end{frame}
 
 \begin{frame}{Base de dados: recorte e variáveis}
@@ -81,7 +80,6 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \end{columns}
 \vspace{0.5em}
 {\small Gini: aproximação pelas classes de renda das pessoas de 14 anos ou mais. Migração: residência inferior a dez anos.}
-\fonte{Elaboração própria. Cidades menores têm taxas mais instáveis; o recorte não elimina todo problema de registro.}
 \end{frame}
 
 \section{Metodologia}
@@ -98,7 +96,6 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \end{tabularx}
 \vspace{0.6em}
 {\small O log permite expressar as comparações como mudanças percentuais na taxa típica.}
-\fonte{Elaboração própria. Apostila GED-16, caps. 4, 5 e 7. Transformação e comparações auxiliares nos apêndices.}
 \end{frame}
 
 \begin{frame}{Metodologia: como avaliamos o modelo}
@@ -111,7 +108,6 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \end{itemize}
 \vspace{0.4em}
 {\small Os testes complementam a leitura dos gráficos. Um bom ajuste não garante que os pressupostos sejam atendidos.}
-\fonte{Elaboração própria. Apostila GED-16, caps. 4 e 6. Sem teste baseado em uma ordem artificial de vizinhos.}
 \end{frame}
 
 \section{Ajuste do modelo}
@@ -127,7 +123,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item Falta verificar a forma desses erros
 \end{itemize}
 \end{columns}
-\fonte{Modelo final, mesmos dados usados no ajuste. Diagonal: igualdade entre observado e ajustado; não é validação externa.}
+\legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Não é validação externa.}
 \end{frame}
 
 \begin{frame}{Ajuste: diagnóstico da variância dos erros}
@@ -141,7 +137,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 {\small \textbf{Leitura:} procurar uma faixa sem curva e com largura constante. A dispersão diminui com a população.}
 \vspace{0.3em}
 {\small \alert{Breusch-Pagan rejeita variância constante.} Intervalos e testes clássicos exigem cautela.}
-\fonte{Modelo final. Linha tracejada: erro zero. Breusch-Pagan: $p$ \nBPp. Cada ponto representa um município.}
+\legenda{Linha tracejada: erro zero. Breusch-Pagan: $p$ \nBPp. Cada ponto representa um município.}
 \end{frame}
 
 \begin{frame}{Ajuste: diagnóstico da normalidade dos resíduos}
@@ -155,7 +151,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 {\small \textbf{Leitura:} o histograma acompanha a curva; no gráfico de quantis, os pontos ficam próximos da reta.}
 \vspace{0.3em}
 {\small Shapiro-Wilk não rejeita normalidade ($p$ = \nSWp). \textbf{Isso não resolve a variância não constante.}}
-\fonte{Modelo final. Quantis comparam a distribuição dos resíduos com uma normal. Normalidade não é comprovada pelo teste.}
+\legenda{Quantis comparam os resíduos com uma normal. O teste não comprova normalidade.}
 \end{frame}
 
 \section{Discussão e interpretação}
@@ -170,7 +166,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item Migração: intervalo cruza zero
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. p.p. = pontos percentuais. Pontos: estimativas; barras: IC 95\% clássico, sem correção de variância. Associação, não causa.}
+\legenda{p.p. = pontos percentuais. Pontos: estimativas; barras: IC 95\% clássico, sem correção de variância.}
 \end{frame}
 
 \begin{frame}{Discussão: a desigualdade depende da renda}
@@ -185,7 +181,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item Na baixa renda, o sinal varia; não há um efeito positivo geral
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. Faixa: IC 95\% clássico, sem correção de variância. Pontos vermelhos: percentis 10, 50 e 90 da renda.}
+\legenda{Faixa: IC 95\% clássico. Pontos vermelhos: percentis 10, 50 e 90 da renda.}
 \end{frame}
 
 \begin{frame}{Discussão: renda e região no ajuste}
@@ -200,7 +196,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item O gráfico mostra a taxa típica retransformada
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. Curvas restritas à renda observada em cada região. Faixas: IC 95\% clássico. Não representam média aritmética da taxa.}
+\legenda{Curvas no intervalo de renda observado em cada região. Faixas: IC 95\% clássico. Não representam média aritmética.}
 \end{frame}
 
 \begin{frame}{Discussão: limites das conclusões}
@@ -212,7 +208,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item \textbf{Vizinhança:} municípios próximos podem compartilhar fatores; independência espacial não foi verificada
 \item \textbf{Estudo observacional:} associação municipal não demonstra causa nem descreve indivíduos
 \end{itemize}
-\fonte{Diagnóstico do modelo e validação dos dados. VIF máximo \nVIFrendaFinal; esse número não substitui a análise dos resíduos.}
+\legenda{VIF máximo: \nVIFrendaFinal. Esse número não substitui a análise dos resíduos.}
 \end{frame}
 
 \begin{frame}{Resposta à pergunta e próximos passos}
@@ -224,7 +220,6 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item \textbf{Literatura:} escola e desigualdade têm respaldo; diferenças regionais também aparecem em estudos municipais
 \item \textbf{Próximos passos:} tratar a variância dos erros e ampliar informações sobre políticas estaduais e violência organizada
 \end{itemize}
-\fonte{Fajnzylber et al. (2002); Lochner e Moretti (2004); Wanzinack et al. (2022); Barros et al. (2020). Resultados são associações.}
 \end{frame}
 
 \appendix
@@ -232,7 +227,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \scriptsize
 \renewcommand{\arraystretch}{1.02}
 \input{tabelas/coeficientes.tex}
-\fonte{Elaboração própria. Resposta ln(taxa); erros-padrão e testes clássicos, sem correção de variância.}
+\legenda{Resposta ln(taxa); erros-padrão e testes clássicos, sem correção de variância.}
 \end{frame}
 
 \begin{frame}{Apêndice B · Testes e contribuição dos termos}
@@ -253,7 +248,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \end{columns}
 \vspace{0.5em}
 {\small Os gráficos dos slides 8 e 9 explicam os diagnósticos. Não foi realizado teste de independência espacial.}
-\fonte{Elaboração própria. Testes clássicos; interpretar com cautela pela variância não constante.}
+\legenda{Testes clássicos: interpretar com cautela pela variância não constante.}
 \end{frame}
 
 \begin{frame}{Apêndice C · Transformação da resposta (Box-Cox)}
@@ -268,7 +263,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item Escolha do log: leitura percentual e melhora visual dos resíduos
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. Box-Cox com os mesmos termos do modelo final. Não selecionou log como potência ótima.}
+\legenda{Mesmos termos do modelo final. Box-Cox não selecionou o log como potência ótima.}
 \end{frame}
 
 \begin{frame}{Apêndice D · Modelo com e sem a renda}
@@ -286,7 +281,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item A comparação não isola apenas a renda linear
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. Indicadoras de região omitidas; ao retirar renda, sai a interação. Inferência clássica.}
+\legenda{Indicadoras de região omitidas; ao retirar renda, sai a interação. Inferência clássica.}
 \end{frame}
 
 \begin{frame}{Apêndice E · Região escolhida; estado como comparação}
@@ -305,14 +300,13 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item Referência: Sudeste no modelo final; SP no comparativo
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. Decisão do grupo em 17/11/2026. Comparação preservada para perguntas.}
 \end{frame}
 
 \begin{frame}{Apêndice F · Variáveis testadas e retiradas}
 \footnotesize
 \renewcommand{\arraystretch}{1.2}
 \input{tabelas/retiradas.tex}
-\fonte{Elaboração própria. $F$ parcial de cada variável somada ao modelo final. Inferência clássica.}
+\legenda{$F$ parcial de cada variável somada ao modelo final. Inferência clássica.}
 \vspace{0.4em}
 {\small \nForaNome: \nForaHom{} homicídio e \nForaIndet{} óbitos de intenção indeterminada em três anos. Exclusão por indício de sub-registro.}
 \end{frame}
@@ -334,20 +328,18 @@ Oscilação por porte: $1/\sqrt{\text{casos esperados}}$ & Grupo; apoiar o recor
 IC do efeito do Gini por renda & Grupo; interpretar a interação\\
 \bottomrule
 \end{tabularx}
-\fonte{Apostila GED-16 e registro das escolhas do grupo. Nenhum novo modelo foi introduzido nesta revisão.}
 \end{frame}
 
 \begin{frame}{Apêndice H · Resíduos por explicativa: renda e trabalho}
 {\centering\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_1.png}\par}
 \vspace{0.2em}
 {\small Procurar curvas e mudanças de dispersão. A faixa dos erros varia entre os níveis das explicativas.}
-\fonte{Modelo final, mesmos municípios. Apostila GED-16, seção 4.4: diagnóstico versus cada explicativa na regressão múltipla.}
 \end{frame}
 
 \begin{frame}{Apêndice I · Resíduos por explicativa: escola e região}
 {\centering\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_2.png}\par}
 \vspace{0.2em}
 {\small Diferenças de dispersão permanecem. Erros centrados por região não comprovam independência entre municípios.}
-\fonte{Modelo final. Região entra como categoria; linhas centrais das caixas são medianas. Apoio à leitura dos slides 8 e 9.}
+\legenda{Região entra como categoria; linhas centrais das caixas representam medianas.}
 \end{frame}
 \end{document}

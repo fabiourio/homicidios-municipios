@@ -19,7 +19,7 @@ Ela atualiza organização, tempos, hipóteses e referências sem alterar dados 
 | Pessoas | Preservar os cinco apresentadores e sua ordem | O usuário pediu a mesma divisão da apresentação parcial |
 | Tamanho | Usar 23 páginas: 14 principais e nove apêndices, A–I | A redução evita comprimir 29 páginas principais no tempo disponível |
 | Numeração | Manter apenas a numeração no rodapé | Facilita ensaio e perguntas sem repetir disciplina e título |
-| Estudos anteriores | Retirar a revisão extensa do início e os apêndices de referências | Manter comparações relevantes na discussão e fontes curtas nos gráficos |
+| Estudos anteriores | Retirar a revisão extensa do início e os apêndices de referências | Manter comparações relevantes na discussão; preservar referências na documentação |
 | Sequência | Contexto, dados, metodologia, ajuste e discussão | Cada pessoa cobre um item docente nessa ordem |
 | Gráficos exploratórios | Retirar os dois gráficos do corpo e preservá-los no repositório | Priorizar métodos, ajuste e discussão |
 | Ajuste observado | Mostrar taxas observadas e ajustadas no slide 7 | Explicar a escala e o alcance do ajuste |

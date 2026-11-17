@@ -27,7 +27,7 @@ A [revisão da narrativa de 17/11](revisao-semantica-apresentacao.md) atualiza a
 - G16: Os arquivos finais e as evidências de verificação ficam no repositório.
 - G17: As 23 páginas incluem 14 principais e nove apêndices, A–I.
 - G18: Os apêndices H–I ocupam as páginas 22–23 e mostram resíduos por explicativa.
-- G19: O rodapé contém apenas a numeração; os gráficos mantêm suas fontes curtas.
+- G19: O rodapé contém apenas a numeração; as referências ficam na documentação e os gráficos mantêm legendas técnicas.
 - G20: As hipóteses permanecem expectativas iniciais; migração permanece no modelo, sem evidência clara de associação.
 
 ## Desenho aprovado
@@ -35,7 +35,7 @@ A [revisão da narrativa de 17/11](revisao-semantica-apresentacao.md) atualiza a
 Preservar o modelo estatístico e os dados atuais.
 Reutilizar o Beamer e os geradores em R da apresentação parcial.
 Manter 14 páginas principais e nove apêndices para perguntas.
-Retirar os dois apêndices de referências. Manter as fontes curtas junto aos gráficos.
+Retirar os dois apêndices de referências. Retirar as fontes visíveis da projeção e preservar referências na documentação.
 Manter apenas a numeração no rodapé.
 Organizar contexto, dados, metodologia, ajuste e discussão nessa ordem.
 Retirar do corpo os dois gráficos exploratórios e preservá-los no repositório.
@@ -76,7 +76,7 @@ Os itens concluídos abaixo registram a versão anterior. As verificações da r
 ## Revisão da narrativa — verificação final
 
 - [x] R1 — Conferir os cinco itens docentes na ordem aprovada e a função de cada slide.
-- [x] R2 — Conferir 23 páginas, nove apêndices, fontes curtas e rodapé apenas com numeração.
+- [x] R2 — Conferir 23 páginas, nove apêndices, fontes fora da projeção e rodapé apenas com numeração.
 - [x] R3 — Conferir 780 segundos, tempos individuais e marcos de transição nos materiais exportados.
 - [x] R4 — Conferir hipótese de migração, exclusão escolar e abertura sem resultados antecipados.
 - [x] R5 — Regenerar exportações e pacote do grupo; executar o verificador e revisar páginas alteradas.

@@ -86,7 +86,8 @@ Contexto e dados ocupam 2min45. As cinco partes seguem a ordem pedida pelas prof
 Kauan apresenta contexto; Fabio, dados; Douglas, métodos; Luiz Felipe, ajuste e diagnósticos; Willian, discussão.
 O slide 7 mostra taxas observadas e ajustadas. Os dois gráficos exploratórios retirados permanecem no repositório.
 Os apêndices H e I mostram resíduos por explicativa nas páginas 22 e 23.
-As fontes curtas dos gráficos permanecem. O rodapé dos slides contém apenas a numeração.
+As fontes foram retiradas da projeção e preservadas em `apresentacao/referencias-dos-slides.md`.
+As legendas técnicas dos gráficos permanecem. O rodapé contém apenas a numeração.
 Os dois minutos restantes acomodam pausas e transições.
 O ensaio deve confirmar a duração; a estimativa por palavras não substitui a fala real.
 Os diagnósticos usam gráficos interpretados antes dos valores dos testes e do VIF.

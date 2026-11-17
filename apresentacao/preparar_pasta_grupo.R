@@ -8,12 +8,12 @@ origem <- c("apresentacao_final.pdf", "apresentacao_final.pptx", "apresentacao_f
             file.path("briefings", paste0("briefing_", c("kauan", "fabio", "douglas", "luiz_felipe", "willian"), ".pdf")),
             "roteiro.csv", "../decisoes/revisao-projeto-apostila.md", "../validacao/auditoria_extras.txt",
             "../decisoes/decisoes-do-grupo.pdf", "../decisoes/GED-16-alinhamento-com-professores.txt",
-            "../decisoes/revisao-semantica-apresentacao.md", "../validacao/REVISAO_MODELO_FINAL.md")
+            "../decisoes/revisao-semantica-apresentacao.md", "../validacao/REVISAO_MODELO_FINAL.md", "referencias-dos-slides.md")
 relativo <- c(file.path("01_slides", basename(origem[1:3])),
               file.path("02_briefings", basename(origem[4:8])), "02_briefings/roteiro.csv",
               "03_revisao/revisao-projeto-apostila.md", "03_revisao/auditoria_extras.txt",
               "03_revisao/decisoes.pdf", "03_revisao/GED-16-alinhamento-com-professores.txt",
-              "03_revisao/revisao-semantica-apresentacao.md", "03_revisao/REVISAO_MODELO_FINAL.md")
+              "03_revisao/revisao-semantica-apresentacao.md", "03_revisao/REVISAO_MODELO_FINAL.md", "03_revisao/referencias-dos-slides.md")
 stopifnot(all(file.exists(origem)), length(origem) == length(relativo))
 for (p in unique(dirname(relativo))) dir.create(file.path(destino, p), recursive = TRUE, showWarnings = FALSE)
 stopifnot(all(file.copy(origem, file.path(destino, relativo), overwrite = FALSE)))

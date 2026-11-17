@@ -48,7 +48,8 @@ Não ler os apêndices durante o roteiro principal.
 | 22–23 | Apêndices H–I: resíduos contra cada variável explicativa, conforme a apostila |
 
 Os dois gráficos exploratórios retirados do corpo permanecem disponíveis no repositório.
-As fontes curtas dos gráficos permanecem. O rodapé dos slides contém apenas a numeração.
+As fontes foram retiradas da projeção e preservadas em [registro de referências](referencias-dos-slides.md).
+As legendas técnicas dos gráficos permanecem. O rodapé contém apenas a numeração.
 Os apêndices de referências foram retirados; o registro bibliográfico permanece no projeto.
 
 ## Cuidados para a fala
