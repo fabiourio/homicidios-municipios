@@ -175,6 +175,16 @@ mac <- c(
 mac <- sub("^-", "$-$", mac)
 writeLines(sprintf("\\newcommand{\\n%s}{%s}", names(mac), mac), "numeros.tex")
 
+extra <- c(GiniEfDez = sinal(gr$efeito_pct[gr$percentil == 10]),
+           GiniEfVinteCinco = sinal(gr$efeito_pct[gr$percentil == 25]),
+           RendaDez = fmt(gr$renda[gr$percentil == 10], 0),
+           RendaNoventa = fmt(gr$renda[gr$percentil == 90], 0),
+           EscolaEfeito = sinal(efe$efeito_pct[efe$termo == "freq_15a17"], 1),
+           DistorcaoEfeito = sinal(efe$efeito_pct[efe$termo == "distorcao_em"], 1),
+           UrbanaEfeito = sinal(efe$efeito_pct[efe$termo == "pct_urbana"], 1))
+cat(paste(sprintf("\\newcommand{\\n%s}{%s}", names(extra), extra), collapse = "\n"),
+    "\n", sep = "", file = "numeros.tex", append = TRUE)
+
 # Tabela do corte de população (percentil 80) em cada região
 cr <- as.data.frame(eda$corte_regiao)
 lin <- sprintf("%s & %s & %s & %s\\%%\\\\", cr$regiao, fmt(cr$municipios, 0), fmt(cr$considerados, 0), fmt(cr$pct_pop, 0))
@@ -300,3 +310,60 @@ writeLines(c("\\begin{tabular}{@{}p{0.36\\textwidth}rrp{0.40\\textwidth}@{}}", "
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/retiradas.tex")
 
 cat("numeros.tex e tabelas/ gerados. Variável de maior correlação com ln(taxa):", var_max, "\n")
+
+library(ggplot2)
+dir.create("figuras", showWarnings = FALSE)
+azul <- "#00689D"; vermelho <- "#C8343B"; claro <- "#D6E6F2"
+tema <- theme_minimal(base_size = 16) +
+  theme(panel.grid.minor = element_blank(), plot.background = element_rect(fill = "white", colour = NA))
+plot_d <- mod$d
+p <- ggplot(plot_d, aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
+  geom_point(colour = azul, alpha = .3, size = 1.2) +
+  labs(x = "Valor ajustado de ln(taxa)", y = "Resíduo de ln(taxa)") + tema
+ggsave("figuras/residuos_ajustado.png", p, width = 6.3, height = 4.0, dpi = 220)
+p <- ggplot(plot_d, aes(pop, abs(residuo))) +
+  geom_point(colour = azul, alpha = .3, size = 1.2) +
+  scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(x = "População (escala log)", y = "Tamanho do erro: |resíduo|") + tema
+ggsave("figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
+p <- ggplot(plot_d, aes(sample = rstandard(mod$final))) +
+  stat_qq(colour = azul, alpha = .35, size = 1.1) + stat_qq_line(colour = vermelho, linewidth = .8) +
+  labs(x = "Quantis de uma distribuição normal", y = "Quantis dos resíduos padronizados") + tema
+ggsave("figuras/qq_final.png", p, width = 6.3, height = 4.0, dpi = 220)
+p <- ggplot(plot_d, aes(residuo)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = claro, colour = "white") +
+  stat_function(fun = dnorm, args = list(mean = mean(plot_d$residuo), sd = sd(plot_d$residuo)),
+                colour = vermelho, linewidth = .8) +
+  labs(x = "Resíduo de ln(taxa)", y = "Densidade") + tema
+ggsave("figuras/histograma_residuos.png", p, width = 6.3, height = 4.0, dpi = 220)
+ef_plot <- mod$mudancas[mod$mudancas$termo != "desocup", ]
+ef_plot$rotulo <- c("Urbanização: +10 p.p.", "Frequência escolar: +5 p.p.",
+                    "Atraso escolar: +10 p.p.", "Migração recente: +5 p.p.")
+ef_plot$rotulo <- factor(ef_plot$rotulo, levels = rev(ef_plot$rotulo))
+p <- ggplot(ef_plot, aes(efeito_pct, rotulo)) +
+  geom_vline(xintercept = 0, colour = "grey45", linetype = 2) +
+  geom_segment(aes(x = ic_inf_pct, xend = ic_sup_pct, yend = rotulo), colour = azul, linewidth = 1.1) +
+  geom_point(colour = azul, size = 3.5) +
+  labs(x = "Mudança percentual na taxa típica", y = NULL) + tema
+ggsave("figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)
+efeito_grafico <- mod$efeito_gini
+environment(efeito_grafico) <- mod
+gini_plot <- efeito_grafico(exp(seq(quantile(plot_d$log_rend, .02), quantile(plot_d$log_rend, .98), length.out = 200)))
+p <- ggplot(gini_plot, aes(renda, efeito_pct)) +
+  geom_ribbon(aes(ymin = ic_inf_pct, ymax = ic_sup_pct), fill = claro, alpha = .8) +
+  geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
+  geom_line(colour = azul, linewidth = 1) +
+  geom_point(data = gr[gr$percentil %in% c(10, 50, 90), ], colour = vermelho, size = 2.7) +
+  scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(x = "Renda per capita (R$, escala log)", y = "Mudança na taxa típica: +0,05 no Gini (%)") + tema
+ggsave("figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
+p <- ggplot(mod$grade, aes(rend, taxa, group = regiao)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = claro, alpha = .65) +
+  geom_line(aes(colour = regiao), linewidth = 1) +
+  scale_colour_manual(values = c(Nordeste = azul, Sudeste = "#13294B"), name = NULL) +
+  scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada (/100 mil/ano)") +
+  tema + theme(legend.position = "bottom")
+ggsave("figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
+stopifnot(identical(as.character(ef_plot$termo), as.character(mod$mudancas$termo[mod$mudancas$termo != "desocup"])))

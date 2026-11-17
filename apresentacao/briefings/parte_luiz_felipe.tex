@@ -1,21 +1,24 @@
-\section{Sua parte: renda em U, transformação e construção do modelo}
-\textbf{Mensagem principal:} a relação com a renda é em U invertido; a resposta entra em log (Box-Cox); e o modelo foi montado em blocos, cada um testado pelo $F$ parcial.
-
-\subsection{O que enfatizar}
+\section{Sua parte: método e diagnóstico por gráficos}
+\textbf{Mensagem principal:} o ajuste tem associação com as explicativas, mas ainda apresenta variância não constante nos erros.
+\subsection{Modelo e finalidade dos métodos}
 \begin{itemize}
-\item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos não são os mais pobres nem os mais ricos: são os do \nDecilPico º décimo de renda, abaixo da renda mediana. Por isso entram renda e renda² (modelo polinomial).
-\item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln. No slide seguinte, mostrar os gráficos dos resíduos antes e depois: com o log, a dispersão fica mais uniforme e os pontos ficam mais perto da reta.
-\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), Gini e Gini $\times$ renda (o efeito da desigualdade muda com a renda), as demais explicativas e a região (variação entre regiões). Renda e Gini entram centralizados na média.
-\item \textbf{Blocos:} A socioeconômico, B urbanização, C educação e migração, D região, E Gini $\times$ renda. Todos entram; o bloco C dá $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem da região (bloco D). O termo Gini $\times$ renda entra por último, com $F$ = \nFInter.
-\item \textbf{Região ou estado:} o slide saiu do corpo e virou o Apêndice E, para perguntas. O estado explica mais ($R^2_a$ \nRdoisAestado{} contra \nRdoisA), mas usa \nNumParEstado{} parâmetros e o teste de normalidade rejeita. A escolha está em aberto; os slides usam a região.
+\item A resposta é ln(taxa). O $R^2$ ajustado de \nRdoisA{} se refere a essa escala, não à taxa original.
+\item Renda ao quadrado representa uma curva. Gini $\times$ renda permite que a associação da desigualdade varie com a renda.
+\item Os testes $F$ avaliam contribuições conjuntas. A tabela dos blocos fica no apêndice B, sem leitura no corpo.
+\item O log foi escolhido por interpretação e melhora visual. Box-Cox estimou \nLambda{} no modelo auxiliar; zero fica fora de seu intervalo.
 \end{itemize}
-
+\subsection{Como apontar os diagnósticos}
+\begin{description}[leftmargin=0pt]
+\item[Resíduos e ajuste.] O eixo horizontal mostra o valor ajustado de ln(taxa). O vertical mostra o resíduo. Apontar a linha horizontal de zero. Procurar curva sistemática e mudanças na largura da faixa.
+\item[Erro e população.] O eixo horizontal mostra a população em escala logarítmica. O vertical mostra o tamanho absoluto do resíduo. A dispersão diminui com a população. Isso indica que a variância ainda muda.
+\item[Histograma.] O eixo horizontal mostra os resíduos. O vertical mostra sua densidade. Comparar a distribuição com a curva normal vermelha.
+\item[Gráfico de quantis.] O eixo horizontal mostra quantis de uma normal. O vertical mostra quantis dos resíduos padronizados. Pontos próximos da reta apoiam uma aproximação normal; desvios nas pontas merecem atenção.
+\end{description}
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[O $\lambda$ estimado não é 0, e o 0 está fora do IC; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log permite ler os efeitos em \%. Dizemos no slide que a escolha é por interpretabilidade.
-\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $g$ é o Gini centralizado, $\mathbf{x}$ são as outras explicativas (desocupação, urbanização, escola e migração), $D$ são as indicadoras de região e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
-\item[Região ou estado: qual vocês vão usar?] Os slides usam a região, e a escolha ainda está em aberto no grupo (Apêndice E). Com região a história é mais simples: cinco grupos com características comuns. Com estado, cada um é comparado com São Paulo. O estado explica mais ($F$ parcial \nFEstado{} com \nGlEstado{} gl), mas tem \nNumParEstado{} parâmetros, VIF máximo de \nVIFmaxEstado{} e \nNumUFpoucos{} estados com menos de 10 municípios.
+\item[Normalidade passou; então o modelo está bom?] Shapiro-Wilk não rejeitou normalidade, mas isso não a comprova. A variância não constante continua sendo uma limitação.
+\item[O que muda quando a variância não é constante?] Os intervalos e testes clássicos exigem cautela. Não garantimos inferência válida apenas porque o ajuste ou o VIF parecem bons.
+\item[Por que olhar o VIF depois?] O VIF ajuda a avaliar incerteza dos coeficientes por informação repetida. Ele não verifica a forma dos resíduos nem a variância constante.
 \end{description}
-
-\subsection{Transição}
-``Com o modelo montado, o Willian mostra o que ele diz e como checamos as hipóteses.''
+\subsection{Controle da fala e transição}
+Interpretar os gráficos antes de citar os testes. Ao concluir: ``Com essas restrições explícitas, o Willian interpreta os resultados do ajuste.''

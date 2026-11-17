@@ -28,6 +28,14 @@ stopifnot(length(titulos) == length(notas))
 quem <- ifelse(grepl("^\\[", notas), sub("^\\[([^]]+)\\].*", "\\1", notas), NA)
 fala <- sub("^\\[[^]]+\\]\\s*", "", notas)
 
+roteiro <- read.csv("../roteiro.csv", encoding = "UTF-8")
+stopifnot(identical(roteiro$slide, which(!is.na(quem))),
+          all(roteiro$pessoa == quem[roteiro$slide]),
+          all(roteiro$segundos > 0), sum(roteiro$segundos) == 13 * 60)
+roteiro$fim <- cumsum(roteiro$segundos)
+roteiro$inicio <- roteiro$fim - roteiro$segundos
+tempo <- function(segundos) sprintf("%dmin%02ds", segundos %/% 60, segundos %% 60)
+
 # Texto da nota -> LaTeX: escapa símbolos e troca {Nome} pela macro \nNome do código
 para_tex <- function(x) {
   x <- gsub("\\\\", "\\\\textbackslash{}", x)
@@ -42,10 +50,11 @@ blocos <- rle(ifelse(is.na(quem), "", quem))
 fim <- cumsum(blocos$lengths); ini <- fim - blocos$lengths + 1
 lin <- character(0)
 for (i in seq_along(blocos$values)) if (blocos$values[i] != "")
-  lin <- c(lin, sprintf("\\textbf{%s} & %s\\\\", blocos$values[i],
+  lin <- c(lin, sprintf("\\textbf{%s} & %s & %s\\\\", blocos$values[i],
+                        tempo(sum(roteiro$segundos[roteiro$pessoa == blocos$values[i]])),
                         paste(titulos_tex[ini[i]:fim[i]], collapse = "; ")))
-writeLines(c("\\small", "\\begin{tabularx}{\\linewidth}{@{}>{\\raggedright\\arraybackslash}p{2.6cm}>{\\raggedright\\arraybackslash}X@{}}",
-             "\\toprule", "\\textbf{Quem} & \\textbf{Slides, na ordem}\\\\", "\\midrule", lin,
+writeLines(c("\\small", "\\begin{tabularx}{\\linewidth}{@{}>{\\raggedright\\arraybackslash}p{2.1cm}p{1.8cm}>{\\raggedright\\arraybackslash}X@{}}",
+             "\\toprule", "\\textbf{Quem} & \\textbf{Tempo} & \\textbf{Slides, na ordem}\\\\", "\\midrule", lin,
              "\\bottomrule", "\\end{tabularx}", "\\normalsize"), "divisao.tex")
 
 # Um briefing por apresentador
@@ -54,13 +63,16 @@ for (nome in unique(na.omit(quem))) {
   if (!file.exists(sprintf("parte_%s.tex", s))) stop("Falta o texto da parte: parte_", s, ".tex")
   pags <- which(quem == nome)
   antes <- quem[max(1, min(pags) - 1)]; depois <- quem[min(length(quem), max(pags) + 1)]
+  plano_pessoa <- roteiro[roteiro$pessoa == nome, ]
 
   topicos <- function(x) paste0("\\item ", strsplit(para_tex(x), "(?<=[.!?])\\s+(?=[[:upper:]%\\\\])", perl = TRUE)[[1]])
   slides <- unlist(lapply(pags, function(k) c(
     "\\noindent\\begin{minipage}{\\linewidth}",
-    sprintf("\\textbf{\\large\\color{navy}%s}\\par\\vspace{0.4em}", titulos_tex[k]),
+    sprintf("\\textbf{\\large\\color{navy}Slide %d: %s}\\par\\vspace{0.4em}", k, titulos_tex[k]),
+    sprintf("\\textbf{Tempo deste slide:} %s. \\textbf{Marco de fim na apresentação:} %s.\\par",
+            tempo(roteiro$segundos[roteiro$slide == k]), tempo(roteiro$fim[roteiro$slide == k])),
     sprintf("\\begin{center}\\fbox{\\includegraphics[page=%d,width=0.56\\linewidth]{../latex/%s.pdf}}\\end{center}", k, deck),
-    "\\textbf{O que dizer:}", "\\begin{itemize}", topicos(fala[k]), "\\end{itemize}",
+    "\\textbf{Fala completa para ensaiar:}", "\\begin{itemize}", topicos(fala[k]), "\\end{itemize}",
     "\\end{minipage}\\par\\vspace{1.6em}")))
   writeLines(c("\\section{Seus slides e o que dizer em cada um}", slides), sprintf("fala_%s.tex", s))
 
@@ -73,10 +85,13 @@ for (nome in unique(na.omit(quem))) {
             paste(titulos_tex[pags], collapse = "; "),
             ifelse(min(pags) == 1 || is.na(antes) || antes == nome, "você abre a apresentação", antes),
             ifelse(is.na(depois) || depois == nome, "fim da apresentação", depois)),
+    sprintf("\\caixa{\\textbf{Seu tempo total:} %s. \\textbf{Comece no marco:} %s. \\textbf{Termine no marco:} %s.}",
+            tempo(sum(plano_pessoa$segundos)), tempo(min(plano_pessoa$inicio)), tempo(max(plano_pessoa$fim))),
+    "Os tempos são metas de ensaio. O roteiro reserva dois minutos para pausas e transições até o limite de quinze minutos.",
     sprintf("\\input{parte_%s.tex}", s), sprintf("\\input{fala_%s.tex}", s),
     "\\newpage", "\\input{comum.tex}", "\\end{document}"), sprintf("briefing_%s.tex", s))
 
-  ok <- system2("tectonic", c("-X", "compile", shQuote(sprintf("briefing_%s.tex", s))), stdout = FALSE, stderr = FALSE)
+  ok <- system2("tectonic", c("-X", "compile", "--keep-logs", shQuote(sprintf("briefing_%s.tex", s))), stdout = FALSE, stderr = FALSE)
   if (ok != 0) stop("Falhou ao compilar briefing_", s, ".tex")
   file.remove(sprintf("briefing_%s.tex", s), sprintf("fala_%s.tex", s))
   cat("gerado: briefing_", s, ".pdf (", length(pags), " slides)\n", sep = "")

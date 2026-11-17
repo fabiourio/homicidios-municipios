@@ -1,0 +1,61 @@
+library(jsonlite)
+library(pdftools)
+library(xml2)
+
+notas <- fromJSON("notas.json")
+roteiro <- read.csv("roteiro.csv", encoding = "UTF-8")
+pdf <- "apresentacao_final.pdf"
+paginas <- pdf_info(pdf)$pages
+stopifnot(paginas == length(notas), nrow(roteiro) == 14,
+          identical(roteiro$slide, seq_len(14)), sum(roteiro$segundos) == 780)
+pessoas <- c("Kauan", "Fabio", "Douglas", "Luiz Felipe", "Willian")
+tempos <- c(90, 90, 120, 180, 300)
+stopifnot(identical(unique(roteiro$pessoa), pessoas),
+          identical(as.numeric(tapply(roteiro$segundos, factor(roteiro$pessoa, levels = pessoas), sum)), tempos))
+num_tex <- readLines("latex/numeros.tex", encoding = "UTF-8")
+num <- setNames(sub(".*\\}\\{(.*)\\}$", "\\1", num_tex), sub("^\\\\newcommand\\{\\\\n(\\w+)\\}.*", "\\1", num_tex))
+num <- gsub("\\$-\\$", "−", gsub("\\\\%", "%", num))
+num <- gsub("$+$", "+", gsub("$<$", "<", num, fixed = TRUE), fixed = TRUE)
+for (k in names(num)) notas <- gsub(sprintf("{%s}", k), num[[k]], notas, fixed = TRUE)
+stopifnot(!any(grepl("\\{\\w+\\}", notas)))
+stopifnot(identical(unname(tools::md5sum(pdf)), unname(tools::md5sum("latex/apresentacao_final.pdf"))))
+texto <- pdf_text(pdf)
+stopifnot(all(vapply(seq_along(texto), function(k) {
+  palavras <- strsplit(trimws(texto[k]), "[[:space:]]+")[[1]]
+  tail(palavras, 1) == as.character(k)
+}, logical(1))))
+
+pasta_pptx <- tempfile(); dir.create(pasta_pptx)
+unzip("apresentacao_final.pptx", exdir = pasta_pptx)
+ns <- c(p = "http://schemas.openxmlformats.org/presentationml/2006/main",
+        a = "http://schemas.openxmlformats.org/drawingml/2006/main")
+slides <- list.files(file.path(pasta_pptx, "ppt/slides"), pattern = "^slide[0-9]+[.]xml$")
+stopifnot(length(slides) == paginas)
+for (k in seq_len(paginas)) {
+  arq <- file.path(pasta_pptx, sprintf("ppt/notesSlides/notesSlide%d.xml", k))
+  nota <- paste(xml_text(xml_find_all(read_xml(arq), "//p:sp[p:nvSpPr/p:nvPr/p:ph[@type='body']]//a:t", ns)), collapse = "")
+  stopifnot(identical(nota, notas[k]))
+}
+html <- read_html("apresentacao_final.html")
+secoes <- xml_find_all(html, "//section[@class='slide']")
+stopifnot(length(secoes) == paginas, identical(xml_attr(secoes, "data-notes"), notas))
+
+roteiro$palavras <- lengths(strsplit(sub("^\\[[^]]+\\]\\s*", "", notas[roteiro$slide]), "[[:space:]]+"))
+roteiro$palavras_por_minuto <- round(60 * roteiro$palavras / roteiro$segundos)
+roteiro$fim_segundos <- cumsum(roteiro$segundos)
+stopifnot(all(roteiro$palavras_por_minuto <= 140))
+for (pessoa in pessoas) {
+  slug <- gsub(" ", "_", tolower(iconv(pessoa, to = "ASCII//TRANSLIT")))
+  arq <- sprintf("briefings/briefing_%s.pdf", slug)
+  t <- paste(pdf_text(arq), collapse = "\n")
+  stopifnot(grepl(paste0("Briefing: ", pessoa), t, fixed = TRUE),
+            grepl("Seu tempo total:", t, fixed = TRUE),
+            grepl("Antes de você:", t, fixed = TRUE), grepl("Depois de você:", t, fixed = TRUE),
+            grepl("Perguntas prováveis", t, fixed = TRUE),
+            grepl("O projeto em um minuto", t, fixed = TRUE))
+  pags <- roteiro$slide[roteiro$pessoa == pessoa]
+  stopifnot(all(vapply(pags, function(k) grepl(paste0("Slide ", k, ":"), t, fixed = TRUE), logical(1))))
+}
+write.csv(roteiro, "tempos_verificados.csv", row.names = FALSE, fileEncoding = "UTF-8")
+cat(sprintf("OK: %d páginas, %d slides principais, cinco briefings, notas iguais no PPTX e HTML, roteiro de %d segundos.\n", paginas, nrow(roteiro), sum(roteiro$segundos)))
+print(aggregate(cbind(segundos, palavras) ~ pessoa, roteiro, sum))

@@ -194,7 +194,7 @@ com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficient
 write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5.2 Região x estado: os dois modelos lado a lado (escolha em aberto; os resultados usam a região)
+# 5.2 Região x estado: região mantida no modelo final; estado como comparação complementar
 # -----------------------------------------------------------------------------
 d$uf <- relevel(factor(d$uf), ref = "SP")
 com_estado <- update(final, . ~ . - regiao + uf)      # estado (26 indicadoras) no lugar da região

@@ -1,28 +1,25 @@
-\section{Sua parte: diagnóstico, resultados, crítica e conclusão}
-\textbf{Mensagem principal:} H1 (desigualdade) se confirma nos municípios de renda média e alta, não nos mais pobres; H2 (escola) se confirma; H3 (migração) não se confirma. A renda tem efeito em U invertido e as regiões diferem muito; isso está de acordo com a literatura. A variância não constante é a principal pendência.
-
-\subsection{O que enfatizar}
+\section{Sua parte: resultados, crítica e conclusão}
+\textbf{Mensagem principal:} escola e desigualdade apresentam associações relevantes, mas a leitura depende da renda e das limitações do ajuste.
+\subsection{Como ler os gráficos de resultados}
+\begin{description}[leftmargin=0pt]
+\item[Efeitos de escola, urbanização e migração.] O eixo horizontal mostra a mudança percentual na taxa típica. As linhas identificam a variável e a mudança comparada. Pontos são estimativas e barras são ICs clássicos. A linha vertical marca zero. Frequência escolar associa-se a uma taxa menor; atraso escolar e urbanização, a uma taxa maior. A barra de migração cruza zero.
+\item[Gini $\times$ renda.] O eixo horizontal mostra renda per capita em escala logarítmica. O vertical mostra a mudança percentual para cinco centésimos a mais no Gini. A linha mostra a estimativa; a faixa clara mostra o IC clássico. A linha tracejada marca zero. Os pontos vermelhos representam percentis da renda. Na mediana, a estimativa é \nGiniEfMediana\%; no percentil noventa, \nGiniEfNoventa\%. Na baixa renda, o sinal varia.
+\item[Renda e região.] O eixo horizontal mostra renda; o vertical mostra a taxa típica retransformada. As curvas mantêm outras características num valor comum. Cada curva aparece somente na renda observada da região. O pico perto de R\$ \nPico{} vale no Gini médio. Nordeste e Sudeste continuam diferentes nessa comparação. Não apresentar a curva como média aritmética prevista.
+\end{description}
+\subsection{Leitura crítica que precisa aparecer}
 \begin{itemize}
-\item \textbf{Ordem:} primeiro o diagnóstico (três slides), depois os coeficientes, a crítica do modelo e a conclusão. Os professores pediram: ver primeiro se o modelo está bem especificado e só depois ler os números.
-\item \textbf{Efeitos em \%:} como a resposta está em log, cada efeito é a variação da taxa para a mudança indicada, com as outras variáveis constantes. A primeira coluna liga cada variável à hipótese (H1, H2, H3). A migração (H3) não é significativa ($p$ = \nPMigr). A desocupação tem sinal negativo, contrário à correlação simples: é assunto da crítica do modelo.
-\item \textbf{Escola (H2):} mais jovens de 15--17 na escola, menos homicídios; mais atraso no ensino médio, mais homicídios. O abandono saiu do modelo (Apêndice D). É associação, não causa.
-\item \textbf{A desigualdade depende da renda:} o gráfico mostra o efeito de +0,05 no Gini ao longo da renda, com faixa de IC 95\%. Na renda mediana, \nGiniEfMediana\% na taxa; nos 10\% mais ricos, \nGiniEfNoventa\%; abaixo de R\$ \nGiniZero{} (\nGiniZeroPct\% dos municípios) o efeito não é positivo. Termo com $F$ = \nFInter; $R^2_a$ de \nRdoisAsemInter{} para \nRdoisA.
-\item \textbf{Curva da renda:} pico em R\$ \nPico{} no Gini médio, com as outras variáveis controladas, perto do pico dos dados brutos (R\$ \nRendaDecilPico) e abaixo da renda mediana. As duas curvas (Nordeste e Sudeste) cobrem só a renda observada em cada região.
-\item \textbf{Diagnóstico:} são três slides. Primeiro os gráficos (resíduos contra valores ajustados e contra a população; depois histograma e gráfico de quantis), por último a tabela dos testes. Mostrar no gráfico o que o teste diz. Shapiro-Wilk não rejeita a normalidade ($W$ = \nSW, $p$ = \nSWp); a variância não é constante (Breusch-Pagan = \nBP, rejeita); nenhum resíduo passa de 4 desvios-padrão. Dizer que, com \nForaNome{} no estudo, o teste de normalidade rejeitava. A multicolinearidade fica por último (VIF máximo \nVIFrendaFinal). Independência: dados em corte transversal, sem ordem de coleta; não há sequência a testar.
-\item \textbf{Crítica do modelo (slide novo):} cinco pontos, sem defender o modelo: variância não constante; desocupação com sinal trocado em relação à correlação simples ($r$ = \nCorDesocup), sinal de multicolinearidade com a renda ($r$ = \nCorDesocupRenda); normalidade que só passa sem \nForaNome; H3 não confirmada; e \nRdoisPct\% de variação explicada, sem dados de crime organizado e de política estadual.
-\item \textbf{Com e sem a renda (Apêndice F, para perguntas):} o $F$ parcial (\nFRenda) mostra que ela contribui; sem ela o $R^2_a$ cai para \nRdoisAsemRenda, e sai também o termo Gini $\times$ renda. Mostrar na tabela, em negrito, onde a significância muda: a desigualdade e a desocupação deixam de ser significativas; as medidas de escola continuam; a migração não é significativa nos dois casos. É o efeito da correlação entre as explicativas.
-\item \textbf{Conclusão:} responder a pergunta do início (H1 nos municípios de renda média e alta, H2 confirmada, H3 não confirmada) e comparar com os estudos do slide do Kauan: urbanização e desigualdade com o mesmo sinal de Wanzinack et al.; diferença entre regiões como em Barros et al. Fechar com os trabalhos futuros: variância não constante, crime organizado e política estadual, seleção formal de variáveis.
+\item Os intervalos dos gráficos não corrigem a variância não constante. Tratar a inferência como exploratória, sem esconder essa restrição.
+\item Não dizer ``o Gini não tem efeito nos mais pobres''. A estimativa no percentil dez é \nGiniEfDez\%; no percentil vinte e cinco, \nGiniEfVinteCinco\%, com intervalo que cruza zero.
+\item Percentil noventa não significa todos os municípios do topo. O valor de R\$ \nGiniZero{} é um cruzamento da estimativa com zero, não um limite de significância.
+\item Desocupação tem associação negativa frágil. Não atribuir uma causa comprovada ao sinal nem dizer que desocupação protege contra homicídios.
+\item A vizinhança pode gerar fatores compartilhados. Não testamos independência espacial e não tratamos ordem de linhas como vizinhança.
+\item Retomar a pergunta no encerramento. Relacionar os resultados à literatura sem afirmar que estudos diferentes são replicações exatas.
 \end{itemize}
-
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Por que o efeito da desigualdade muda com a renda?] É o que os dados mostram, e vale com cortes de população de 20, 30, 50 e 100 mil habitantes. Uma explicação possível, não testada: nos municípios pobres, um Gini alto marca os mais rurais e com mais pobreza extrema, e não o contraste entre ricos e pobres.
-\item[Por que tiraram a \% de óbitos de intenção indeterminada?] A medida tinha os homicídios no divisor: caía sozinha quando os homicídios subiam. Com a conta corrigida, ela não tem efeito, então saiu do modelo (Apêndice D).
-\item[Por que a desocupação tem efeito negativo?] Sozinha, ela acompanha mais homicídios ($r$ = \nCorDesocup). No modelo o sinal troca, porque ela repete a renda ($r$ = \nCorDesocupRenda). É sinal de multicolinearidade, e por isso não interpretamos esse coeficiente.
-\item[A variância não constante invalida o modelo?] Não invalida os coeficientes (continuam certos na média), mas deixa os valores p aproximados; está na crítica do modelo e nos trabalhos futuros.
-\item[O VIF foi calculado com ln renda padronizado ou cru?] Na escolha entre renda, \% pobres e alfabetização, com ln renda cru (VIF \nVIFrenda). No modelo final, com ln renda centralizado na média (VIF \nVIFrendaFinal). Padronizar não muda o VIF, porque ele só depende da correlação entre as explicativas. Centralizar muda, por causa do termo ao quadrado: sem centralizar, o VIF seria \nVIFrendaCru.
-\item[E o gasto da prefeitura com segurança?] Testamos em uma versão anterior do modelo e o gasto não apareceu associado à taxa. A segurança é sobretudo atribuição do governo do estado, e muitas prefeituras não gastam nada nessa função.
+\item[Por que o efeito do Gini muda com a renda?] O ajuste estima essa interação. O estudo não identifica seu mecanismo causal; o padrão de baixa renda exige cuidado adicional.
+\item[A desocupação protege contra violência?] Não podemos concluir isso. O sinal negativo é frágil e sua causa não foi demonstrada.
+\item[Qual é a principal melhoria futura?] Tratar a variância dos erros e ampliar informações sobre políticas estaduais e violência organizada. Essas mudanças podem alterar as estimativas.
 \end{description}
-
-\subsection{Encerramento}
-Agradecer e abrir para perguntas. A tabela completa de coeficientes está no apêndice, depois do ``Obrigado''.
+\subsection{Controle da fala e encerramento}
+Não ler cada coeficiente nem cada referência. Fechar com a resposta à pergunta, as restrições e o próximo passo. Ao terminar: ``Obrigado.''

@@ -2,7 +2,9 @@
 
 Grupo: Douglas Bergamim Fernandes, Fabio Eiiti Kobayashi Urio, Kauan Alves Aragão, Luiz Felipe de Brito Ramos e Willian Nelton Teleken.
 
-Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16 (indicador 16.1.1, taxa de homicídios por 100 mil habitantes).
+Trabalho da disciplina de Análise de Regressão, ligado ao ODS 16, sobre violência letal nos municípios brasileiros.
+A resposta inclui agressões e intervenções legais; ela não equivale estritamente ao indicador 16.1.1 de homicídio intencional da ONU.
+O [metadado da ONU](https://unstats.un.org/sdgs/metadata/files/Metadata-16-01-01.pdf) define o indicador e suas exclusões.
 
 **Pergunta:** quais fatores socioeconômicos, demográficos e geográficos estão associados à taxa de homicídios nos municípios brasileiros?
 
@@ -32,9 +34,9 @@ entrega/                   CÓDIGO DA ANÁLISE para entregar (ver entrega/LEIA-M
   2_modelo.R    Box-Cox, VIF, blocos com F parcial, modelo, comparação com e sem a renda e diagnóstico -> entrega/resultados/modelagem/
   dados/                   cópia da base analítica e das variáveis extras (geradas pelos scripts 01 e 02)
 validacao/                 validação da qualidade dos dados (validar_dados.R e RELATORIO.md)
-relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv)
-decisoes/                  INTERNO: guia das decisões do grupo, com opções, prós e contras e o que já foi decidido (PDF e a fonte em HTML)
-apresentacao/              INTERNO: slides (latex/), notas.json, exportação .pptx/.html e briefings/ por apresentador
+relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv) e modelo/ com os arquivos do Overleaf
+decisoes/                  INTERNO: transcrição do alinhamento com os professores e guia das decisões do grupo (PDF e fonte em HTML)
+apresentacao/              slides finais (latex/ e exportações) e material interno de fala (notas.json e briefings/)
 ```
 
 ## Como rodar
@@ -64,7 +66,25 @@ cd briefings
 Rscript gerar_briefings.R                 # um briefing_<nome>.pdf por apresentador
 ```
 
-Tudo em `apresentacao/` é interno do grupo (não vai na entrega). Para atualizar os briefings, use a skill `briefing-apresentacao` (`.claude/skills/`).
+Os slides em `apresentacao/apresentacao_final.pdf` e `.pptx` são os arquivos da apresentação para enviar à professora.
+O prazo informado pelo grupo é **18/11/2026, às 10h00**. A apresentação tem limite de 15 minutos.
+As notas e os briefings são material interno do grupo.
+Para atualizar os briefings, use a skill `briefing-apresentacao` (`.claude/skills/`).
+
+## Fechamento da apresentação final
+
+Os [materiais finais e os briefings](apresentacao/LEIA-ME.md) estão organizados por apresentador.
+O [registro de verificação](apresentacao/VERIFICACAO.md) documenta os checks, as correções e os limites desta etapa.
+
+As [decisões aprovadas em 17/11](decisoes/discussao-final-17-11-2026.md) mantêm a região no modelo.
+A apresentação terá 14 páginas principais e apêndices para perguntas.
+O roteiro prevê 13 minutos: Kauan 1min30, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 5min.
+Os dois minutos restantes acomodam pausas e transições.
+O ensaio deve confirmar a duração; a estimativa por palavras não substitui a fala real.
+Os diagnósticos usam gráficos interpretados antes dos valores dos testes e do VIF.
+As limitações incluem o recorte populacional, o Gini aproximado e a dependência entre municípios não avaliada.
+O [plano de execução](decisoes/plano-fechamento-final.md) registra os requisitos desta etapa.
+O artigo final fica para a próxima etapa; os arquivos do modelo do Overleaf estão em `relatorio/modelo/`.
 
 Nenhum número é digitado à mão no `.tex`: tudo vem de `numeros.tex` e `tabelas/`. O `gerar_numeros.R` também confere as frases fixas dos slides (ex.: "renda em U invertido") e para com erro se o resultado deixar de sustentá-las.
 

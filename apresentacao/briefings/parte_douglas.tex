@@ -1,21 +1,20 @@
-\section{Sua parte: análise exploratória}
-\textbf{Mensagem principal:} a taxa é assimétrica à direita (o que pede uma transformação), varia muito entre regiões, e nenhum fator sozinho a explica; renda, \% pobres e alfabetização medem quase o mesmo, então só a renda entra no modelo.
-
-\subsection{O que enfatizar}
+\section{Sua parte: padrões descritivos}
+\textbf{Mensagem principal:} região e renda apresentam padrões relevantes, mas nenhuma comparação bruta isola suas associações.
+\subsection{Como ler os dois gráficos}
 \begin{itemize}
-\item Daqui em diante, tudo usa os \nMunEsc{} municípios do escopo (no mapa, os de fora aparecem em cinza).
-\item \textbf{Resumo:} as variáveis têm escalas e dispersões bem diferentes; a densidade foi testada em log e padronizada, como a professora pediu; com este escopo ela não é significativa ($p$ = \nPDens) e fica fora do modelo, com outras cinco variáveis testadas e retiradas (Apêndice D).
-\item \textbf{Assimetria (histograma da taxa):} metade dos municípios fica entre \nTaxaQuartilUm{} e \nTaxaQuartilTres, mas há uma cauda longa à direita (assimetria \nAssimTaxa, positiva), que puxa a média (\nTaxaMedia) para cima da mediana (\nTaxaMediana). Isso antecipa a transformação do modelo.
-\item \textbf{Variação entre regiões (mapa e boxplot no mesmo slide):} Norte e Nordeste acima de Sudeste e Sul. Daí a região no modelo; a Amazônia Legal foi testada e ficou fora porque a maior parte dela é a própria região Norte (o efeito vem só do Mato Grosso).
-\item \textbf{Correlações:} a maior com o log da taxa é a de \nCorMaxVar{} (\nCorMax). Na matriz, renda, \% pobres e alfabetização se repetem (até \nCorTrio{} entre si): multicolinearidade, VIF da renda \nVIFrenda{} (com ln renda sem padronizar; padronizar não muda o VIF).
+\item Tudo nesta parte usa os mesmos \nMunEsc{} municípios do modelo. Não confundir com todos os municípios brasileiros.
+\item No gráfico regional, o eixo horizontal identifica as regiões. O eixo vertical mostra ln(taxa), o logaritmo da taxa anual.
+\item A linha dentro da caixa é a mediana. A caixa contém a metade central. Os pontos vermelhos mostram médias de ln(taxa).
+\item Norte e Nordeste têm medianas maiores no recorte. A variação dentro das regiões impede resumir cada município pela região.
+\item No gráfico de renda, os grupos avançam da menor para a maior renda. O eixo vertical continua em ln(taxa).
+\item A mediana é maior numa faixa intermediária. Isso motiva uma curva no modelo, sem demonstrar um efeito isolado.
+\item Apontar a dispersão dentro das faixas. As diferenças podem envolver região, escola e outras características.
 \end{itemize}
-
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Por que o log e não a raiz?] Quem decide é o Box-Cox, no slide do Luiz Felipe; aqui só mostramos que a taxa original é assimétrica.
-\item[Tirar \% pobres e alfabetização não perde informação?] Pouca: elas repetem a renda; mantê-las deixaria os coeficientes instáveis e com sinais trocados.
-\item[A fronteira não importa?] Testamos a faixa de fronteira e ela não tem efeito, por isso saiu do modelo (Apêndice D). Com a região no modelo, boa parte do efeito regional já é captada.
+\item[O gráfico prova que renda causa violência?] Não. A comparação é descritiva e as faixas diferem em outras características. O ajuste também não demonstra causa.
+\item[Por que usar uma curva em vez de uma reta?] As medianas não seguem um crescimento ou uma queda contínua. O termo quadrático permite representar esse padrão.
+\item[Todos os municípios do Nordeste são mais violentos?] Não. O gráfico mostra variação entre municípios e sobreposição entre grupos. O resultado compara distribuições, não determina cada caso.
 \end{description}
-
-\subsection{Transição}
-``A relação com a renda tem uma forma especial, que o Luiz Felipe mostra agora.''
+\subsection{Controle da fala e transição}
+Não reabrir a seleção de variáveis. Ao concluir: ``O Luiz Felipe explica como o modelo considera essas diferenças e como avaliamos seus erros.''
