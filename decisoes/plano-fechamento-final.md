@@ -122,4 +122,4 @@ O registro final de agentes e verificações fica em `apresentacao/VERIFICACAO.m
 - [x] Regenerar exportações, briefings e guia, sem modificar coeficientes ou região.
 - [x] Conferir todas as páginas, o tempo e a ausência de fontes visíveis.
 - [x] Atualizar o pacote do grupo e validar seus arquivos e links.
-- [ ] Publicar a revisão sem fazer merge e informar somente pendências reais.
+- [x] Publicar a revisão sem fazer merge; pendências reais registradas na matriz e no pacote do grupo.
