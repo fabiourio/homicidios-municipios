@@ -23,8 +23,9 @@ setwd(atual)
 
 br <- eda$br; d_eda <- eda$d; porte <- as.data.frame(eda$porte); R <- eda$R
 reg_br <- tapply(br$hom, br$regiao, sum) / tapply(br$exposure, br$regiao, sum) * 1e5   # todos os municípios
-# Taxa mundial de homicídios em 2021: UNODC, Global Study on Homicide 2023 (único número externo, com fonte no slide)
-TAXA_MUNDO_UNODC <- 5.8
+contexto <- read.csv("../contexto_homicidios_2021.csv")
+taxa_brasil_ctx <- contexto$taxa_100mil[contexto$local == "Brasil"]
+taxa_mundo_ctx <- contexto$taxa_100mil[contexto$local == "Mundo"]
 cv <- eda$cv
 e <- c(
   municipios_br = nrow(br), hom_br = sum(br$hom), taxa_br = eda$taxa_br, pop_min = eda$POP_MIN,
@@ -33,7 +34,7 @@ e <- c(
   zeros_escopo = sum(d_eda$hom == 0), zeros_br = sum(br$hom == 0),
   taxa_media = mean(d_eda$taxa), taxa_mediana = median(d_eda$taxa),
   assim_taxa = eda$assimetria(d_eda$taxa),
-  hom_ano = sum(br$hom) / 3, taxa_mundo = TAXA_MUNDO_UNODC, razao_mundo = eda$taxa_br / TAXA_MUNDO_UNODC,
+  hom_ano = sum(br$hom) / 3,
   taxa_n_br = reg_br[["N"]], taxa_ne_br = reg_br[["NE"]], taxa_co_br = reg_br[["CO"]],
   taxa_se_br = reg_br[["SE"]], taxa_s_br = reg_br[["S"]],
   cor_renda_pobres = R["ln Renda", "% pobres"], cor_renda_alfabet = R["ln Renda", "Alfabetização"],
@@ -74,6 +75,9 @@ coef <- function(t, col) coefs[coefs$termo == t, col]
 
 # Confere as frases fixas dos slides: se o resultado mudar, para aqui em vez de gerar slide errado
 confere <- function(ok, frase) if (!isTRUE(ok)) stop("O resultado não sustenta mais a frase do slide: ", frase)
+confere(nrow(contexto) == 2 && all(contexto$ano == 2021) && all(contexto$indicador == "homicidio_intencional") &&
+          length(taxa_brasil_ctx) == 1 && length(taxa_mundo_ctx) == 1 && taxa_brasil_ctx > taxa_mundo_ctx && taxa_mundo_ctx > 0,
+        "contexto internacional compara o mesmo indicador e o mesmo ano")
 confere(coef("rend_c2", "b") < 0 && coef("rend_c2", "p") < 0.05, "renda em U invertido")
 confere(m[["lambda"]] < 0.25, "Box-Cox: lambda mais perto de 0 (log) do que de 0,5 (raiz); o log é o valor de fácil interpretação mais próximo")
 confere(m[["lambda_ic_inf"]] > 0, "lambda = 0 fica fora do IC 95% de Box-Cox")
@@ -163,7 +167,9 @@ mac <- c(
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
   AssimTaxa = fmt(e[["assim_taxa"]], 2),
-  HomAno = fmt(e[["hom_ano"]], 0), TaxaMundo = fmt(e[["taxa_mundo"]]), RazaoMundo = fmt(e[["razao_mundo"]]),
+  HomAno = fmt(e[["hom_ano"]], 0),
+  TaxaBrasilContexto = fmt(taxa_brasil_ctx), TaxaMundoContexto = fmt(taxa_mundo_ctx),
+  RazaoContexto = fmt(taxa_brasil_ctx / taxa_mundo_ctx),
   TaxaNbr = fmt(e[["taxa_n_br"]]), TaxaNEbr = fmt(e[["taxa_ne_br"]]), TaxaCObr = fmt(e[["taxa_co_br"]]),
   TaxaSEbr = fmt(e[["taxa_se_br"]]), TaxaSbr = fmt(e[["taxa_s_br"]]),
   CorMax = fmt(abs(r_resp[[var_max]]), 2), CorMaxVar = gsub("%", "\\\\%", var_max),
@@ -246,7 +252,7 @@ cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcom
 
 # Tabela dos dois modelos lado a lado: região x estado; em negrito, onde a significância a 5% muda
 re <- mod$regiao_estado
-rot_re <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", rot_cs, `rend_c:gini_c` = "Gini $\\times$ renda")
+rot_re <- c(rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)²", rot_cs, `rend_c:gini_c` = "Gini $\\times$ ln(renda)")
 stopifnot(all(re$termo %in% names(rot_re)))
 muda <- (re$p_regiao < 0.05) != (re$p_estado < 0.05)
 cel <- cbind(rot_re[re$termo], gsub("-", "$-$", fmt(re$b_regiao, 3)), fp(re$p_regiao), gsub("-", "$-$", fmt(re$b_estado, 3)), fp(re$p_estado))
@@ -299,7 +305,7 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
              lin_gini, lin, "\\bottomrule", "\\end{tabular}"), "tabelas/efeitos.tex")
 
 # Apêndice: coeficientes
-nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ renda",
+nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)²", gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)",
            desocup = "Desocupação", pct_urbana = "\\% urbana",
            freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",

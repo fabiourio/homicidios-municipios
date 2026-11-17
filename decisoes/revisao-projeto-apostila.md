@@ -143,3 +143,7 @@ Não foram tratadas como decisões já tomadas nem como obrigação para aumenta
 
 As decisões da apresentação estão fechadas.
 A discussão futura sobre correção da variância deve ocorrer antes de tratar uma nova análise como versão final do artigo.
+
+A [análise crítica posterior por slide](analise-critica-slide-a-slide.md) recuperou a relevância quantitativa da abertura.
+Ela também tornou explícitas a urbanização, a fragilidade da desocupação e a resposta final sobre renda e região.
+A comparação internacional usa dados de homicídio intencional em 2021 e não utiliza a taxa do modelo na divisão.

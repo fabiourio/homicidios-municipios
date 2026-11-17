@@ -27,16 +27,18 @@
 
 \section{Contextualização e questão de pesquisa}
 \begin{frame}{Contexto e questão de pesquisa}
+\begin{block}{Homicídios intencionais em 2021 · por 100 mil habitantes}
+\centering\large\textbf{Brasil: \nTaxaBrasilContexto}\qquad\textbf{Mundo: \nTaxaMundoContexto}
+\end{block}
 \begin{itemize}
-\setlength{\itemsep}{0.5em}
-\item Brasil, 2021--2023: \textbf{\nHomAno{} mortes por ano} na medida do estudo
-\item A taxa nacional não descreve as diferenças entre os municípios
-\item Problema: identificar características municipais associadas a essas diferenças
+\setlength{\itemsep}{0.35em}
+\item Brasil: cerca de \textbf{\nRazaoContexto{} vezes a média mundial}
+\item Nossa base, 2021--2023: média de \textbf{\nHomAno{} mortes por ano}
+\item \textbf{ODS 16, meta 16.1:} reduzir a violência e as mortes relacionadas
 \end{itemize}
-\begin{block}{Pergunta}
+\begin{block}{Pergunta de pesquisa}
 Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
 \end{block}
-{\small Objetivo: descrever associações no recorte estudado, sem afirmar causa. Tema relacionado ao ODS 16.}
 \end{frame}
 
 \section{Base de dados}
@@ -73,7 +75,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \begin{itemize}
 \item Renda, Gini e desocupação
 \item Urbanização
-\item Frequência e atraso escolar
+\item Frequência de 15--17 anos e atraso no ensino médio
 \item Migração recente
 \item Região, com referência no Sudeste
 \end{itemize}
@@ -118,9 +120,9 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \column{0.33\textwidth}
 \begin{itemize}\small
 \item $R^2$ ajustado = \nRdoisA, na escala de ln(taxa)
-\item Pontos próximos da diagonal: erros menores
-\item Desvios grandes permanecem
-\item Falta verificar a forma desses erros
+\item O modelo acompanha parte da variação observada
+\item Municípios com erros grandes permanecem
+\item Esse ajuste não mede desempenho em dados novos
 \end{itemize}
 \end{columns}
 \legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Não é validação externa.}
@@ -161,9 +163,9 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \fig{efeitos.png}
 \column{0.29\textwidth}
 \begin{itemize}\small
-\item Hipóteses: mais exclusão escolar e migração, taxas maiores
 \item Maior frequência associada a taxa menor
 \item Maior atraso associado a taxa maior
+\item Urbanização: associação positiva
 \item Migração: intervalo cruza zero
 \end{itemize}
 \end{columns}
@@ -205,7 +207,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \setlength{\itemsep}{0.5em}
 \item \textbf{Variância não constante:} tratar os intervalos e testes como evidência exploratória
 \item \textbf{Medição:} Gini aproximado e possível sub-registro dos óbitos; cidades pequenas ficam fora do recorte
-\item \textbf{Desocupação:} associação negativa frágil; o sinal não demonstra sua causa
+\item \textbf{Desocupação:} o sinal negativo perde evidência ao excluir municípios com alta proporção de óbitos indeterminados
 \item \textbf{Vizinhança:} municípios próximos podem compartilhar fatores; independência espacial não foi verificada
 \item \textbf{Estudo observacional:} associação municipal não demonstra causa nem descreve indivíduos
 \end{itemize}
@@ -218,8 +220,8 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \item \textbf{Desigualdade:} associação depende da renda; positiva nos percentis 50 e 90 avaliados
 \item \textbf{Escola:} frequência e atraso escolar apresentam associações nas direções esperadas
 \item \textbf{Migração:} não encontramos evidência clara no modelo ajustado
-\item \textbf{Literatura:} escola e desigualdade têm respaldo; diferenças regionais também aparecem em estudos municipais
-\item \textbf{Próximos passos:} tratar a variância dos erros e ampliar informações sobre políticas estaduais e violência organizada
+\item \textbf{Renda e região:} relação curva da renda; diferenças regionais permanecem no ajuste
+\item \textbf{Próximos passos:} tratar a variância dos erros, investigar dependência espacial e ampliar dados de políticas estaduais
 \end{itemize}
 \end{frame}
 

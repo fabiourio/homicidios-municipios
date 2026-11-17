@@ -13,6 +13,7 @@ O prazo informado para enviar os slides é 18/11/2026, às 10h00.
 - [Falas completas](notas.json): uma nota por página, na ordem do deck.
 - [Tempos por slide](roteiro.csv): fonte dos tempos nos briefings.
 - [Verificação final](VERIFICACAO.md): evidências e limites das verificações.
+- [Análise crítica por slide](../decisoes/analise-critica-slide-a-slide.md): função, lacunas e correções conforme o enunciado docente.
 
 O PowerPoint usa imagens dos slides para preservar o visual. A fonte editável fica em `latex/apresentacao_final.tex`.
 Notas e briefings são materiais internos do grupo. Os slides fazem parte da entrega à professora.

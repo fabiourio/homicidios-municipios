@@ -16,9 +16,11 @@ relativo <- c(file.path("01_slides", basename(origem[1:3])),
               "03_revisao/revisao-semantica-apresentacao.md", "03_revisao/REVISAO_MODELO_FINAL.md", "03_revisao/referencias-dos-slides.md")
 codigo <- file.path("../entrega", c("analise_final.qmd", "analise_final.html", "1_analise_exploratoria.R", "2_modelo.R", "LEIA-ME.md"))
 bases <- file.path("../entrega/dados", c("base_analitica.csv", "variaveis_extras.csv", "malha_mun.geojson", "dicionario.csv", "dicionario_extras.csv", "validacao_gini.csv"))
-origem <- c(origem, codigo, bases, "../decisoes/conferencia-pedidos-17-11-2026.md")
+origem <- c(origem, codigo, bases, "../decisoes/conferencia-pedidos-17-11-2026.md",
+            "../decisoes/analise-critica-slide-a-slide.md", "contexto_homicidios_2021.csv")
 relativo <- c(relativo, file.path("04_codigo", basename(codigo)), file.path("04_codigo/dados", basename(bases)),
-              "03_revisao/conferencia-pedidos-17-11-2026.md")
+              "03_revisao/conferencia-pedidos-17-11-2026.md", "03_revisao/analise-critica-slide-a-slide.md",
+              "03_revisao/contexto_homicidios_2021.csv")
 stopifnot(all(file.exists(origem)), length(origem) == length(relativo))
 for (p in unique(dirname(relativo))) dir.create(file.path(destino, p), recursive = TRUE, showWarnings = FALSE)
 stopifnot(all(file.copy(origem, file.path(destino, relativo), overwrite = FALSE)))

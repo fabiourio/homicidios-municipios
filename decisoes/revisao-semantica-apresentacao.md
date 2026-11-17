@@ -10,7 +10,7 @@ O usuário também pediu que cada slide cumpra um dos cinco itens das professora
 - Preservar 14 slides principais e a meta total de 13 minutos.
 - Reservar 75 segundos para Kauan. Transferir os 15 segundos liberados para a discussão do Willian.
 - Definir o tempo como meta e limite de ensaio, sem exigir preencher segundos com leitura.
-- Retirar da abertura a conclusão sobre diferenças regionais. A taxa nacional e a variação municipal motivam a pergunta.
+- Retirar da abertura a conclusão sobre diferenças regionais. A comparação internacional e a escala das mortes na base motivam a pergunta. A abertura liga esses dados à meta 16.1 da ODS 16.
 - Manter a pergunta de associação do estudo. As hipóteses iniciais ficam no briefing e retornam na discussão dos resultados.
 - Não trocar uma hipótese apenas porque ela não recebeu apoio.
 - Usar exclusão escolar, medida por frequência e atraso escolar. Não chamar essa medida de exclusão social em geral.

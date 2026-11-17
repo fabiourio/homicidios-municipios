@@ -1,0 +1,3 @@
+local,ano,indicador,taxa_100mil,publicacao,localizacao,fonte_url
+Brasil,2021,homicidio_intencional,21.3,UNODC GSH 2023 e Anuario Estatistico ONU 2024,Figura 6 - ano conferido no Anuario Estatistico ONU 2024,https://data.un.org/_Docs/SYB/PDFs/SYB67_328_202411_Intentional%20homicides%20and%20other%20crimes.pdf
+Mundo,2021,homicidio_intencional,5.8,UNODC GSH 2023 e Relatorio ODS 16 de 2024,Taxa mundial de homicidios em 2021,https://unstats.un.org/sdgs/report/2024/extended-report/Extended-Report_Goal-16.pdf

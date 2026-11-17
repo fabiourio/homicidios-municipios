@@ -126,11 +126,11 @@ A comparação com estados permanece complementar; não substitui região.
 
 | Pessoa | Slides | Tempo | Marco final | Palavras nas falas |
 |---|---|---:|---:|---:|
-| Kauan | 1–2 | 1min15 | 1min15 | 112 |
+| Kauan | 1–2 | 1min15 | 1min15 | 123 |
 | Fabio | 3–4 | 1min30 | 2min45 | 186 |
-| Douglas | 5–6 | 2min | 4min45 | 178 |
-| Luiz Felipe | 7–9 | 3min | 7min45 | 270 |
-| Willian | 10–14 | 5min15 | 13min00 | 512 |
+| Douglas | 5–6 | 2min | 4min45 | 181 |
+| Luiz Felipe | 7–9 | 3min | 7min45 | 274 |
+| Willian | 10–14 | 5min15 | 13min00 | 534 |
 
 Esses volumes deixam espaço para apontar os gráficos e fazer pausas. Eles não dispensam o ensaio.
 A ordem e as pessoas são as mesmas; os assuntos foram condensados e redistribuídos em relação à parcial.
@@ -147,6 +147,16 @@ A ordem e as pessoas são as mesmas; os assuntos foram condensados e redistribu�
 ## Pasta entregue para a revisão do grupo
 
 A pasta `Desktop/GED-16-apresentacao-final` foi atualizada e conferida pelo manifesto.
-Ela contém 30 arquivos mais o manifesto, incluindo o caderno final e as bases em `04_codigo`.
+Ela contém 32 arquivos mais o manifesto, incluindo o caderno final e as bases em `04_codigo`.
 Os links locais dos documentos foram adaptados; referências ao restante do projeto abrem a branch no GitHub.
 O pacote foi validado sem links locais quebrados. O material não substitui o ZIP acadêmico completo.
+
+
+## Revisão crítica posterior de cada slide
+
+O usuário apontou que a abertura havia perdido a relevância quantitativa da apresentação parcial.
+A revisão de arquivos não havia identificado adequadamente essa falha de conteúdo.
+A análise crítica posterior está em `analise-critica-slide-a-slide.md`.
+Ela recupera a comparação internacional com o mesmo ano e definição, além da escala da base e da ODS.
+Também explicita urbanização, justifica a fragilidade da desocupação e inclui renda e região na resposta final.
+Os demais itens docentes permanecem cobertos; a história das tentativas não voltou ao roteiro principal.

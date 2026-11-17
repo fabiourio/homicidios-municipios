@@ -28,3 +28,13 @@ A bibliografia do projeto permanece em `relatorio/referencias.bib` e na document
 - **Slide 21:** Apostila GED-16 e registro das escolhas do grupo. Nenhum novo modelo foi introduzido nesta revisão.
 - **Slide 22:** Modelo final, mesmos municípios. Apostila GED-16, seção 4.4: diagnóstico versus cada explicativa na regressão múltipla.
 - **Slide 23:** Modelo final. Região entra como categoria; linhas centrais das caixas são medianas. Apoio à leitura dos slides 8 e 9.
+
+
+## Contextualização revista após o novo comentário do usuário
+
+O slide 2 recupera a comparação internacional para dimensionar o problema, sem linhas de fonte na projeção.
+Brasil: 21,3 e mundo: 5,8 homicídios intencionais por cem mil habitantes em 2021; razão aproximada de 3,7.
+Dados conferidos nas figuras 5 e 6 do relatório UNODC 2023 e nas publicações oficiais indicadas na análise crítica.
+A razão não usa a taxa de 22,7 da base, que cobre 2021–2023 e inclui intervenções legais.
+A comparação e a média anual de 46.105 mortes da base são informações distintas, identificadas na fala.
+A [análise crítica por slide](../decisoes/analise-critica-slide-a-slide.md) registra os motivos e as fontes.

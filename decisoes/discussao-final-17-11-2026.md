@@ -76,7 +76,8 @@ A comparação controlada consta na [revisão da narrativa](revisao-semantica-ap
 - A resposta soma agressões (X85–Y09) e intervenções legais (Y35–Y36), por residência, na média anual de 2021–2023.
 - Essa medida municipal de violência letal se relaciona ao ODS 16, mas não equivale estritamente ao indicador 16.1.1.
 - O [metadado da ONU](https://unstats.un.org/sdgs/metadata/files/Metadata-16-01-01.pdf) exclui intervenções legais da definição de homicídio intencional.
-- Por essa diferença, retirar a comparação direta com a taxa mundial de homicídio intencional dos slides e das falas.
+- A comparação internacional usa homicídio intencional em 2021: Brasil 21,3 e mundo 5,8 por cem mil habitantes.
+- A razão de cerca de 3,7 usa a mesma definição e o mesmo ano; não divide a taxa da base pela taxa mundial.
 - A correção é de interpretação; a definição usada no modelo e os dados permanecem os mesmos.
 - O modelo explica ln(taxa); o R² não descreve diretamente a variação da taxa original.
 - A desigualdade tem efeito estimado negativo no percentil 10 de renda e sem distinção de zero no percentil 25.

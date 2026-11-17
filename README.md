@@ -148,3 +148,7 @@ O [HTML executado](entrega/analise_final.html) apresenta os resultados e gráfic
 A execução isolada reproduziu as 15 tabelas CSV, com tolerância de 1e-12, usando região e 1.133 municípios.
 O relatório antigo em `relatorio/` permanece histórico e não deve ser usado como código ou artigo final.
 As pessoas e a ordem das falas foram preservadas; os assuntos foram condensados e redistribuídos.
+
+A [análise crítica de cada slide](decisoes/analise-critica-slide-a-slide.md) relaciona conteúdo e enunciado docente.
+A abertura recupera a comparação internacional, com taxas de homicídio intencional do mesmo ano, sem alterar o modelo.
+A pasta do grupo inclui a análise crítica por slide e a tabela dos dados de contexto.

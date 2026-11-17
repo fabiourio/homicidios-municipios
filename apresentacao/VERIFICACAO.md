@@ -184,11 +184,11 @@ Tempos e volume das falas, após substituir as macros:
 
 | Pessoa | Tempo | Palavras | Marco final |
 |---|---:|---:|---:|
-| Kauan | 75s | 112 | 1min15 |
+| Kauan | 75s | 123 | 1min15 |
 | Fabio | 90s | 186 | 2min45 |
-| Douglas | 120s | 178 | 4min45 |
-| Luiz Felipe | 180s | 270 | 7min45 |
-| Willian | 315s | 512 | 13min00 |
+| Douglas | 120s | 181 | 4min45 |
+| Luiz Felipe | 180s | 274 | 7min45 |
+| Willian | 315s | 534 | 13min00 |
 
 O roteiro inclui interpretação dos gráficos e pausas; as falas não devem preencher o tempo com leitura adicional.
 O ensaio humano continua pendente. Os cinco briefings apresentam o mesmo tempo, início e fim conferidos automaticamente.
@@ -233,3 +233,18 @@ O pacote final contém 30 arquivos mais manifesto. A pasta do Desktop foi atuali
 Os documentos de apoio adaptam os links para o pacote; os outros arquivos preservam o conteúdo das fontes.
 O caderno e suas bases acompanham a apresentação em `04_codigo`.
 Não houve nova delegação nesta conferência integral, envio externo ou merge.
+
+
+## Análise crítica de conteúdo após o comentário sobre a abertura
+
+O registro `../decisoes/analise-critica-slide-a-slide.md` avalia os 14 slides principais e os nove apêndices.
+A análise diferencia a presença formal de um item docente da sua contribuição real à apresentação.
+A abertura recupera a comparação internacional e a ligação à meta 16.1, antes da pergunta.
+A comparação usa homicídio intencional em 2021: Brasil 21,3, mundo 5,8; razão aproximada de 3,7.
+Os valores foram conferidos nas figuras 5 e 6 do relatório original UNODC 2023 e na tabela oficial da ONU de 2024.
+A taxa da base do modelo, de outro período e definição, não é usada nessa divisão.
+Os slides 4, 7, 10, 13 e 14 receberam ajustes de conteúdo; o apêndice A inclui os 14 parâmetros.
+As referências continuam fora da projeção. Região, pessoas, ordem e tempos permanecem os mesmos.
+Os arquivos foram regenerados. O verificador confirmou 23 páginas, cinco briefings e notas iguais nas exportações.
+As páginas alteradas, a abertura e o briefing de Kauan foram inspecionados após a compilação.
+O roteiro mantém 780 segundos; o ensaio humano permanece pendente.
