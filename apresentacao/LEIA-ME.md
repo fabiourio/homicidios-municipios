@@ -28,6 +28,7 @@ Notas e briefings são materiais internos do grupo. Os slides fazem parte da ent
 | Willian | 10–14 | 5min15 | 7min45 | 13min00 | [Abrir](briefings/briefing_willian.pdf) |
 
 Cada briefing inclui a parte individual, as falas completas, os slides, as decisões comuns e perguntas respondidas.
+Mantivemos as pessoas e sua ordem; os assuntos foram condensados e redistribuídos para o roteiro docente.
 Os tempos são metas de ensaio, não o resultado de uma apresentação real.
 A abertura de Kauan e Fabio ocupa 2min45. O último slide tem 60 segundos.
 Não preencher o tempo com leitura. Tratar os tempos como metas e limites de ensaio.
@@ -107,11 +108,12 @@ O resultado da [revisão com a apostila](../decisoes/revisao-projeto-apostila.md
 
 O artigo final não integra esta etapa.
 O modelo original do Overleaf está em `../relatorio/modelo/`, incluindo o ZIP recebido.
-A entrega final ainda precisa do artigo `.tex`/`.pdf`, do `.qmd` alinhado ao modelo e do ZIP completo.
+O [caderno final em `.qmd`](../entrega/analise_final.qmd) foi executado e reproduziu o ajuste.
+A entrega final ainda precisa do artigo `.tex`/`.pdf` e do ZIP completo.
 
 ## Preparar os arquivos para o grupo
 
 Na pasta `apresentacao/`, executar `Rscript preparar_pasta_grupo.R` seguido do caminho de uma pasta vazia.
-O script copia slides, briefings e revisão. Também gera instruções, mensagem pronta e manifesto de hashes.
+O script copia slides, briefings, revisão, caderno final e bases. Também gera instruções, mensagem pronta e manifesto de hashes.
 A pasta criada no Desktop chama-se `GED-16-apresentacao-final`.
 Ela é material para o grupo, não a entrega acadêmica completa.

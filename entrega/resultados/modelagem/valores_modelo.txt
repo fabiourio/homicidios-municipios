@@ -109,7 +109,7 @@ VIF do modelo final:
            7.61            1.46            1.81            2.10            3.09 
      freq_15a17    distorcao_em pct_migr_10anos          regiao   rend_c:gini_c 
            1.15            1.97            1.37            1.65            1.55 
-Renda per capita do pico da taxa esperada (no Gini médio): R$ 815
+Renda per capita do pico da taxa típica ajustada (no Gini médio): R$ 815
 
 Efeito de +0,05 no Gini conforme a renda (zero em R$ 931; 29% dos municípios abaixo):
  percentil renda efeito_pct ic_inf_pct ic_sup_pct        p

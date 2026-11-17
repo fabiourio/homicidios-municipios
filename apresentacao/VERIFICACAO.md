@@ -6,7 +6,7 @@ Data: 17/11/2026. Base: `1893e89` (`main`). Branch: `apresentacao-final-15-minut
 
 - 14 páginas principais e nove apêndices, de A a I.
 - Meta de 23 páginas no PDF, no PowerPoint e no HTML.
-- Cinco briefings, com as mesmas pessoas e ordem da apresentação parcial.
+- Cinco briefings, com as mesmas pessoas e ordem da apresentação parcial; conteúdos condensados e redistribuídos.
 - Roteiro de 780 segundos: 75/90/120/180/315 segundos por pessoa.
 - Abertura de 165 segundos; dois minutos de reserva até o limite informado.
 - Marcos finais: 1min15, 2min45, 4min45, 7min45 e 13min00.
@@ -110,7 +110,7 @@ Nenhum agente fez merge ou enviou mensagens ao grupo.
 - O PowerPoint preserva o visual como imagens; a fonte editável é o Beamer.
 - A revisão não acrescentou outro modelo nem corrigiu a variância dos erros.
 - O artigo final ficou fora desta etapa por instrução do usuário.
-- O `.qmd` e o ZIP completo da entrega permanecem na etapa de fechamento do artigo.
+- O `.qmd` final foi concluído na conferência posterior. O ZIP completo depende do artigo.
 
 ## Repositório e entrega para revisão
 
@@ -185,14 +185,15 @@ Tempos e volume das falas, após substituir as macros:
 | Pessoa | Tempo | Palavras | Marco final |
 |---|---:|---:|---:|
 | Kauan | 75s | 112 | 1min15 |
-| Fabio | 90s | 177 | 2min45 |
+| Fabio | 90s | 186 | 2min45 |
 | Douglas | 120s | 178 | 4min45 |
 | Luiz Felipe | 180s | 270 | 7min45 |
-| Willian | 315s | 493 | 13min00 |
+| Willian | 315s | 512 | 13min00 |
 
 O roteiro inclui interpretação dos gráficos e pausas; as falas não devem preencher o tempo com leitura adicional.
 O ensaio humano continua pendente. Os cinco briefings apresentam o mesmo tempo, início e fim conferidos automaticamente.
-O comando de integridade contra `1893e89` confirmou dados e resultados originais sem alterações.
+A conferência inicial preservou os resultados originais. Na revisão posterior, rótulos da taxa típica foram corrigidos.
+As bases, os coeficientes e as 15 tabelas CSV permanecem numericamente iguais ao ajuste anterior.
 
 Agentes desta revisão: `auditoria_modelo_final`, `coerencia_conclusoes`, `documentacao_narrativa`,
 `briefings_narrativa` e `revisao_semantica_visual`.
@@ -214,3 +215,21 @@ PDF, PowerPoint, HTML e cinco briefings foram regenerados.
 O verificador passou e agora rejeita linhas “Fonte:” ou “Fontes:” no texto dos slides.
 A revisão visual conferiu o slide de dados e um gráfico com legenda técnica.
 A pasta do Desktop foi atualizada; os 18 arquivos e o manifesto coincidem com a preparação verificada.
+
+
+## Conferência de todos os pedidos da conversa
+
+A matriz `../decisoes/conferencia-pedidos-17-11-2026.md` registra os pedidos, as evidências e 11 divergências corrigidas.
+O `.qmd` havia sido adiado sem instrução; o usuário adiou somente o artigo. Essa pendência foi corrigida.
+`entrega/analise_final.qmd` executou em cópia isolada; 15 tabelas coincidiram com tolerância de 1e-12.
+`validacao/saida/10_conferencia_caderno.txt` registra a comparação dos códigos embutidos e das tabelas.
+O ajuste conserva as bases, os coeficientes e região. Rótulos da taxa típica e a execução local de Box-Cox foram corrigidos.
+A transcrição e o ZIP recebido foram confrontados com os originais do Desktop e Downloads.
+As 23 páginas foram inspecionadas; dois painéis que entravam no subtítulo foram movidos para o corpo.
+As hipóteses ficaram explícitas nos resultados. O município foi explicado como unidade e região como explicativa.
+O verificador passou após regenerar slides e briefings. A capa preserva “Novembro de 2026”.
+
+O pacote final contém 30 arquivos mais manifesto. A pasta do Desktop foi atualizada e seus hashes conferem.
+Os documentos de apoio adaptam os links para o pacote; os outros arquivos preservam o conteúdo das fontes.
+O caderno e suas bases acompanham a apresentação em `04_codigo`.
+Não houve nova delegação nesta conferência integral, envio externo ou merge.

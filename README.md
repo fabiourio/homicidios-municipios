@@ -138,3 +138,13 @@ Dados do SIM coletados em 25/10/2026 e do Censo em 27/10/2026.
 - **Região:** entra como variável categórica (5 classes, referência Sudeste).
 - **Presídios:** os presos entram na população do Censo, o que distorce a % de homens de 15 a 29 anos e o denominador da taxa em alguns municípios pequenos de SP.
 - **% intenção indeterminada:** mede a qualidade do registro. Não entra no modelo: os homicídios estão no seu divisor, então ela cai quando os homicídios sobem, só pela conta.
+
+
+## Conferência de todos os pedidos
+
+A [matriz de conferência](decisoes/conferencia-pedidos-17-11-2026.md) confronta as mensagens de 17/11 com os materiais reais.
+O [caderno final em Quarto](entrega/analise_final.qmd) contém os códigos comentados da análise final.
+O [HTML executado](entrega/analise_final.html) apresenta os resultados e gráficos; não substitui o artigo em LaTeX.
+A execução isolada reproduziu as 15 tabelas CSV, com tolerância de 1e-12, usando região e 1.133 municípios.
+O relatório antigo em `relatorio/` permanece histórico e não deve ser usado como código ou artigo final.
+As pessoas e a ordem das falas foram preservadas; os assuntos foram condensados e redistribuídos.

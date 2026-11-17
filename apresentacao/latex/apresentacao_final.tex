@@ -21,7 +21,7 @@
 \subtitle{Regressão linear múltipla · ODS 16}
 \author{\footnotesize Douglas Bergamim Fernandes \and Fabio Eiiti Kobayashi Urio \and Kauan Alves Aragão \and Luiz Felipe de Brito Ramos \and Willian Nelton Teleken}
 \institute{Instituto Tecnológico de Aeronáutica · GED-16 Análise de Regressão}
-\date{Apresentação final · 18 de novembro de 2026}
+\date{Novembro de 2026}
 \begin{document}
 \maketitle
 
@@ -161,8 +161,9 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \fig{efeitos.png}
 \column{0.29\textwidth}
 \begin{itemize}\small
-\item Mais frequência escolar: taxa menor
-\item Mais atraso escolar: taxa maior
+\item Hipóteses: mais exclusão escolar e migração, taxas maiores
+\item Maior frequência associada a taxa menor
+\item Maior atraso associado a taxa maior
 \item Migração: intervalo cruza zero
 \end{itemize}
 \end{columns}
@@ -175,7 +176,7 @@ Região como categoria & Considerar diferenças regionais; Sudeste como referên
 \fig{gini_renda.png}
 \column{0.32\textwidth}
 \begin{itemize}\small
-\item Efeito estimado de +0,05 no Gini
+\item Hipótese: mais desigualdade, maior taxa
 \item Na renda mediana: \textbf{\nGiniEfMediana\%}
 \item No percentil 90 da renda: \textbf{\nGiniEfNoventa\%}
 \item Na baixa renda, o sinal varia; não há um efeito positivo geral
@@ -331,13 +332,13 @@ IC do efeito do Gini por renda & Grupo; interpretar a interação\\
 \end{frame}
 
 \begin{frame}{Apêndice H · Resíduos por explicativa: renda e trabalho}
-{\centering\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_1.png}\par}
+\noindent\makebox[\linewidth][c]{\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_1.png}}
 \vspace{0.2em}
 {\small Procurar curvas e mudanças de dispersão. A faixa dos erros varia entre os níveis das explicativas.}
 \end{frame}
 
 \begin{frame}{Apêndice I · Resíduos por explicativa: escola e região}
-{\centering\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_2.png}\par}
+\noindent\makebox[\linewidth][c]{\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_2.png}}
 \vspace{0.2em}
 {\small Diferenças de dispersão permanecem. Erros centrados por região não comprovam independência entre municípios.}
 \legenda{Região entra como categoria; linhas centrais das caixas representam medianas.}

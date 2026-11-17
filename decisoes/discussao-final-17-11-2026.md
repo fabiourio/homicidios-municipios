@@ -16,7 +16,7 @@ Ela atualiza organização, tempos, hipóteses e referências sem alterar dados 
 | Região ou estado | Manter região no modelo principal | O grupo confirmou a decisão às 17h11. A comparação regional responde à pergunta escolhida |
 | Tempo | Planejar 13 minutos de fala e reservar dois minutos | O limite informado pela professora é de 15 minutos |
 | Abertura | Contexto e dados ocupam 2min45 | A professora prioriza interpretação e discussão dos resultados |
-| Pessoas | Preservar os cinco apresentadores e sua ordem | O usuário pediu a mesma divisão da apresentação parcial |
+| Pessoas | Preservar os cinco apresentadores e sua ordem | O usuário pediu a mesmas pessoas e ordem da apresentação parcial |
 | Tamanho | Usar 23 páginas: 14 principais e nove apêndices, A–I | A redução evita comprimir 29 páginas principais no tempo disponível |
 | Numeração | Manter apenas a numeração no rodapé | Facilita ensaio e perguntas sem repetir disciplina e título |
 | Estudos anteriores | Retirar a revisão extensa do início e os apêndices de referências | Manter comparações relevantes na discussão; preservar referências na documentação |

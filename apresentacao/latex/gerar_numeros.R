@@ -95,7 +95,7 @@ confere(mod$POP_MIN == eda$POP_MIN && mod$FORA == eda$FORA && setequal(mod$d$cod
 confere(nrow(fora) == 1 && fora$pop >= eda$POP_MIN && fora$intencao_indeterminada > 10 * fora$hom, "o município retirado tem muito mais óbitos de intenção indeterminada do que homicídios")
 confere(all(p_ret(c("dens_z", "faixa_fronteira", "abandono_em", "pct_h1529", "indet_sem_hom")) > 0.05), "densidade, fronteira, abandono, % homens 15–29 e % indeterminada (corrigida) não são significativas")
 al_sem_mt <- summary(update(mod$final, . ~ . + amazonia_legal, data = mod$d[mod$d$uf != "MT", ]))$coefficients["amazonia_legal", 4]
-confere(p_ret("amazonia_legal") < 0.05 && al_sem_mt > 0.05, "a Amazônia Legal só é significativa por causa do Mato Grosso")
+confere(p_ret("amazonia_legal") < 0.05 && al_sem_mt > 0.05, "a evidência da Amazônia Legal é sensível à exclusão de Mato Grosso")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
 confere(sig_pos("gini_c") && sig_pos("rend_c:gini_c") && sig_pos("distorcao_em") &&
@@ -315,7 +315,7 @@ writeLines(c("\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}lrrrlrrr@{}
 
 # Apêndice: variáveis testadas e retiradas (F parcial de cada uma somada ao modelo final)
 motivo <- c(dens_z = "Sem evidência adicional", faixa_fronteira = "Sem evidência adicional", abandono_em = "Sem evidência adicional", pct_h1529 = "Sem evidência adicional",
-            amazonia_legal = "O efeito vem só do Mato Grosso",
+            amazonia_legal = "Sem evidência clara ao excluir MT",
             indet_sem_hom = "A medida original tinha os homicídios no divisor; corrigida, sem evidência adicional")
 stopifnot(all(ret$termo %in% names(motivo)))
 lin <- sprintf("%s & %s & %s & %s\\\\", gsub("%", "\\%", gsub("–", "--", ret$variavel), fixed = TRUE), fmt(ret$F, 2), fp(ret$p), motivo[ret$termo])

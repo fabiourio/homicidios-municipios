@@ -1,0 +1,1 @@
+OK: 15 tabelas reproduzidas com tolerância 1e-12; dois códigos embutidos idênticos; imagens incorporadas.

@@ -7,7 +7,7 @@ As seções 1 a 4 olham a base inteira (5.570 municípios) e dizem quanto de cad
 
 ## Resumo
 
-A base está **limpa do ponto de vista técnico**: não há chave quebrada, valor faltando, valor impossível nem erro de conta. O Gini calculado bate com o oficial do IBGE nas 27 UFs. Os problemas que existem estão **na medição**: a causa da morte às vezes fica sem registro, e com poucos homicídios a taxa oscila muito. O escopo de 30 mil habitantes ou mais já tira a maior parte dos casos ruins (desocupação de 51%, taxa zero, 32 dos 35 municípios com presídio). **Não encontramos evidência adicional que justifique excluir outros municípios.** No modelo atual, só o coeficiente de **desocupação** é frágil: perde a significância sem os 31 municípios de % indeterminada alta. A **migração recente** não é significativa no modelo base (p = 0,143).
+A base está **limpa do ponto de vista técnico**: não há chave quebrada, valor faltando, valor impossível nem erro de conta. A comparação agregada do Gini nas 27 UFs mostra proximidade, com universos etários diferentes. Ela não valida valores municipais exatos. Os problemas que existem estão **na medição**: a causa da morte às vezes fica sem registro, e com poucos homicídios a taxa oscila muito. O escopo de 30 mil habitantes ou mais já tira a maior parte dos casos ruins (desocupação de 51%, taxa zero, 32 dos 35 municípios com presídio). **Não encontramos evidência adicional que justifique excluir outros municípios.** No modelo atual, só o coeficiente de **desocupação** é frágil: perde a significância sem os 31 municípios de % indeterminada alta. A **migração recente** não é significativa no modelo base (p = 0,143).
 
 ## 1. Completude e chaves (ok)
 
@@ -26,7 +26,7 @@ A base está **limpa do ponto de vista técnico**: não há chave quebrada, valo
 |---|---|---|
 | Percentuais fora de 0–100 (inclui as 3 variáveis extras) | 0 | ok |
 | Gini fora de 0–1 ou faltando | 0; 0 (vai de 0,275 a 0,684 na base e de 0,325 a 0,652 no escopo) | ok |
-| Gini calculado × oficial do IBGE | 27 UFs: correlação 0,995, erro absoluto médio 0,003, máximo 0,008 (Tocantins). 5 regiões: erro máximo 0,003. Brasil: 0,542 × 0,542 | ok. O acerto do Brasil não é teste: o script de preparação escolhe a renda da última classe para reproduzir esse valor. O teste são as UFs e as regiões |
+| Gini calculado × oficial do IBGE | 27 UFs: correlação 0,995, erro absoluto médio 0,003, máximo 0,008 (Tocantins). 5 regiões: erro máximo 0,003. Brasil: 0,542 × 0,542 | ok. O acerto do Brasil não é teste: o script de preparação escolhe a renda da última classe para reproduzir esse valor. A comparação nas UFs e regiões é uma checagem agregada, com universos etários diferentes |
 | Gini máximo | Alto Alegre-RR 0,684; Petrolândia-SC 0,671; Nova Lima-MG 0,652 | Só Nova Lima está no escopo (Alto Alegre tem 21 mil hab.) e é o ponto de maior alavancagem (seção 5) |
 | Gini mínimo | Presidente Lucena-RS 0,275 (base); Forquilhinha-SC 0,325 (escopo) | sem sinal de erro: o valor bate com o recálculo (seção 3) |
 | Densidade × pop/área | diferença máxima de 2,5% (arredondamento) | ok |
@@ -106,7 +106,7 @@ Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini (centralizad
 ## Não verificado
 - A regra do SIM para a residência de quem morre dentro do presídio.
 - A causa das diferenças de ±1 a ±3 pessoas nas tabelas 10300 e 9517 (parece arredondamento ou sigilo do IBGE).
-- O Gini de cada município: só existe valor oficial para o Brasil, as regiões e as UFs. O erro do cálculo dentro de um município não foi medido.
+- O Gini de cada município: a referência oficial coletada no projeto cobre Brasil, regiões e UFs. O erro do cálculo dentro de um município não foi medido.
 - Por que a frequência escolar de Veranópolis-RS é 43,5%. Só confirmamos que a base repete o arquivo do IBGE.
 - Se os 36 óbitos de intenção indeterminada de Campos do Jordão-SP escondem homicídios (o município saiu do escopo por esse indício, sem teste).
 

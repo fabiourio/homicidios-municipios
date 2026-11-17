@@ -9,7 +9,7 @@ O verificador confirmou 23 páginas, cinco briefings, notas iguais e roteiro de 
 A [revisão da narrativa](revisao-semantica-apresentacao.md) registra os pedidos posteriores do usuário em 17/11.
 Não resta decisão aberta sobre região, divisão de falas, vizinhança ou organização dos slides.
 O ensaio cronometrado do grupo ainda precisa confirmar a duração real.
-O projeto completo ainda precisa do artigo, do código final em `.qmd` e do ZIP de entrega.
+O projeto completo ainda precisa do artigo e do ZIP de entrega. O código final em `.qmd` foi executado.
 O responsável pelo envio precisa ser identificado na mensagem da atividade.
 
 A revisão não encontrou divergência que justifique alterar os dados ou trocar o modelo final.
@@ -79,6 +79,7 @@ H3 mede migração recente por residência ininterrupta inferior a dez anos. Nã
 A migração permanece no modelo, com p clássico de 0,143, sem evidência clara de associação.
 A retirada da medida problemática de intenção indeterminada mudou o apoio a H3 no registro de 11/11.
 Nenhum dado ou coeficiente do modelo principal muda nesta atualização.
+O `.qmd` reproduz a análise final. Os rótulos que confundiam taxa típica com média esperada foram corrigidos.
 A verificação dos novos materiais fica registrada separadamente em [VERIFICACAO.md](../apresentacao/VERIFICACAO.md).
 
 ## Conferência dos dados
@@ -134,9 +135,9 @@ Não foram tratadas como decisões já tomadas nem como obrigação para aumenta
 |---|---|
 | Ensaio cronometrado | Cada pessoa precisa ensaiar sua fala e suas transições |
 | Artigo `.tex` e `.pdf` | Adiado por instrução do usuário; limite de 15 páginas incluindo referências |
-| `.qmd` final organizado e comentado | Ainda falta integrar a análise final nesse formato |
+| `.qmd` final organizado e comentado | Concluído: `entrega/analise_final.qmd`, com HTML executado e 15 tabelas reproduzidas |
 | Relatório exploratório antigo | Usa recorte e hipóteses diferentes; não deve ser confundido com o artigo ou código final |
-| ZIP único da entrega completa | Depende do artigo e do `.qmd`; a pasta do grupo não é esse ZIP acadêmico |
+| ZIP único da entrega completa | Depende do artigo; a pasta do grupo não é esse ZIP acadêmico |
 | Responsável pelo envio | Identificar quem enviará o arquivo e incluir os nomes de todos na mensagem da atividade |
 | Merge do PR | Não executado; depende de ordem explícita |
 

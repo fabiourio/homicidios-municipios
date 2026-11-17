@@ -1,0 +1,756 @@
+---
+title: "GED-16 — código da análise final"
+lang: pt-BR
+format:
+  html:
+    toc: true
+    embed-resources: true
+    code-fold: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+Este caderno contém os códigos em R e reproduz o modelo usado na apresentação final.
+O artigo em LaTeX permanece numa etapa posterior. O relatório antigo em `relatorio/` não corresponde a este ajuste.
+
+## Pergunta, dados e escopo
+
+Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
+
+A resposta é a média anual de óbitos por residência em 2021–2023, por cem mil habitantes, usando a população de 2022.
+A medida soma agressões (X85–Y09) e intervenções legais/operações de guerra (Y35–Y36).
+Ela se relaciona à ODS 16 e difere da definição internacional do indicador 16.1.1.
+
+Os dados vêm do SIM/DATASUS, do Censo 2022 do IBGE e dos indicadores educacionais de 2022 do INEP.
+O município é a unidade de observação. Região é uma variável explicativa, com o Sudeste como referência.
+O ajuste usa municípios com pelo menos 30 mil habitantes, sem Campos do Jordão-SP por suspeita documentada de sub-registro.
+O Gini é uma aproximação pelas classes de renda das pessoas de quatorze anos ou mais.
+A migração mede residência ininterrupta inferior a dez anos, sem restringir a origem internacional.
+
+## Reprodução
+
+Mantenha este `.qmd` junto à pasta `dados/`, que contém as bases e a malha municipal.
+Execute `quarto render analise_final.qmd` nesta pasta, com R e os pacotes usados nos códigos abaixo instalados.
+A execução recria as tabelas e figuras em `resultados/` e gera um HTML com os códigos e a interpretação.
+Cada parte executa em ambiente separado. Os códigos comentados abaixo reproduzem os dois scripts da entrega.
+
+## Código completo: análise exploratória
+
+```{r}
+#| label: analise-exploratoria
+exploratoria <- local({
+  # =============================================================================
+  # Fatores associados aos homicídios nos municípios brasileiros
+  # Parte 1 - Análise exploratória
+  #
+  # Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv (1 linha por município) e dados/malha_mun.geojson
+  # Saída:   resultados/eda/ (figuras e tabelas)
+  # Rodar com a pasta entrega/ como diretório de trabalho.
+  #
+  # Escopo: a análise é feita nos municípios com 30 mil habitantes ou mais, o percentil 80 da população
+  # (o mesmo do modelo). Só a definição do escopo e o mapa usam todos os 5.570 municípios.
+  # =============================================================================
+
+  rm(list = ls())
+
+  library(ggplot2)
+  library(dplyr)
+  library(tidyr)
+  library(GGally)
+  library(sf)
+
+  set.seed(16)
+  dir.create("resultados/eda", recursive = TRUE, showWarnings = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # Leitura
+  # -----------------------------------------------------------------------------
+  br <- read.csv("dados/base_analitica.csv")
+  br <- merge(br, read.csv("dados/variaveis_extras.csv"), by = "cod_ibge")    # educação (INEP) e migração
+  str(br)
+
+  taxa_br <- sum(br$hom) / sum(br$exposure) * 1e5    # taxa nacional (todos os municípios)
+
+  # Escopo: municípios com 30 mil habitantes ou mais. Nesse porte, a taxa nacional dá pelo menos 20 homicídios
+  # esperados em 3 anos (casos_esperados_corte)
+  POP_MIN <- 30000
+  # Campos do Jordão-SP fica fora: 1 homicídio registrado e 36 óbitos de intenção indeterminada (indício de sub-registro)
+  FORA <- 3509700
+  br$escopo <- br$pop >= POP_MIN & br$cod_ibge != FORA
+  casos_esperados_corte <- POP_MIN * 3 * taxa_br / 1e5
+
+  # Percentil da população de cada município (0 a 100): mostra onde o corte fica entre os 5.570 municípios
+  percentil <- function(x) 100 * (rank(x) - 0.5) / length(x)
+  br$p_pop <- percentil(br$pop)
+  percentil_corte <- 100 * mean(br$pop < POP_MIN)
+
+  # Percentil de cada município e resumo do corte por região
+  perc <- br[, c("cod_ibge", "municipio", "uf", "regiao", "pop", "p_pop")]
+  perc$considerado <- ifelse(br$escopo, "sim", "não")
+  perc$regiao <- factor(perc$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                        labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
+  perc <- perc[order(-perc$pop), ]
+  write.csv(perc, "resultados/eda/percentis_municipios.csv", row.names = FALSE)
+  corte_regiao <- perc %>% group_by(regiao) %>%
+    summarise(municipios = n(), considerados = sum(considerado == "sim"),
+              pct_pop = 100 * sum(pop[considerado == "sim"]) / sum(pop), .groups = "drop")
+  write.csv(corte_regiao, "resultados/eda/corte_regiao.csv", row.names = FALSE)
+
+  # Paleta igual à dos slides: azul do ODS 16, vermelho de destaque e azul-claro de preenchimento
+  AZUL <- "#00689D"; VERMELHO <- "#C8343B"; CINZA <- "#7A869A"; FUNDO <- "#FFFFFF"; CLARO <- "#D6E6F2"; MARINHO <- "#13294B"
+  th <- theme_minimal(base_size = 12) +
+    theme(plot.background = element_rect(fill = FUNDO, colour = NA), panel.grid.minor = element_blank())
+  milhar <- function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE, trim = TRUE)
+  assimetria <- function(x) mean((x - mean(x))^3) / sd(x)^3
+
+  # -----------------------------------------------------------------------------
+  # 1. Definição do escopo: confiabilidade da taxa por porte do município (todos os municípios)
+  #    oscilacao = 1 / raiz(nº esperado de homicídios em 3 anos): variação só pelo acaso
+  #    cor_2024  = correlação entre a taxa de 2021-23 e a de 2024 (estabilidade)
+  # -----------------------------------------------------------------------------
+  br$porte <- cut(br$pop, c(0, 5e3, 1e4, 2e4, 3e4, 5e4, 1e5, Inf), right = FALSE,
+                  labels = c("< 5 mil", "5–10 mil", "10–20 mil", "20–30 mil", "30–50 mil", "50–100 mil", ">= 100 mil"))
+  porte <- br %>% group_by(porte) %>%
+    summarise(municipios = n(), pct_pop = 100 * sum(pop) / sum(br$pop), hom_mediana_3anos = median(hom),
+              pct_zero = 100 * mean(hom == 0), oscilacao = 100 / sqrt(median(exposure) * taxa_br / 1e5),
+              cor_2024 = cor(taxa, taxa_24), .groups = "drop")
+  write.csv(porte, "resultados/eda/confiabilidade_porte.csv", row.names = FALSE)
+
+  # Taxa x população: municípios pequenos têm taxas muito mais dispersas
+  p <- ggplot(br, aes(pop, taxa)) + geom_point(size = .4, alpha = .25, colour = AZUL) +
+    geom_vline(xintercept = POP_MIN, colour = VERMELHO, linetype = 2) +
+    scale_x_log10(labels = milhar) + coord_cartesian(ylim = c(0, 150)) +
+    labs(x = "População (escala log)", y = "Taxa de homicídios (/100 mil)") + th
+  ggsave("resultados/eda/e0_taxa_pop.png", p, width = 4.8, height = 3.0, dpi = 250)
+
+  # -----------------------------------------------------------------------------
+  # 2. Mapa: municípios do escopo coloridos pela taxa; os demais em cinza
+  # -----------------------------------------------------------------------------
+  g <- st_read("dados/malha_mun.geojson", quiet = TRUE)
+  g$cod_ibge <- as.integer(g$codarea)
+  gd <- inner_join(g, br, by = "cod_ibge")
+  gd$classe <- cut(gd$taxa, c(-Inf, 10, 20, 30, 45, 60, Inf), labels = c("até 10", "10–20", "20–30", "30–45", "45–60", "60+"))
+  gd$classe <- factor(ifelse(gd$escopo, as.character(gd$classe), "fora do escopo"),
+                      levels = c(levels(gd$classe), "fora do escopo"))
+  uf <- gd %>% mutate(uf = substr(cod_ibge, 1, 2)) %>% group_by(uf) %>% summarise()
+  p <- ggplot(gd) +
+    geom_sf(aes(fill = classe), colour = NA) +
+    geom_sf(data = uf, fill = NA, colour = "white", linewidth = .25) +
+    scale_fill_manual(values = c("#D6E6F2", "#9EC3DB", "#5E9CC2", AZUL, "#1F4A7A", MARINHO, "#E9EBEE"),
+                      name = "Homicídios\npor 100 mil/ano") +
+    theme_void(base_size = 10) +
+    theme(plot.background = element_rect(fill = FUNDO, colour = NA), legend.position = c(.15, .25))
+  ggsave("resultados/eda/e2_mapa_taxa.png", p, width = 4.2, height = 4.2, dpi = 250)
+
+  # -----------------------------------------------------------------------------
+  # A partir daqui: só os municípios do escopo
+  # -----------------------------------------------------------------------------
+  d <- br[br$escopo, ]
+  d$regiao <- factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                     labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"))
+  d$ln_taxa <- log(d$taxa)
+
+  summary(d[, c("taxa", "rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet", "pct_urbana",
+                "pct_h1529", "regiao", "amazonia_legal", "faixa_fronteira")])
+
+  rot <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R$)",
+           gini = "Desigualdade (índice de Gini)", pct_pobres = "% pobres (14+)",
+           desocup = "Desocupação (%)", alfabet = "Alfabetização (%)", pct_urbana = "% urbana",
+           pct_h1529 = "% homens 15–29", freq_15a17 = "Frequência escolar 15–17 (%)",
+           abandono_em = "Abandono no ensino médio (%)", distorcao_em = "Distorção idade-série EM (%)",
+           pct_migr_10anos = "Migração recente (%)", pop = "População")
+
+  # -----------------------------------------------------------------------------
+  # 3. Tabelas-resumo: numéricas (média, quartis, assimetria) e categóricas (frequências)
+  # -----------------------------------------------------------------------------
+  desc <- d %>% select(all_of(names(rot))) %>%
+    pivot_longer(everything()) %>% group_by(name) %>%
+    summarise(media = mean(value), dp = sd(value), min = min(value), q1 = quantile(value, .25),
+              mediana = median(value), q3 = quantile(value, .75), max = max(value),
+              assimetria = assimetria(value), .groups = "drop") %>%
+    mutate(var = rot[name]) %>% arrange(match(name, names(rot)))
+  write.csv(desc, "resultados/eda/descritiva.csv", row.names = FALSE)
+
+  freq <- bind_rows(
+    d %>% count(nivel = regiao) %>% mutate(variavel = "Região"),
+    d %>% count(nivel = as.character(amazonia_legal)) %>% mutate(variavel = "Amazônia Legal (1 = sim)"),
+    d %>% count(nivel = as.character(faixa_fronteira)) %>% mutate(variavel = "Faixa de fronteira (1 = sim)")) %>%
+    mutate(pct = 100 * n / nrow(d)) %>% select(variavel, nivel, n, pct)
+  write.csv(freq, "resultados/eda/frequencias.csv", row.names = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # E1. Distribuição da resposta: histograma da taxa (avalia a assimetria)
+  # -----------------------------------------------------------------------------
+  p <- ggplot(d, aes(taxa)) +
+    geom_histogram(bins = 40, fill = AZUL, colour = FUNDO, linewidth = .2) +
+    labs(x = "Taxa de homicídios (por 100 mil hab./ano)", y = "Nº de municípios") + th
+  ggsave("resultados/eda/e1_hist_resposta.png", p, width = 4.8, height = 3.0, dpi = 250)
+
+  # -----------------------------------------------------------------------------
+  # E3. Boxplots de ln(taxa) por região
+  # -----------------------------------------------------------------------------
+  p <- ggplot(d, aes(regiao, ln_taxa)) +
+    geom_boxplot(fill = CLARO, colour = AZUL, outlier.size = .4, outlier.alpha = .3, width = .6) +
+    stat_summary(fun = mean, geom = "point", colour = VERMELHO, size = 1.6) +
+    labs(x = NULL, y = "ln Taxa de homicídios") + th
+  ggsave("resultados/eda/e3_box_regiao.png", p, width = 4.8, height = 2.7, dpi = 220)
+
+  # -----------------------------------------------------------------------------
+  # E4. Histogramas das explicativas numéricas (assimetria e bimodalidade)
+  # -----------------------------------------------------------------------------
+  xs <- c("rend_pc_media", "gini", "pct_pobres", "desocup", "alfabet",
+          "pct_urbana", "pct_h1529",
+          "freq_15a17", "abandono_em", "distorcao_em", "pct_migr_10anos")
+  e4 <- d %>% select(all_of(xs)) %>% pivot_longer(everything()) %>%
+    mutate(var = factor(rot[name], levels = rot[xs]))
+  p <- ggplot(e4, aes(value)) +
+    geom_histogram(bins = 40, fill = AZUL, colour = FUNDO, linewidth = .15) +
+    facet_wrap(~var, scales = "free", ncol = 5) + labs(x = NULL, y = NULL) + th +
+    theme(axis.text = element_text(size = 6.5), strip.text = element_text(size = 7.5))
+  ggsave("resultados/eda/e4_hist_explicativas.png", p, width = 7, height = 3.2, dpi = 220)
+
+  # -----------------------------------------------------------------------------
+  # E5. Correlações: de cada explicativa com ln(taxa), e entre as explicativas (matriz completa em CSV)
+  # -----------------------------------------------------------------------------
+  cv <- c(log_rend = "ln Renda", gini = "Desigualdade", pct_pobres = "% pobres", desocup = "Desocupação",
+          alfabet = "Alfabetização", pct_urbana = "% urbana",
+          pct_h1529 = "% homens 15–29",
+          freq_15a17 = "Freq. escolar 15–17", abandono_em = "Abandono EM", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração recente")
+  R <- cor(d[, c("ln_taxa", names(cv))])
+  dimnames(R) <- list(c("ln Taxa", cv), c("ln Taxa", cv))
+  write.csv(round(R, 3), "resultados/eda/correlacao.csv")
+
+  trio <- c("ln Renda", "% pobres", "Alfabetização")         # medem quase o mesmo (multicolinearidade)
+  e5 <- data.frame(var = cv, r = R["ln Taxa", cv])
+  e5$grupo <- ifelse(e5$var %in% trio, "renda, pobreza e alfabetização", "demais")
+  e5$var <- factor(e5$var, levels = e5$var[order(e5$r)])
+  p <- ggplot(e5, aes(r, var, fill = grupo)) + geom_col(width = .7) +
+    geom_vline(xintercept = 0, colour = CINZA) +
+    geom_text(aes(label = sub(".", ",", sprintf("%.2f", r), fixed = TRUE), hjust = ifelse(r > 0, -0.15, 1.15)), size = 3.3) +
+    scale_fill_manual(values = c(`renda, pobreza e alfabetização` = VERMELHO, demais = AZUL), name = NULL) +
+    scale_x_continuous(limits = c(-.6, .6)) +
+    labs(x = "Correlação com ln(taxa)", y = NULL) + th + theme(legend.position = "bottom")
+  ggsave("resultados/eda/e5_correlacao.png", p, width = 4.8, height = 4.0, dpi = 250)
+
+  # -----------------------------------------------------------------------------
+  # E6. Dispersão: ln(taxa) x cada explicativa, com reta de mínimos quadrados
+  # -----------------------------------------------------------------------------
+  xs6 <- c(log_rend = "ln Renda per capita", gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (%)",
+           pct_urbana = "% urbana",
+           pct_h1529 = "% homens 15–29")
+  e6 <- d %>% select(ln_taxa, all_of(names(xs6))) %>% pivot_longer(-ln_taxa) %>%
+    mutate(var = factor(xs6[name], levels = xs6))
+  p <- ggplot(e6, aes(value, ln_taxa)) +
+    geom_point(size = .3, alpha = .2, colour = AZUL) +
+    geom_smooth(method = "lm", se = FALSE, colour = VERMELHO, linewidth = .7, formula = y ~ x) +
+    facet_wrap(~var, scales = "free_x", ncol = 4) + labs(x = NULL, y = "ln Taxa de homicídios") + th +
+    theme(strip.text = element_text(size = 7.5), axis.text = element_text(size = 6.5))
+  ggsave("resultados/eda/e6_dispersao.png", p, width = 7, height = 3.6, dpi = 220)
+
+  # -----------------------------------------------------------------------------
+  # E7. Boxplots de ln(taxa) por décimo de renda: mostra a forma (não linear) da relação
+  # -----------------------------------------------------------------------------
+  d$faixa_renda <- cut(d$rend_pc_media, quantile(d$rend_pc_media, seq(0, 1, .1)),
+                       include.lowest = TRUE, dig.lab = 5)
+  med_faixa <- d %>% group_by(faixa_renda) %>% summarise(renda = median(rend_pc_media), med = median(ln_taxa))
+  p <- ggplot(d, aes(faixa_renda, ln_taxa)) +
+    geom_boxplot(fill = CLARO, colour = AZUL, outlier.size = .3, outlier.alpha = .3, width = .6) +
+    stat_summary(fun = mean, geom = "point", colour = VERMELHO, size = 1.6) +
+    scale_x_discrete(labels = milhar(round(med_faixa$renda))) +
+    labs(x = "Renda per capita (R$, mediana de cada décimo)", y = "ln Taxa de homicídios") + th +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ggsave("resultados/eda/e7_box_renda.png", p, width = 4.8, height = 3.2, dpi = 250)
+
+  # -----------------------------------------------------------------------------
+  # E8. Matriz de gráficos de dispersão de um subconjunto de variáveis
+  # -----------------------------------------------------------------------------
+  sub <- d %>% transmute(`ln Taxa` = ln_taxa, `ln Renda` = log_rend, `% pobres` = pct_pobres,
+                         `Alfabetização` = alfabet, `% urbana` = pct_urbana)
+  p <- ggpairs(sub, lower = list(continuous = wrap("points", size = .25, alpha = .25, colour = AZUL)),
+               diag = list(continuous = wrap("densityDiag", fill = CLARO, colour = AZUL))) + th +
+    theme(axis.text = element_text(size = 6.5), strip.text = element_text(size = 10))
+  ggsave("resultados/eda/e8_pares.png", p, width = 5.4, height = 4.6, dpi = 220)
+
+  # -----------------------------------------------------------------------------
+  # Resumo no console
+  # -----------------------------------------------------------------------------
+  cat("\nConfiabilidade da taxa por porte (todos os municípios):\n"); print(as.data.frame(porte), digits = 3, row.names = FALSE)
+  cat(sprintf("\nEscopo: %d municípios (%.1f%% da população) | média da taxa %.1f | mediana %.1f\n",
+              nrow(d), 100 * sum(d$pop) / sum(br$pop), mean(d$taxa), median(d$taxa)))
+  cat("\nCorrelação de cada explicativa com ln(taxa):\n"); print(round(sort(R["ln Taxa", cv]), 2))
+  list(d = d, br = br)
+})
+```
+
+## Código completo: ajuste e diagnóstico
+
+O modelo principal usa região. O ajuste com estados é somente uma comparação complementar.
+Os blocos e testes parciais documentam a construção; seus resultados dependem da ordem dos acréscimos.
+
+```{r}
+#| label: ajuste-final
+modelo <- local({
+  # =============================================================================
+  # Fatores associados aos homicídios nos municípios brasileiros
+  # Parte 2 - Ajuste do modelo de regressão linear múltipla
+  #
+  # Entrada: dados/base_analitica.csv e dados/variaveis_extras.csv
+  #          (municípios com 30 mil hab. ou mais)
+  # Saída:   resultados/modelagem/ (figuras, tabelas e valores_modelo.txt)
+  # Rodar com a pasta entrega/ como diretório de trabalho.
+  # =============================================================================
+
+  rm(list = ls())
+
+  library(ggplot2)
+  library(MASS)     # boxcox
+  library(car)      # vif
+  library(lmtest)   # bptest
+
+  set.seed(16)
+  dir.create("resultados/modelagem", recursive = TRUE, showWarnings = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # Leitura dos dados
+  # -----------------------------------------------------------------------------
+  d <- read.csv("dados/base_analitica.csv")
+
+  # Variáveis de educação e migração (INEP 2022 e Censo 2022), em arquivo à parte
+  extras <- read.csv("dados/variaveis_extras.csv")
+  d <- merge(d, extras[, c("cod_ibge", "abandono_em", "distorcao_em", "pct_migr_10anos")], by = "cod_ibge")
+
+  # Escopo do modelo: municípios com 30 mil habitantes ou mais (percentil 80 da população).
+  # Abaixo disso a taxa é dominada pelo acaso (poucos casos): ver confiabilidade_porte.csv
+  POP_MIN <- 30000
+  # Campos do Jordão-SP fica fora: 1 homicídio registrado e 36 óbitos de intenção indeterminada (indício de sub-registro)
+  FORA <- 3509700
+  d <- d[d$pop >= POP_MIN & d$cod_ibge != FORA, ]
+
+  # Só para os testes da seção 5.3 (variáveis testadas e retiradas): ln(densidade) padronizado e
+  # % de óbitos de intenção indeterminada com os homicídios fora do total de causas externas
+  d$dens_z <- (d$log_dens - mean(d$log_dens)) / sd(d$log_dens)
+  d$indet_sem_hom <- 100 * d$intencao_indeterminada / (d$total_causas_externas - d$hom)
+
+  # Região como variável categórica: 5 classes -> 4 indicadoras, com o Sudeste como referência
+  d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
+                             labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")), ref = "Sudeste")
+
+  # Resposta: taxa de homicídios por 100 mil hab./ano (2021-2023)
+  d$y <- d$taxa
+
+  # Paleta igual à dos slides: azul do ODS 16, vermelho de destaque e azul-claro de preenchimento
+  AZUL <- "#00689D"; VERMELHO <- "#C8343B"; CINZA <- "#7A869A"; FUNDO <- "#FFFFFF"; CLARO <- "#D6E6F2"; MARINHO <- "#13294B"
+  th <- theme_minimal(base_size = 12) +
+    theme(plot.background = element_rect(fill = FUNDO, colour = NA), panel.grid.minor = element_blank())
+  milhar <- function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE, trim = TRUE)
+
+  # -----------------------------------------------------------------------------
+  # 1. Regressão linear simples: taxa ~ ln(renda) (ponto de partida)
+  # -----------------------------------------------------------------------------
+  rls <- lm(y ~ log_rend, data = d)
+  summary(rls)
+
+  # -----------------------------------------------------------------------------
+  # 2. Transformação da resposta (Box-Cox)
+  # -----------------------------------------------------------------------------
+  f_base <- ~ log_rend + gini + desocup + pct_urbana + freq_15a17 + distorcao_em + pct_migr_10anos + regiao
+
+  m_y <- lm(update(f_base, y ~ .), data = d)
+
+  # Box-Cox exige resposta positiva: no escopo do modelo não há município com taxa zero
+  stopifnot(all(d$y > 0))
+  bc <- boxcox(lm(update(f_base, y ~ .), data = d, y = TRUE, qr = TRUE), lambda = seq(-0.5, 1.2, 0.01), plotit = FALSE)
+  lambda <- bc$x[which.max(bc$y)]
+  lambda_ic <- range(bc$x[bc$y > max(bc$y) - qchisq(0.95, 1) / 2])     # IC 95% para lambda
+
+  # lambda estimado perto de 0: adotamos ln(Y), valor simples de interpretar (100 b = variação % aproximada da taxa)
+  d$ly <- log(d$y)
+  m_log <- lm(update(f_base, ly ~ .), data = d)
+
+  # Shapiro-Wilk (Ho: normal)
+  sw_y    <- shapiro.test(rstandard(m_y))
+  sw_log  <- shapiro.test(rstandard(m_log))
+
+  # -----------------------------------------------------------------------------
+  # 3. Multicolinearidade: renda, % pobres e alfabetização juntas
+  # -----------------------------------------------------------------------------
+  m_colin <- lm(ly ~ log_rend + pct_pobres + alfabet + gini + desocup + pct_urbana +
+                  freq_15a17 + distorcao_em + pct_migr_10anos + regiao, data = d)
+  summary(m_colin)
+
+  # Para a região (4 indicadoras) o car devolve o GVIF; GVIF^(1/(2*gl)) ao quadrado fica na escala do VIF
+  vif_colin <- vif(m_colin)[, "GVIF^(1/(2*Df))"]^2
+
+  # Mantemos só a renda. O termo quadrático usa a renda centralizada, para reduzir a correlação entre X e X²
+  d$rend_c  <- d$log_rend - mean(d$log_rend)
+  d$rend_c2 <- d$rend_c^2
+  cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend_c, d$rend_c2))
+
+  # O Gini também é centralizado, por causa do termo Gini x renda: o coeficiente do Gini vale em ln(renda) médio,
+  # e os da renda valem no Gini médio
+  d$gini_c <- d$gini - mean(d$gini)
+
+  # -----------------------------------------------------------------------------
+  # 4. Construção em blocos: somas de quadrados extras e teste F parcial
+  # -----------------------------------------------------------------------------
+  mA <- lm(ly ~ rend_c + rend_c2 + gini_c + desocup, data = d)                  # socioeconômico
+  mB <- update(mA, . ~ . + pct_urbana)                                           # + urbanização
+  mC <- update(mB, . ~ . + freq_15a17 + distorcao_em + pct_migr_10anos)          # + educação e migração
+  mD <- update(mC, . ~ . + regiao)                                               # + região
+  mE <- update(mD, . ~ . + rend_c:gini_c)                                        # + Gini x renda (interação)
+
+  anova_blocos <- anova(mA, mB, mC, mD, mE)
+  anova_blocos
+  write.csv(as.data.frame(anova_blocos), "resultados/modelagem/anova_blocos.csv")
+
+  # F parcial do termo quadrático (Ho: beta_renda² = 0)
+  F_quad  <- anova(update(mE, . ~ . - rend_c2), mE)
+
+  comp <- data.frame(
+    modelo = c("A socioeconômico", "B + urbanização", "C + educação e migração", "D + região", "E + Gini x renda"),
+    p   = sapply(list(mA, mB, mC, mD, mE), function(m) length(coef(m)) - 1),
+    R2  = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$r.squared),
+    R2a = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$adj.r.squared),
+    MSE = sapply(list(mA, mB, mC, mD, mE), function(m) summary(m)$sigma^2))
+  write.csv(comp, "resultados/modelagem/comparacao_blocos.csv", row.names = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # 5. Modelo final (E): teste F global, coeficientes e intervalos de confiança
+  # -----------------------------------------------------------------------------
+  final <- mE
+  sf_ <- summary(final)
+  sf_
+  anova(final)
+  ic <- confint(final, level = 0.95)
+  vif_final <- vif(final)[, "GVIF^(1/(2*Df))"]^2
+
+  coefs <- data.frame(termo = rownames(sf_$coefficients), sf_$coefficients, ic, row.names = NULL)
+  names(coefs) <- c("termo", "b", "ep", "t", "p", "ic_inf", "ic_sup")
+  write.csv(coefs, "resultados/modelagem/coeficientes.csv", row.names = FALSE)
+
+  # Renda em que a taxa típica ajustada é máxima, no Gini médio: derivada b1 + 2 b2 rend_c = 0
+  b <- coef(final)
+  pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
+
+  # Efeitos na escala da taxa: com ln(taxa), uma mudança delta em X multiplica a taxa por exp(b * delta)
+  mudancas <- data.frame(
+    termo   = c("pct_urbana", "desocup", "freq_15a17", "distorcao_em", "pct_migr_10anos"),
+    variavel = c("% urbana", "Desocupação", "Frequência escolar 15–17", "Distorção idade-série (EM)", "Migração recente"),
+    mudanca = c("+10 pontos", "+1 ponto", "+5 pontos", "+10 pontos", "+5 pontos"),
+    delta   = c(10, 1, 5, 10, 5))
+  mudancas$b <- b[mudancas$termo]
+  mudancas$p <- sf_$coefficients[mudancas$termo, 4]
+  mudancas$efeito_pct <- 100 * (exp(mudancas$b * mudancas$delta) - 1)
+  mudancas$ic_inf_pct <- 100 * (exp(ic[mudancas$termo, 1] * mudancas$delta) - 1)
+  mudancas$ic_sup_pct <- 100 * (exp(ic[mudancas$termo, 2] * mudancas$delta) - 1)
+  write.csv(mudancas, "resultados/modelagem/efeitos_percentuais.csv", row.names = FALSE)
+
+  # Efeito de +0,05 no Gini conforme a renda: (b_gini + b_interação * rend_c), com o erro-padrão dessa combinação linear
+  V <- vcov(final)
+  efeito_gini <- function(rend) {
+    rc <- log(rend) - mean(d$log_rend)
+    e  <- b["gini_c"] + b["rend_c:gini_c"] * rc
+    ep <- sqrt(V["gini_c", "gini_c"] + rc^2 * V["rend_c:gini_c", "rend_c:gini_c"] + 2 * rc * V["gini_c", "rend_c:gini_c"])
+    tc <- qt(0.975, final$df.residual)
+    data.frame(renda = rend, efeito_pct = 100 * (exp(0.05 * e) - 1), ic_inf_pct = 100 * (exp(0.05 * (e - tc * ep)) - 1),
+               ic_sup_pct = 100 * (exp(0.05 * (e + tc * ep)) - 1), p = 2 * pt(-abs(e / ep), final$df.residual))
+  }
+  gini_renda <- data.frame(percentil = c(10, 25, 50, 75, 90),
+                           efeito_gini(quantile(d$rend_pc_media, c(.10, .25, .50, .75, .90))), row.names = NULL)
+  write.csv(gini_renda, "resultados/modelagem/efeito_gini_renda.csv", row.names = FALSE)
+  renda_gini_zero <- unname(exp(mean(d$log_rend) - b["gini_c"] / b["rend_c:gini_c"]))     # renda em que o efeito do Gini é zero
+
+  # Gráfico de efeito da renda: taxa típica ajustada (IC 95%) ao longo da renda, demais variáveis na média (Gini médio).
+  # Uma curva para o Nordeste e outra para o Sudeste, cada uma só na faixa de renda observada na região (sem extrapolar).
+  grade <- do.call(rbind, lapply(c("Nordeste", "Sudeste"), function(rg) {
+    lr <- d$log_rend[d$regiao == rg]
+    data.frame(regiao = rg, rend = exp(seq(quantile(lr, .02), quantile(lr, .98), length.out = 100)))
+  }))
+  grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
+  for (v in c("desocup", "pct_urbana", "freq_15a17", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
+  grade$gini_c <- 0
+  grade$regiao <- factor(grade$regiao, levels = levels(d$regiao))
+  pr <- predict(final, newdata = grade, interval = "confidence", level = 0.95)
+  grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
+
+  # -----------------------------------------------------------------------------
+  # 5.1 Modelo com e sem a renda: a renda tem o maior VIF do modelo
+  # -----------------------------------------------------------------------------
+  sem_renda <- update(final, . ~ . - rend_c - rend_c2 - rend_c:gini_c)
+  F_renda <- anova(sem_renda, final)                    # Ho: beta_renda = beta_renda² = beta_interação = 0
+  vif_sem_renda <- vif(sem_renda)[, "GVIF^(1/(2*Df))"]^2
+  ss_ <- summary(sem_renda)
+  termos <- rownames(ss_$coefficients)[-1]
+  com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficients[termos, 4],
+                        b_sem = ss_$coefficients[termos, 1], p_sem = ss_$coefficients[termos, 4], row.names = NULL)
+  write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # 5.2 Região x estado: região mantida no modelo final; estado como comparação complementar
+  # -----------------------------------------------------------------------------
+  d$uf <- relevel(factor(d$uf), ref = "SP")
+  com_estado <- update(final, . ~ . - regiao + uf)      # estado (26 indicadoras) no lugar da região
+  F_estado <- anova(final, com_estado)                  # Ho: os estados não acrescentam nada além da região
+  vif_estado <- vif(com_estado)[, "GVIF^(1/(2*Df))"]^2
+  se_ <- summary(com_estado)
+  sw_estado <- shapiro.test(rstandard(com_estado))       # Ho: normalidade, no modelo com estado
+  termos_x <- grep("^regiao|Intercept", rownames(sf_$coefficients), value = TRUE, invert = TRUE)
+  regiao_estado <- data.frame(termo = termos_x, b_regiao = b[termos_x], p_regiao = sf_$coefficients[termos_x, 4],
+                              b_estado = se_$coefficients[termos_x, 1], p_estado = se_$coefficients[termos_x, 4], row.names = NULL)
+  write.csv(regiao_estado, "resultados/modelagem/regiao_x_estado.csv", row.names = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # 5.3 Variáveis testadas e retiradas: F parcial de cada uma somada ao modelo (Ho: beta = 0)
+  # -----------------------------------------------------------------------------
+  testadas <- c(dens_z = "Densidade (ln, padronizada)", faixa_fronteira = "Faixa de fronteira",
+                abandono_em = "Abandono no ensino médio", pct_h1529 = "% homens 15–29", amazonia_legal = "Amazônia Legal",
+                indet_sem_hom = "% intenção indeterminada (sem os homicídios no total)")
+  retiradas <- do.call(rbind, lapply(names(testadas), function(v) {
+    m <- update(final, as.formula(paste(". ~ . +", v)))
+    a <- anova(final, m)
+    data.frame(termo = v, variavel = testadas[[v]], F = a$F[2], p = a$`Pr(>F)`[2], R2a_com = summary(m)$adj.r.squared)
+  }))
+  write.csv(retiradas, "resultados/modelagem/testadas_retiradas.csv", row.names = FALSE)
+
+  # -----------------------------------------------------------------------------
+  # 6. Diagnóstico pela análise dos resíduos
+  # -----------------------------------------------------------------------------
+  d$ajustado <- fitted(final)
+  d$residuo  <- residuals(final)
+  d$res_semi <- d$residuo / sqrt(sum(d$residuo^2) / final$df.residual)    # e* = e / sqrt(MSE)
+
+  bp <- bptest(final)                                   # Ho: variância constante
+  sw_final <- shapiro.test(rstandard(final))   # Ho: normalidade
+  outliers <- d[abs(d$res_semi) >= 4, c("municipio", "uf", "pop", "taxa", "ajustado", "res_semi")]
+
+  # -----------------------------------------------------------------------------
+  # Figuras
+  # -----------------------------------------------------------------------------
+  # M1. Log-verossimilhança de Box-Cox em função de lambda
+  p <- ggplot(data.frame(l = bc$x, ll = bc$y), aes(l, ll)) +
+    geom_line(colour = AZUL, linewidth = .9) +
+    geom_vline(xintercept = lambda, colour = CINZA, linetype = 2) +
+    geom_vline(xintercept = 0, colour = VERMELHO, linewidth = .6) +
+    annotate("text", x = lambda + .03, y = min(bc$y) + .1 * diff(range(bc$y)), hjust = 0, size = 3,
+             label = paste0("λ máx. = ", sub(".", ",", sprintf("%.2f", lambda), fixed = TRUE))) +
+    annotate("text", x = -.03, y = min(bc$y) + .1 * diff(range(bc$y)), hjust = 1, size = 3,
+             colour = VERMELHO, label = "λ = 0 (ln Y)") +
+    labs(x = "λ", y = "Log-verossimilhança") + th
+  ggsave("resultados/modelagem/m1_boxcox.png", p, width = 4.8, height = 3.0, dpi = 250)
+
+  # M2. Resíduos x ajustados e gráfico de quantis: Y original x ln Y
+  dd <- rbind(data.frame(m = "Y (taxa original)", fit = fitted(m_y), es = rstandard(m_y)),
+              data.frame(m = "ln Y", fit = fitted(m_log), es = rstandard(m_log)))
+  dd$m <- factor(dd$m, levels = c("Y (taxa original)", "ln Y"))
+  p <- ggplot(dd, aes(fit, es)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
+    geom_hline(yintercept = 0, colour = CINZA, linetype = 2) + facet_wrap(~m, scales = "free_x") +
+    labs(x = "Valor ajustado", y = "Resíduo padronizado") + th
+  ggsave("resultados/modelagem/m2a_residuos_y_transformada.png", p, width = 4.6, height = 2.6, dpi = 220)
+  p <- ggplot(dd, aes(sample = es)) + stat_qq(size = .5, alpha = .3, colour = AZUL) +
+    stat_qq_line(colour = VERMELHO) + facet_wrap(~m) +
+    labs(x = "Quantis teóricos (dist. normal)", y = "Quantis amostrais") + th
+  ggsave("resultados/modelagem/m2b_qq_y_transformada.png", p, width = 4.6, height = 2.6, dpi = 220)
+
+  # M3. Resíduos semi-studentizados x ajustados e x ln(renda)
+  p <- ggplot(d, aes(ajustado, res_semi)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
+    geom_hline(yintercept = c(-4, 0, 4), linetype = 2, colour = c(VERMELHO, CINZA, VERMELHO)) +
+    labs(x = "Valor ajustado (ln taxa)", y = "Resíduo semi-studentizado") + th
+  ggsave("resultados/modelagem/m3a_residuos_ajustados.png", p, width = 4.6, height = 3.0, dpi = 250)
+  p <- ggplot(d, aes(log_rend, res_semi)) + geom_point(size = .5, alpha = .25, colour = AZUL) +
+    geom_hline(yintercept = 0, linetype = 2, colour = CINZA) +
+    labs(x = "ln Renda per capita", y = "Resíduo semi-studentizado") + th
+  ggsave("resultados/modelagem/m3b_residuos_renda.png", p, width = 3.2, height = 2.6, dpi = 220)
+
+  # M4. |Resíduo| x população (variável fora do modelo): variância não constante
+  p <- ggplot(d, aes(pop, abs(residuo))) + geom_point(size = .5, alpha = .2, colour = AZUL) +
+    scale_x_log10(labels = milhar) +
+    labs(x = "População (escala log)", y = "|resíduo|") + th + theme(plot.margin = margin(5, 20, 5, 5))
+  ggsave("resultados/modelagem/m4_residuo_pop.png", p, width = 6.4, height = 2.6, dpi = 220)
+
+  # M5. Histograma e gráfico de quantis dos resíduos padronizados
+  p <- ggplot(d, aes(rstandard(final))) +
+    geom_histogram(aes(y = after_stat(density)), bins = 40, fill = AZUL, colour = FUNDO, linewidth = .15) +
+    labs(x = "Resíduo padronizado", y = "Densidade") + th
+  ggsave("resultados/modelagem/m5a_hist_residuos.png", p, width = 3.2, height = 2.6, dpi = 220)
+  p <- ggplot(d, aes(sample = rstandard(final))) + stat_qq(size = .5, alpha = .3, colour = AZUL) +
+    stat_qq_line(colour = VERMELHO) + labs(x = "Quantis teóricos (dist. normal)", y = "Quantis amostrais") + th
+  ggsave("resultados/modelagem/m5b_qq_final.png", p, width = 3.2, height = 2.6, dpi = 220)
+
+  # M7. Efeito da renda previsto pelo modelo, no Nordeste e no Sudeste (IC 95% da taxa típica ajustada)
+  p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
+    geom_ribbon(aes(ymin = lo, ymax = hi), fill = CLARO, alpha = .7) +
+    geom_line(aes(colour = regiao), linewidth = 1) +
+    scale_colour_manual(values = c(Nordeste = AZUL, Sudeste = MARINHO), name = NULL) +
+    geom_vline(xintercept = pico_renda, colour = VERMELHO, linetype = 2) +
+    annotate("text", x = pico_renda * 1.05, y = max(grade$hi), hjust = 0, vjust = 1, size = 3.5, colour = VERMELHO,
+             label = paste0("pico: R$ ", milhar(round(pico_renda)))) +
+    scale_x_log10(labels = milhar) +
+    labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada (/100 mil)") + th + theme(legend.position = "bottom")
+  ggsave("resultados/modelagem/m7_efeito_renda.png", p, width = 4.8, height = 3.0, dpi = 250)
+
+  # M8. Efeito de +0,05 no Gini ao longo da renda (IC 95%)
+  g8 <- efeito_gini(exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 100)))
+  p <- ggplot(g8, aes(renda, efeito_pct)) +
+    geom_ribbon(aes(ymin = ic_inf_pct, ymax = ic_sup_pct), fill = CLARO, alpha = .7) +
+    geom_line(colour = AZUL, linewidth = 1) +
+    geom_hline(yintercept = 0, colour = CINZA, linetype = 2) +
+    geom_vline(xintercept = renda_gini_zero, colour = VERMELHO, linetype = 2) +
+    annotate("text", x = renda_gini_zero * 1.05, y = max(g8$ic_sup_pct), hjust = 0, vjust = 1, size = 3.5, colour = VERMELHO,
+             label = paste0("efeito zero: R$ ", milhar(round(renda_gini_zero)))) +
+    scale_x_log10(labels = milhar) +
+    labs(x = "Renda per capita (R$, escala log)", y = "Efeito de +0,05 no Gini (% na taxa)") + th
+  ggsave("resultados/modelagem/m8_efeito_gini_renda.png", p, width = 4.8, height = 3.0, dpi = 250)
+
+  # -----------------------------------------------------------------------------
+  # Números citados na apresentação
+  # -----------------------------------------------------------------------------
+  write.csv(outliers, "resultados/modelagem/outliers.csv", row.names = FALSE)
+
+  sink("resultados/modelagem/valores_modelo.txt")
+  cat(sprintf("n = %d municípios | zeros: %d\n", nrow(d), sum(d$y == 0)))
+  cat("\n== 1. Regressão simples: taxa ~ ln(renda) ==\n"); print(summary(rls)$coefficients)
+  cat(sprintf("R² = %.3f\n", summary(rls)$r.squared))
+  cat("\n== 2. Box-Cox ==\n")
+  cat(sprintf("lambda = %.2f | IC 95%%: %.2f a %.2f | adotado: 0 (ln)\n", lambda, lambda_ic[1], lambda_ic[2]))
+  cat(sprintf("Shapiro-Wilk: Y W = %.3f | ln Y W = %.3f\n", sw_y$statistic, sw_log$statistic))
+  cat(sprintf("Breusch-Pagan: Y = %.1f | ln Y = %.1f\n", bptest(m_y)$statistic, bptest(m_log)$statistic))
+  cat("\n== 3. Multicolinearidade ==\n")
+  cat("VIF com renda, % pobres e alfabetização juntas:\n"); print(round(vif_colin, 2))
+  print(summary(m_colin)$coefficients[c("log_rend", "pct_pobres", "alfabet"), ])
+  cat(sprintf("cor(X, X²): sem centrar = %.4f | centrado = %.4f\n", cor_quad[1], cor_quad[2]))
+  cat("\n== 4. Blocos (F parcial) ==\n"); print(anova_blocos)
+  cat(sprintf("\nF parcial renda²: F = %.1f | p = %.2g\n", F_quad$F[2], F_quad$`Pr(>F)`[2]))
+  cat("\nR² e R² ajustado por bloco:\n"); print(comp, digits = 4, row.names = FALSE)
+  cat("\n== 5. Modelo final (E) ==\n"); print(sf_)
+  cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))
+  cat("\nVIF do modelo final:\n"); print(round(vif_final, 2))
+  cat(sprintf("Renda per capita do pico da taxa típica ajustada (no Gini médio): R$ %.0f\n", pico_renda))
+  cat(sprintf("\nEfeito de +0,05 no Gini conforme a renda (zero em R$ %.0f; %.0f%% dos municípios abaixo):\n",
+              renda_gini_zero, 100 * mean(d$rend_pc_media < renda_gini_zero)))
+  print(gini_renda, digits = 3, row.names = FALSE)
+  cat("\n== 5.1 Modelo com e sem a renda ==\n")
+  cat(sprintf("F parcial da renda (renda, renda² e Gini x renda): F = %.1f (gl %d) | p = %.2g\n", F_renda$F[2], F_renda$Df[2], F_renda$`Pr(>F)`[2]))
+  cat(sprintf("R² ajustado: com = %.3f | sem = %.3f\n", sf_$adj.r.squared, ss_$adj.r.squared))
+  cat(sprintf("VIF máximo: com = %.2f | sem = %.2f\n", max(vif_final), max(vif_sem_renda)))
+  print(com_sem, digits = 3, row.names = FALSE)
+  cat("\n== 5.2 Região x estado ==\n")
+  cat(sprintf("Parâmetros: região = %d | estado = %d\n", length(coef(final)), length(coef(com_estado))))
+  cat(sprintf("R² ajustado: região = %.3f | estado = %.3f\n", sf_$adj.r.squared, se_$adj.r.squared))
+  cat(sprintf("VIF máximo: região = %.2f | estado = %.2f\n", max(vif_final), max(vif_estado)))
+  cat(sprintf("F parcial do estado além da região: F = %.1f (gl %d) | p = %.2g\n", F_estado$F[2], F_estado$Df[2], F_estado$`Pr(>F)`[2]))
+  cat(sprintf("Estados com menos de 10 municípios no estudo: %d\n", sum(table(d$uf) < 10)))
+  cat(sprintf("Shapiro-Wilk com estado = %.3f | p = %.2g\n", sw_estado$statistic, sw_estado$p.value))
+  print(regiao_estado, digits = 3, row.names = FALSE)
+  cat("\n== 5.3 Variáveis testadas e retiradas (F parcial de cada uma somada ao modelo) ==\n")
+  print(retiradas[, -1], digits = 3, row.names = FALSE)
+  cat("\n== 6. Diagnóstico ==\n")
+  cat(sprintf("Breusch-Pagan = %.1f (gl %d) | p = %.2g\n", bp$statistic, bp$parameter, bp$p.value))
+  cat(sprintf("Shapiro-Wilk = %.3f | p = %.2g\n", sw_final$statistic, sw_final$p.value))
+  cat(sprintf("Possíveis outliers (|e*| >= 4): %d\n", nrow(outliers))); print(outliers, row.names = FALSE)
+  sink()
+  cat(readLines("resultados/modelagem/valores_modelo.txt"), sep = "\n")
+  stopifnot(nrow(d) == 1133, final$rank == 14, df.residual(final) == 1119,
+            !anyNA(model.frame(final)), all(is.finite(coef(final))),
+            is.factor(d$regiao), levels(d$regiao)[1] == "Sudeste",
+            "regiao" %in% all.vars(formula(final)), !"uf" %in% all.vars(formula(final)))
+  list(d = d, final = final, bp = bp, sw = sw_final, efeitos = mudancas, gini = gini_renda)
+})
+```
+
+## Conferência do ajuste
+
+```{r}
+#| label: conferir-ajuste
+stopifnot(identical(sort(exploratoria$d$cod_ibge), sort(modelo$d$cod_ibge)))
+formula(modelo$final)
+knitr::kable(data.frame(
+  Municipios = nobs(modelo$final), Parametros = modelo$final$rank,
+  R2_ajustado_ln_taxa = summary(modelo$final)$adj.r.squared,
+  p_Breusch_Pagan = modelo$bp$p.value, p_Shapiro_Wilk = modelo$sw$p.value), digits = 6)
+```
+
+O R² ajustado se refere a ln(taxa). Ele não representa diretamente a proporção da variação na taxa original.
+O log foi adotado pela interpretação e pelos diagnósticos, sem ser a potência ótima selecionada por Box-Cox.
+
+## Diagnóstico por gráficos
+
+### Forma e dispersão dos resíduos
+
+```{r}
+#| label: graficos-residuos
+#| echo: false
+knitr::include_graphics(c("resultados/modelagem/m3a_residuos_ajustados.png",
+                          "resultados/modelagem/m4_residuo_pop.png"))
+```
+
+Buscamos resíduos próximos de zero, sem curvatura sistemática e com dispersão semelhante.
+A dispersão muda com o tamanho dos municípios. Breusch–Pagan rejeita variância constante.
+Os intervalos e testes clássicos permanecem exploratórios, sem correção dessa variância.
+
+### Distribuição dos resíduos
+
+```{r}
+#| label: graficos-normalidade
+#| echo: false
+knitr::include_graphics(c("resultados/modelagem/m5a_hist_residuos.png",
+                          "resultados/modelagem/m5b_qq_final.png"))
+```
+
+Os gráficos aproximam a distribuição normal. Shapiro–Wilk não rejeita normalidade, sem comprová-la.
+Esse resultado não resolve a variância desigual nem demonstra independência espacial.
+
+### Box-Cox com a especificação final
+
+O código anterior contém a transformação auxiliar inicial. Esta conferência repete o diagnóstico com os termos finais.
+
+```{r}
+#| label: boxcox-especificacao-final
+bc_final <- MASS::boxcox(lm(update(formula(modelo$final), y ~ .), data = modelo$d, y = TRUE, qr = TRUE),
+                         lambda = seq(-.5, 1.2, .001), plotit = FALSE)
+limite <- max(bc_final$y) - qchisq(.95, 1) / 2
+potencia <- bc_final$x[which.max(bc_final$y)]
+intervalo <- range(bc_final$x[bc_final$y > limite])
+knitr::kable(data.frame(potencia = potencia, inferior = intervalo[1], superior = intervalo[2]))
+ggplot(data.frame(lambda = bc_final$x, perfil = bc_final$y), aes(lambda, perfil)) +
+  geom_line(colour = "#00689D") + geom_hline(yintercept = limite, linetype = 2) +
+  geom_vline(xintercept = 0, colour = "#C8343B", linetype = 2) +
+  geom_vline(xintercept = potencia, colour = "#00689D", linetype = 3) +
+  coord_cartesian(xlim = c(-.05, .4), ylim = c(limite - 20, max(bc_final$y) + 3)) +
+  labs(x = "Potência; zero corresponde ao log", y = "Log-verossimilhança de perfil",
+       subtitle = "IC 95%: perfil acima da linha horizontal") + theme_minimal()
+```
+
+A potência zero, correspondente ao log, fica fora do intervalo. O diagnóstico não selecionou o log como potência ótima.
+Essa limitação deve acompanhar a interpretação, sem trocar o modelo apenas para obter testes favoráveis.
+
+## Resultados e hipóteses
+
+```{r}
+#| label: efeitos-percentuais
+knitr::kable(modelo$efeitos[, c("variavel", "mudanca", "efeito_pct", "ic_inf_pct", "ic_sup_pct", "p")], digits = 4)
+knitr::kable(modelo$gini, digits = 4)
+```
+
+Os percentuais descrevem mudanças na taxa típica derivada do ajuste em log, mantendo as demais explicativas constantes.
+Eles não descrevem uma média aritmética prevista nem demonstram causa.
+
+- A associação do Gini depende da renda. A hipótese de efeito positivo uniforme não descreve todo o resultado.
+- Frequência escolar e atraso escolar apresentam direções compatíveis com a hipótese de exclusão escolar.
+- Migração recente permanece no modelo, sem evidência clara de associação no ajuste final.
+- O sinal negativo da desocupação é frágil; sua causa não foi identificada.
+
+## Limites e próximos passos
+
+A variância desigual, o possível sub-registro, o Gini aproximado e a independência espacial não verificada limitam a inferência.
+O recorte exclui municípios pequenos e não permite generalizar diretamente seus resultados a eles.
+O estudo descreve associações municipais, sem identificar causas ou riscos individuais.
+Trabalhos futuros podem tratar a variância, investigar dependência espacial e avaliar estabilidade em outros períodos.
+
+## Ambiente da execução
+
+```{r}
+#| label: ambiente-r
+sessionInfo()
+```

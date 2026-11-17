@@ -110,3 +110,16 @@ O usuário autorizou a execução contínua e a atualização do repositório.
 As alterações anteriores desta sessão são a transcrição, o modelo do Overleaf e seus links.
 Os agentes recebem tarefas separadas por arquivos. Nenhum agente pode fazer merge.
 O registro final de agentes e verificações fica em `apresentacao/VERIFICACAO.md`.
+
+
+## Conferência integral dos pedidos de 17/11
+
+- [x] Reunir todos os pedidos, orientações e propostas na matriz `conferencia-pedidos-17-11-2026.md`.
+- [x] Identificar o adiamento indevido do `.qmd`; o usuário adiou apenas o artigo.
+- [x] Criar o caderno com os códigos comentados e executá-lo em cópia isolada.
+- [x] Conferir os dois códigos embutidos contra os scripts e reproduzir as 15 tabelas.
+- [x] Corrigir a documentação, os rótulos e a correspondência entre materiais.
+- [x] Regenerar exportações, briefings e guia, sem modificar coeficientes ou região.
+- [x] Conferir todas as páginas, o tempo e a ausência de fontes visíveis.
+- [x] Atualizar o pacote do grupo e validar seus arquivos e links.
+- [ ] Publicar a revisão sem fazer merge e informar somente pendências reais.
