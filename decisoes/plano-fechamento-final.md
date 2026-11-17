@@ -55,7 +55,7 @@ A estimativa por palavras é uma referência para ensaio, não uma medição de 
 - [x] T3 — Atualizar os briefings. Arquivos: `apresentacao/briefings/comum.tex`, `parte_*.tex`, `gerar_briefings.R`, `divisao.tex`. Conferir nomes, transições e conteúdo completo.
 - [x] T4 — Gerar as exportações. Executar a análise, compilar o Beamer, exportar PPTX/HTML e compilar os cinco briefings. Conferir páginas e notas.
 - [x] T5 — Revisar os resultados. Renderizar páginas do deck e dos briefings. Conferir gráficos, cortes, textos, macros e tempo estimado. Corrigir os achados e repetir os checks afetados.
-- [ ] T6 — Atualizar o repositório. Registrar a evidência em `apresentacao/VERIFICACAO.md`. Conferir o diff. Fazer commit e preparar PR sem merge.
+- [x] T6 — Atualizar o repositório. Registrar a evidência em `apresentacao/VERIFICACAO.md`. Conferir o diff. Fazer commit e preparar PR sem merge.
 
 ## Comandos de reprodução
 

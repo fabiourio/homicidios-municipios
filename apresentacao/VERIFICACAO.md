@@ -105,3 +105,17 @@ Nenhum agente fez merge ou enviou mensagens ao grupo.
 - A revisão não acrescentou outro modelo nem corrigiu a variância dos erros.
 - O artigo final ficou fora desta etapa por instrução do usuário.
 - O `.qmd` e o ZIP completo da entrega permanecem na etapa de fechamento do artigo.
+
+## Repositório e entrega para revisão
+
+- [PR 12](https://github.com/fabiourio/homicidios-municipios/pull/12) aberto sobre `main`.
+- Branch publicada: `apresentacao-final-15-minutos`.
+- O GitHub informou ausência de conflitos de merge.
+- Na consulta final, não havia revisão remota nem verificações automáticas registradas. As revisões independentes desta sessão estão descritas acima.
+- Nenhum merge foi executado. A branch permanece disponível para revisão do grupo.
+
+Somente após ordem explícita para integrar:
+
+```sh
+gh pr merge 12 --repo fabiourio/homicidios-municipios --merge
+```
