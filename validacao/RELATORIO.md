@@ -61,8 +61,8 @@ Os extremos de cada variável, na base e no escopo, estão em `saida/02_extremos
 Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini (centralizado), desocupação, % urbana, frequência escolar, distorção idade-série, migração recente, região e o termo renda x Gini (14 parâmetros). n = 1.133; R² = 0,564; R² ajustado = 0,558. Os coeficientes são iguais aos de `entrega/resultados/modelagem/valores_modelo.txt`.
 
 - **Nenhum município tem |e*| ≥ 4.** Campos do Jordão-SP (e* = −4,4 no modelo anterior) saiu do escopo por indício de sub-registro: 1 homicídio e 36 óbitos de intenção indeterminada (37,5% dos óbitos externos).
-- 4 municípios têm |e*| ≥ 3, e **3 são negativos**: Lavras da Mangabeira-CE (4 homicídios em 3 anos; e* = −3,9), Pomerode-SC (1; −3,6) e Barra Bonita-SP (1; −3,1). O positivo é São Francisco de Itabapoana-RJ (104 homicídios; e* = 3,3). Isso é efeito da contagem pequena com ln(taxa), não problema de dado. Pomerode tem só 2 óbitos indeterminados (3,7%) e 3,5% de causas mal definidas, e a contagem por ocorrência é 0: **não parece erro de digitação**.
-- *(Fora da apostila, só descritivo)* 78 municípios têm alavancagem acima de 2p/n e 55 têm distância de Cook acima de 4/n, mas o Cook máximo é só 0,021 (Vitória-ES), ou seja, **nenhum ponto domina o ajuste**. As maiores alavancagens são Nova Lima-MG (Gini de 0,652 e 48,7% de indeterminada; h = 0,148), São Paulo de Olivença-AM, Santana de Parnaíba-SP, Bagre-PA e Itaíba-PE (desocupação de 19,1%).
+- 4 municípios têm |e*| ≥ 3, e **3 são negativos**: Lavras da Mangabeira-CE (4 homicídios em 3 anos; e* = −3,9), Pomerode-SC (1; −3,6) e Barra Bonita-SP (1; −3,1). O positivo é São Francisco de Itabapoana-RJ (104 homicídios; e* = 3,3). Contagens pequenas podem contribuir para esses resíduos em ln(taxa). Não encontramos evidência direta de erro nesses registros. Pomerode tem só 2 óbitos indeterminados (3,7%) e 3,5% de causas mal definidas, e a contagem por ocorrência é 0: **não parece erro de digitação**.
+- *(Fora da apostila, só descritivo)* 78 municípios têm alavancagem acima de 2p/n e 55 têm distância de Cook acima de 4/n, mas o Cook máximo é só 0,021 (Vitória-ES), ou seja, esse indicador isolado não sugere domínio por um único ponto. As maiores alavancagens são Nova Lima-MG (Gini de 0,652 e 48,7% de indeterminada; h = 0,148), São Paulo de Olivença-AM, Santana de Parnaíba-SP, Bagre-PA e Itaíba-PE (desocupação de 19,1%).
 - O gráfico de resíduos (`v1`) não tem mais a faixa diagonal dos zeros, porque o escopo não tem taxa zero.
 
 ## 6. Sensibilidade: o modelo reajustado sem cada grupo de casos
@@ -87,14 +87,14 @@ Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini (centralizad
 ## 7. Recomendações
 
 **DEVE ser feito**
-1. **Manter Campos do Jordão-SP fora do escopo e não remover mais nenhum município.** Ele tem indício de sub-registro (1 homicídio e 36 óbitos indeterminados). Nos demais, não há |e*| ≥ 4 nem evidência direta de erro, e a apostila só manda remover quando há essa evidência.
-2. **Tratar `desocup` como frágil.** Ela (p = 0,022) perde a significância sem os 31 municípios de % indeterminada alta (p = 0,072). `pct_migr_10anos` não é significativa no modelo base (p = 0,143): não tirar conclusão sobre ela.
-3. **Manter a % indeterminada só como checagem de dado.** Ela saiu do modelo (a medida tem os homicídios no divisor; corrigida, não tem efeito), mas os 31 municípios com valor alto, concentrados em MG e SP, indicam taxa subestimada.
+1. **Preservar a exclusão deliberada de Campos do Jordão-SP por suspeita de sub-registro**, conforme a decisão já discutida com os professores. Um homicídio e 36 óbitos indeterminados são indícios, não confirmação de erro. A apostila não obriga essa exclusão; avaliar a sensibilidade e não retirar outros municípios apenas para favorecer testes.
+2. **Tratar `desocup` como frágil.** Ela (p = 0,022) perde a significância sem os 31 municípios de % indeterminada alta (p = 0,072). `pct_migr_10anos` não é significativa no modelo base (p = 0,143): relatar ausência de evidência clara nesse ajuste, sem afirmar ausência de associação.
+3. **Manter a % indeterminada só como checagem de dado.** Ela saiu do modelo (a medida tem os homicídios no divisor; corrigida, não acrescentou evidência clara), mas os 31 municípios com valor alto, concentrados em MG e SP, sinalizam possível problema de classificação dos óbitos.
 
 **PODE ser feito**
 4. Citar que os resíduos grandes são quase todos negativos (3 de 4) e vêm de municípios com 1 a 4 homicídios em 3 anos. É uma limitação de usar ln(taxa) com contagem pequena.
-5. Usar a correlação com 2024 (0,79 no escopo contra 0,26 nos municípios < 5 mil) como evidência a favor do corte em 30 mil habitantes.
-6. Dizer que o Gini municipal é uma aproximação feita pelas classes de renda. Ela bate com o oficial nas 27 UFs (erro médio de 0,003), mas o IBGE não publica o valor por município para conferir.
+5. Usar a correlação com 2024 (0,79 no escopo contra 0,26 nos municípios < 5 mil) como apoio à maior estabilidade em municípios maiores. Essa comparação não valida especificamente trinta mil habitantes como corte ótimo.
+6. Dizer que o Gini municipal é uma aproximação feita pelas classes de renda. A comparação nas 27 UFs tem diferença média de 0,003, mas usa universos diferentes: pessoas de quatorze anos ou mais no cálculo e todos os moradores na referência. Ela não valida o Gini exato municipal.
 7. Veranópolis-RS (frequência escolar de 43,5%) é valor estranho da fonte, mas está fora do escopo e não afeta o modelo.
 8. Ignorar as inconsistências das tabelas 10300 e 9517. O efeito é ≤ 0,03 p.p.; não precisa de correção.
 
@@ -109,8 +109,9 @@ Modelo: ln(taxa) em função de renda (com termo ao quadrado), Gini (centralizad
 - O Gini de cada município: só existe valor oficial para o Brasil, as regiões e as UFs. O erro do cálculo dentro de um município não foi medido.
 - Por que a frequência escolar de Veranópolis-RS é 43,5%. Só confirmamos que a base repete o arquivo do IBGE.
 - Se os 36 óbitos de intenção indeterminada de Campos do Jordão-SP escondem homicídios (o município saiu do escopo por esse indício, sem teste).
-- As variáveis extras foram conferidas contra os arquivos originais em 17/11/2026: 44.560 comparações, sem divergências. Evidências em `auditoria_extras.txt` e reprodução em `validar_extras.R`.
-- O efeito de tirar só Nova Lima-MG do modelo (não há cenário para isso).
+
+A revisão adicional retirou Nova Lima-MG isoladamente. Os principais efeitos mantiveram sinais e magnitudes próximas.
+A evidência está em `saida/09_auditoria_modelo.csv` e em [Revisão do modelo final](REVISAO_MODELO_FINAL.md).
 
 ## Complemento da auditoria de 17/11/2026
 

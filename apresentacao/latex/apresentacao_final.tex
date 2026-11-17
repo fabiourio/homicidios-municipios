@@ -12,7 +12,7 @@
 \setbeamerfont{institute}{size=\footnotesize}
 \setbeamerfont{date}{size=\footnotesize}
 \setbeamertemplate{navigation symbols}{}
-\setbeamertemplate{footline}{\hspace{1em}\scriptsize\color{black!55}GED-16 · Homicídios nos municípios\hfill\insertframenumber\hspace{1em}\vspace{0.6em}}
+\setbeamertemplate{footline}{\hfill\scriptsize\color{black!55}\insertframenumber\hspace{1em}\vspace{0.6em}}
 \graphicspath{{figuras/}{../../entrega/resultados/eda/}{../../entrega/resultados/modelagem/}}
 \newcommand{\fig}[1]{\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{#1}}
 \newcommand{\fonte}[1]{\par\vspace{0.2em}{\tiny\color{black!65}Fonte: #1\par}}
@@ -25,23 +25,23 @@
 \begin{document}
 \maketitle
 
-\section{Contexto e pergunta}
+\section{Contextualização e questão de pesquisa}
 \begin{frame}{Contexto e questão de pesquisa}
 \begin{itemize}
 \setlength{\itemsep}{0.5em}
 \item Brasil, 2021--2023: \textbf{\nHomAno{} mortes por ano} na medida do estudo
-\item A violência letal se distribui de forma desigual entre as regiões
-\item ODS 16: reduzir a violência e as mortes relacionadas
+\item A taxa nacional não descreve as diferenças entre os municípios
+\item Problema: identificar características municipais associadas a essas diferenças
 \end{itemize}
 \begin{block}{Pergunta}
 Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
 \end{block}
-{\small Hipóteses: desigualdade (H1), exclusão escolar (H2) e migração recente (H3) associadas a taxas maiores.}
-\fonte{SIM/DATASUS; IBGE. Hipóteses: Fajnzylber et al. (2002), Lochner e Moretti (2004), Sampson e Groves (1989).}
+{\small Objetivo: descrever associações no recorte estudado, sem afirmar causa. Tema relacionado ao ODS 16.}
+\fonte{SIM/DATASUS; IBGE. Média anual de 2021--2023, conforme a definição apresentada no slide seguinte.}
 \end{frame}
 
-\section{Dados}
-\begin{frame}{Fontes e medida de violência}
+\section{Base de dados}
+\begin{frame}{Base de dados: fontes e medida de violência}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}X@{}}
 \toprule
 \textbf{Fonte} & \textbf{O que utilizamos}\\
@@ -59,7 +59,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{SIM/DATASUS; IBGE; INEP. Medida relacionada ao ODS 16; a definição difere do indicador oficial 16.1.1.}
 \end{frame}
 
-\begin{frame}{Recorte e variáveis do modelo}
+\begin{frame}{Base de dados: recorte e variáveis}
 \begin{columns}[T]
 \column{0.48\textwidth}
 \textbf{\color{ods}Onde o modelo se aplica}
@@ -84,50 +84,53 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{Elaboração própria. Cidades menores têm taxas mais instáveis; o recorte não elimina todo problema de registro.}
 \end{frame}
 
-\section{Padrões nos dados}
-\begin{frame}{A distribuição da taxa difere entre regiões}
-\begin{columns}[c]
-\column{0.64\textwidth}
-\fig{e3_box_regiao.png}
-\column{0.33\textwidth}
-\begin{itemize}
-\item Norte e Nordeste têm medianas maiores no recorte
-\item Há diferenças entre municípios da mesma região
-\item Região sozinha não explica essa variação
-\end{itemize}
-\end{columns}
-\fonte{SIM/DATASUS; IBGE. Eixo em ln(taxa). Linha central: mediana; caixa: metade central; ponto vermelho: média de ln(taxa).}
+\section{Metodologia}
+\begin{frame}{Metodologia: modelo e finalidade dos termos}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.34\linewidth}X@{}}
+\toprule
+\textbf{Método ou termo} & \textbf{Finalidade}\\
+\midrule
+Regressão múltipla de ln(taxa) & Comparar municípios mantendo outras características constantes\\[0.6em]
+ln(renda) e seu quadrado & Representar uma relação curva com a renda\\[0.6em]
+Gini $\times$ ln(renda) & Permitir que a associação da desigualdade dependa da renda\\[0.6em]
+Região como categoria & Considerar diferenças regionais; Sudeste como referência\\
+\bottomrule
+\end{tabularx}
+\vspace{0.6em}
+{\small O log permite expressar as comparações como mudanças percentuais na taxa típica.}
+\fonte{Elaboração própria. Apostila GED-16, caps. 4, 5 e 7. Transformação e comparações auxiliares nos apêndices.}
 \end{frame}
 
-\begin{frame}{A relação bruta com a renda não é uma reta}
-\begin{columns}[c]
-\column{0.64\textwidth}
-\fig{e7_box_renda.png}
-\column{0.33\textwidth}
-\begin{itemize}
-\item A mediana é maior em uma faixa intermediária de renda
-\item O padrão sugere uma relação curva
-\item Ainda não controlamos as outras características
-\end{itemize}
-\end{columns}
-\fonte{SIM/DATASUS; IBGE. Eixo em ln(taxa). Décimos de renda per capita; pontos vermelhos: médias de ln(taxa).}
-\end{frame}
-
-\section{Método e diagnóstico}
-\begin{frame}{Modelo ajustado e finalidade dos métodos}
+\begin{frame}{Metodologia: como avaliamos o modelo}
 \begin{itemize}
 \setlength{\itemsep}{0.65em}
-\item \textbf{Regressão linear múltipla para ln(taxa):} comparar municípios mantendo outras características constantes
-\item \textbf{Renda ao quadrado:} representar a relação curva; \textbf{Gini $\times$ renda:} permitir que a associação da desigualdade mude com a renda
-\item \textbf{Testes $F$:} avaliar a contribuição do modelo e dos termos acrescentados
-\item \textbf{Resíduos e gráficos:} avaliar a forma dos erros; VIF entra depois como alerta para a leitura dos coeficientes
+\item \textbf{Testes $F$ global e parciais:} avaliar a contribuição das explicativas e dos termos acrescentados
+\item \textbf{Gráficos dos resíduos:} procurar curvas, mudanças de dispersão e desvios da distribuição normal
+\item \textbf{Breusch-Pagan e Shapiro-Wilk:} complementar a avaliação da variância e da normalidade
+\item \textbf{VIF:} avaliar informação repetida entre explicativas, depois de verificar a especificação e os resíduos
 \end{itemize}
 \vspace{0.4em}
-{\small Ajuste final: $R^2$ ajustado = \nRdoisA, \textbf{na escala de ln(taxa)}.}
-\fonte{Elaboração própria. Apostila GED-16, caps. 4, 6 e 7. Box-Cox e comparação de modelos nos apêndices.}
+{\small Os testes complementam a leitura dos gráficos. Um bom ajuste não garante que os pressupostos sejam atendidos.}
+\fonte{Elaboração própria. Apostila GED-16, caps. 4 e 6. Sem teste baseado em uma ordem artificial de vizinhos.}
 \end{frame}
 
-\begin{frame}{Diagnóstico: o tamanho dos erros ainda varia}
+\section{Ajuste do modelo}
+\begin{frame}{Ajuste: valores observados e ajustados}
+\begin{columns}[c]
+\column{0.64\textwidth}
+\fig{observado_ajustado.png}
+\column{0.33\textwidth}
+\begin{itemize}\small
+\item $R^2$ ajustado = \nRdoisA, na escala de ln(taxa)
+\item Pontos próximos da diagonal: erros menores
+\item Desvios grandes permanecem
+\item Falta verificar a forma desses erros
+\end{itemize}
+\end{columns}
+\fonte{Modelo final, mesmos dados usados no ajuste. Diagonal: igualdade entre observado e ajustado; não é validação externa.}
+\end{frame}
+
+\begin{frame}{Ajuste: diagnóstico da variância dos erros}
 \begin{columns}[c]
 \column{0.49\textwidth}
 \includegraphics[width=\linewidth]{residuos_ajustado.png}
@@ -141,7 +144,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{Modelo final. Linha tracejada: erro zero. Breusch-Pagan: $p$ \nBPp. Cada ponto representa um município.}
 \end{frame}
 
-\begin{frame}{Diagnóstico: os resíduos se aproximam da normal}
+\begin{frame}{Ajuste: diagnóstico da normalidade dos resíduos}
 \begin{columns}[c]
 \column{0.49\textwidth}
 \includegraphics[width=\linewidth]{histograma_residuos.png}
@@ -155,8 +158,8 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{Modelo final. Quantis comparam a distribuição dos resíduos com uma normal. Normalidade não é comprovada pelo teste.}
 \end{frame}
 
-\section{Resultados e discussão}
-\begin{frame}{Escola e urbanização têm associações claras no ajuste}
+\section{Discussão e interpretação}
+\begin{frame}{Discussão: escola, urbanização e migração}
 \begin{columns}[c]
 \column{0.68\textwidth}
 \fig{efeitos.png}
@@ -170,7 +173,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{Elaboração própria. p.p. = pontos percentuais. Pontos: estimativas; barras: IC 95\% clássico, sem correção de variância. Associação, não causa.}
 \end{frame}
 
-\begin{frame}{A associação da desigualdade muda com a renda}
+\begin{frame}{Discussão: a desigualdade depende da renda}
 \begin{columns}[c]
 \column{0.65\textwidth}
 \fig{gini_renda.png}
@@ -185,7 +188,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{Elaboração própria. Faixa: IC 95\% clássico, sem correção de variância. Pontos vermelhos: percentis 10, 50 e 90 da renda.}
 \end{frame}
 
-\begin{frame}{Renda e região permanecem associadas à taxa}
+\begin{frame}{Discussão: renda e região no ajuste}
 \begin{columns}[c]
 \column{0.65\textwidth}
 \fig{renda_regiao.png}
@@ -200,7 +203,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \fonte{Elaboração própria. Curvas restritas à renda observada em cada região. Faixas: IC 95\% clássico. Não representam média aritmética da taxa.}
 \end{frame}
 
-\begin{frame}{Limitações que restringem as conclusões}
+\begin{frame}{Discussão: limites das conclusões}
 \begin{itemize}
 \setlength{\itemsep}{0.5em}
 \item \textbf{Variância não constante:} tratar os intervalos e testes como evidência exploratória
@@ -215,7 +218,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \begin{frame}{Resposta à pergunta e próximos passos}
 \begin{itemize}
 \setlength{\itemsep}{0.5em}
-\item \textbf{Desigualdade:} associação positiva nas rendas média e alta; depende da renda do município
+\item \textbf{Desigualdade:} associação depende da renda; positiva nos percentis 50 e 90 avaliados
 \item \textbf{Escola:} frequência e atraso escolar apresentam associações nas direções esperadas
 \item \textbf{Migração:} não encontramos evidência clara no modelo ajustado
 \item \textbf{Literatura:} escola e desigualdade têm respaldo; diferenças regionais também aparecem em estudos municipais
@@ -256,16 +259,16 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \begin{frame}{Apêndice C · Transformação da resposta (Box-Cox)}
 \begin{columns}[c]
 \column{0.62\textwidth}
-\fig{m1_boxcox.png}
+\fig{boxcox_final.png}
 \column{0.35\textwidth}
 \begin{itemize}\small
-\item Melhor potência: \nLambda
-\item IC 95\%: [\nLambdaInf; \nLambdaSup]
+\item Melhor potência: \nLambdaFinal
+\item IC 95\%: [\nLambdaFinalInf; \nLambdaFinalSup]
 \item O log corresponde a zero, fora do intervalo
 \item Escolha do log: leitura percentual e melhora visual dos resíduos
 \end{itemize}
 \end{columns}
-\fonte{Elaboração própria. Box-Cox no modelo auxiliar anterior aos termos quadrático e de interação. Não selecionou log como potência ótima.}
+\fonte{Elaboração própria. Box-Cox com os mesmos termos do modelo final. Não selecionou log como potência ótima.}
 \end{frame}
 
 \begin{frame}{Apêndice D · Modelo com e sem a renda}
@@ -334,37 +337,14 @@ IC do efeito do Gini por renda & Grupo; interpretar a interação\\
 \fonte{Apostila GED-16 e registro das escolhas do grupo. Nenhum novo modelo foi introduzido nesta revisão.}
 \end{frame}
 
-\begin{frame}{Apêndice H · Referências}
-\footnotesize
-\begin{itemize}
-\item FAJNZYLBER, P.; LEDERMAN, D.; LOAYZA, N. Inequality and violent crime. \textit{Journal of Law and Economics}, 45(1), 1--39, 2002.
-\item LOCHNER, L.; MORETTI, E. The effect of education on crime. \textit{American Economic Review}, 94(1), 155--189, 2004.
-\item SAMPSON, R. J.; GROVES, W. B. Community structure and crime: testing social-disorganization theory. \textit{American Journal of Sociology}, 94(4), 774--802, 1989.
-\item WANZINACK, C.; SIGNORELLI, M. C.; REIS, C. Violence and social determinants of health in Brazil. \textit{Cadernos de Saúde Pública}, 38(10), e00282621, 2022.
-\item BARROS, P. H. B.; BAGGIO, H. S.; BAGGIO, I. S. The socioeconomic determinants of crime in Brazil. \textit{Revista Brasileira de Segurança Pública}, 14(2), 188--209, 2020.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Apêndice I · Métodos e fontes}
-\footnotesize
-\begin{itemize}
-\item FERRARI, D. \textit{Apostila GED-16: Análise de Regressão}. ITA. Caps. 1, 4, 6 e 7.
-\item BOX, G. E. P.; COX, D. R. An analysis of transformations. \textit{JRSS, Series B}, 26(2), 211--252, 1964.
-\item GASTWIRTH, J. L. The estimation of the Lorenz curve and Gini index. \textit{Review of Economics and Statistics}, 54(3), 306--316, 1972.
-\item IBGE. Censo Demográfico 2022, tabelas SIDRA indicadas no dicionário de dados.
-\item Ministério da Saúde. SIM/DATASUS, óbitos por residência, 2021--2023.
-\item INEP. Indicadores Educacionais 2022: distorção idade-série no ensino médio.
-\item ONU/UNODC. Metadados do indicador 16.1.1. A definição oficial não inclui Y35--Y36.
-\end{itemize}
-\end{frame}
-\begin{frame}{Apêndice J · Resíduos por explicativa: renda e trabalho}
+\begin{frame}{Apêndice H · Resíduos por explicativa: renda e trabalho}
 {\centering\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_1.png}\par}
 \vspace{0.2em}
 {\small Procurar curvas e mudanças de dispersão. A faixa dos erros varia entre os níveis das explicativas.}
 \fonte{Modelo final, mesmos municípios. Apostila GED-16, seção 4.4: diagnóstico versus cada explicativa na regressão múltipla.}
 \end{frame}
 
-\begin{frame}{Apêndice K · Resíduos por explicativa: escola e região}
+\begin{frame}{Apêndice I · Resíduos por explicativa: escola e região}
 {\centering\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{residuos_explicativas_2.png}\par}
 \vspace{0.2em}
 {\small Diferenças de dispersão permanecem. Erros centrados por região não comprovam independência entre municípios.}

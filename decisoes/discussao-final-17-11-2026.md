@@ -6,6 +6,8 @@ Este registro resume as mensagens do grupo de 17/11/2026, entre 09h53 e 17h11, f
 O usuário aprovou a avaliação crítica das propostas e autorizou sua aplicação.
 A [transcrição do alinhamento com os professores](GED-16-alinhamento-com-professores.txt) complementa as instruções escritas da professora.
 As mensagens originais contêm propostas, discordâncias e decisões; este registro distingue cada uma delas.
+A [revisão da narrativa](revisao-semantica-apresentacao.md) incorpora os pedidos posteriores do usuário em 17/11.
+Ela atualiza organização, tempos, hipóteses e referências sem alterar dados ou modelo.
 
 ## Decisões finais
 
@@ -13,11 +15,14 @@ As mensagens originais contêm propostas, discordâncias e decisões; este regis
 |---|---|---|
 | Região ou estado | Manter região no modelo principal | O grupo confirmou a decisão às 17h11. A comparação regional responde à pergunta escolhida |
 | Tempo | Planejar 13 minutos de fala e reservar dois minutos | O limite informado pela professora é de 15 minutos |
-| Abertura | Contexto e dados ocupam três minutos | A professora prioriza interpretação e discussão dos resultados |
+| Abertura | Contexto e dados ocupam 2min45 | A professora prioriza interpretação e discussão dos resultados |
 | Pessoas | Preservar os cinco apresentadores e sua ordem | O usuário pediu a mesma divisão da apresentação parcial |
-| Tamanho | Usar 14 páginas principais e apêndices | A redução evita comprimir 29 páginas principais no tempo disponível |
-| Numeração | Numerar os slides | Facilita ensaio e perguntas |
-| Estudos anteriores | Retirar a revisão extensa do início | Manter comparações relevantes na discussão e referências nos apêndices |
+| Tamanho | Usar 23 páginas: 14 principais e nove apêndices, A–I | A redução evita comprimir 29 páginas principais no tempo disponível |
+| Numeração | Manter apenas a numeração no rodapé | Facilita ensaio e perguntas sem repetir disciplina e título |
+| Estudos anteriores | Retirar a revisão extensa do início e os apêndices de referências | Manter comparações relevantes na discussão e fontes curtas nos gráficos |
+| Sequência | Contexto, dados, metodologia, ajuste e discussão | Cada pessoa cobre um item docente nessa ordem |
+| Gráficos exploratórios | Retirar os dois gráficos do corpo e preservá-los no repositório | Priorizar métodos, ajuste e discussão |
+| Ajuste observado | Mostrar taxas observadas e ajustadas no slide 7 | Explicar a escala e o alcance do ajuste |
 | Variáveis | Mostrar categorias, sem ler a lista completa | As variáveis relevantes voltam nos resultados |
 | Gini e migração | Explicar brevemente as medidas | Os nomes sozinhos não informam como foram construídas |
 | Gini × renda | Explicar a interação junto ao resultado | A leitura do gráfico mostra como a associação muda com a renda |
@@ -42,16 +47,29 @@ As mensagens originais contêm propostas, discordâncias e decisões; este regis
 
 | Pessoa | Páginas principais | Tempo | Conteúdo |
 |---|---|---:|---|
-| Kauan | 1–2 | 1min30 | Contexto, pergunta e hipóteses |
+| Kauan | 1–2 | 1min15 | Contexto, problema, motivação e pergunta |
 | Fabio | 3–4 | 1min30 | Fontes, resposta, variáveis, corte e limites dos dados |
-| Douglas | 5–6 | 2min | Padrões relevantes da análise exploratória |
-| Luiz Felipe | 7–9 | 3min | Método e interpretação gráfica dos diagnósticos |
-| Willian | 10–14 | 5min | Resultados, interpretação, crítica e conclusão |
+| Douglas | 5–6 | 2min | Modelo e finalidade dos procedimentos de avaliação |
+| Luiz Felipe | 7–9 | 3min | Ajuste observado e interpretação gráfica dos diagnósticos |
+| Willian | 10–14 | 5min15 | Resultados, interpretação, crítica e conclusão |
 
 O total planejado é de 13 minutos. A reserva de dois minutos acomoda pausas e transições.
+Os marcos finais são 1min15, 2min45, 4min45, 7min45 e 13min00.
+Kauan divide seus 75 segundos em 10 e 65 segundos. O último slide recebe 60 segundos.
+Os tempos são metas e limites de ensaio. Nenhuma pessoa precisa preenchê-los com leitura.
 A estimativa por palavras orienta o ensaio, mas não mede a duração real.
 Cada pessoa recebe um briefing completo no molde da apresentação parcial.
 Não foi informada uma regra da disciplina exigindo que todos falem; a divisão decorre da preferência do grupo.
+
+## Hipóteses e vocabulário
+
+As hipóteses são expectativas iniciais, não resultados antecipados. Elas permanecem nos briefings e retornam na discussão.
+A abertura apresenta problema e pergunta, sem antecipar achados regionais.
+H2 trata de exclusão escolar, medida por frequência e atraso escolar. Não representa exclusão social em geral.
+H3 trata de migração recente, medida por residência ininterrupta inferior a dez anos. Não representa imigração internacional.
+A migração permanece no modelo final. H3 ficou sem apoio após retirar a medida problemática de intenção indeterminada.
+O p clássico é 0,143; a variância não constante limita sua interpretação.
+A comparação controlada consta na [revisão da narrativa](revisao-semantica-apresentacao.md). Ela não demonstra ausência de associação nem causa.
 
 ## Cuidados de interpretação
 

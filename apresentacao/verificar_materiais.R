@@ -6,13 +6,13 @@ notas <- fromJSON("notas.json")
 roteiro <- read.csv("roteiro.csv", encoding = "UTF-8")
 logs <- c("latex/apresentacao_final.log", list.files("briefings", pattern = "^briefing_.*[.]log$", full.names = TRUE))
 logs <- logs[file.exists(logs)]
-stopifnot(!any(vapply(logs, function(f) any(grepl("Overfull|Missing character", readLines(f, warn = FALSE))), logical(1))))
+stopifnot(length(logs) == 6, !any(vapply(logs, function(f) any(grepl("Overfull|Missing character", readLines(f, warn = FALSE))), logical(1))))
 pdf <- "apresentacao_final.pdf"
 paginas <- pdf_info(pdf)$pages
-stopifnot(paginas == length(notas), nrow(roteiro) == 14,
+stopifnot(paginas == 23, paginas == length(notas), nrow(roteiro) == 14,
           identical(roteiro$slide, seq_len(14)), sum(roteiro$segundos) == 780)
 pessoas <- c("Kauan", "Fabio", "Douglas", "Luiz Felipe", "Willian")
-tempos <- c(90, 90, 120, 180, 300)
+tempos <- c(75, 90, 120, 180, 315)
 stopifnot(identical(unique(roteiro$pessoa), pessoas),
           identical(as.numeric(tapply(roteiro$segundos, factor(roteiro$pessoa, levels = pessoas), sum)), tempos))
 num_tex <- readLines("latex/numeros.tex", encoding = "UTF-8")
@@ -24,8 +24,8 @@ stopifnot(!any(grepl("\\{\\w+\\}", notas)))
 stopifnot(identical(unname(tools::md5sum(pdf)), unname(tools::md5sum("latex/apresentacao_final.pdf"))))
 texto <- pdf_text(pdf)
 stopifnot(all(vapply(seq_along(texto), function(k) {
-  palavras <- strsplit(trimws(texto[k]), "[[:space:]]+")[[1]]
-  tail(palavras, 1) == as.character(k)
+  linhas <- trimws(strsplit(texto[k], "\n", fixed = TRUE)[[1]])
+  tail(linhas[nzchar(linhas)], 1) == as.character(k)
 }, logical(1))))
 
 pasta_pptx <- tempfile(); dir.create(pasta_pptx)
@@ -47,6 +47,7 @@ roteiro$palavras <- lengths(strsplit(sub("^\\[[^]]+\\]\\s*", "", notas[roteiro$s
 roteiro$palavras_por_minuto <- round(60 * roteiro$palavras / roteiro$segundos)
 roteiro$fim_segundos <- cumsum(roteiro$segundos)
 stopifnot(all(roteiro$palavras_por_minuto <= 140))
+tempo <- function(s) sprintf("%dmin%02ds", s %/% 60, s %% 60)
 for (pessoa in pessoas) {
   slug <- gsub(" ", "_", tolower(iconv(pessoa, to = "ASCII//TRANSLIT")))
   arq <- sprintf("briefings/briefing_%s.pdf", slug)
@@ -56,6 +57,10 @@ for (pessoa in pessoas) {
             grepl("Antes de você:", t, fixed = TRUE), grepl("Depois de você:", t, fixed = TRUE),
             grepl("Perguntas prováveis", t, fixed = TRUE),
             grepl("O projeto em um minuto", t, fixed = TRUE))
+  i <- match(pessoa, pessoas)
+  stopifnot(grepl(paste0("Seu tempo total: ", tempo(tempos[i])), t, fixed = TRUE),
+            grepl(paste0("Comece no marco: ", tempo(sum(tempos[seq_len(i - 1)]))), t, fixed = TRUE),
+            grepl(paste0("Termine no marco: ", tempo(sum(tempos[seq_len(i)]))), t, fixed = TRUE))
   pags <- roteiro$slide[roteiro$pessoa == pessoa]
   stopifnot(all(vapply(pags, function(k) grepl(paste0("Slide ", k, ":"), t, fixed = TRUE), logical(1))))
 }

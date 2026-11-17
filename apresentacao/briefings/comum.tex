@@ -2,7 +2,7 @@
 \caixa{\textbf{Pergunta:} quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?}
 \begin{itemize}
 \item \textbf{Tema:} violência letal municipal relacionada ao ODS 16. Nossa medida inclui intervenções legais e difere do indicador oficial.
-\item \textbf{Contexto:} \nHomAno{} mortes anuais na medida do estudo, com diferenças entre regiões.
+\item \textbf{Contexto:} \nHomAno{} mortes anuais na medida do estudo. A medida nacional não descreve a variação municipal.
 \item \textbf{Resposta:} média anual de óbitos por residência, por cem mil habitantes, entre 2021 e 2023. Inclui agressões e intervenções legais/operações de guerra.
 \item \textbf{Fontes:} SIM/DATASUS para óbitos; Censo 2022 para características municipais; INEP para atraso escolar.
 \item \textbf{Recorte:} \nMunEsc{} municípios com pelo menos \nPopMin{} mil habitantes, sem \nForaNome. Representam \nPctPopEsc\% da população brasileira.
@@ -12,18 +12,28 @@
 \section{Decisões finais e motivos}
 \begin{description}[leftmargin=0pt]
 \item[Apresentar somente o resultado final.] A professora pediu pergunta, interpretação, discussão e crítica. As decisões intermediárias ficam para perguntas.
-\item[Preservar os cinco apresentadores.] A abertura ocupa três minutos. O roteiro prevê treze minutos de fala, com dois minutos de reserva.
+\item[Preservar os cinco apresentadores.] Contexto e dados ocupam 2min45. O roteiro prevê 13 minutos, com dois minutos de reserva até o limite.
+\item[Seguir os cinco itens docentes.] Kauan contextualiza; Fabio apresenta dados; Douglas explica metodologia; Luiz Felipe apresenta ajuste; Willian discute e interpreta.
+\item[Guardar hipóteses para discussão e perguntas.] A abertura apresenta problema e pergunta. As expectativas originais permanecem no briefing, sem uma leitura obrigatória.
 \item[Manter região.] A escolha responde à comparação regional com menos parâmetros. O estado melhora o ajuste, mas isso não decide a escolha sozinho.
 \item[Definir a resposta e o recorte.] Fontes, taxa, período, população e exclusão continuam visíveis, mesmo com a abertura curta.
 \item[Restringir por população.] O corte próximo do percentil \nPercCorte{} reduz a instabilidade em cidades pequenas. Ele também limita a generalização.
 \item[Excluir \nForaNome.] Há \nForaHom{} homicídio e \nForaIndet{} óbitos de intenção indeterminada no período. Isso indica possível sub-registro, sem demonstrar a causa.
 \item[Usar o Gini calculado.] A aproximação usa classes de renda das pessoas de quatorze anos ou mais. Nas UFs, a correlação com o oficial é \nGiniCorUF. A referência considera todos os moradores; essa comparação agregada não valida o valor exato municipal.
 \item[Manter renda curva e Gini $\times$ renda.] O termo quadrático representa a curva da renda. A interação permite que a associação da desigualdade varie com a renda.
-\item[Usar o logaritmo.] A leitura percentual e os gráficos motivam a escolha. Box-Cox estimou \nLambda; zero fica fora do IC [\nLambdaInf; \nLambdaSup]. O teste não selecionou o log como potência ótima.
+\item[Usar o logaritmo.] A leitura percentual e os gráficos motivam a escolha. Box-Cox estimou \nLambdaFinal; zero fica fora do IC [\nLambdaFinalInf; \nLambdaFinalSup]. O teste não selecionou o log como potência ótima.
 \item[Mostrar os gráficos dos diagnósticos.] Resíduos vêm antes do VIF. O número do teste complementa a interpretação visual, sem substituí-la.
 \item[Reconhecer a vizinhança como limitação.] Municípios próximos podem compartilhar fatores. A independência espacial não foi verificada; não criamos uma ordem artificial de vizinhos.
 \item[Não acrescentar variáveis pela narrativa.] Abandono parental não integra o modelo final. Variáveis testadas e retiradas ficam no apêndice F.
 \end{description}
+
+\section{Hipóteses iniciais e migração recente}
+\begin{description}[leftmargin=0pt]
+\item[H1: mais desigualdade, mais homicídios.] A associação depende da renda. O sinal positivo aparece nas rendas mediana e alta; na baixa renda, varia.
+\item[H2: mais exclusão escolar, mais homicídios.] A frequência escolar tem associação negativa; o atraso escolar tem associação positiva. Essas medidas não representam exclusão social em geral.
+\item[H3: mais migração recente, mais homicídios.] A hipótese foi testada e não recebeu apoio claro no modelo final ($p$ clássico = \nPMigrFinal{}). Migração recente significa residência ininterrupta inferior a dez anos, sem restrição a origem internacional. A ausência de evidência clara não prova ausência de associação nem invalida a hipótese.
+\end{description}
+Para perguntas: mantidos os demais termos finais, acrescentar a medida antiga de intenção indeterminada produz $p$ = \nPMigrAntiga{} para migração. A medida corrigida produz $p$ = \nPMigrCorrigida{}. A medida antiga tinha acoplamento matemático com homicídios. Essas comparações não são os resultados exatos da apresentação parcial. A migração permanece no modelo final; não foi retirada. A variância não constante exige cautela com os testes clássicos.
 
 \section{O que os resultados permitem dizer}
 \begin{itemize}
@@ -38,7 +48,7 @@
 
 \section{Como ler os gráficos sem exagerar}
 \begin{description}[leftmargin=0pt]
-\item[Caixas por região e renda.] A linha central é a mediana. A caixa contém a metade central dos municípios. São comparações descritivas, sem controlar as outras variáveis.
+\item[Observado contra ajustado.] O eixo horizontal mostra ln(taxa) ajustada; o vertical mostra ln(taxa) observada. A diagonal indica igualdade. Pontos afastados indicam erros maiores. Os mesmos dados produziram o ajuste; esse gráfico não representa validação externa.
 \item[Resíduos contra valores ajustados.] O eixo vertical mostra observado menos ajustado em ln(taxa). Procurar uma faixa em torno de zero, sem curva sistemática e com largura semelhante.
 \item[Tamanho dos resíduos contra população.] O eixo vertical mostra o erro absoluto. A dispersão menor nos municípios maiores sinaliza variância não constante.
 \item[Histograma e gráfico de quantis.] Comparar o histograma com a curva normal. No gráfico de quantis, procurar pontos próximos da reta e observar os desvios nas pontas.
@@ -57,6 +67,7 @@
 
 \section{Quem fala o quê}
 \input{divisao.tex}
+Os marcos acumulados são 1min15, 2min45, 4min45, 7min45 e 13 minutos. Usar esses tempos como metas e limites de ensaio.
 
 \section{Glossário rápido}
 \begin{description}[leftmargin=0pt]

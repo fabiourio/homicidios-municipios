@@ -1,25 +1,32 @@
-\section{Sua parte: método e diagnóstico por gráficos}
-\textbf{Mensagem principal:} o ajuste tem associação com as explicativas, mas ainda apresenta variância não constante nos erros.
-\subsection{Modelo e finalidade dos métodos}
+\section{Sua parte: ajuste do modelo}
+\textbf{Mensagem principal:} o modelo representa parte da variação observada, mas a variância dos erros ainda muda entre municípios.
+\subsection{Slide 7: valores observados e ajustados}
+Reservar 60 segundos. Mostrar o gráfico antes de citar o $R^2$ ajustado.
 \begin{itemize}
-\item A resposta é ln(taxa). O $R^2$ ajustado de \nRdoisA{} se refere a essa escala, não à taxa original.
-\item Renda ao quadrado representa uma curva. Gini $\times$ renda permite que a associação da desigualdade varie com a renda.
-\item Os testes $F$ avaliam contribuições conjuntas. A tabela dos blocos fica no apêndice B, sem leitura no corpo.
-\item O log foi escolhido por interpretação e melhora visual. Box-Cox estimou \nLambda{} no modelo auxiliar; zero fica fora de seu intervalo.
-\item Os apêndices J e K mostram resíduos contra cada explicativa, como pede a apostila. Usar apenas para perguntas ou inspeção detalhada.
+\item Cada ponto representa um município. O eixo horizontal mostra ln(taxa) ajustada; o vertical mostra ln(taxa) observada.
+\item A diagonal indica igualdade entre observado e ajustado. Pontos próximos indicam erros menores; pontos afastados indicam erros maiores.
+\item O $R^2$ ajustado é \nRdoisA{} na escala de ln(taxa). Não representa a proporção explicada da taxa original.
+\item O gráfico usa os mesmos municípios empregados no ajuste. Ele não apresenta validação em municípios novos.
+\item O $R^2$ não demonstra que os pressupostos foram atendidos. Os próximos gráficos examinam a forma dos erros.
 \end{itemize}
-\subsection{Como apontar os diagnósticos}
+\subsection{Slide 8: diagnóstico da variância dos erros}
+Reservar 65 segundos. Explicar os dois painéis e a consequência para os resultados.
 \begin{description}[leftmargin=0pt]
-\item[Resíduos e ajuste.] O eixo horizontal mostra o valor ajustado de ln(taxa). O vertical mostra o resíduo. Apontar a linha horizontal de zero. Procurar curva sistemática e mudanças na largura da faixa.
-\item[Erro e população.] O eixo horizontal mostra a população em escala logarítmica. O vertical mostra o tamanho absoluto do resíduo. A dispersão diminui com a população. Isso indica que a variância ainda muda.
-\item[Histograma.] O eixo horizontal mostra os resíduos. O vertical mostra sua densidade. Comparar a distribuição com a curva normal vermelha.
-\item[Gráfico de quantis.] O eixo horizontal mostra quantis de uma normal. O vertical mostra quantis dos resíduos padronizados. Pontos próximos da reta apoiam uma aproximação normal; desvios nas pontas merecem atenção.
+\item[Resíduos e ajuste, à esquerda.] O eixo horizontal mostra ln(taxa) ajustada. O vertical mostra o resíduo, observado menos ajustado. Apontar a linha tracejada de erro zero. Procurar uma faixa sem curva sistemática e com largura semelhante.
+\item[Erro e população, à direita.] O eixo horizontal mostra população em escala logarítmica. O vertical mostra o tamanho absoluto do resíduo. A dispersão diminui nos municípios maiores. Breusch-Pagan rejeita variância constante ($p$ \nBPp). Os testes e intervalos clássicos exigem cautela.
+\end{description}
+\subsection{Slide 9: distribuição dos resíduos}
+Reservar 55 segundos. A forma da distribuição e a constância da variância são questões diferentes.
+\begin{description}[leftmargin=0pt]
+\item[Histograma, à esquerda.] O eixo horizontal mostra resíduos; o vertical mostra densidade. As barras se aproximam da curva normal vermelha.
+\item[Gráfico de quantis, à direita.] O eixo horizontal mostra quantis de uma normal; o vertical mostra quantis dos resíduos padronizados. Os pontos ficam próximos da reta, com desvios nas pontas. Shapiro-Wilk não rejeita normalidade ($p$ = \nSWp), mas isso não a comprova. Nenhum resíduo semi-studentizado ultrapassa o limite de $\pm4$ usado para sinalizar extremos.
 \end{description}
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Normalidade passou; então o modelo está bom?] Shapiro-Wilk não rejeitou normalidade, mas isso não a comprova. A variância não constante continua sendo uma limitação.
-\item[O que muda quando a variância não é constante?] Os intervalos e testes clássicos exigem cautela. Não garantimos inferência válida apenas porque o ajuste ou o VIF parecem bons.
-\item[Por que olhar o VIF depois?] O VIF ajuda a avaliar incerteza dos coeficientes por informação repetida. Ele não verifica a forma dos resíduos nem a variância constante.
+\item[O gráfico observado contra ajustado valida o modelo?] Ele mostra o ajuste nos próprios dados usados para estimar os coeficientes. Não mede desempenho em municípios novos nem comprova os pressupostos. Uma validação externa exigiria dados separados.
+\item[Normalidade não foi rejeitada; então o modelo está adequado?] Esse resultado não comprova normalidade. A variância não constante permanece. Um bom $R^2$ também não elimina essa limitação.
+\item[O que muda quando a variância não é constante?] A variância desigual limita os intervalos e testes clássicos. As conclusões são exploratórias. Os apêndices H e I, slides 22 e 23, mostram resíduos por explicativa. Eles complementam o diagnóstico, sem mudar os coeficientes nem verificar independência espacial.
 \end{description}
 \subsection{Controle da fala e transição}
+A meta da parte é 3 minutos, terminando no marco acumulado de 7min45.
 Interpretar os gráficos antes de citar os testes. Ao concluir: ``Com essas restrições explícitas, o Willian interpreta os resultados do ajuste.''

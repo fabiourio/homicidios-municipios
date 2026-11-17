@@ -75,15 +75,23 @@ Para atualizar os briefings, use a skill `briefing-apresentacao` (`.claude/skill
 
 Os [materiais finais e os briefings](apresentacao/LEIA-ME.md) estão organizados por apresentador.
 O [registro de verificação](apresentacao/VERIFICACAO.md) documenta os checks, as correções e os limites desta etapa.
-Uma [revisão com a apostila e as orientações docentes](decisoes/revisao-projeto-apostila.md) conferiu a análise e a entrega completa.
+Uma [revisão com a apostila e as orientações docentes](decisoes/revisao-projeto-apostila.md) conferiu a análise e os requisitos da entrega.
+A [auditoria do modelo final](validacao/REVISAO_MODELO_FINAL.md) reproduz cálculos e registra limitações e sensibilidades.
 Ela acrescentou resíduos por explicativa nos apêndices e registrou a conferência das variáveis extras nas fontes originais.
 
 As [decisões aprovadas em 17/11](decisoes/discussao-final-17-11-2026.md) mantêm a região no modelo.
-A apresentação terá 14 páginas principais e apêndices para perguntas.
-O roteiro prevê 13 minutos: Kauan 1min30, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 5min.
+A [revisão da narrativa](decisoes/revisao-semantica-apresentacao.md) define 23 páginas: 14 principais e nove apêndices, de A a I.
+O roteiro prevê 13 minutos: Kauan 1min15, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 5min15.
+Contexto e dados ocupam 2min45. As cinco partes seguem a ordem pedida pelas professoras.
+Kauan apresenta contexto; Fabio, dados; Douglas, métodos; Luiz Felipe, ajuste e diagnósticos; Willian, discussão.
+O slide 7 mostra taxas observadas e ajustadas. Os dois gráficos exploratórios retirados permanecem no repositório.
+Os apêndices H e I mostram resíduos por explicativa nas páginas 22 e 23.
+As fontes curtas dos gráficos permanecem. O rodapé dos slides contém apenas a numeração.
 Os dois minutos restantes acomodam pausas e transições.
 O ensaio deve confirmar a duração; a estimativa por palavras não substitui a fala real.
 Os diagnósticos usam gráficos interpretados antes dos valores dos testes e do VIF.
+As hipóteses são expectativas iniciais. A migração recente permanece no modelo, sem evidência clara de associação.
+Exclusão escolar significa frequência e atraso escolar. Migração recente significa residência ininterrupta inferior a dez anos.
 As limitações incluem o recorte populacional, o Gini aproximado e a dependência entre municípios não avaliada.
 O [plano de execução](decisoes/plano-fechamento-final.md) registra os requisitos desta etapa.
 O artigo final fica para a próxima etapa; os arquivos do modelo do Overleaf estão em `relatorio/modelo/`.

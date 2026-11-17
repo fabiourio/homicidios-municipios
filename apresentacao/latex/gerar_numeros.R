@@ -136,7 +136,21 @@ confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos muni
 r_resp <- R["ln Taxa", colnames(R) != "ln Taxa"]
 var_max <- names(which.max(abs(r_resp)))
 
+bc_final <- MASS::boxcox(lm(update(formula(mod$final), y ~ .), data = mod$d),
+                         lambda = seq(-.5, 1.2, .001), plotit = FALSE)
+bc_lim <- max(bc_final$y) - qchisq(.95, 1) / 2
+bc_ci <- range(bc_final$x[bc_final$y > bc_lim])
+bc_max <- bc_final$x[which.max(bc_final$y)]
+confere(bc_ci[1] > 0, "Box-Cox final também não seleciona log")
+migracao <- read.csv("../../validacao/saida/08_sensibilidade_migracao.csv", row.names = 1)
+confere(abs(migracao["final", "p_migracao"] - coef("pct_migr_10anos", "p")) < 1e-10,
+        "sensibilidade da migração corresponde ao mesmo modelo final")
+
 mac <- c(
+  LambdaFinal = fmt(bc_max, 2), LambdaFinalInf = fmt(bc_ci[1], 2), LambdaFinalSup = fmt(bc_ci[2], 2),
+  PMigrFinal = fp(migracao["final", "p_migracao"]),
+  PMigrAntiga = fp(migracao["com_medida_antiga", "p_migracao"]),
+  PMigrCorrigida = fp(migracao["com_medida_corrigida", "p_migracao"]),
   MunBR = fmt(e[["municipios_br"]], 0), HomBR = fmt(e[["hom_br"]], 0), TaxaBR = fmt(e[["taxa_br"]]),
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
   PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), PercCorte = fmt(e[["percentil_corte"]], 0), PctMaiores = fmt(100 - e[["percentil_corte"]], 0),
@@ -394,3 +408,19 @@ for (k in seq_along(painel_vars)) {
   }
   dev.off()
 }
+
+p <- ggplot(plot_d, aes(ajustado, ly)) +
+  geom_abline(intercept = 0, slope = 1, colour = vermelho, linetype = 2) +
+  geom_point(colour = azul, alpha = .35, size = 1.1) + coord_equal() +
+  labs(x = "ln(taxa) ajustado", y = "ln(taxa) observado") + tema
+ggsave("figuras/observado_ajustado.png", p, width = 6.3, height = 4.3, dpi = 220)
+
+p <- ggplot(data.frame(lambda = bc_final$x, perfil = bc_final$y), aes(lambda, perfil)) +
+  geom_line(colour = azul, linewidth = .8) +
+  geom_hline(yintercept = bc_lim, linetype = 2, colour = "grey45") +
+  geom_vline(xintercept = 0, colour = vermelho, linetype = 2) +
+  geom_vline(xintercept = bc_max, colour = azul, linetype = 3) +
+  coord_cartesian(xlim = c(-.05, .4), ylim = c(bc_lim - 20, max(bc_final$y) + 3)) +
+  labs(x = "Potência (zero corresponde ao log)", y = "Log-verossimilhança de perfil",
+       subtitle = "IC 95%: perfil acima da linha cinza") + tema
+ggsave("figuras/boxcox_final.png", p, width = 6.3, height = 4.3, dpi = 220)

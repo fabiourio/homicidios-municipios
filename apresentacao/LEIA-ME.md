@@ -1,6 +1,6 @@
 # Apresentação final — 18/11/2026
 
-**Apresentar os slides 1–14.** Os slides 15–25 são apêndices para perguntas.
+**Apresentar os slides 1–14.** Os slides 15–23 são os nove apêndices, de A a I, para perguntas.
 O roteiro planeja 13 minutos. Os dois minutos restantes acomodam pausas e transições.
 O grupo ainda precisa confirmar a duração num ensaio cronometrado.
 O prazo informado para enviar os slides é 18/11/2026, às 10h00.
@@ -21,32 +21,43 @@ Notas e briefings são materiais internos do grupo. Os slides fazem parte da ent
 
 | Pessoa | Slides | Tempo | Marco de início | Marco de fim | Briefing completo |
 |---|---|---|---|---|---|
-| Kauan | 1–2 | 1min30 | 0min00 | 1min30 | [Abrir](briefings/briefing_kauan.pdf) |
-| Fabio | 3–4 | 1min30 | 1min30 | 3min00 | [Abrir](briefings/briefing_fabio.pdf) |
-| Douglas | 5–6 | 2min | 3min00 | 5min00 | [Abrir](briefings/briefing_douglas.pdf) |
-| Luiz Felipe | 7–9 | 3min | 5min00 | 8min00 | [Abrir](briefings/briefing_luiz_felipe.pdf) |
-| Willian | 10–14 | 5min | 8min00 | 13min00 | [Abrir](briefings/briefing_willian.pdf) |
+| Kauan | 1–2 | 1min15 | 0min00 | 1min15 | [Abrir](briefings/briefing_kauan.pdf) |
+| Fabio | 3–4 | 1min30 | 1min15 | 2min45 | [Abrir](briefings/briefing_fabio.pdf) |
+| Douglas | 5–6 | 2min | 2min45 | 4min45 | [Abrir](briefings/briefing_douglas.pdf) |
+| Luiz Felipe | 7–9 | 3min | 4min45 | 7min45 | [Abrir](briefings/briefing_luiz_felipe.pdf) |
+| Willian | 10–14 | 5min15 | 7min45 | 13min00 | [Abrir](briefings/briefing_willian.pdf) |
 
 Cada briefing inclui a parte individual, as falas completas, os slides, as decisões comuns e perguntas respondidas.
 Os tempos são metas de ensaio, não o resultado de uma apresentação real.
-Não ler as referências nem os apêndices durante o roteiro principal.
+A abertura de Kauan e Fabio ocupa 2min45. O último slide tem 60 segundos.
+Não preencher o tempo com leitura. Tratar os tempos como metas e limites de ensaio.
+Não ler os apêndices durante o roteiro principal.
 
 ## Conteúdo dos slides
 
 | Slides | Conteúdo |
 |---|---|
-| 1–2 | Tema, contexto, pergunta e hipóteses |
+| 1–2 | Contextualização: tema, problema, motivação e pergunta |
 | 3–4 | Fontes, resposta, variáveis e recorte |
-| 5–6 | Diferenças regionais e relação bruta com a renda |
-| 7 | Modelo final e finalidade dos métodos |
+| 5–6 | Metodologia: modelo, termos e finalidade dos procedimentos de avaliação |
+| 7 | Ajuste do modelo: taxas observadas e ajustadas, escala e alcance |
 | 8–9 | Resíduos, variância dos erros e normalidade, com gráficos interpretados |
 | 10–12 | Escola, urbanização, migração, desigualdade, renda e região |
 | 13–14 | Limitações, resposta à pergunta, literatura e trabalhos futuros |
-| 15–23 | Coeficientes, testes, Box-Cox, comparações, variáveis retiradas e referências |
-| 24–25 | Resíduos contra cada variável explicativa, conforme a apostila |
+| 15–21 | Apêndices A–G: coeficientes, testes, Box-Cox, comparações e variáveis retiradas |
+| 22–23 | Apêndices H–I: resíduos contra cada variável explicativa, conforme a apostila |
+
+Os dois gráficos exploratórios retirados do corpo permanecem disponíveis no repositório.
+As fontes curtas dos gráficos permanecem. O rodapé dos slides contém apenas a numeração.
+Os apêndices de referências foram retirados; o registro bibliográfico permanece no projeto.
 
 ## Cuidados para a fala
 
+- Abrir com problema e pergunta. Apresentar os resultados na discussão.
+- Tratar as hipóteses como expectativas iniciais. Elas permanecem nos briefings e retornam na discussão.
+- Definir exclusão escolar por frequência e atraso escolar. A medida não representa toda a exclusão social.
+- Definir migração recente por residência ininterrupta inferior a dez anos. A medida não representa imigração internacional.
+- Manter H3: a migração permanece no modelo, sem evidência clara de associação, com p clássico de 0,143.
 - Mostrar o padrão do gráfico antes de citar o teste.
 - Explicar os eixos e as linhas quando apresentar cada gráfico.
 - Distinguir não rejeitar normalidade de comprovar normalidade.

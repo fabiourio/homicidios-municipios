@@ -2,16 +2,22 @@
 
 Data: 17/11/2026. Base: `1893e89` (`main`). Branch: `apresentacao-final-15-minutos`.
 
-## Resultado
+## Configuração aprovada na revisão da narrativa
 
-- 14 páginas principais e onze apêndices.
-- 25 páginas no PDF, no PowerPoint e no HTML.
-- Cinco briefings completos, com a mesma divisão da apresentação parcial.
-- Roteiro de 780 segundos: 90/90/120/180/300 segundos por pessoa.
-- Abertura de 180 segundos; dois minutos de reserva até o limite informado.
+- 14 páginas principais e nove apêndices, de A a I.
+- Meta de 23 páginas no PDF, no PowerPoint e no HTML.
+- Cinco briefings, com as mesmas pessoas e ordem da apresentação parcial.
+- Roteiro de 780 segundos: 75/90/120/180/315 segundos por pessoa.
+- Abertura de 165 segundos; dois minutos de reserva até o limite informado.
+- Marcos finais: 1min15, 2min45, 4min45, 7min45 e 13min00.
+- Último slide: 60 segundos. Rodapé apenas com numeração; fontes curtas dos gráficos preservadas.
 - As falas são metas de ensaio. A duração de uma apresentação real não foi medida.
 
-## Reprodução e integridade
+O verificador confirmou os critérios acima na geração final de 17/11/2026.
+As evidências nas seções seguintes registram as versões anteriores à [revisão da narrativa](../decisoes/revisao-semantica-apresentacao.md).
+A evidência da geração atual está no encerramento deste registro.
+
+## Reprodução e integridade — registro anterior
 
 1. O código original da análise foi extraído de `1893e89` para uma pasta temporária.
 2. Os dois scripts originais foram executados sobre os dados reais do repositório.
@@ -33,7 +39,7 @@ Rscript verificar_materiais.R
 
 As pastas de execução estão documentadas no [LEIA-ME](LEIA-ME.md).
 
-## Verificação dos arquivos entregues
+## Verificação dos arquivos entregues — registro anterior
 
 O script `verificar_materiais.R` confere os materiais finais, não apenas seus arquivos-fonte:
 
@@ -41,7 +47,7 @@ O script `verificar_materiais.R` confere os materiais finais, não apenas seus a
 - Correspondência das notas reais do PowerPoint e do HTML com as falas resolvidas.
 - Ausência de marcadores numéricos sem substituição.
 - Igualdade do PDF exportado com o PDF compilado.
-- Numeração contínua das 25 páginas.
+- Numeração contínua das páginas da versão então verificada.
 - Presença das cinco pessoas e seus tempos aprovados.
 - Identificação da fala completa de cada slide nos briefings.
 - Contexto, perguntas, transições e marcos de tempo nos briefings.
@@ -72,7 +78,7 @@ Casos de falha testados em cópias temporárias:
 
 Fonte para a definição oficial: [metadados ONU/UNODC](https://unstats.un.org/sdgs/metadata/files/Metadata-16-01-01.pdf).
 
-## Revisão visual
+## Revisão visual — registro anterior
 
 - O agente principal inspecionou montagens dos slides 1–14.
 - Uma revisão independente inspecionou os slides 8–23, as cinco capas e uma página de fala.
@@ -120,7 +126,7 @@ Somente após ordem explícita para integrar:
 gh pr merge 12 --repo fabiourio/homicidios-municipios --merge
 ```
 
-## Revisão complementar com a apostila
+## Revisão complementar com a apostila — registro anterior
 
 A [revisão do projeto completo](../decisoes/revisao-projeto-apostila.md) consultou diretamente os capítulos oficiais.
 Ela acrescentou os apêndices J e K, com resíduos contra cada explicativa, conforme a seção 4.4.
@@ -135,3 +141,64 @@ Essa pasta não substitui o ZIP completo da entrega acadêmica.
 
 Agentes adicionais: `revisao_apostila_metodos`, `revisao_dados_fontes` e `revisao_apoio_apostila`.
 A ferramenta não forneceu contagens individuais de `subagent_tokens`.
+
+## Revisão da narrativa — 17/11/2026
+
+O usuário pediu retirar os apêndices de referências e o rodapé repetido, além de verificar hipóteses e tempo.
+A [especificação da revisão](../decisoes/revisao-semantica-apresentacao.md) preserva dados, modelo e ordem dos cinco apresentadores.
+
+- A sequência passa a contexto (1–2), dados (3–4), métodos (5–6), ajuste (7–9) e discussão (10–14).
+- O slide 7 mostra taxas observadas e ajustadas; os dois gráficos exploratórios permanecem disponíveis no repositório.
+- Os antigos diagnósticos J–K passam a H–I, páginas 22–23, após retirar os apêndices de referências.
+- As hipóteses permanecem expectativas iniciais; a abertura apresenta problema e pergunta.
+- H2 trata de exclusão escolar; H3 trata de migração recente, não imigração internacional.
+- A migração permanece no modelo, sem evidência clara de associação (p clássico = 0,143).
+- A retirada da medida problemática de intenção indeterminada mudou o apoio a H3; o registro explica essa comparação.
+
+Verificações desta revisão:
+
+- [x] Regenerar PDF, PowerPoint, HTML, notas e cinco briefings.
+- [x] Conferir 23 páginas, apêndices A–I, numeração e fontes curtas.
+- [x] Conferir tempos, marcos, correspondência das falas e função de cada slide.
+- [x] Inspecionar os gráficos e as páginas alteradas.
+- [x] Executar o verificador atualizado e conferir a integridade dos dados e do modelo.
+- [x] Regenerar o guia PDF e a pasta do grupo; conferir as cópias.
+
+O verificador passou com 23 páginas, 14 slides principais e cinco briefings.
+As notas do PowerPoint e HTML são idênticas. Os logs não apresentam cortes de conteúdo.
+A conferência visual cobriu o corpo e os apêndices; Box-Cox, metodologia e conclusão foram inspecionados após os últimos ajustes.
+
+
+## Auditoria computacional final
+
+`validacao/auditar_modelo.R` foi executado e registrou 365 medidas e comparações.
+A reconstrução independente preservou coeficientes; efeitos e intervalos tiveram diferenças inferiores a 1e-10.
+O PRESS foi conferido por 1.133 reajustes diretos, sem caracterizá-lo como validação externa.
+Os cenários incluíram Nova Lima, Campos, cortes populacionais e estados.
+Região permanece no modelo principal, conforme confirmação reiterada do usuário.
+Box-Cox foi repetido com a especificação final e atualizou o apêndice C; o log segue fora do intervalo.
+As limitações de variância desigual e independência espacial não verificada permanecem explícitas.
+A [revisão do modelo](../validacao/REVISAO_MODELO_FINAL.md) distingue resultado reproduzido de hipótese confirmada.
+
+Tempos e volume das falas, após substituir as macros:
+
+| Pessoa | Tempo | Palavras | Marco final |
+|---|---:|---:|---:|
+| Kauan | 75s | 112 | 1min15 |
+| Fabio | 90s | 177 | 2min45 |
+| Douglas | 120s | 178 | 4min45 |
+| Luiz Felipe | 180s | 270 | 7min45 |
+| Willian | 315s | 493 | 13min00 |
+
+O roteiro inclui interpretação dos gráficos e pausas; as falas não devem preencher o tempo com leitura adicional.
+O ensaio humano continua pendente. Os cinco briefings apresentam o mesmo tempo, início e fim conferidos automaticamente.
+O comando de integridade contra `1893e89` confirmou dados e resultados originais sem alterações.
+
+Agentes desta revisão: `auditoria_modelo_final`, `coerencia_conclusoes`, `documentacao_narrativa`,
+`briefings_narrativa` e `revisao_semantica_visual`.
+Os trabalhos foram delimitados por arquivos; a revisão visual não alterou as fontes.
+A ferramenta não disponibilizou `subagent_tokens`; a contagem individual não pôde ser medida.
+
+A pasta `Desktop/GED-16-apresentacao-final` foi atualizada após conferir o manifesto anterior.
+O novo manifesto confere 17 arquivos; a comparação confirmou cópias idênticas à preparação temporária.
+Slides, cinco briefings e relatório da auditoria acompanham a mensagem pronta para o grupo.
