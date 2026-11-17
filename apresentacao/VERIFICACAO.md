@@ -4,8 +4,8 @@ Data: 17/11/2026. Base: `1893e89` (`main`). Branch: `apresentacao-final-15-minut
 
 ## Resultado
 
-- 14 páginas principais e nove apêndices.
-- 23 páginas no PDF, no PowerPoint e no HTML.
+- 14 páginas principais e onze apêndices.
+- 25 páginas no PDF, no PowerPoint e no HTML.
 - Cinco briefings completos, com a mesma divisão da apresentação parcial.
 - Roteiro de 780 segundos: 90/90/120/180/300 segundos por pessoa.
 - Abertura de 180 segundos; dois minutos de reserva até o limite informado.
@@ -41,7 +41,7 @@ O script `verificar_materiais.R` confere os materiais finais, não apenas seus a
 - Correspondência das notas reais do PowerPoint e do HTML com as falas resolvidas.
 - Ausência de marcadores numéricos sem substituição.
 - Igualdade do PDF exportado com o PDF compilado.
-- Numeração contínua das 23 páginas.
+- Numeração contínua das 25 páginas.
 - Presença das cinco pessoas e seus tempos aprovados.
 - Identificação da fala completa de cada slide nos briefings.
 - Contexto, perguntas, transições e marcos de tempo nos briefings.
@@ -119,3 +119,19 @@ Somente após ordem explícita para integrar:
 ```sh
 gh pr merge 12 --repo fabiourio/homicidios-municipios --merge
 ```
+
+## Revisão complementar com a apostila
+
+A [revisão do projeto completo](../decisoes/revisao-projeto-apostila.md) consultou diretamente os capítulos oficiais.
+Ela acrescentou os apêndices J e K, com resíduos contra cada explicativa, conforme a seção 4.4.
+O deck passou a 25 páginas: as mesmas 14 principais, com 11 apêndices. O tempo planejado continua em 13 minutos.
+A definição do Gini por pessoas de 14 anos ou mais ficou explícita nos slides e nos briefings.
+Os universos diferentes na comparação com o Gini oficial ficaram registrados como limitação.
+A revisão das fontes locais comparou 44.560 células sem divergências; a execução está em `../validacao/saida/07_extras_fontes.txt`.
+Os gráficos novos foram revisados. Um problema de legenda e um excesso vertical foram corrigidos antes da exportação final.
+O verificador agora também rejeita os avisos de corte de conteúdo presentes nos logs de compilação.
+A pasta para o grupo é gerada por `preparar_pasta_grupo.R`, com manifesto de hashes e conferência das cópias.
+Essa pasta não substitui o ZIP completo da entrega acadêmica.
+
+Agentes adicionais: `revisao_apostila_metodos`, `revisao_dados_fontes` e `revisao_apoio_apostila`.
+A ferramenta não forneceu contagens individuais de `subagent_tokens`.

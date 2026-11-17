@@ -75,6 +75,8 @@ Para atualizar os briefings, use a skill `briefing-apresentacao` (`.claude/skill
 
 Os [materiais finais e os briefings](apresentacao/LEIA-ME.md) estão organizados por apresentador.
 O [registro de verificação](apresentacao/VERIFICACAO.md) documenta os checks, as correções e os limites desta etapa.
+Uma [revisão com a apostila e as orientações docentes](decisoes/revisao-projeto-apostila.md) conferiu a análise e a entrega completa.
+Ela acrescentou resíduos por explicativa nos apêndices e registrou a conferência das variáveis extras nas fontes originais.
 
 As [decisões aprovadas em 17/11](decisoes/discussao-final-17-11-2026.md) mantêm a região no modelo.
 A apresentação terá 14 páginas principais e apêndices para perguntas.

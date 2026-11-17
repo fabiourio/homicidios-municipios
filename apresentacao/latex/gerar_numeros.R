@@ -300,9 +300,9 @@ writeLines(c("\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}lrrrlrrr@{}
              paste0(lin, "\\\\"), "\\bottomrule", "\\end{tabular*}"), "tabelas/coeficientes.tex")
 
 # Apêndice: variáveis testadas e retiradas (F parcial de cada uma somada ao modelo final)
-motivo <- c(dens_z = "Sem efeito", faixa_fronteira = "Sem efeito", abandono_em = "Sem efeito", pct_h1529 = "Sem efeito",
+motivo <- c(dens_z = "Sem evidência adicional", faixa_fronteira = "Sem evidência adicional", abandono_em = "Sem evidência adicional", pct_h1529 = "Sem evidência adicional",
             amazonia_legal = "O efeito vem só do Mato Grosso",
-            indet_sem_hom = "A medida original tinha os homicídios no divisor; corrigida, não tem efeito")
+            indet_sem_hom = "A medida original tinha os homicídios no divisor; corrigida, sem evidência adicional")
 stopifnot(all(ret$termo %in% names(motivo)))
 lin <- sprintf("%s & %s & %s & %s\\\\", gsub("%", "\\%", gsub("–", "--", ret$variavel), fixed = TRUE), fmt(ret$F, 2), fp(ret$p), motivo[ret$termo])
 writeLines(c("\\begin{tabular}{@{}p{0.36\\textwidth}rrp{0.40\\textwidth}@{}}", "\\toprule",
@@ -367,3 +367,30 @@ p <- ggplot(mod$grade, aes(rend, taxa, group = regiao)) +
   tema + theme(legend.position = "bottom")
 ggsave("figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
 stopifnot(identical(as.character(ef_plot$termo), as.character(mod$mudancas$termo[mod$mudancas$termo != "desocup"])))
+
+painel_vars <- list(c("log_rend", "gini", "desocup", "pct_urbana"),
+                   c("freq_15a17", "distorcao_em", "pct_migr_10anos", "regiao"))
+nomes_diag <- c(log_rend = "ln(renda per capita)", gini = "Gini calculado",
+                desocup = "Desocupação (%)", pct_urbana = "População urbana (%)",
+                freq_15a17 = "Frequência escolar 15–17 (%)", distorcao_em = "Atraso escolar (%)",
+                pct_migr_10anos = "Migração recente (%)", regiao = "Região")
+for (k in seq_along(painel_vars)) {
+  png(sprintf("figuras/residuos_explicativas_%d.png", k), width = 2200, height = 1400, res = 220)
+  grid::grid.newpage()
+  grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 2)))
+  for (j in seq_along(painel_vars[[k]])) {
+    v <- painel_vars[[k]][j]
+    p <- ggplot(plot_d, aes(x = .data[[v]], y = residuo)) +
+      geom_hline(yintercept = 0, colour = "grey45", linetype = 2)
+    if (v == "regiao") {
+      p <- p + geom_boxplot(fill = claro, colour = azul, outlier.alpha = .25)
+    } else {
+      p <- p + geom_point(colour = azul, alpha = .28, size = .8)
+    }
+    p <- p + labs(x = nomes_diag[[v]], y = "Resíduo de ln(taxa)") + tema +
+      theme(text = element_text(size = 12), axis.text.x = element_text(size = 9))
+    print(p, vp = grid::viewport(layout.pos.row = (j - 1) %/% 2 + 1,
+                                layout.pos.col = (j - 1) %% 2 + 1))
+  }
+  dev.off()
+}

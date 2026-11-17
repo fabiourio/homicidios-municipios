@@ -4,6 +4,9 @@ library(xml2)
 
 notas <- fromJSON("notas.json")
 roteiro <- read.csv("roteiro.csv", encoding = "UTF-8")
+logs <- c("latex/apresentacao_final.log", list.files("briefings", pattern = "^briefing_.*[.]log$", full.names = TRUE))
+logs <- logs[file.exists(logs)]
+stopifnot(!any(vapply(logs, function(f) any(grepl("Overfull|Missing character", readLines(f, warn = FALSE))), logical(1))))
 pdf <- "apresentacao_final.pdf"
 paginas <- pdf_info(pdf)$pages
 stopifnot(paginas == length(notas), nrow(roteiro) == 14,

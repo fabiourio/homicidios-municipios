@@ -1,6 +1,6 @@
 # Apresentação final — 18/11/2026
 
-**Apresentar os slides 1–14.** Os slides 15–23 são apêndices para perguntas.
+**Apresentar os slides 1–14.** Os slides 15–25 são apêndices para perguntas.
 O roteiro planeja 13 minutos. Os dois minutos restantes acomodam pausas e transições.
 O grupo ainda precisa confirmar a duração num ensaio cronometrado.
 O prazo informado para enviar os slides é 18/11/2026, às 10h00.
@@ -43,6 +43,7 @@ Não ler as referências nem os apêndices durante o roteiro principal.
 | 10–12 | Escola, urbanização, migração, desigualdade, renda e região |
 | 13–14 | Limitações, resposta à pergunta, literatura e trabalhos futuros |
 | 15–23 | Coeficientes, testes, Box-Cox, comparações, variáveis retiradas e referências |
+| 24–25 | Resíduos contra cada variável explicativa, conforme a apostila |
 
 ## Cuidados para a fala
 
@@ -90,6 +91,15 @@ Não editar os números em `latex/numeros.tex`; eles são gerados pela análise.
 
 ## Próxima etapa do projeto
 
+O resultado da [revisão com a apostila](../decisoes/revisao-projeto-apostila.md) registra as correções e as pendências.
+
 O artigo final não integra esta etapa.
 O modelo original do Overleaf está em `../relatorio/modelo/`, incluindo o ZIP recebido.
 A entrega final ainda precisa do artigo `.tex`/`.pdf`, do `.qmd` alinhado ao modelo e do ZIP completo.
+
+## Preparar os arquivos para o grupo
+
+Na pasta `apresentacao/`, executar `Rscript preparar_pasta_grupo.R` seguido do caminho de uma pasta vazia.
+O script copia slides, briefings e revisão. Também gera instruções, mensagem pronta e manifesto de hashes.
+A pasta criada no Desktop chama-se `GED-16-apresentacao-final`.
+Ela é material para o grupo, não a entrega acadêmica completa.
