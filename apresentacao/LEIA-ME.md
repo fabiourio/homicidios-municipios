@@ -1,7 +1,7 @@
 # Apresentação final — 18/11/2026
 
-**Apresentar os slides 1–14.** Os slides 15–23 são os nove apêndices, de A a I, para perguntas.
-O roteiro planeja 13min30. Os 1min30 restantes acomodam pausas e transições.
+**Apresentar os slides 1–15.** Os slides 16–24 são os nove apêndices, de A a I, para perguntas.
+O roteiro planeja 14min30. Os 30 segundos restantes acomodam pausas e transições.
 O grupo ainda precisa confirmar a duração num ensaio cronometrado.
 O prazo informado para enviar os slides é 18/11/2026, às 10h00.
 
@@ -26,7 +26,7 @@ Notas e briefings são materiais internos do grupo. Os slides fazem parte da ent
 | Fabio | 3–4 | 1min30 | 1min45 | 3min15 | [Abrir](briefings/briefing_fabio.pdf) |
 | Douglas | 5–6 | 2min | 3min15 | 5min15 | [Abrir](briefings/briefing_douglas.pdf) |
 | Luiz Felipe | 7–9 | 3min | 5min15 | 8min15 | [Abrir](briefings/briefing_luiz_felipe.pdf) |
-| Willian | 10–14 | 5min15 | 8min15 | 13min30 | [Abrir](briefings/briefing_willian.pdf) |
+| Willian | 10–15 | 6min15 | 8min15 | 14min30 | [Abrir](briefings/briefing_willian.pdf) |
 
 Cada briefing inclui a parte individual, as falas completas, os slides, as decisões comuns e perguntas respondidas.
 Mantivemos as pessoas e sua ordem; os assuntos foram condensados e redistribuídos para o roteiro docente.

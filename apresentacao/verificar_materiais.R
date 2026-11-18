@@ -9,10 +9,10 @@ logs <- logs[file.exists(logs)]
 stopifnot(length(logs) == 6, !any(vapply(logs, function(f) any(grepl("Overfull|Missing character", readLines(f, warn = FALSE))), logical(1))))
 pdf <- "apresentacao_final.pdf"
 paginas <- pdf_info(pdf)$pages
-stopifnot(paginas == 23, paginas == length(notas), nrow(roteiro) == 14,
-          identical(roteiro$slide, seq_len(14)), sum(roteiro$segundos) == 810)
+stopifnot(paginas == 24, paginas == length(notas), nrow(roteiro) == 15,
+          identical(roteiro$slide, seq_len(15)), sum(roteiro$segundos) == 870)
 pessoas <- c("Kauan", "Fabio", "Douglas", "Luiz Felipe", "Willian")
-tempos <- c(105, 90, 120, 180, 315)
+tempos <- c(105, 90, 120, 180, 375)
 stopifnot(identical(unique(roteiro$pessoa), pessoas),
           identical(as.numeric(tapply(roteiro$segundos, factor(roteiro$pessoa, levels = pessoas), sum)), tempos))
 num_tex <- readLines("latex/numeros.tex", encoding = "UTF-8")
