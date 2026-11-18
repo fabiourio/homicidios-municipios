@@ -2,10 +2,12 @@
 
 ## O que cada pessoa precisa saber
 
-- **Kauan:** a fala define ODS; o slide 2 identifica a ODS 16, a meta 16.1 e o indicador de referência 16.1.1. A fala distingue nossa medida do indicador oficial. A comparação começa no mundo e passa ao Brasil, ambos em 2021. A contagem média da base é de 2021–2023.
-- **Tempo:** Kauan dispõe de 1min45, incluindo dez segundos na capa. As durações dos demais permanecem iguais. Seus marcos de entrada e saída avançam trinta segundos.
+- **Willian:** o slide 10 volta com a visão geral das estimativas. Os gráficos passam a 11–13, as limitações a 14 e o encerramento a 15. Não ler cada linha da tabela; introduzir o que os gráficos interpretarão.
+
+- **Kauan:** a fala define ODS; o slide 2 identifica a ODS 16, a meta 16.1 e o indicador de referência 16.1.1. A fala distingue nossa medida do indicador oficial. Primeiro aparece a contagem média de 2021–2023. Depois, a comparação mostra mundo e Brasil em 2021.
+- **Tempo:** Kauan dispõe de 1min45, incluindo dez segundos na capa. O bloco de Willian passa a 6min15 com o slide de estimativas; os demais blocos preservam suas durações.
 - **Modelo:** mantém a especificação adotada, com região. Nenhum coeficiente principal foi alterado por esta auditoria.
-- **Slides:** permanecem 14 principais e nove apêndices existentes. Não apresentar justificativas de todas as candidatas na fala.
+- **Slides:** são 15 principais e nove apêndices existentes. Não apresentar justificativas de todas as candidatas na fala.
 - **Perguntas:** os briefings e a auditoria explicam estrutura familiar, favelas e as demais candidatas. Esses resultados são apoio, sem ampliar o roteiro.
 
 ## Divisão final
@@ -18,7 +20,7 @@
 | Luiz Felipe | 7–9 | 3min | 5min15 | 8min15 |
 | Willian | 10–15 | 6min15 | 8min15 | 14min30 |
 
-Há 1min30 de margem até quinze minutos. Os tempos são metas; o ensaio confirma a duração real.
+Há 30 segundos de margem até quinze minutos. Os tempos são metas; o ensaio confirma a duração real.
 
 ## Se perguntarem sobre estrutura familiar
 

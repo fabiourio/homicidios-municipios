@@ -44,10 +44,11 @@ Não ler os apêndices durante o roteiro principal.
 | 5–6 | Metodologia: modelo, termos e finalidade dos procedimentos de avaliação |
 | 7 | Ajuste do modelo: taxas observadas e ajustadas, escala e alcance |
 | 8–9 | Resíduos, variância dos erros e normalidade, com gráficos interpretados |
-| 10–12 | Escola, urbanização, migração, desigualdade, renda e região |
-| 13–14 | Limitações, resposta à pergunta, literatura e trabalhos futuros |
-| 15–21 | Apêndices A–G: coeficientes, testes, Box-Cox, comparações e variáveis retiradas |
-| 22–23 | Apêndices H–I: resíduos contra cada variável explicativa, conforme a apostila |
+| 10 | Visão geral das estimativas do modelo; introdução aos resultados |
+| 11–13 | Escola, urbanização, migração, desigualdade, renda e região |
+| 14–15 | Limitações, resposta à pergunta, literatura e trabalhos futuros |
+| 16–22 | Apêndices A–G: coeficientes, testes, Box-Cox, comparações e variáveis retiradas |
+| 23–24 | Apêndices H–I: resíduos contra cada variável explicativa, conforme a apostila |
 
 Os dois gráficos exploratórios retirados do corpo permanecem disponíveis no repositório.
 As fontes foram retiradas da projeção e preservadas em [registro de referências](referencias-dos-slides.md).

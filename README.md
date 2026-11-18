@@ -80,15 +80,15 @@ A [auditoria do modelo final](validacao/REVISAO_MODELO_FINAL.md) reproduz cálcu
 Ela acrescentou resíduos por explicativa nos apêndices e registrou a conferência das variáveis extras nas fontes originais.
 
 As [decisões aprovadas em 17/11](decisoes/discussao-final-17-11-2026.md) mantêm a região no modelo.
-A [revisão da narrativa](decisoes/revisao-semantica-apresentacao.md) define 23 páginas: 14 principais e nove apêndices, de A a I.
-O roteiro prevê 13min30: Kauan 1min45, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 5min15.
+A [revisão da narrativa](decisoes/revisao-semantica-apresentacao.md) define 24 páginas: 15 principais e nove apêndices, de A a I.
+O roteiro prevê 14min30: Kauan 1min45, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 6min15.
 Contexto e dados ocupam 3min15. As cinco partes seguem a ordem pedida pelas professoras.
 Kauan define ODS, ODS 16, meta 16.1 e indicador de referência 16.1.1 no contexto; Fabio, dados; Douglas, métodos; Luiz Felipe, ajuste e diagnósticos; Willian, discussão.
 O slide 7 mostra taxas observadas e ajustadas. Os dois gráficos exploratórios retirados permanecem no repositório.
-Os apêndices H e I mostram resíduos por explicativa nas páginas 22 e 23.
+Os apêndices H e I mostram resíduos por explicativa nas páginas 23 e 24.
 As fontes foram retiradas da projeção e preservadas em `apresentacao/referencias-dos-slides.md`.
 As legendas técnicas dos gráficos permanecem. O rodapé contém apenas a numeração.
-Os 1min30 restantes acomodam pausas e transições.
+Os 30 segundos restantes acomodam pausas e transições.
 O ensaio deve confirmar a duração; a estimativa por palavras não substitui a fala real.
 Os diagnósticos usam gráficos interpretados antes dos valores dos testes e do VIF.
 As hipóteses são expectativas iniciais. A migração recente permanece no modelo, sem evidência clara de associação.

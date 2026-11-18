@@ -39,7 +39,7 @@ for (i in which(endsWith(relativo, ".md"))) {
   caminho <- normalizePath(file.path(dirname(origem[i]), alvo), mustWork = FALSE)
   j <- match(caminho, origem_abs)
   novo <- if (!is.na(j) && dirname(relativo[i]) == dirname(relativo[j])) basename(relativo[j]) else
-    if (startsWith(caminho, paste0(raiz, "/"))) paste0("https://github.com/fabiourio/homicidios-municipios/blob/apresentacao-final-15-minutos/", substring(caminho, nchar(raiz) + 2)) else alvo
+    if (startsWith(caminho, paste0(raiz, "/"))) paste0("https://github.com/fabiourio/homicidios-municipios/blob/main/", substring(caminho, nchar(raiz) + 2)) else alvo
   texto <- gsub(link, paste0("](", novo, ")"), texto, fixed = TRUE)
  }
  writeLines(texto, arquivo)
@@ -48,28 +48,28 @@ leia <- c("GED-16 — APRESENTAÇÃO FINAL — 18/11/2026", "",
           "COMECE POR AQUI", "",
           "Leia MUDANCAS-PARA-O-TIME.md: ODS no contexto, novos marcos de tempo e respostas para perguntas.",
           "01_slides: PDF, PowerPoint e HTML com notas. Enviar os slides à professora até 18/11, 10h00.",
-          "Apresentar apenas os slides 1 a 14. Slides 15 a 23 são apoio para perguntas.",
+          "Apresentar apenas os slides 1 a 15. Slides 16 a 24 são apoio para perguntas.",
           "02_briefings: cada pessoa lê seu PDF e ensaia a fala completa.",
-          "03_revisao: auditoria com a apostila, decisões e conferência de todos os pedidos. Leitura de apoio.",
+          "03_revisao: análise e histórico. A numeração e o tempo atuais estão em LEIA-PRIMEIRO.txt e roteiro.csv.",
           "04_codigo: caderno final em .qmd, HTML executado, scripts e bases utilizadas.", "",
           "DIVISÃO E TEMPO", "Kauan: slides 1–2, contexto, 1min45, termina no marco 1min45.",
           "Fabio: slides 3–4, dados, 1min30, termina no marco 3min15.",
           "Douglas: slides 5–6, métodos, 2min, termina no marco 5min15.",
           "Luiz Felipe: slides 7–9, ajuste e diagnósticos, 3min, termina no marco 8min15.",
-          "Willian: slides 10–14, discussão, 5min15, termina no marco 13min30.",
-          "Meta: 13min30. Abertura: 3min15. Último slide: 60 segundos. Reservar 1min30 para pausas e transições.",
+          "Willian: slides 10–15, discussão, 6min15, termina no marco 14min30.",
+          "Meta: 14min30. Abertura: 3min15. Último slide: 60 segundos. Reservar 30 segundos para pausas e transições.",
           "Usar os tempos como metas e limites de ensaio. O ensaio humano ainda precisa acontecer.", "",
           "PENDÊNCIAS DO PROJETO COMPLETO", "Artigo .tex/.pdf e ZIP único da entrega ainda faltam. O .qmd final está em 04_codigo.",
           "Definir o responsável pelo envio. Todos precisam postar os nomes do grupo e indicar quem enviou o arquivo.",
           "Esta pasta serve ao grupo e não substitui o ZIP completo exigido pela professora.", "",
-          "REPOSITÓRIO", "https://github.com/fabiourio/homicidios-municipios/pull/12", "",
+          "REPOSITÓRIO", "https://github.com/fabiourio/homicidios-municipios/tree/main", "",
           "Integrantes: Douglas Bergamim Fernandes; Fabio Eiiti Kobayashi Urio; Kauan Alves Aragão; Luiz Felipe de Brito Ramos; Willian Nelton Teleken.")
 writeLines(leia, file.path(destino, "LEIA-PRIMEIRO.txt"), useBytes = TRUE)
 mensagem <- c("Pessoal, seguem os slides revisados e os briefings individuais.",
-              "Mantivemos a ordem: Kauan 1min45; Fabio 1min30; Douglas 2min; Luiz Felipe 3min; Willian 5min15.",
-              "A fala principal termina no slide 14. Os slides 15 a 23 são apoio para perguntas.",
+              "Mantivemos a ordem: Kauan 1min45; Fabio 1min30; Douglas 2min; Luiz Felipe 3min; Willian 6min15.",
+              "A fala principal termina no slide 15. Os slides 16 a 24 são apoio para perguntas.",
               "Cada briefing tem a fala completa, leitura dos gráficos, perguntas prováveis e marcos de tempo.",
-              "Precisamos fazer um ensaio cronometrado. A meta é 13min30, com limite de 15.",
+              "Precisamos fazer um ensaio cronometrado. A meta é 14min30, com limite de 15.",
               "O código final em .qmd e seu HTML executado estão em 04_codigo. O artigo e o ZIP completo ficam para a próxima etapa.",
               "Falta indicar quem fará o envio.")
 writeLines(mensagem, file.path(destino, "MENSAGEM-PARA-O-GRUPO.txt"), useBytes = TRUE)

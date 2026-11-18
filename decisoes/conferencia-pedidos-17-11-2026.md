@@ -1,5 +1,7 @@
 # Conferência de todos os pedidos de 17/11/2026
 
+> Registro da revisão anterior. A integração de 18/11 acrescentou um slide de estimativas. A numeração e os tempos atuais estão no [LEIA-ME da apresentação](../apresentacao/LEIA-ME.md). As análises e decisões estatísticas abaixo permanecem válidas.
+
 Este documento confronta os pedidos desta conversa com os arquivos reais do projeto.
 As instruções das professoras prevalecem sobre as propostas do grupo.
 As correções posteriores do usuário prevalecem sobre interpretações anteriores do assistente.

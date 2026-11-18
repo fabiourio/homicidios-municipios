@@ -79,7 +79,7 @@ Ausência de evidência clara não comprova ausência de associação.
 - A variância desigual, o possível sub-registro, o Gini aproximado e a dependência espacial limitam a interpretação.
 - Estudos futuros podem avaliar variância desigual, estrutura espacial e estabilidade em outras bases e períodos.
 
-A apresentação principal usa 14 slides e 13min30 planejados.
+A apresentação principal usa 15 slides e 14min30 planejados. O modelo estatístico permanece igual.
 Kauan dispõe de 1min45 para contexto, ODS 16, meta 16.1 e indicador de referência 16.1.1.
 Os nove apêndices são apoio para perguntas, sem leitura obrigatória.
 O ensaio humano ainda precisa confirmar a duração.
