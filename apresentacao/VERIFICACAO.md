@@ -304,3 +304,5 @@ Os PRs 12 e 13 foram integrados em sequência invertida. O PR 13 acrescentou o s
 - Guia pessoal atualizado localmente em oito páginas, com SIM definido, fontes explicadas, exemplos de taxas e interpretação dos testes. Não integra a entrega do grupo.
 
 A duração real continua dependente de ensaio. O artigo e o ZIP acadêmico completo continuam na etapa posterior já combinada.
+
+A contribuição posterior de Douglas na main também foi integrada: fórmula no slide 5. Foram explicitados os termos centralizados e a distinção entre pressupostos e diagnósticos. As referências dos apêndices H/I nos briefings passaram a 23/24.

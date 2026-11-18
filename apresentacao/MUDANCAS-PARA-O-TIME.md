@@ -2,6 +2,8 @@
 
 ## O que cada pessoa precisa saber
 
+- **Douglas:** a fórmula do modelo foi incorporada ao slide 5. Usar como referência, sem ler os símbolos. Os termos de renda e Gini são centralizados. As condições dos erros são pressupostos, avaliados nos diagnósticos.
+
 - **Willian:** o slide 10 volta com a visão geral das estimativas. Os gráficos passam a 11–13, as limitações a 14 e o encerramento a 15. Não ler cada linha da tabela; introduzir o que os gráficos interpretarão.
 
 - **Kauan:** a fala define ODS; o slide 2 identifica a ODS 16, a meta 16.1 e o indicador de referência 16.1.1. A fala distingue nossa medida do indicador oficial. Primeiro aparece a contagem média de 2021–2023. Depois, a comparação mostra mundo e Brasil em 2021.
