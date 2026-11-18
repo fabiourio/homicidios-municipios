@@ -42,8 +42,12 @@ Leia seu briefing atualizado e ensaie somente seus slides principais. Use os ap�
 
 Evidências completas: [auditoria das candidatas](../validacao/AUDITORIA_CANDIDATAS.md) e [verificação de favelas](../validacao/FAVELAS_METODO_E_DECISAO.md).
 
-Últimos ajustes pedidos: título do slide 2 restaurado para “Contexto e questão de pesquisa”.
-A definição da sigla ODS permanece apenas na fala. O slide preserva ODS 16, meta e indicador.
-A medida no slide 2 foi resumida. A distinção metodológica fica no slide de dados, sem mencionar guerra na abertura.
 
-Ordem final do contexto: primeiro 46.105 mortes anuais na base de 2021–2023; depois a comparação internacional de 2021, mundo e Brasil. A fala segue essa ordem.
+## Ajustes finais do slide de contexto
+
+- Título: Contexto e questão de pesquisa.
+- A definição da sigla ODS fica apenas na fala; ODS 16, meta e indicador permanecem no slide.
+- Primeiro a média de 46.105 mortes anuais na base de 2021–2023.
+- Depois, Mundo 5,8 e Brasil 21,3 por cem mil em 2021, com razão próxima de 3,7.
+- Os três dados do bloco aparecem em linhas compactas, sem quebras forçadas. A fala cita a razão, sem ler todos os valores.
+- A medida foi resumida. A distinção em relação ao indicador internacional fica na explicação dos dados.

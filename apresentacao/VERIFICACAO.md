@@ -288,3 +288,8 @@ A apresentação continua focada nos cinco itens docentes. A auditoria não crio
 - PDF, PPTX, HTML e cinco briefings regenerados. Verificador aprovado: 23 páginas e 810 segundos.
 - Falas atuais: Kauan 158 palavras; Fabio 182; Douglas 181; Luiz Felipe 274; Willian 534.
 - Guia pessoal reduzido para oito páginas; somente o PDF foi entregue no Desktop.
+
+Ajuste final de concisão: valores Mundo 5,8 e Brasil 21,3 mantidos no slide de 2021, com a razão próxima de 3,7.
+A média anual continua primeiro. O bloco foi renderizado com os três dados em linhas compactas.
+A fala de Kauan cita a razão e tem 151 palavras no total dos dois slides; sua meta permanece 105 segundos.
+Exportações e cinco briefings regenerados; verificador aprovado novamente em 18/11.
