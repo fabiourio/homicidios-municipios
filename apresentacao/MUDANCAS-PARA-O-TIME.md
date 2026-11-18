@@ -16,7 +16,7 @@
 | Fabio | 3–4 | 1min30 | 1min45 | 3min15 |
 | Douglas | 5–6 | 2min | 3min15 | 5min15 |
 | Luiz Felipe | 7–9 | 3min | 5min15 | 8min15 |
-| Willian | 10–14 | 5min15 | 8min15 | 13min30 |
+| Willian | 10–15 | 6min15 | 8min15 | 14min30 |
 
 Há 1min30 de margem até quinze minutos. Os tempos são metas; o ensaio confirma a duração real.
 
