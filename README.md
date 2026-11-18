@@ -81,14 +81,14 @@ Ela acrescentou resíduos por explicativa nos apêndices e registrou a conferên
 
 As [decisões aprovadas em 17/11](decisoes/discussao-final-17-11-2026.md) mantêm a região no modelo.
 A [revisão da narrativa](decisoes/revisao-semantica-apresentacao.md) define 23 páginas: 14 principais e nove apêndices, de A a I.
-O roteiro prevê 13 minutos: Kauan 1min15, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 5min15.
-Contexto e dados ocupam 2min45. As cinco partes seguem a ordem pedida pelas professoras.
-Kauan apresenta contexto; Fabio, dados; Douglas, métodos; Luiz Felipe, ajuste e diagnósticos; Willian, discussão.
+O roteiro prevê 13min30: Kauan 1min45, Fabio 1min30, Douglas 2min, Luiz Felipe 3min e Willian 5min15.
+Contexto e dados ocupam 3min15. As cinco partes seguem a ordem pedida pelas professoras.
+Kauan define ODS, ODS 16, meta 16.1 e indicador de referência 16.1.1 no contexto; Fabio, dados; Douglas, métodos; Luiz Felipe, ajuste e diagnósticos; Willian, discussão.
 O slide 7 mostra taxas observadas e ajustadas. Os dois gráficos exploratórios retirados permanecem no repositório.
 Os apêndices H e I mostram resíduos por explicativa nas páginas 22 e 23.
 As fontes foram retiradas da projeção e preservadas em `apresentacao/referencias-dos-slides.md`.
 As legendas técnicas dos gráficos permanecem. O rodapé contém apenas a numeração.
-Os dois minutos restantes acomodam pausas e transições.
+Os 1min30 restantes acomodam pausas e transições.
 O ensaio deve confirmar a duração; a estimativa por palavras não substitui a fala real.
 Os diagnósticos usam gráficos interpretados antes dos valores dos testes e do VIF.
 As hipóteses são expectativas iniciais. A migração recente permanece no modelo, sem evidência clara de associação.
@@ -152,3 +152,11 @@ As pessoas e a ordem das falas foram preservadas; os assuntos foram condensados 
 A [análise crítica de cada slide](decisoes/analise-critica-slide-a-slide.md) relaciona conteúdo e enunciado docente.
 A abertura recupera a comparação internacional, com taxas de homicídio intencional do mesmo ano, sem alterar o modelo.
 A pasta do grupo inclui a análise crítica por slide e a tabela dos dados de contexto.
+
+## Auditoria adicional das candidatas
+
+A [auditoria completa](validacao/AUDITORIA_CANDIDATAS.md) examinou 39 colunas e codificações, em 57 formas de entrada.
+Algumas acrescentam informação. O usuário confirmou manter o modelo principal e guardar as comparações como apoio.
+A [verificação de favelas](validacao/FAVELAS_METODO_E_DECISAO.md) distingue qualidade da fonte e estabilidade da associação.
+O [resumo para o time](apresentacao/MUDANCAS-PARA-O-TIME.md) explica as mudanças finais e as respostas para perguntas.
+Não foram acrescentados apêndices nem justificativas de cada candidata à apresentação principal.

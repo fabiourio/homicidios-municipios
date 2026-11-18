@@ -57,7 +57,7 @@ ln(taxa de homicídios) explicada por: ln(renda) e seu quadrado · Gini · Gini 
 | 14 | Proporção de óbitos de intenção indeterminada sai | Defeito na conta (acima) |
 | 10 | Esta é a entrega final | "Parcial" e "preliminar" saíram dos nomes dos arquivos e da capa |
 
-Decisões concluídas em 17/11: região mantida (pergunta 3), mesma ordem dos cinco apresentadores (pergunta 11) e vizinhança citada como limitação (pergunta 15). Não entra um novo teste espacial. O roteiro prevê 13 minutos e reserva dois minutos para pausas e transições. A capa do deck fica com "novembro de 2026".
+Decisões concluídas em 17/11: região mantida (pergunta 3), mesma ordem dos cinco apresentadores (pergunta 11) e vizinhança citada como limitação (pergunta 15). Não entra um novo teste espacial. O roteiro prevê 13min30 e reserva 1min30 para pausas e transições. A capa do deck fica com "novembro de 2026".
 
 ## O que muda nas hipóteses
 
@@ -118,3 +118,16 @@ Aprovados na reunião: o Gini calculado pelas faixas de renda, a retirada de Cam
 - A apresentação não inclui abandono parental nem variáveis retiradas apenas para melhorar a narrativa.
 - Os cinco briefings preservam as pessoas e a ordem Kauan, Fabio, Douglas, Luiz Felipe e Willian. Os conteúdos foram condensados e redistribuídos; não são idênticos aos da parcial.
 - O artigo final fica fora desta etapa.
+
+## Estrutura familiar: esclarecimento para perguntas
+
+A variável `pct_maes_solo` aparece no levantamento e na exploratória antiga, mas não no ajuste final.
+Ela representa domicílios com mulher responsável, sem cônjuge e com filhos, conforme a definição da base candidata.
+Ela não identifica abandono parental. O registro consultado não documenta um motivo estatístico específico para sua não inclusão final.
+Não afirmar que ela foi retirada por falta de significância. O abandono escolar no ensino médio é outra variável.
+Esse abandono escolar foi testado e retirado por ausência de contribuição adicional no ajuste condicional registrado.
+
+A checagem de estrutura familiar foi executada após identificar a lacuna histórica: p clássico de 0,139 e ganho mínimo no ajuste.
+A justificativa atual para manter fora está na [auditoria completa das candidatas](../validacao/AUDITORIA_CANDIDATAS.md).
+Essa auditoria não autoriza afirmar que todas as outras candidatas eram não significativas.
+O usuário confirmou preservar o modelo principal, registrar comparações e não acrescentar apêndices ao deck.

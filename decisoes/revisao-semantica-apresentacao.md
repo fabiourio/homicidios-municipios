@@ -7,8 +7,8 @@ O usuário também pediu que cada slide cumpra um dos cinco itens das professora
 
 - Manter região no modelo principal, conforme confirmação reiterada do usuário em 17/11.
 - Preservar os cinco apresentadores e sua ordem.
-- Preservar 14 slides principais e a meta total de 13 minutos.
-- Reservar 75 segundos para Kauan. Transferir os 15 segundos liberados para a discussão do Willian.
+- Preservar 14 slides principais e a meta total de 13min30.
+- Reservar 105 segundos para Kauan. O acréscimo de 30 segundos contextualiza ODS, meta e indicador. O tempo dos demais permanece igual.
 - Definir o tempo como meta e limite de ensaio, sem exigir preencher segundos com leitura.
 - Retirar da abertura a conclusão sobre diferenças regionais. A comparação internacional e a escala das mortes na base motivam a pergunta. A abertura liga esses dados à meta 16.1 da ODS 16.
 - Manter a pergunta de associação do estudo. As hipóteses iniciais ficam no briefing e retornam na discussão dos resultados.
@@ -25,7 +25,7 @@ O usuário também pediu que cada slide cumpra um dos cinco itens das professora
 | Slide | Item docente | Pessoa | Segundos | Função |
 |---|---|---|---:|---|
 | 1 | Contextualização | Kauan | 10 | Apresentar tema e grupo |
-| 2 | Contextualização e questão | Kauan | 65 | Explicar problema, motivação e pergunta |
+| 2 | Contextualização e questão | Kauan | 95 | Definir ODS, ODS 16, meta 16.1, indicador 16.1.1, dimensão do problema e pergunta |
 | 3 | Base de dados | Fabio | 40 | Informar fontes, período e medida da resposta |
 | 4 | Base de dados | Fabio | 50 | Delimitar recorte e grupos de variáveis |
 | 5 | Metodologia | Douglas | 55 | Explicar o modelo e a finalidade dos termos |
@@ -39,8 +39,8 @@ O usuário também pediu que cada slide cumpra um dos cinco itens das professora
 | 13 | Discussão e interpretação | Willian | 65 | Delimitar as conclusões e reconhecer limitações |
 | 14 | Discussão e interpretação | Willian | 60 | Responder à pergunta e propor trabalhos futuros |
 
-Totais: Kauan 75s; Fabio 90s; Douglas 120s; Luiz Felipe 180s; Willian 315s. Total 780s.
-A abertura passa a 2min45. Permanecem dois minutos de reserva até o limite de 15 minutos.
+Totais: Kauan 105s; Fabio 90s; Douglas 120s; Luiz Felipe 180s; Willian 315s. Total 810s.
+A abertura passa a 3min15. Permanecem 1min30 de reserva até o limite de 15 minutos.
 
 ## O que ocorreu com a hipótese de migração
 
@@ -76,3 +76,16 @@ Nenhum dado ou coeficiente do modelo principal foi alterado nesta revisão.
 
 A comparação controlada está preservada em `validacao/saida/08_sensibilidade_migracao.csv`.
 O ajuste principal continua com os mesmos 14 parâmetros, municípios e coeficientes.
+
+## Contextualização da ODS — ajuste final solicitado pelo Kauan
+
+Kauan assume a definição de ODS e a ligação do projeto com a Agenda 2030.
+A fala define ODS; o slide 2 nomeia a ODS 16 e apresenta a meta 16.1 e o indicador de referência 16.1.1.
+A medida do estudo é relacionada ao indicador, sem reproduzi-lo exatamente: inclui X85–Y09 e Y35–Y36 e usa média de 2021–2023.
+A comparação internacional começa na taxa mundial e passa à brasileira, ambas de 2021.
+A contagem de 46.105 por ano é média de 2021–2023 na base nacional, não da amostra final.
+Não foi demonstrado que 2021 seja um ano atípico. O destaque é a diferença Brasil–mundo no mesmo ano.
+O slide 2 recebe 95 segundos; Kauan totaliza 105. Os tempos dos demais não mudam.
+O total de 810 segundos preserva 90 segundos de margem até o limite de quinze minutos.
+
+Fontes oficiais: [ONU Brasil — ODS](https://brasil.un.org/pt-br/sdgs), [ODS 16 e meta 16.1](https://brasil.un.org/pt-br/sdgs/16), [metadados 16.1.1](https://unstats.un.org/sdgs/metadata/files/Metadata-16-01-01.pdf).

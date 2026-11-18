@@ -10,9 +10,9 @@ stopifnot(length(logs) == 6, !any(vapply(logs, function(f) any(grepl("Overfull|M
 pdf <- "apresentacao_final.pdf"
 paginas <- pdf_info(pdf)$pages
 stopifnot(paginas == 23, paginas == length(notas), nrow(roteiro) == 14,
-          identical(roteiro$slide, seq_len(14)), sum(roteiro$segundos) == 780)
+          identical(roteiro$slide, seq_len(14)), sum(roteiro$segundos) == 810)
 pessoas <- c("Kauan", "Fabio", "Douglas", "Luiz Felipe", "Willian")
-tempos <- c(75, 90, 120, 180, 315)
+tempos <- c(105, 90, 120, 180, 315)
 stopifnot(identical(unique(roteiro$pessoa), pessoas),
           identical(as.numeric(tapply(roteiro$segundos, factor(roteiro$pessoa, levels = pessoas), sum)), tempos))
 num_tex <- readLines("latex/numeros.tex", encoding = "UTF-8")
@@ -23,6 +23,10 @@ for (k in names(num)) notas <- gsub(sprintf("{%s}", k), num[[k]], notas, fixed =
 stopifnot(!any(grepl("\\{\\w+\\}", notas)))
 stopifnot(identical(unname(tools::md5sum(pdf)), unname(tools::md5sum("latex/apresentacao_final.pdf"))))
 texto <- pdf_text(pdf)
+stopifnot(!grepl("ODS: Objetivos de Desenvolvimento Sustentável", texto[2], fixed = TRUE),
+          all(vapply(c("Paz, Justiça e Instituições", "Eficazes", "Meta 16.1:", "Indicador 16.1.1:",
+                      "Medida do estudo:", "intervenções legais"),
+                    function(t) grepl(t, gsub("[[:space:]]+", " ", texto[2]), fixed = TRUE), logical(1))))
 stopifnot(!any(grepl("Fonte:|Fontes:", texto, ignore.case = TRUE)))
 stopifnot(all(vapply(seq_along(texto), function(k) {
   linhas <- trimws(strsplit(texto[k], "\n", fixed = TRUE)[[1]])

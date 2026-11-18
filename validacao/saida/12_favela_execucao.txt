@@ -1,0 +1,367 @@
+Loading required package: carData
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Variáveis: 39 especificações: 57
+          variavel    forma    n faltantes  estado            p     delta_r2a
+         pct_indet original 1133         0 testada 2.500025e-06  8.284451e-03
+        pct_favela    log1p 1133         0 testada 1.161648e-05  7.142700e-03
+           pct_ind    log1p 1133         0 testada 5.131684e-05  6.042655e-03
+           pct_ind original 1133         0 testada 5.632599e-05  5.973872e-03
+   pct_area_assent    log1p 1133         0 testada 6.026179e-05  5.924007e-03
+        pct_favela original 1133         0 testada 1.417039e-04  5.294013e-03
+         ln_pib_pc original 1133         0 testada 1.999523e-04  5.041054e-03
+    emprego_formal    log1p 1133         0 testada 2.568291e-04  4.857467e-03
+     cobertura_aps original 1133         0 testada 1.529351e-03  3.558762e-03
+   assent_familias    log1p 1133         0 testada 1.617033e-03  3.518527e-03
+        pct_pobres original 1133         0 testada 3.195282e-03  3.029185e-03
+    amazonia_legal original 1133         0 testada 5.957250e-03  2.585848e-03
+         cresc_pop original 1133         0 testada 7.718467e-03  2.402958e-03
+         gini_2010 original 1133         0 testada 1.138225e-02  2.130554e-03
+  guarda_municipal original 1132         1 testada 1.209786e-02  2.087863e-03
+         pct_indet    log1p 1133         0 testada 1.363075e-02  2.004993e-03
+      pct_informal original 1133         0 testada 1.968143e-02  1.751076e-03
+       bovinos_km2    log1p 1133         0 testada 3.195878e-02  1.420692e-03
+           log_pop original 1133         0 testada 4.214277e-02  1.235064e-03
+     indet_sem_hom    log1p 1133         0 testada 4.365141e-02  1.211634e-03
+    emprego_formal original 1133         0 testada 5.983613e-02  1.003517e-03
+           pct_adm original 1133         0 testada 6.458851e-02  9.536622e-04
+          pct_soja original 1133         0 testada 7.006122e-02  9.008809e-04
+             bf_pc original 1133         0 testada 7.551425e-02  8.525027e-04
+          log_area original 1133         0 testada 9.380321e-02  7.140570e-04
+            pib_pc original 1133         0 testada 1.121459e-01  6.019593e-04
+      tem_presidio original 1133         0 testada 1.147295e-01  5.878005e-04
+ pct_migr_outra_uf    log1p 1133         0 testada 1.204482e-01  5.576739e-04
+     pct_maes_solo original 1133         0 testada 1.386746e-01  4.712966e-04
+         pct_h1529 original 1133         0 testada 1.405957e-01  4.629381e-04
+       abandono_em    log1p 1133         0 testada 1.407749e-01  4.621648e-04
+       bovinos_km2 original 1133         0 testada 1.448752e-01  4.447705e-04
+   pct_area_assent original 1133         0 testada 1.508023e-01  4.205821e-04
+        pct_desmat original 1133         0 testada 1.833493e-01  3.045777e-04
+        pct_desmat    log1p 1133         0 testada 2.093975e-01  2.277072e-04
+        pct_pobres    log1p 1133         0 testada 2.611444e-01  1.041249e-04
+ pct_migr_outra_uf original 1133         0 testada 2.766188e-01  7.289766e-05
+   assent_familias original 1133         0 testada 2.834318e-01  5.983522e-05
+           rm_ride original 1133         0 testada 2.905584e-01  4.658985e-05
+   faixa_fronteira original 1133         0 testada 3.066050e-01  1.822858e-05
+        pct_presos original 1133         0 testada 3.078786e-01  1.605964e-05
+          conc_urb original 1133         0 testada 3.146189e-01  4.772612e-06
+          pct_agro original 1133         0 testada 4.045975e-01 -1.203182e-04
+        freq_18a24 original 1133         0 testada 4.446456e-01 -1.639332e-04
+    desp_assist_pc    log1p 1132         1 testada 5.262614e-01 -2.363268e-04
+           alfabet original 1133         0 testada 5.329337e-01 -2.411982e-04
+       desp_seg_pc original 1132         1 testada 6.586812e-01 -3.180226e-04
+       abandono_em original 1133         0 testada 6.670485e-01 -3.217390e-04
+    desp_assist_pc original 1132         1 testada 7.421644e-01 -3.524092e-04
+       desp_seg_pc    log1p 1132         1 testada 7.559031e-01 -3.569983e-04
+        pct_presos    log1p 1133         0 testada 7.771806e-01 -3.632516e-04
+          log_dens original 1133         0 testada 7.817614e-01 -3.645738e-04
+          pct_soja    log1p 1133         0 testada 8.020652e-01 -3.700719e-04
+          pct_agro    log1p 1133         0 testada 8.323460e-01 -3.771991e-04
+         focos_km2 original 1133         0 testada 8.893577e-01 -3.872673e-04
+         focos_km2    log1p 1133         0 testada 9.059462e-01 -3.894000e-04
+     indet_sem_hom original 1133         0 testada 9.960775e-01 -3.949110e-04
+ sinais_principais_alterados
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                               R2a  GiniP50 GiniP50_inf GiniP50_sup
+final                      0.55848 15.78358    10.55880    21.25527
+pct_favela__original       0.56377 13.91922     8.72700    19.35939
+pct_favela__log1p          0.56562 13.28891     8.10732    18.71884
+pct_ind__original          0.56445 17.84132    12.47008    23.46909
+ln_pib_pc__original        0.56352 16.83734    11.56700    22.35666
+pct_pobres__original       0.56151 25.71603    17.04745    35.02661
+cobertura_aps__original    0.56204 15.14428     9.95488    20.57859
+cresc_pop__original        0.56088 15.79100    10.57979    21.24780
+pct_informal__original     0.56023 13.59782     8.18892    19.27714
+pct_maes_solo__original    0.55895 14.68773     9.33050    20.30747
+guarda_municipal__original 0.56099 15.52854    10.31882    20.98429
+                           Freq5.freq_15a17 Dist10.distorcao_em   MigrP  DesocP
+final                              -8.63451            15.58362 0.14333 0.02171
+pct_favela__original               -8.25361            15.42692 0.08401 0.00330
+pct_favela__log1p                  -8.03436            15.03072 0.08873 0.00217
+pct_ind__original                  -8.59674            14.82075 0.19341 0.00886
+ln_pib_pc__original                -8.02521            14.86416 0.21680 0.00808
+pct_pobres__original               -8.96985            15.23079 0.15708 0.10668
+cobertura_aps__original            -9.53509            15.51643 0.38909 0.09273
+cresc_pop__original                -9.42248            15.20994 0.00384 0.02113
+pct_informal__original             -8.54365            15.79448 0.27008 0.04542
+pct_maes_solo__original            -9.16635            15.46323 0.05691 0.01077
+guarda_municipal__original         -8.69198            15.49352 0.15150 0.01100
+[1] "social"
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + pct_maes_solo +
+    freq_18a24 + abandono_em + rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F   Pr(>F)
+1   1119 306.99
+2   1115 302.50  4    4.4883 4.1359 0.002486 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                R2a             GiniP50         GiniP50_inf         GiniP50_sup
+            0.56337            13.27595             7.89006            18.93070
+   Freq5.freq_15a17 Dist10.distorcao_em               MigrP              DesocP
+           -8.24988            15.86269             0.06594             0.00174
+[1] "economico"
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + ln_pib_pc + pct_ind +
+    pct_pobres + pct_informal + ln1p_emprego + rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F    Pr(>F)
+1   1119 306.99
+2   1114 293.08  5    13.909 10.574 6.154e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                R2a             GiniP50         GiniP50_inf         GiniP50_sup
+            0.57659            24.88613            16.16778            34.25878
+   Freq5.freq_15a17 Dist10.distorcao_em               MigrP              DesocP
+           -8.31131            14.49687             0.35514             0.16914
+[1] "territorio"
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + log_pop + log_dens +
+    amazonia_legal + faixa_fronteira + rm_ride + conc_urb + rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F  Pr(>F)
+1   1119 306.99
+2   1113 302.51  6    4.4844 2.7498 0.01173 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                R2a             GiniP50         GiniP50_inf         GiniP50_sup
+            0.56258            13.10123             7.55040            18.93856
+   Freq5.freq_15a17 Dist10.distorcao_em               MigrP              DesocP
+           -7.86341            15.17686             0.03928             0.05321
+[1] "comparacao_favela_ind_pib"
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + pct_ind +
+    ln_pib_pc + rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F    Pr(>F)
+1   1119 306.99
+2   1116 298.65  3    8.3441 10.393 9.519e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+                R2a             GiniP50         GiniP50_inf         GiniP50_sup
+            0.56932            15.91223            10.55642            21.52750
+   Freq5.freq_15a17 Dist10.distorcao_em               MigrP              DesocP
+           -7.92518            14.57975             0.14074             0.00111
+Warning messages:
+1: package ‘car’ was built under R version 4.4.3
+2: package ‘carData’ was built under R version 4.4.3
+3: package ‘zoo’ was built under R version 4.4.3
+4: package ‘ggplot2’ was built under R version 4.4.3
+A captura oficial de 17/11/2026 contém 656 municípios, sem sigilo. Total: 16390790 ; proporções integradas conferidas.
+
+ base
+there are higher-order terms (interactions) in this model
+consider setting type = 'predictor'; see ?vif
+         r2a           SW        BP.BP        PRESS       VIFmax
+5.584788e-01 1.652335e-01 1.441174e-05 3.150406e+02 7.612782e+00
+
+ favela
+              Estimate  Std. Error  t value     Pr(>|t|)
+pct_favela 0.008517838 0.002230742 3.818387 0.0001417039
+there are higher-order terms (interactions) in this model
+consider setting type = 'predictor'; see ?vif
+         r2a           SW        BP.BP        PRESS       VIFmax
+5.637728e-01 6.186043e-02 6.392163e-05 3.114920e+02 7.629641e+00
+
+ favela_log
+                    Estimate Std. Error  t value     Pr(>|t|)
+log1p(pct_favela) 0.07311208 0.01659913 4.404574 1.161648e-05
+there are higher-order terms (interactions) in this model
+consider setting type = 'predictor'; see ?vif
+         r2a           SW        BP.BP        PRESS       VIFmax
+5.656215e-01 5.333546e-02 1.607049e-04 3.101971e+02 7.675247e+00
+
+ industria
+           Estimate  Std. Error  t value     Pr(>|t|)
+pct_ind 0.004443033 0.001098874 4.043261 5.632599e-05
+there are higher-order terms (interactions) in this model
+consider setting type = 'predictor'; see ?vif
+         r2a           SW        BP.BP        PRESS       VIFmax
+5.644527e-01 1.652345e-01 6.786825e-05 3.111405e+02 7.823796e+00
+
+ pib
+           Estimate Std. Error  t value     Pr(>|t|)
+ln_pib_pc 0.1230386 0.03297342 3.731448 0.0001999523
+there are higher-order terms (interactions) in this model
+consider setting type = 'predictor'; see ?vif
+         r2a           SW        BP.BP        PRESS       VIFmax
+5.635198e-01 1.587774e-01 1.292094e-05 3.115972e+02 9.149930e+00
+
+ tres
+              Estimate  Std. Error  t value     Pr(>|t|)
+pct_favela 0.007659391 0.002229615 3.435297 0.0006136676
+pct_ind    0.002674574 0.001357075 1.970837 0.0489893902
+ln_pib_pc  0.069303480 0.040507574 1.710877 0.0873817086
+there are higher-order terms (interactions) in this model
+consider setting type = 'predictor'; see ?vif
+         r2a           SW        BP.BP        PRESS       VIFmax
+5.693247e-01 8.351677e-02 3.072177e-04 3.079768e+02 9.291179e+00
+                cenario    n           b            p efeito_10pp   inf_10pp
+                  todos 1133 0.008517838 1.417039e-04    8.891128  4.2278567
+                 sem_SP  939 0.009487783 5.622417e-05    9.952452  5.0081612
+                 sem_RJ 1081 0.008687694 1.512254e-04    9.076244  4.2945505
+                 sem_PA 1061 0.010971573 9.508939e-06   11.596079  6.3255999
+                 sem_AM 1111 0.007739006 8.688863e-04    8.046344  3.2428163
+          sem_Nova_Lima 1132 0.008437810 1.652046e-04    8.804021  4.1412897
+ sem_percentil99_favela 1121 0.010050539 1.602792e-04   10.572960  4.9632807
+                 pop50k  657 0.007634311 2.197311e-03    7.933284  2.7968763
+                pop100k  319 0.005300456 8.008669e-02    5.443445 -0.6370987
+ sup_10pp           SW           BP
+ 13.76304 0.0618604272 6.392163e-05
+ 15.12954 0.0002530391 7.941848e-07
+ 14.07717 0.0087748288 2.018996e-04
+ 17.12781 0.0320578150 2.450791e-04
+ 13.07336 0.0346625230 4.405087e-05
+ 13.67552 0.0599919384 7.922062e-05
+ 16.48244 0.0654659739 1.059733e-04
+ 13.32634 0.6295712644 3.413687e-02
+ 11.89609 0.5568066469 4.658644e-02
+null device
+          1
+
+ADICIONAR log_pop AO MODELO COM FAVELA
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + log_pop +
+    rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F Pr(>F)
+1   1118 303.04
+2   1117 302.77  1   0.26825 0.9896   0.32
+              Estimate Std. Error   t value     Pr(>|t|)
+pct_favela 0.007856515 0.00232770 3.3752270 0.0007629006
+log_pop    0.025578725 0.02571232 0.9948042 0.3200469653
+
+ADICIONAR tem_favela AO MODELO COM FAVELA
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + tem_favela +
+    rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq     F  Pr(>F)
+1   1118 303.04
+2   1117 301.99  1    1.0522 3.892 0.04876 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+              Estimate  Std. Error  t value    Pr(>|t|)
+pct_favela 0.006461949 0.002459545 2.627295 0.008724557
+tem_favela 0.076347136 0.038699516 1.972819 0.048762472
+
+RETIRADA DE CADA UF
+ uf_retirada    n           b            p
+          RO 1122 0.008796822 9.493575e-05
+          AC 1128 0.008538023 1.412783e-04
+          AM 1111 0.007739006 8.688863e-04
+          RR 1131 0.008497774 1.524020e-04
+          PA 1061 0.010971573 9.508939e-06
+          AP 1130 0.008214566 2.643707e-04
+          TO 1126 0.008632532 1.307782e-04
+          MA 1081 0.010745129 3.456971e-06
+          PI 1117 0.008385287 1.717197e-04
+          CE 1068 0.007822147 4.977963e-04
+          RN 1115 0.008413922 1.811706e-04
+          PB 1116 0.008622389 1.247405e-04
+          PE 1070 0.008556617 2.850504e-04
+          AL 1113 0.008337437 2.366348e-04
+          SE 1119 0.008492029 1.620837e-04
+          BA 1040 0.009034501 1.111212e-04
+          MG 1015 0.007651391 8.705863e-04
+          ES 1112 0.005656990 1.416369e-02
+          RJ 1081 0.008687694 1.512254e-04
+          SP  939 0.009487783 5.622417e-05
+          PR 1068 0.007545142 1.220052e-03
+          SC 1082 0.009165447 3.935711e-05
+          RS 1060 0.007308133 1.026616e-03
+          MS 1117 0.008489494 1.528254e-04
+          MT 1111 0.008331386 1.959447e-04
+          GO 1093 0.008450105 1.880461e-04
+          DF 1132 0.008504605 1.459854e-04
+sinais positivos: 27 de 27
+ regiao_retirada    n           b            p
+         Sudeste  748 0.005333473 4.192413e-02
+           Norte 1011 0.010759062 5.846854e-05
+        Nordeste  775 0.010954318 4.549949e-05
+    Centro-Oeste 1054 0.008259508 2.730437e-04
+             Sul  944 0.007181926 2.116270e-03
+
+ESTADO APENAS COMO SENSIBILIDADE
+              Estimate  Std. Error  t value  Pr(>|t|)
+pct_favela 0.003434146 0.002179079 1.575962 0.1153231

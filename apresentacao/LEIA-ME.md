@@ -1,7 +1,7 @@
 # Apresentação final — 18/11/2026
 
 **Apresentar os slides 1–14.** Os slides 15–23 são os nove apêndices, de A a I, para perguntas.
-O roteiro planeja 13 minutos. Os dois minutos restantes acomodam pausas e transições.
+O roteiro planeja 13min30. Os 1min30 restantes acomodam pausas e transições.
 O grupo ainda precisa confirmar a duração num ensaio cronometrado.
 O prazo informado para enviar os slides é 18/11/2026, às 10h00.
 
@@ -22,16 +22,16 @@ Notas e briefings são materiais internos do grupo. Os slides fazem parte da ent
 
 | Pessoa | Slides | Tempo | Marco de início | Marco de fim | Briefing completo |
 |---|---|---|---|---|---|
-| Kauan | 1–2 | 1min15 | 0min00 | 1min15 | [Abrir](briefings/briefing_kauan.pdf) |
-| Fabio | 3–4 | 1min30 | 1min15 | 2min45 | [Abrir](briefings/briefing_fabio.pdf) |
-| Douglas | 5–6 | 2min | 2min45 | 4min45 | [Abrir](briefings/briefing_douglas.pdf) |
-| Luiz Felipe | 7–9 | 3min | 4min45 | 7min45 | [Abrir](briefings/briefing_luiz_felipe.pdf) |
-| Willian | 10–14 | 5min15 | 7min45 | 13min00 | [Abrir](briefings/briefing_willian.pdf) |
+| Kauan | 1–2 | 1min45 | 0min00 | 1min45 | [Abrir](briefings/briefing_kauan.pdf) |
+| Fabio | 3–4 | 1min30 | 1min45 | 3min15 | [Abrir](briefings/briefing_fabio.pdf) |
+| Douglas | 5–6 | 2min | 3min15 | 5min15 | [Abrir](briefings/briefing_douglas.pdf) |
+| Luiz Felipe | 7–9 | 3min | 5min15 | 8min15 | [Abrir](briefings/briefing_luiz_felipe.pdf) |
+| Willian | 10–14 | 5min15 | 8min15 | 13min30 | [Abrir](briefings/briefing_willian.pdf) |
 
 Cada briefing inclui a parte individual, as falas completas, os slides, as decisões comuns e perguntas respondidas.
 Mantivemos as pessoas e sua ordem; os assuntos foram condensados e redistribuídos para o roteiro docente.
 Os tempos são metas de ensaio, não o resultado de uma apresentação real.
-A abertura de Kauan e Fabio ocupa 2min45. O último slide tem 60 segundos.
+A abertura de Kauan e Fabio ocupa 3min15. O último slide tem 60 segundos.
 Não preencher o tempo com leitura. Tratar os tempos como metas e limites de ensaio.
 Não ler os apêndices durante o roteiro principal.
 
@@ -39,7 +39,7 @@ Não ler os apêndices durante o roteiro principal.
 
 | Slides | Conteúdo |
 |---|---|
-| 1–2 | Contextualização: tema, problema, motivação e pergunta |
+| 1–2 | Contextualização: significado de ODS, ODS 16, meta 16.1, indicador 16.1.1, dimensão do problema e pergunta |
 | 3–4 | Fontes, resposta, variáveis e recorte |
 | 5–6 | Metodologia: modelo, termos e finalidade dos procedimentos de avaliação |
 | 7 | Ajuste do modelo: taxas observadas e ajustadas, escala e alcance |
@@ -56,6 +56,8 @@ Os apêndices de referências foram retirados; o registro bibliográfico permane
 
 ## Cuidados para a fala
 
+- Kauan define ODS brevemente na fala. O slide 2 identifica ODS 16, meta 16.1 e indicador de referência 16.1.1.
+- A medida do estudo difere do indicador oficial. A comparação mundo–Brasil usa 2021; não demonstra ano atípico.
 - Abrir com problema e pergunta. Apresentar os resultados na discussão.
 - Tratar as hipóteses como expectativas iniciais. Elas permanecem nos briefings e retornam na discussão.
 - Definir exclusão escolar por frequência e atraso escolar. A medida não representa toda a exclusão social.

@@ -38,3 +38,14 @@ Dados conferidos nas figuras 5 e 6 do relatório UNODC 2023 e nas publicações 
 A razão não usa a taxa de 22,7 da base, que cobre 2021–2023 e inclui intervenções legais.
 A comparação e a média anual de 46.105 mortes da base são informações distintas, identificadas na fala.
 A [análise crítica por slide](../decisoes/analise-critica-slide-a-slide.md) registra os motivos e as fontes.
+
+## ODS explicitada no contexto final
+
+O slide 2 define ODS como Objetivos de Desenvolvimento Sustentável: dezessete objetivos da ONU para a Agenda 2030.
+O projeto se liga à ODS 16, Paz, Justiça e Instituições Eficazes, e à meta 16.1.
+O indicador de referência 16.1.1 mede vítimas de homicídio intencional por cem mil habitantes.
+Sua definição oficial prevê desagregação por sexo e idade; o modelo municipal usa uma medida agregada distinta do SIM.
+O slide e a fala distinguem a referência internacional da taxa anual média de 2021–2023 do estudo.
+A comparação começa no mundo (5,8) e passa ao Brasil (21,3), ambos em 2021. Não caracteriza esse ano como atípico.
+
+Fontes: [ONU Brasil — ODS](https://brasil.un.org/pt-br/sdgs), [ODS 16](https://brasil.un.org/pt-br/sdgs/16), [metadados do indicador](https://unstats.un.org/sdgs/metadata/files/Metadata-16-01-01.pdf).

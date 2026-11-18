@@ -79,7 +79,8 @@ Ausência de evidência clara não comprova ausência de associação.
 - A variância desigual, o possível sub-registro, o Gini aproximado e a dependência espacial limitam a interpretação.
 - Estudos futuros podem avaliar variância desigual, estrutura espacial e estabilidade em outras bases e períodos.
 
-A apresentação principal usa 14 slides e 13 minutos planejados.
+A apresentação principal usa 14 slides e 13min30 planejados.
+Kauan dispõe de 1min45 para contexto, ODS 16, meta 16.1 e indicador de referência 16.1.1.
 Os nove apêndices são apoio para perguntas, sem leitura obrigatória.
 O ensaio humano ainda precisa confirmar a duração.
 
@@ -95,3 +96,11 @@ O script executa os dois códigos finais e regenera seus resultados, sem alterar
 Ele registra 365 medidas e comparações em `saida/09_auditoria_modelo.csv` e `.txt`.
 As afirmações numéricas acima podem ser conferidas nesses arquivos.
 A revisão das fontes está em `saida/07_extras_fontes.txt`; o contexto geral está em `RELATORIO.md`.
+
+## Auditoria posterior das candidatas
+
+A [auditoria adicional](AUDITORIA_CANDIDATAS.md) examinou as candidatas disponíveis, incluindo estrutura familiar e despesas reconstruídas.
+Algumas alternativas acrescentam informação e alteram magnitudes ou a evidência da migração.
+A [verificação de favelas](FAVELAS_METODO_E_DECISAO.md) registra a fonte oficial e as sensibilidades.
+O usuário confirmou manter a especificação principal e guardar essas comparações como apoio.
+Isso não demonstra que a especificação adotada seja única ou ótima.

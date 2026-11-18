@@ -14,8 +14,8 @@ Ela atualiza organização, tempos, hipóteses e referências sem alterar dados 
 | Assunto | Decisão | Motivo |
 |---|---|---|
 | Região ou estado | Manter região no modelo principal | O grupo confirmou a decisão às 17h11. A comparação regional responde à pergunta escolhida |
-| Tempo | Planejar 13 minutos de fala e reservar dois minutos | O limite informado pela professora é de 15 minutos |
-| Abertura | Contexto e dados ocupam 2min45 | A professora prioriza interpretação e discussão dos resultados |
+| Tempo | Planejar 13min30 de fala e reservar 1min30 | O limite informado pela professora é de 15 minutos |
+| Abertura | Contexto e dados ocupam 3min15; Kauan explica ODS 16, meta 16.1 e indicador 16.1.1 | O usuário assumiu essa contextualização; a medida do SIM difere do indicador oficial |
 | Pessoas | Preservar os cinco apresentadores e sua ordem | O usuário pediu a mesmas pessoas e ordem da apresentação parcial |
 | Tamanho | Usar 23 páginas: 14 principais e nove apêndices, A–I | A redução evita comprimir 29 páginas principais no tempo disponível |
 | Numeração | Manter apenas a numeração no rodapé | Facilita ensaio e perguntas sem repetir disciplina e título |
@@ -47,15 +47,15 @@ Ela atualiza organização, tempos, hipóteses e referências sem alterar dados 
 
 | Pessoa | Páginas principais | Tempo | Conteúdo |
 |---|---|---:|---|
-| Kauan | 1–2 | 1min15 | Contexto, problema, motivação e pergunta |
+| Kauan | 1–2 | 1min45 | ODS, ODS 16, meta, indicador de referência, dimensão do problema e pergunta |
 | Fabio | 3–4 | 1min30 | Fontes, resposta, variáveis, corte e limites dos dados |
 | Douglas | 5–6 | 2min | Modelo e finalidade dos procedimentos de avaliação |
 | Luiz Felipe | 7–9 | 3min | Ajuste observado e interpretação gráfica dos diagnósticos |
 | Willian | 10–14 | 5min15 | Resultados, interpretação, crítica e conclusão |
 
-O total planejado é de 13 minutos. A reserva de dois minutos acomoda pausas e transições.
-Os marcos finais são 1min15, 2min45, 4min45, 7min45 e 13min00.
-Kauan divide seus 75 segundos em 10 e 65 segundos. O último slide recebe 60 segundos.
+O total planejado é de 13min30. A reserva de 1min30 acomoda pausas e transições.
+Os marcos finais são 1min45, 3min15, 5min15, 8min15 e 13min30.
+Kauan divide seus 105 segundos em 10 e 95 segundos. O último slide recebe 60 segundos.
 Os tempos são metas e limites de ensaio. Nenhuma pessoa precisa preenchê-los com leitura.
 A estimativa por palavras orienta o ensaio, mas não mede a duração real.
 Cada pessoa recebe um briefing completo no molde da apresentação parcial.

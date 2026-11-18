@@ -1,0 +1,14 @@
+Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
+Warning message:
+package ‘sf’ was built under R version 4.4.3
+Desmatamento: municípios fora da planilha (= 0): 2
+SISDEPEN: estabelecimentos sem código IBGE: 0 | presos neles: 0
+INCRA: 9964 projetos | 445 criados depois de 2023 (fora) | 0 sem data
+INCRA: projetos sem município casado por nome + UF: 1 | famílias neles: 102
+[1] "BAHIA BA"
+Spherical geometry (s2) switched off
+INPE: 574745 focos 2021-2023 | 83 fora de qualquer polígono da malha (descartados)
+SICONFI: municípios sem DCA 2022: 11
+Bolsa Família: anos 2021, 2022 | linhas sem município casado por nome + UF: 0
+
+Candidatas: 5570 municípios x 28 variáveis

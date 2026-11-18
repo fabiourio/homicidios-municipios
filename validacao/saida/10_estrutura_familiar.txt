@@ -1,0 +1,47 @@
+FONTE: SIDRA 9882, variável 800, ano 2022. Numerador: categoria 72607, sexo 100681. Denominador: 72603, sexo 100679.
+Conferência: 5.570 municípios, sem diferenças relevantes entre contagens da fonte e variável integrada.
+AMOSTRA E VARIÁVEL
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+  7.605  12.232  13.881  14.007  15.878  22.572
+                  n           faltantes     parametros_base parametros_com_maes
+               1133                   0                  14                  15
+
+TESTE F CONDICIONAL
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_maes_solo +
+    rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F Pr(>F)
+1   1119 306.99
+2   1118 306.39  1   0.60175 2.1957 0.1387
+
+COEFICIENTE ADICIONAL
+                Estimate Std. Error  t value  Pr(>|t|)
+pct_maes_solo 0.01834187 0.01237808 1.481803 0.1386746
+
+EFEITO PARA +5 PONTOS PERCENTUAIS
+estimativa.pct_maes_solo                    2.5 %                   97.5 %
+                 9.60462                 -2.92876                 23.75625
+
+DIAGNÓSTICOS
+                 n r2_ajustado     sigma shapiro_p      bp_p.BP    PRESS
+final         1133   0.5584788 0.5237810 0.1652335 1.441174e-05 315.0406
+com_maes_solo 1133   0.5589501 0.5235014 0.3001827 1.809436e-06 314.8707
+               vif_max
+final         7.612782
+com_maes_solo 8.501013
+
+MUDANÇAS NOS RESULTADOS PRINCIPAIS
+              gini_mediana_pct freq_5pp.freq_15a17 distorcao_10pp.distorcao_em
+final                 15.78358           -8.634512                    15.58362
+com_maes_solo         14.68773           -9.166347                    15.46323
+              migracao_p
+final         0.14333404
+com_maes_solo 0.05690885
+
+DECISÃO ATUAL
+Manter o modelo principal. A inclusão tem contribuição adicional imprecisa, ganho mínimo no ajuste e não resolve a variância desigual.
+Isso não prova ausência de associação e não reconstrói a justificativa histórica da exclusão. Testes e intervalos são clássicos e exploratórios.

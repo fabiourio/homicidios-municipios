@@ -10,9 +10,9 @@ A [revisão da narrativa de 17/11](revisao-semantica-apresentacao.md) atualiza a
 ## Requisitos verificáveis
 
 - G1: A apresentação cobre os cinco pontos pedidos pela professora.
-- G2: O roteiro tem 13 minutos de fala planejada.
+- G2: O roteiro tem 13min30 de fala planejada.
 - G3: A divisão preserva Kauan, Fabio, Douglas, Luiz Felipe e Willian, nessa ordem.
-- G4: A abertura de Kauan e Fabio ocupa 2min45.
+- G4: A abertura de Kauan e Fabio ocupa 3min15.
 - G5: Os diagnósticos mostram gráficos com uma interpretação visível.
 - G6: Cada página tem uma nota coerente com seu conteúdo.
 - G7: Os cinco briefings contêm as falas completas de cada pessoa.
@@ -50,15 +50,15 @@ Não esconder as limitações quando os testes não rejeitam uma hipótese.
 
 | Pessoa | Tempo | Páginas principais | Função |
 |---|---:|---|---|
-| Kauan | 1min15 | 1–2 | Contexto, problema, motivação e pergunta |
+| Kauan | 1min45 | 1–2 | Contexto, problema, motivação e pergunta |
 | Fabio | 1min30 | 3–4 | Fontes, resposta, variáveis e recorte |
 | Douglas | 2min | 5–6 | Modelo e finalidade dos procedimentos de avaliação |
 | Luiz Felipe | 3min | 7–9 | Ajuste observado e diagnóstico por gráficos |
 | Willian | 5min15 | 10–14 | Efeitos, interpretação, crítica e conclusão |
 
-O total de 13 minutos reserva dois minutos para pausas e transições.
-Os marcos finais são 1min15, 2min45, 4min45, 7min45 e 13min00.
-Kauan dispõe de 10 e 65 segundos nos slides 1 e 2. O slide final recebe 60 segundos.
+O total de 13min30 reserva 1min30 para pausas e transições.
+Os marcos finais são 1min45, 3min15, 5min15, 8min15 e 13min30.
+Kauan dispõe de 10 e 95 segundos nos slides 1 e 2. O slide final recebe 60 segundos.
 Os tempos são metas e limites de ensaio. Não exigir leitura para preencher segundos.
 A estimativa por palavras é uma referência para ensaio, não uma medição de apresentação real.
 
@@ -77,7 +77,7 @@ Os itens concluídos abaixo registram a versão anterior. As verificações da r
 
 - [x] R1 — Conferir os cinco itens docentes na ordem aprovada e a função de cada slide.
 - [x] R2 — Conferir 23 páginas, nove apêndices, fontes fora da projeção e rodapé apenas com numeração.
-- [x] R3 — Conferir 780 segundos, tempos individuais e marcos de transição nos materiais exportados.
+- [x] R3 — Conferir 810 segundos, tempos individuais e marcos de transição nos materiais exportados.
 - [x] R4 — Conferir hipótese de migração, exclusão escolar e abertura sem resultados antecipados.
 - [x] R5 — Regenerar exportações e pacote do grupo; executar o verificador e revisar páginas alteradas.
 - [x] R6 — Registrar somente verificações executadas e revisar o diff antes de atualizar o PR.

@@ -7,9 +7,9 @@ Data: 17/11/2026. Base: `1893e89` (`main`). Branch: `apresentacao-final-15-minut
 - 14 páginas principais e nove apêndices, de A a I.
 - Meta de 23 páginas no PDF, no PowerPoint e no HTML.
 - Cinco briefings, com as mesmas pessoas e ordem da apresentação parcial; conteúdos condensados e redistribuídos.
-- Roteiro de 780 segundos: 75/90/120/180/315 segundos por pessoa.
-- Abertura de 165 segundos; dois minutos de reserva até o limite informado.
-- Marcos finais: 1min15, 2min45, 4min45, 7min45 e 13min00.
+- Roteiro de 810 segundos: 105/90/120/180/315 segundos por pessoa.
+- Abertura de 195 segundos; 1min30 de reserva até o limite informado.
+- Marcos finais: 1min45, 3min15, 5min15, 8min15 e 13min30.
 - Último slide: 60 segundos. Rodapé apenas com numeração; fontes retiradas da projeção; legendas técnicas preservadas.
 - As falas são metas de ensaio. A duração de uma apresentação real não foi medida.
 
@@ -248,3 +248,43 @@ As referências continuam fora da projeção. Região, pessoas, ordem e tempos p
 Os arquivos foram regenerados. O verificador confirmou 23 páginas, cinco briefings e notas iguais nas exportações.
 As páginas alteradas, a abertura e o briefing de Kauan foram inspecionados após a compilação.
 O roteiro mantém 780 segundos; o ensaio humano permanece pendente.
+
+## Geração final: contexto ODS e auditoria adicional
+
+A fala define ODS; o slide 2 identifica ODS 16, meta 16.1 e indicador de referência 16.1.1.
+Ele distingue nossa medida do indicador oficial e explicita os períodos das duas comparações.
+Mundo e Brasil usam 2021. A contagem da base é média anual de 2021–2023; não foi demonstrado ano atípico.
+O slide foi renderizado e inspecionado. A definição permanece no corpo branco, sem virar subtítulo do Beamer.
+
+O verificador foi executado após regenerar os cinco briefings:
+
+- 23 páginas: 14 principais e nove apêndices, sem acréscimos.
+- Notas iguais no PowerPoint, no HTML e na fonte.
+- Cinco briefings com os marcos atualizados.
+- Roteiro de 810 segundos: 105/90/120/180/315 por pessoa.
+- Kauan: 162 palavras, incluindo a capa; meta de 1min45.
+- Sem transbordamentos, caracteres ausentes ou linhas de fonte na projeção.
+- Modelo principal preservado, com região e os mesmos coeficientes.
+
+A auditoria adicional está em `validacao/AUDITORIA_CANDIDATAS.md`.
+Foram testadas 39 colunas/codificações em 57 formas; cada comparação usa os mesmos casos na referência e na ampliação.
+As duas despesas municipais foram reconstruídas porque a saída candidata estava desatualizada em relação à fonte disponível.
+As outras 26 candidatas e as três explicativas extras do modelo permaneceram numericamente iguais.
+A fonte de favelas foi confrontada com a API atual: 656 municípios e todas as contagens idênticas.
+Os testes e sensibilidades foram reproduzidos pelos scripts da auditoria.
+
+O usuário confirmou manter o modelo principal e guardar essas comparações como apoio.
+Não afirmar que todas as candidatas foram excluídas por ausência de significância.
+As justificativas atuais corrigem lacunas de documentação; não inventam decisões históricas.
+A apresentação continua focada nos cinco itens docentes. A auditoria não criou apêndices novos.
+
+### Últimos ajustes solicitados no fechamento
+
+- Título do slide 2 restaurado para “Contexto e questão de pesquisa”.
+- Definição da sigla ODS retirada do slide, preservada brevemente na fala.
+- ODS 16, meta e indicador continuam visíveis.
+- Primeiro a média anual de 46.105 mortes na base de 2021–2023; depois a comparação internacional de 2021.
+- Medida do estudo resumida; referência a guerra retirada da abertura e da projeção dos dados.
+- PDF, PPTX, HTML e cinco briefings regenerados. Verificador aprovado: 23 páginas e 810 segundos.
+- Falas atuais: Kauan 158 palavras; Fabio 182; Douglas 181; Luiz Felipe 274; Willian 534.
+- Guia pessoal reduzido para oito páginas; somente o PDF foi entregue no Desktop.

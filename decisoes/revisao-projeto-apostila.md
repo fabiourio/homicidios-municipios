@@ -5,7 +5,7 @@ Data: 17/11/2026. Apresentação final: 18/11/2026.
 ## Conclusão prática
 
 A revisão da narrativa define 23 páginas: 14 slides principais e nove apêndices, A–I.
-O verificador confirmou 23 páginas, cinco briefings, notas iguais e roteiro de 780 segundos.
+O verificador confirmou 23 páginas, cinco briefings, notas iguais e roteiro de 810 segundos.
 A [revisão da narrativa](revisao-semantica-apresentacao.md) registra os pedidos posteriores do usuário em 17/11.
 Não resta decisão aberta sobre região, divisão de falas, vizinhança ou organização dos slides.
 O ensaio cronometrado do grupo ainda precisa confirmar a duração real.
@@ -56,7 +56,7 @@ Não introduzimos métodos novos para buscar testes favoráveis.
 ## Correções feitas na revisão com a apostila
 
 1. Acrescentamos resíduos contra renda, Gini, desocupação, urbanização, escola, migração e região.
-2. Preservamos os 14 slides principais e o roteiro de 13 minutos; os painéis novos são apoio para perguntas.
+2. Preservamos os 14 slides principais e o roteiro de 13min30; os painéis novos são apoio para perguntas.
 3. Explicitamos que o Gini calculado considera pessoas de 14 anos ou mais.
 4. Explicitamos que a referência oficial do Gini considera todos os moradores.
 5. Corrigimos valores e afirmações desatualizados do relatório de validação.
@@ -70,10 +70,10 @@ Não introduzimos métodos novos para buscar testes favoráveis.
 - Mostrar taxas observadas e ajustadas no slide 7.
 - Retirar os dois apêndices de referências e retirar as fontes visíveis da projeção. Preservar legendas técnicas e referências na documentação.
 - Manter apenas a numeração no rodapé. Renomear os diagnósticos complementares como H e I.
-- Reservar 75/90/120/180/315 segundos, na mesma ordem dos cinco apresentadores.
+- Reservar 105/90/120/180/315 segundos, na mesma ordem dos cinco apresentadores.
 - Preservar hipóteses como expectativas iniciais, com discussão posterior dos resultados.
 
-A abertura cobre problema e pergunta em 2min45, incluindo os dados. O último slide recebe 60 segundos.
+A abertura cobre problema e pergunta em 3min15, incluindo os dados. O último slide recebe 60 segundos.
 H2 mede exclusão escolar por frequência e atraso escolar. Não mede exclusão social em geral.
 H3 mede migração recente por residência ininterrupta inferior a dez anos. Não mede imigração internacional.
 A migração permanece no modelo, com p clássico de 0,143, sem evidência clara de associação.
@@ -127,7 +127,7 @@ Não foram tratadas como decisões já tomadas nem como obrigação para aumenta
 | Região e recorte populacional | Região mantida; 30 mil habitantes; 1.133 municípios |
 | Sem teste artificial de vizinhos | Ausência do teste e limitação declarada |
 | Comparação com e sem renda | Apêndice D |
-| Tempo de até 15 minutos | Roteiro de 13 minutos e dois minutos de reserva; ensaio humano pendente |
+| Tempo de até 15 minutos | Roteiro de 13min30 e 1min30 de reserva; ensaio humano pendente |
 
 ## Pendências do projeto completo
 

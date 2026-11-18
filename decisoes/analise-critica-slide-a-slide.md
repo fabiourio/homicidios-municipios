@@ -8,7 +8,7 @@ Critério: cada slide precisa cumprir uma função e preparar o seguinte, dentro
 A sequência cobre os cinco itens docentes. A versão anterior ainda tinha lacunas de conteúdo.
 A abertura perdeu a referência que dimensionava o problema; uma frase óbvia ocupou esse espaço.
 A conclusão também precisava responder à parte geográfica e à renda, além das três hipóteses.
-A revisão abaixo corrige essas lacunas preservando região, pessoas, ordem e roteiro de 13 minutos.
+A revisão abaixo corrige essas lacunas preservando região, pessoas, ordem e roteiro de 13min30.
 Não há motivo para inserir a história das tentativas de modelagem no corpo da apresentação.
 
 ## Análise dos 14 slides principais
@@ -16,7 +16,7 @@ Não há motivo para inserir a história das tentativas de modelagem no corpo da
 | Slide | Função necessária | Avaliação crítica e encaminhamento |
 |---|---|---|
 | 1 — Capa | Identificar tema e grupo | Adequado. Apresentar o tema em dez segundos; não ler os cinco nomes. A capa não substitui a contextualização. |
-| 2 — Contexto e pergunta | Mostrar relevância, ligação à ODS e pergunta investigada | Precisava ser refeito. “A taxa nacional não descreve diferenças municipais” é genérico e não dimensiona o problema. A abertura recupera a comparação internacional, a escala anual da base e a meta 16.1, antes da pergunta. |
+| 2 — Contexto e pergunta | Definir ODS, identificar ODS 16, meta 16.1, indicador 16.1.1 e pergunta | Precisava ser refeito. “A taxa nacional não descreve diferenças municipais” é genérico e não dimensiona o problema. A abertura define ODS e ODS 16, apresenta meta 16.1 e indicador 16.1.1, compara mundo e Brasil em 2021 e distingue a medida de 2021–2023 do estudo. |
 | 3 — Dados e resposta | Explicar de onde vêm os dados e o que a taxa mede | Adequado. Preservar residência, período, denominador e causas incluídas. A medida do modelo difere do homicídio intencional usado na comparação internacional. Essa distinção precisa aparecer na fala. |
 | 4 — Recorte e explicativas | Delimitar a aplicação do estudo e apresentar as variáveis principais | Adequado com ajuste. Preservar 30 mil habitantes, 1.133 municípios, cobertura populacional e exclusão de Campos do Jordão. Explicitar frequência de 15–17 anos e atraso no ensino médio. Mostrar categorias, sem ler uma lista extensa. |
 | 5 — Modelo e finalidade | Dizer qual modelo foi usado e por que existem quadrado, interação e região | Adequado. A finalidade de cada termo acompanha seu nome. A fala explicita mínimos quadrados. Manter ln(renda), em vez de sugerir que o modelo usa renda bruta ao quadrado. |
@@ -40,7 +40,7 @@ Não há motivo para inserir a história das tentativas de modelagem no corpo da
 | Ajuste do modelo | Slides 7–9 mostram qualidade e limites. Os efeitos do modelo ajustado são interpretados nos slides 10–12. |
 | Discussão e interpretação | Slides 10–14 relacionam resultados à pergunta, às hipóteses, às limitações e aos próximos passos. |
 
-A leitura do ajuste, dos diagnósticos e dos resultados ocupa 8min15 dos 13 minutos planejados.
+A leitura do ajuste, dos diagnósticos e dos resultados ocupa 8min15 dos 13min30 planejados.
 Esse tempo precisa ser usado para interpretar os gráficos, não para enumerar estatísticas.
 A discussão não pode começar e terminar apenas no valor do R².
 
@@ -76,7 +76,7 @@ As referências permanecem na documentação, sem linhas de fonte na projeção.
 ## Tempo e preservação das decisões
 
 A ordem permanece Kauan, Fabio, Douglas, Luiz Felipe e Willian.
-Os tempos permanecem 1min15, 1min30, 2min, 3min e 5min15, totalizando 13 minutos.
-A comparação internacional não exige um novo slide nem ampliação da abertura.
+Os tempos permanecem 1min45, 1min30, 2min, 3min e 5min15, totalizando 13min30.
+A explicação de ODS, meta e indicador amplia a abertura de Kauan em trinta segundos, sem criar outro slide.
 O ensaio humano continua necessário. A meta de tempo não é uma medição da apresentação real.
 Nenhum dado, coeficiente ou especificação do modelo principal foi alterado nesta revisão de conteúdo.
