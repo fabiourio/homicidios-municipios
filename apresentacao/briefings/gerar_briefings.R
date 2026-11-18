@@ -31,7 +31,7 @@ fala <- sub("^\\[[^]]+\\]\\s*", "", notas)
 roteiro <- read.csv("../roteiro.csv", encoding = "UTF-8")
 stopifnot(identical(roteiro$slide, which(!is.na(quem))),
           all(roteiro$pessoa == quem[roteiro$slide]),
-          all(roteiro$segundos > 0), sum(roteiro$segundos) == 13 * 60 + 30)
+          all(roteiro$segundos > 0), sum(roteiro$segundos) == 14 * 60 + 30)
 roteiro$fim <- cumsum(roteiro$segundos)
 roteiro$inicio <- roteiro$fim - roteiro$segundos
 tempo <- function(segundos) sprintf("%dmin%02ds", segundos %/% 60, segundos %% 60)
@@ -87,7 +87,7 @@ for (nome in unique(na.omit(quem))) {
             ifelse(is.na(depois) || depois == nome, "fim da apresentação", depois)),
     sprintf("\\caixa{\\textbf{Seu tempo total:} %s. \\textbf{Comece no marco:} %s. \\textbf{Termine no marco:} %s.}",
             tempo(sum(plano_pessoa$segundos)), tempo(min(plano_pessoa$inicio)), tempo(max(plano_pessoa$fim))),
-    "Os tempos são metas de ensaio. O roteiro reserva um minuto e trinta segundos para pausas e transições até o limite de quinze minutos.",
+    "Os tempos são metas de ensaio. O roteiro reserva trinta segundos para pausas e transições até o limite de quinze minutos.",
     sprintf("\\input{parte_%s.tex}", s), sprintf("\\input{fala_%s.tex}", s),
     "\\newpage", "\\input{comum.tex}", "\\end{document}"), sprintf("briefing_%s.tex", s))
 
