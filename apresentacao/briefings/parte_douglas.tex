@@ -1,21 +1,29 @@
-\section{Sua parte: análise exploratória}
-\textbf{Mensagem principal:} a taxa é assimétrica à direita (o que pede uma transformação), varia muito entre regiões, e nenhum fator sozinho a explica; renda, \% pobres e alfabetização medem quase o mesmo, então só a renda entra no modelo.
-
-\subsection{O que enfatizar}
+\section{Sua parte: metodologia}
+\textbf{Mensagem principal:} cada termo e procedimento tem uma finalidade. Um bom ajuste não garante erros adequados.
+\subsection{Slide 5: modelo e finalidade dos termos}
+Reservar 55 segundos. Ler a relação entre cada método, à esquerda, e sua finalidade, à direita.
 \begin{itemize}
-\item Daqui em diante, tudo usa os \nMunEsc{} municípios do escopo (no mapa, os de fora aparecem em cinza).
-\item \textbf{Resumo:} as variáveis têm escalas e dispersões bem diferentes; a densidade foi testada em log e padronizada, como a professora pediu; com este escopo ela não é significativa ($p$ = \nPDens) e fica fora do modelo, com outras cinco variáveis testadas e retiradas (Apêndice D).
-\item \textbf{Assimetria (histograma da taxa):} metade dos municípios fica entre \nTaxaQuartilUm{} e \nTaxaQuartilTres, mas há uma cauda longa à direita (assimetria \nAssimTaxa, positiva), que puxa a média (\nTaxaMedia) para cima da mediana (\nTaxaMediana). Isso antecipa a transformação do modelo.
-\item \textbf{Variação entre regiões (mapa e boxplot no mesmo slide):} Norte e Nordeste acima de Sudeste e Sul. Daí a região no modelo; a Amazônia Legal foi testada e ficou fora porque a maior parte dela é a própria região Norte (o efeito vem só do Mato Grosso).
-\item \textbf{Correlações:} a maior com o log da taxa é a de \nCorMaxVar{} (\nCorMax). Na matriz, renda, \% pobres e alfabetização se repetem (até \nCorTrio{} entre si): multicolinearidade, VIF da renda \nVIFrenda{} (com ln renda sem padronizar; padronizar não muda o VIF).
+\item A regressão linear múltipla usa ln(taxa), o logaritmo natural da taxa. Ela compara municípios mantendo outras características constantes.
+\item O logaritmo da renda entra com termo linear e quadrático. Esse termo permite representar uma relação curva.
+\item Gini $\times$ ln(renda) é uma interação: permite que a associação da desigualdade mude conforme a renda.
+\item Região entra como categoria, com o Sudeste como referência. As outras regiões são comparadas com essa referência.
+\item O logaritmo permite apresentar comparações como mudanças percentuais na taxa típica. Essa interpretação não transforma associação em causa.
 \end{itemize}
-
+\subsection{Slide 6: como avaliamos o modelo}
+Reservar 65 segundos. Explicar o que cada procedimento verifica, antes dos resultados apresentados pelo Luiz Felipe.
+\begin{itemize}
+\item O teste $F$ global avalia a contribuição conjunta das explicativas. Os testes parciais comparam modelos com e sem determinados termos.
+\item Os gráficos dos resíduos mostram observado menos ajustado. Procuramos curvas, mudanças de dispersão e desvios da distribuição normal.
+\item Breusch-Pagan avalia evidência contra variância constante. Shapiro-Wilk avalia evidência contra normalidade dos resíduos.
+\item Os testes complementam os gráficos. Não rejeitar uma hipótese não a comprova.
+\item O VIF mede informação repetida entre explicativas e ajuda a discutir a incerteza dos coeficientes. Ele não avalia os resíduos.
+\end{itemize}
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Por que o log e não a raiz?] Quem decide é o Box-Cox, no slide do Luiz Felipe; aqui só mostramos que a taxa original é assimétrica.
-\item[Tirar \% pobres e alfabetização não perde informação?] Pouca: elas repetem a renda; mantê-las deixaria os coeficientes instáveis e com sinais trocados.
-\item[A fronteira não importa?] Testamos a faixa de fronteira e ela não tem efeito, por isso saiu do modelo (Apêndice D). Com a região no modelo, boa parte do efeito regional já é captada.
+\item[Por que usar logaritmo?] Pela interpretação percentual e pela melhora visual dos resíduos. Box-Cox estimou \nLambdaFinal{} com os mesmos termos do modelo final. Zero representa o log e fica fora do intervalo [\nLambdaFinalInf; \nLambdaFinalSup]. Portanto, não afirmar que Box-Cox selecionou o log. O apêndice C apresenta essa comparação.
+\item[O que os testes $F$ demonstram?] Eles avaliam contribuições conjuntas, sem identificar causas. O teste global considera todas as explicativas. O parcial compara conjuntos específicos; os blocos do apêndice B dependem da ordem. No apêndice D, retirar renda também retira seu quadrado e sua interação. Os testes clássicos exigem cautela pela variância não constante.
+\item[Por que avaliar resíduos antes do VIF?] Os resíduos mostram problemas de forma, variância e distribuição dos erros. O VIF trata informação repetida entre explicativas. Um VIF baixo não resolve problemas dos resíduos. Os apêndices H e I, slides 22 e 23, complementam essa leitura.
 \end{description}
-
-\subsection{Transição}
-``A relação com a renda tem uma forma especial, que o Luiz Felipe mostra agora.''
+\subsection{Controle da fala e transição}
+A meta da parte é 2 minutos, terminando no marco acumulado de 5min15.
+Não reabrir a seleção de variáveis. Ao concluir: ``O Luiz Felipe mostra o ajuste e o que seus diagnósticos permitem concluir.''

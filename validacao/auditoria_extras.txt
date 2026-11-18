@@ -1,0 +1,64 @@
+AUDITORIA DE DADOS GED-16 — 2026-11-17
+Escopo: leitura do repositório; nenhuma alteração em código, dados ou modelo.
+Execução: cópia isolada /tmp/ged16-revisao-projeto.5e7YrP.
+R: /Library/Frameworks/R.framework/Resources/bin/Rscript.
+
+COMANDOS E RESULTADOS
+Rscript scripts/01_preparar_dados.R — exit 0; log /tmp/ged16-auditoria-01.log.
+Rscript scripts/03_preparar_relatorio.R — exit 0; log /tmp/ged16-auditoria-03.log.
+Rscript validacao/validar_dados.R — exit 0; log /tmp/ged16-auditoria-validacao.log.
+Rscript /tmp/ged16-auditoria-extras.R — exit 0; log /tmp/ged16-auditoria-extras.log.
+O script adicional lê arquivos originais e extrai somente XLSX dos ZIPs para tempdir().
+Não executou scripts/02_integrar_candidatas.R inteiro; não dependeu dos demais candidatos.
+
+RECONSTRUÇÃO
+Comparação all.equal entre originais e reconstruídos: TRUE nos 4 CSVs:
+dados/tabelas/base_analitica.csv (5570 x 33)
+entrega/dados/base_analitica.csv (5570 x 33)
+dados/tabelas/base_relatorio.csv (5570 x 43)
+dados/tabelas/validacao_gini.csv (33 x 5).
+Oito tabelas SIDRA: 5570 códigos únicos por tabela; 0 sem par.
+Base: 5570 códigos IBGE únicos e cod6 únicos; 0 NA.
+SIM: 5566 municípios em 2021–2023; 5446 em 2024; 0 códigos duplicados ou sem par.
+
+CONFERÊNCIA DAS EXTRAS COM OS ORIGINAIS
+Fontes: dados/candidatos/inep/TDI_2022_MUNICIPIOS.zip e tx_rend_municipios_2022.zip;
+dados/candidatos/migracao_censo2022/sidra_10158_menos10anos_no_municipio.json;
+dados/candidatos/frequencia_escolar_censo2022/sidra_10056_freq_15a17_18a24.json.
+INEP: filtro NO_CATEGORIA=Total, NO_DEPENDENCIA=Total; 5570 códigos únicos em cada ZIP.
+Distorção MED_CAT_0 e abandono 3_CAT_MED: 0 diferenças contra entrega e candidatas.
+Há 7 '--' por indicador; todos em municípios com menos de 30000 habitantes.
+Municípios: Chapada de Areia-TO, Monte Santo do Tocantins-TO, Flexeiras-AL,
+Jequiá da Praia-AL, Roteiro-AL, Serra da Saudade-MG, São Pedro da Serra-RS.
+Frequência SIDRA 3795: taxa bruta, D4C=2792 (15–17), D4C=100052 (18–24).
+Cada grupo tem 5570 códigos únicos completos; 0 diferenças contra base/candidatas.
+Migração SIDRA 13338: pessoas com menos de 10 anos ininterruptos no município.
+5570 códigos únicos completos; cálculo = pessoas/pop2022*100.
+0 diferenças contra entrega/candidatas; maior diferença numérica 5.151435e-14.
+Foram 8 comparações x 5570 = 44560 células, incluindo NA; tolerância 1e-10.
+Referências: scripts/02_integrar_candidatas.R:71–81 e 134–141; script adicional em /tmp.
+
+LIMITAÇÕES CONFIRMADAS, SEM ERRO DE CONTA
+Taxa anual = (agressões + intervenções legais)/(3*pop2022)*100000.
+Recálculo difere no máximo 5.1e-13; usa população fixa de 2022 para 2021–2023.
+Isso estima exposição com censo central; não usa populações anuais observadas.
+Referência: scripts/01_preparar_dados.R:199–204.
+Gini municipal usa classes de renda de pessoas 14+ em domicílios particulares.
+Metadado: dados/raw/sidra_raw.json, chave 10300, cols, variável 13432.
+O oficial SIDRA 10301/13418 descreve todos os moradores, sem corte etário.
+Metadado: dados/raw/sidra_10301_gini.json, variavel e resultados$classificacoes=list().
+Universos diferentes: comparação agregada não valida o Gini exato de cada município.
+Classe aberta >20 SM recebe 50 SM por calibração ao Brasil; Brasil não é validação independente.
+Referência: scripts/01_preparar_dados.R:85–111; scripts/00_coletar_dados.R:140–142.
+UFs: correlação 0.995; erro absoluto médio 0.003, máximo 0.008.
+10300: somas das classes diferem do total em até 3 pessoas; 9517: até 1 pessoa.
+A causa dessas pequenas diferenças não foi confirmada. Não alterar os valores.
+Mudança máxima ao usar soma das partes no denominador: pobreza 0.0284 p.p.; desocupação 0.0296 p.p.
+Nenhum bug confirmado que justifique mudar dado ou modelo.
+
+TRÊS TRECHOS DEFASADOS EM validacao/RELATORIO.md
+Linha 6: F densidade 1.74, p .19 -> recálculo atual F .0767794262, p .7817614497.
+A saída atual entrega/resultados/modelagem/testadas_retiradas.csv confirma ambos.
+Linha 55: retirada dos 23 com causas mal definidas >20% muda coeficiente urbano -4% -> -4.7% (arredondar -5%).
+A tabela da própria linha 78 já contém -5%; log recém executado confirma -4.7%.
+Linha 112: extras contra fonte original 'não verificado' -> verificado na auditoria acima, sem divergências.

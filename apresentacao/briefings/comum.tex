@@ -1,84 +1,87 @@
-% Parte comum a todos os briefings: contexto do projeto, decisões e porquês.
-% Números só por macros (\n...), nunca digitados.
-
 \section{O projeto em um minuto}
 \caixa{\textbf{Pergunta:} quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?}
-
 \begin{itemize}
-\item \textbf{Tema:} ODS 16 (paz e justiça), indicador 16.1.1: homicídios por 100 mil habitantes.
-\item \textbf{Contexto:} \nHomAno{} homicídios por ano; taxa \nRazaoMundo{} vezes a média mundial (UNODC); Norte e Nordeste bem acima de Sudeste e Sul.
-\item \textbf{Literatura:} os estudos nacionais com municípios (Wanzinack et al., 2022; Barros et al., 2020; Aransiola et al., 2022; Castellucci e Silva, 2026) usam dados de 2010. Nós usamos o Censo 2022 completo.
-\item \textbf{Unidade de análise:} o município. São \nMunBR{} municípios, com \nHomBR{} homicídios em 2021--2023 (\nTaxaBR{} por 100 mil hab./ano).
-\item \textbf{Resposta:} taxa de homicídios (agressão + intervenção legal, por residência da vítima), média de 2021 a 2023, do SIM/DATASUS.
-\item \textbf{Explicativas:} Censo 2022 do IBGE (renda, desigualdade, trabalho, frequência escolar, urbanização, idade, migração), INEP 2022 (distorção idade-série no ensino médio), mais região.
-\item \textbf{Modelo:} regressão linear múltipla para ln(taxa), por mínimos quadrados, nos \nMunEsc{} municípios com \nPopMin{} mil habitantes ou mais (\nForaNome{} ficou fora por indício de sub-registro).
+\item \textbf{Tema:} violência letal municipal relacionada à ODS 16, Paz, Justiça e Instituições Eficazes. ODS são os Objetivos de Desenvolvimento Sustentável da ONU.
+\item \textbf{Meta e indicador:} a meta 16.1 busca reduzir violência e mortes relacionadas. O indicador de referência 16.1.1 mede vítimas de homicídio intencional por cem mil habitantes. Nossa medida difere do indicador oficial.
+\item \textbf{Contexto:} Brasil com \nTaxaBrasilContexto{} homicídios intencionais por cem mil habitantes em 2021, frente a \nTaxaMundoContexto{} no mundo. Na base do estudo, \nHomAno{} mortes anuais em 2021--2023; são medidas diferentes.
+\item \textbf{Resposta:} média anual de óbitos por residência, por cem mil habitantes, entre 2021 e 2023. Inclui agressões e intervenções legais/operações de guerra.
+\item \textbf{Fontes:} SIM/DATASUS para óbitos; Censo 2022 para características municipais; INEP para atraso escolar.
+\item \textbf{Recorte:} \nMunEsc{} municípios com pelo menos \nPopMin{} mil habitantes, sem \nForaNome. Representam \nPctPopEsc\% da população brasileira.
+\item \textbf{Unidade de análise:} município. Região é uma explicativa; não agregamos a base em cinco observações.
+\item \textbf{Modelo:} regressão linear múltipla para ln(taxa). Região é a escolha final, com o Sudeste como referência.
 \end{itemize}
 
-\section{As decisões e o porquê de cada uma}
-\small
-{\renewcommand{\arraystretch}{1.5}\rowcolors{2}{white}{fundo}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{2.6cm}@{}}
-\toprule
-\textbf{Decisão} & \textbf{Por quê} & \textbf{Apostila}\\
-\midrule
-Violência medida pela taxa de homicídios do SIM & Indicador 16.1.1 do ODS 16; estatística de violência local mais confiável do país e correlacionada com outros crimes (Murray et al., 2013); o SIM cobre todos os municípios com a mesma codificação (CID-10). Pela residência da vítima, média de 2021--2023 & ---\\
-Escopo: municípios com \nPopMin{} mil hab. ou mais & Nos pequenos o homicídio é raro: abaixo de 5 mil hab. a mediana é \nPorteHomMenor{} caso em 3 anos e a taxa oscila $\pm$\nPorteOscMenor\% só pelo acaso; \nZerosBR{} municípios têm taxa zero. O corte fica perto do percentil \nPercCorte{} da população (pedido da professora: percentil por município): a partir dele não há nenhum zero e há pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos. Ficam \nMunEsc{} municípios (\nPctPopEsc\% da população) & Cap. 1: escopo do modelo\\
-\nForaNome{} fora do estudo & Indício de sub-registro: \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada em 3 anos & ---\\
-Densidade fora do modelo & Pedido da professora: padronizar a densidade e tirar os extremos, porque o desvio-padrão era muito maior que a média. Com o corte de \nPopMin{} mil hab., a densidade (em ln, padronizada) não é significativa: $F$ = \nFDens, $p$ = \nPDens. Ela sai do modelo, e não é preciso cortar municípios por densidade & Cap. 6: $F$ parcial e padronização\\
-Resposta em ln(taxa) & Box-Cox estimou $\lambda$ = \nLambda{} (IC de \nLambdaInf{} a \nLambdaSup); usamos $\lambda = 0$, simples de interpretar, mesmo fora do IC. A normalidade melhora ($W$ de \nSWy{} para \nSWln) & Cap. 4: Box-Cox\\
-Só a renda (sem \% pobres e alfabetização) & As três medem quase o mesmo: VIF da renda \nVIFrenda{} e sinais contraditórios & Cap. 6: multicolinearidade e VIF\\
-Renda e renda², com a renda centralizada & No Gini médio, a taxa sobe até uma renda de cerca de R\$ \nPico{} (abaixo da renda mediana) e depois cai (U invertido); centralizar evita a colinearidade entre $X$ e $X^2$ & Cap. 7: modelos polinomiais\\
-Renda mantida & Ela contribui para o modelo: $F$ parcial \nFRenda{} (\nGlRenda{} gl). A comparação com e sem a renda está no Apêndice F; sem ela o $R^2_a$ cai de \nRdoisA{} para \nRdoisAsemRenda. Sem a renda sai também o termo Gini $\times$ renda; a desigualdade e a desocupação deixam de ser significativas, e as medidas de escola continuam & Cap. 6: multicolinearidade e $F$ parcial\\
-Termo Gini $\times$ renda & O efeito da desigualdade muda com a renda: $F$ = \nFInter, $R^2_a$ de \nRdoisAsemInter{} para \nRdoisA. Na renda mediana, +0,05 no Gini dá \nGiniEfMediana\% na taxa; nos 10\% mais ricos, \nGiniEfNoventa\%; abaixo de R\$ \nGiniZero{} (\nGiniZeroPct\% dos municípios) o efeito não é positivo. O Gini entra centralizado & Cap. 7: modelos com interação\\
-Região (5 classes) como variável categórica & Pedido da professora: agrupar os municípios por região do Brasil. Entram \nNumReg{} indicadoras, com o Sudeste de referência. É o bloco D, com maior ganho de $R^2_a$. \textbf{A escolha entre região e estado está em aberto}; os slides usam a região. Os professores disseram que não há opção certa: depende da história que se quer contar, e com estado cada um é comparado com São Paulo. O Apêndice E mostra os dois modelos (com estado: \nNumParEstado{} parâmetros, $R^2_a$ \nRdoisAestado, e o teste de normalidade rejeita) & Cap. 6 e 7: $F$ parcial, variáveis categóricas\\
-Bloco C: educação e migração & Frequência escolar 15--17, distorção idade-série e migração recente; a frequência foi a mais forte entre 26 candidatas testadas em uma versão anterior do modelo. $F$ parcial \nFblocoEd{} e $R^2_a$ de \nRdoisAsemEd{} para \nRdoisAcomEd & Cap. 6: $F$ parcial\\
-Amazônia Legal testada e fora do modelo & A maior parte dela é a própria região Norte, que já está no modelo; o efeito vem só do Mato Grosso & ---\\
-4 variáveis retiradas: faixa de fronteira, abandono no ensino médio, \% homens 15--29 e \% de óbitos de intenção indeterminada & As três primeiras não têm efeito. A última tinha os homicídios no divisor: caía sozinha quando os homicídios subiam; com a conta corrigida, não tem efeito. A tabela está no Apêndice D & Cap. 6: $F$ parcial\\
-Migração recente mantida (H3 não confirmada) & Não é significativa ($p$ = \nPMigr), nem com nem sem a renda. Fica no modelo para registrar o teste da hipótese H3 & Cap. 8: seleção\\
-Outliers mantidos & A validação dos dados não achou erro; a apostila manda remover só com evidência de erro. No modelo final nenhum resíduo passa de $\pm 4$ & Cap. 4: outliers\\
-Fora da apostila só com aviso & Regra do grupo: técnicas de fora (pesos, modelos espaciais, de contagem) só com decisão do grupo. O que já é de fora está listado no Apêndice C do deck: três itens vieram da revisão da professora (Gini, corte por percentil, padronização) e cinco são escolhas do grupo & ---\\
-Só a história do modelo final & Orientação dos professores (reunião de alinhamento): não mostrar os resultados da primeira apresentação nem as decisões do caminho; apresentar a pergunta, o modelo final, a interpretação, a crítica do modelo e os trabalhos futuros. O que ficou do caminho está nos apêndices D, E e F & ---\\
-Diagnóstico antes do VIF & Orientação dos professores: primeiro ver se a especificação está boa e se as hipóteses valem; a multicolinearidade vem depois e só afeta a leitura dos coeficientes. O primeiro sinal dela é um coeficiente com sinal inesperado, como o da desocupação & Cap. 4 e 6\\
-\bottomrule
-\end{tabularx}}
-\normalsize
+\section{Decisões finais e motivos}
+\begin{description}[leftmargin=0pt]
+\item[Apresentar somente o resultado final.] A professora pediu pergunta, interpretação, discussão e crítica. As decisões intermediárias ficam para perguntas.
+\item[Preservar os cinco apresentadores.] Contexto e dados ocupam 3min15. O roteiro prevê 13min30, com 1min30 de reserva até o limite.
+\item[Seguir os cinco itens docentes.] Kauan contextualiza; Fabio apresenta dados; Douglas explica metodologia; Luiz Felipe apresenta ajuste; Willian discute e interpreta.
+\item[Guardar hipóteses para discussão e perguntas.] A abertura apresenta problema e pergunta. As expectativas originais permanecem no briefing, sem uma leitura obrigatória.
+\item[Manter região.] A escolha responde à comparação regional com menos parâmetros. O estado melhora o ajuste, mas isso não decide a escolha sozinho.
+\item[Definir a resposta e o recorte.] Fontes, taxa, período, população e exclusão continuam visíveis, mesmo com a abertura curta.
+\item[Restringir por população.] O corte próximo do percentil \nPercCorte{} reduz a instabilidade em cidades pequenas. Ele também limita a generalização.
+\item[Excluir \nForaNome.] Há \nForaHom{} homicídio e \nForaIndet{} óbitos de intenção indeterminada no período. Isso indica possível sub-registro, sem demonstrar a causa.
+\item[Usar o Gini calculado.] A aproximação usa classes de renda das pessoas de quatorze anos ou mais. Nas UFs, a correlação com o oficial é \nGiniCorUF. A referência considera todos os moradores; essa comparação agregada não valida o valor exato municipal.
+\item[Manter renda curva e Gini $\times$ renda.] O termo quadrático representa a curva da renda. A interação permite que a associação da desigualdade varie com a renda.
+\item[Usar o logaritmo.] A leitura percentual e os gráficos motivam a escolha. Box-Cox estimou \nLambdaFinal; zero fica fora do IC [\nLambdaFinalInf; \nLambdaFinalSup]. O teste não selecionou o log como potência ótima.
+\item[Mostrar os gráficos dos diagnósticos.] Resíduos vêm antes do VIF. O número do teste complementa a interpretação visual, sem substituí-la.
+\item[Reconhecer a vizinhança como limitação.] Municípios próximos podem compartilhar fatores. A independência espacial não foi verificada; não criamos uma ordem artificial de vizinhos.
+\item[Não acrescentar variáveis pela narrativa.] Abandono parental não integra o modelo final. Variáveis testadas e retiradas ficam no apêndice F.
+\item[Estrutura familiar.] A proporção de domicílios com mulher responsável, sem cônjuge e com filhos foi testada nesta auditoria. A contribuição foi imprecisa e o ganho de ajuste pequeno. A decisão atual é manter fora. Essa medida não identifica abandono parental.
+\item[Auditoria das candidatas.] Algumas alternativas acrescentam informação. Não afirmar que todas ficaram fora por ausência de significância. O grupo confirmou manter o modelo adotado e guardar as comparações como apoio, sem acrescentar apêndices.
+\end{description}
 
-\section{O que o modelo mostra}
+\section{Hipóteses iniciais e migração recente}
+\begin{description}[leftmargin=0pt]
+\item[H1: mais desigualdade, mais homicídios.] A associação depende da renda. O sinal positivo aparece nas rendas mediana e alta; na baixa renda, varia.
+\item[H2: mais exclusão escolar, mais homicídios.] A frequência escolar tem associação negativa; o atraso escolar tem associação positiva. Essas medidas não representam exclusão social em geral.
+\item[H3: mais migração recente, mais homicídios.] A hipótese foi testada e não recebeu apoio claro no modelo final ($p$ clássico = \nPMigrFinal{}). Migração recente significa residência ininterrupta inferior a dez anos, sem restrição a origem internacional. A ausência de evidência clara não prova ausência de associação nem invalida a hipótese.
+\end{description}
+Para perguntas: mantidos os demais termos finais, acrescentar a medida antiga de intenção indeterminada produz $p$ = \nPMigrAntiga{} para migração. A medida corrigida produz $p$ = \nPMigrCorrigida{}. A medida antiga tinha acoplamento matemático com homicídios. Essas comparações não são os resultados exatos da apresentação parcial. A migração permanece no modelo final; não foi retirada. A variância não constante exige cautela com os testes clássicos.
+
+\section{O que os resultados permitem dizer}
 \begin{itemize}
-\item O modelo explica \nRdoisA{} da variação do ln(taxa) ($R^2_a$); $F$ global = \nFglobal{} com \nGlUm{} e \nGlDois{} gl.
-\item \textbf{Renda em U invertido:} no Gini médio, a taxa esperada é máxima com renda per capita de cerca de R\$ \nPico{} e cai nos mais pobres e nos mais ricos.
-\item \textbf{Mais homicídios} com mais desigualdade (nos municípios de renda média e alta, não nos mais pobres), mais urbanização e mais atraso escolar; \textbf{menos} com mais jovens de 15--17 na escola e, sem explicação testada, com mais desocupação (efeitos em \% na tabela abaixo).
-\item \textbf{Não significativa} no modelo atual: \nNaoSig. A hipótese H3 não é confirmada.
+\item O $R^2$ ajustado é \nRdoisA{} \textbf{na escala de ln(taxa)}. Não o apresentar como proporção explicada da taxa original.
+\item Frequência escolar tem associação negativa; atraso escolar e urbanização têm associações positivas no ajuste.
+\item Migração recente não apresenta evidência clara no ajuste. Isso não prova ausência de associação em qualquer recorte.
+\item Para um aumento de cinco centésimos no Gini, a estimativa é \nGiniEfDez\% no percentil dez da renda, \nGiniEfVinteCinco\% no percentil vinte e cinco e \nGiniEfMediana\% na mediana.
+\item No percentil noventa da renda, a estimativa é \nGiniEfNoventa\%. Esse percentil é um ponto da distribuição, não todo o grupo mais rico.
+\item O sinal da desigualdade varia na baixa renda. Não dizer que todos os municípios mais pobres têm efeito nulo.
+\item O gráfico retransformado mostra a taxa típica ajustada, não a média aritmética prevista da taxa original.
 \end{itemize}
 
-\begin{center}\small
-\renewcommand{\arraystretch}{1.1}
-\input{../latex/tabelas/efeitos.tex}
-\end{center}
-{\footnotesize Efeito = variação da taxa para a mudança indicada, com as demais variáveis constantes ($100\,[\exp(b\,\Delta) - 1]\%$ com a resposta em log), com o IC 95\% ao lado.}
+\section{Como ler os gráficos sem exagerar}
+\begin{description}[leftmargin=0pt]
+\item[Observado contra ajustado.] O eixo horizontal mostra ln(taxa) ajustada; o vertical mostra ln(taxa) observada. A diagonal indica igualdade. Pontos afastados indicam erros maiores. Os mesmos dados produziram o ajuste; esse gráfico não representa validação externa.
+\item[Resíduos contra valores ajustados.] O eixo vertical mostra observado menos ajustado em ln(taxa). Procurar uma faixa em torno de zero, sem curva sistemática e com largura semelhante.
+\item[Tamanho dos resíduos contra população.] O eixo vertical mostra o erro absoluto. A dispersão menor nos municípios maiores sinaliza variância não constante.
+\item[Histograma e gráfico de quantis.] Comparar o histograma com a curva normal. No gráfico de quantis, procurar pontos próximos da reta e observar os desvios nas pontas.
+\item[Pontos, barras e faixa de confiança.] Os pontos ou linhas mostram estimativas; barras e faixas mostram ICs clássicos. Cruzar zero indica compatibilidade com mudança nula nesse intervalo.
+\end{description}
 
-\section{O que ainda não está resolvido}
+\section{Limites da conclusão e respostas comuns}
 \begin{itemize}
-\item \textbf{Variância não constante:} Breusch-Pagan = \nBP{} (rejeita). Os coeficientes continuam certos na média, mas os valores p ficam aproximados.
-\item \textbf{Seleção de variáveis} ($C_p$, AIC, BIC, PRESS) ainda não foi feita: é da entrega final.
-\item Testadas em uma versão anterior do modelo e deixadas de fora (não ajudaram): garimpo, desmatamento, Bolsa Família, mães solo e gasto municipal em segurança e assistência (SICONFI 2022).
+\item Breusch-Pagan rejeita variância constante ($p$ \nBPp). Os intervalos e testes apresentados são clássicos, sem correção. Tratamos a inferência como exploratória.
+\item Shapiro-Wilk não rejeita normalidade ($p$ = \nSWp). Isso não comprova normalidade e não resolve a variância não constante.
+\item Desocupação apresenta associação negativa frágil. A causa do sinal não foi demonstrada; não afirmar efeito protetor ou causa comprovada por multicolinearidade.
+\item Gini aproximado, possíveis problemas de registro, cidades pequenas excluídas e independência espacial não verificada restringem o alcance.
+\item Associação entre municípios não demonstra causa nem descreve o risco individual de uma pessoa.
+\item As associações dependem das explicativas incluídas. A evidência de migração muda em algumas comparações. A conclusão sem evidência clara vale para o modelo principal adotado.
+\item Tratar a variância dos erros, investigar dependência espacial e ampliar dados de políticas estaduais são trabalhos futuros. O artigo fica para outra etapa.
 \end{itemize}
 
 \section{Quem fala o quê}
 \input{divisao.tex}
+Os marcos acumulados são 1min45, 3min15, 5min15, 8min15 e 13min30. Usar esses tempos como metas e limites de ensaio.
 
 \section{Glossário rápido}
-\small
-\begin{tabularx}{\linewidth}{@{}>{\bfseries}p{3.4cm}X@{}}
-Escopo do modelo & Faixa de dados em que o modelo vale. Fora dela, as conclusões não se aplicam.\\
-Box-Cox & Procedimento que escolhe a potência $\lambda$ da resposta que deixa o modelo mais perto das hipóteses; $\lambda = 0$ é o log.\\
-$R^2_a$ (ajustado) & Fração da variação explicada, com penalidade por variável a mais.\\
-Teste $F$ parcial & Compara o modelo com e sem um bloco de variáveis: diz se o bloco ajuda.\\
-VIF & Mede o quanto uma variável repete as outras (multicolinearidade). Acima de 10 é grave.\\
-Breusch-Pagan & Testa se a variância dos resíduos é constante.\\
-Shapiro-Wilk ($W$) & Testa a normalidade dos resíduos; perto de 1 = mais normal.\\
-Outlier & Resíduo semi-studentizado com $|e^*| \geq 4$.\\
-Modelo espacial autorregressivo & Regressão em que a taxa de um município depende também da taxa dos vizinhos (usado por Barros et al.). Fora da apostila.\\
-Modelo multinível & Regressão com municípios agrupados em estados, separando a variação entre e dentro dos estados (usado por Castellucci e Silva). Fora da apostila.\\
-\end{tabularx}
-\normalsize
+\begin{description}[leftmargin=0pt]
+\item[Resíduo.] Diferença entre a resposta observada e a resposta ajustada.
+\item[ln(taxa).] Logaritmo natural da taxa. Permite expressar comparações por variações percentuais.
+\item[Interação.] A associação de uma variável muda conforme o valor de outra variável.
+\item[IC.] Intervalo de confiança calculado sob as suposições do modelo. Os nossos intervalos são clássicos.
+\item[ponto percentual.] Diferença entre percentuais. Não confundir com uma mudança percentual relativa.
+\item[Teste $F$.] Avalia a contribuição conjunta de variáveis. O teste parcial compara modelos com e sem termos.
+\item[VIF.] Mede o aumento da incerteza de um coeficiente associado à informação repetida entre explicativas. Não avalia os resíduos.
+\item[Quantil.] Valor que separa uma distribuição numa determinada proporção. A comparação de quantis ajuda a avaliar sua forma.
+\end{description}

@@ -1,0 +1,87 @@
+Loading required package: carData
+Warning messages:
+1: package ‘car’ was built under R version 4.4.3
+2: package ‘carData’ was built under R version 4.4.3
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Warning message:
+package ‘zoo’ was built under R version 4.4.3
+
+ADICIONAR log_pop AO MODELO COM FAVELA
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + log_pop +
+    rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F Pr(>F)
+1   1118 303.04
+2   1117 302.77  1   0.26825 0.9896   0.32
+              Estimate Std. Error   t value     Pr(>|t|)
+pct_favela 0.007856515 0.00232770 3.3752270 0.0007629006
+log_pop    0.025578725 0.02571232 0.9948042 0.3200469653
+
+ADICIONAR tem_favela AO MODELO COM FAVELA
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + rend_c:gini_c
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + pct_favela + tem_favela +
+    rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq     F  Pr(>F)
+1   1118 303.04
+2   1117 301.99  1    1.0522 3.892 0.04876 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+              Estimate  Std. Error  t value    Pr(>|t|)
+pct_favela 0.006461949 0.002459545 2.627295 0.008724557
+tem_favela 0.076347136 0.038699516 1.972819 0.048762472
+
+RETIRADA DE CADA UF
+ uf_retirada    n           b            p
+          RO 1122 0.008796822 9.493575e-05
+          AC 1128 0.008538023 1.412783e-04
+          AM 1111 0.007739006 8.688863e-04
+          RR 1131 0.008497774 1.524020e-04
+          PA 1061 0.010971573 9.508939e-06
+          AP 1130 0.008214566 2.643707e-04
+          TO 1126 0.008632532 1.307782e-04
+          MA 1081 0.010745129 3.456971e-06
+          PI 1117 0.008385287 1.717197e-04
+          CE 1068 0.007822147 4.977963e-04
+          RN 1115 0.008413922 1.811706e-04
+          PB 1116 0.008622389 1.247405e-04
+          PE 1070 0.008556617 2.850504e-04
+          AL 1113 0.008337437 2.366348e-04
+          SE 1119 0.008492029 1.620837e-04
+          BA 1040 0.009034501 1.111212e-04
+          MG 1015 0.007651391 8.705863e-04
+          ES 1112 0.005656990 1.416369e-02
+          RJ 1081 0.008687694 1.512254e-04
+          SP  939 0.009487783 5.622417e-05
+          PR 1068 0.007545142 1.220052e-03
+          SC 1082 0.009165447 3.935711e-05
+          RS 1060 0.007308133 1.026616e-03
+          MS 1117 0.008489494 1.528254e-04
+          MT 1111 0.008331386 1.959447e-04
+          GO 1093 0.008450105 1.880461e-04
+          DF 1132 0.008504605 1.459854e-04
+sinais positivos: 27 de 27
+ regiao_retirada    n           b            p
+         Sudeste  748 0.005333473 4.192413e-02
+           Norte 1011 0.010759062 5.846854e-05
+        Nordeste  775 0.010954318 4.549949e-05
+    Centro-Oeste 1054 0.008259508 2.730437e-04
+             Sul  944 0.007181926 2.116270e-03
+
+ESTADO APENAS COMO SENSIBILIDADE
+              Estimate  Std. Error  t value  Pr(>|t|)
+pct_favela 0.003434146 0.002179079 1.575962 0.1153231

@@ -1,21 +1,32 @@
-\section{Sua parte: renda em U, transformação e construção do modelo}
-\textbf{Mensagem principal:} a relação com a renda é em U invertido; a resposta entra em log (Box-Cox); e o modelo foi montado em blocos, cada um testado pelo $F$ parcial.
-
-\subsection{O que enfatizar}
+\section{Sua parte: ajuste do modelo}
+\textbf{Mensagem principal:} o modelo representa parte da variação observada, mas a variância dos erros ainda muda entre municípios.
+\subsection{Slide 7: valores observados e ajustados}
+Reservar 60 segundos. Mostrar o gráfico antes de citar o $R^2$ ajustado.
 \begin{itemize}
-\item \textbf{Renda:} nos dados, o pico fica perto de R\$ \nRendaDecilPico; os mais violentos não são os mais pobres nem os mais ricos: são os do \nDecilPico º décimo de renda, abaixo da renda mediana. Por isso entram renda e renda² (modelo polinomial).
-\item \textbf{Box-Cox:} $\lambda$ estimado \nLambda{} (IC \nLambdaInf{} a \nLambdaSup); usamos o log, simples de interpretar. Normalidade: $W$ de \nSWy{} para \nSWln. No slide seguinte, mostrar os gráficos dos resíduos antes e depois: com o log, a dispersão fica mais uniforme e os pontos ficam mais perto da reta.
-\item \textbf{Equação:} cada termo corresponde a uma decisão já mostrada: log da taxa (Box-Cox), renda e renda² (U invertido), Gini e Gini $\times$ renda (o efeito da desigualdade muda com a renda), as demais explicativas e a região (variação entre regiões). Renda e Gini entram centralizados na média.
-\item \textbf{Blocos:} A socioeconômico, B urbanização, C educação e migração, D região, E Gini $\times$ renda. Todos entram; o bloco C dá $F$ parcial \nFblocoEd; o maior ganho de $R^2_a$ vem da região (bloco D). O termo Gini $\times$ renda entra por último, com $F$ = \nFInter.
-\item \textbf{Região ou estado:} o slide saiu do corpo e virou o Apêndice E, para perguntas. O estado explica mais ($R^2_a$ \nRdoisAestado{} contra \nRdoisA), mas usa \nNumParEstado{} parâmetros e o teste de normalidade rejeita. A escolha está em aberto; os slides usam a região.
+\item Cada ponto representa um município. O eixo horizontal mostra ln(taxa) ajustada; o vertical mostra ln(taxa) observada.
+\item A diagonal indica igualdade entre observado e ajustado. Pontos próximos indicam erros menores; pontos afastados indicam erros maiores.
+\item O $R^2$ ajustado é \nRdoisA{} na escala de ln(taxa). Não representa a proporção explicada da taxa original.
+\item O gráfico usa os mesmos municípios empregados no ajuste. Ele não apresenta validação em municípios novos.
+\item O $R^2$ não demonstra que os pressupostos foram atendidos. Os próximos gráficos examinam a forma dos erros.
 \end{itemize}
-
+\subsection{Slide 8: diagnóstico da variância dos erros}
+Reservar 65 segundos. Explicar os dois painéis e a consequência para os resultados.
+\begin{description}[leftmargin=0pt]
+\item[Resíduos e ajuste, à esquerda.] O eixo horizontal mostra ln(taxa) ajustada. O vertical mostra o resíduo, observado menos ajustado. Apontar a linha tracejada de erro zero. Procurar uma faixa sem curva sistemática e com largura semelhante.
+\item[Erro e população, à direita.] O eixo horizontal mostra população em escala logarítmica. O vertical mostra o tamanho absoluto do resíduo. A dispersão diminui nos municípios maiores. Breusch-Pagan rejeita variância constante ($p$ \nBPp). Os testes e intervalos clássicos exigem cautela.
+\end{description}
+\subsection{Slide 9: distribuição dos resíduos}
+Reservar 55 segundos. A forma da distribuição e a constância da variância são questões diferentes.
+\begin{description}[leftmargin=0pt]
+\item[Histograma, à esquerda.] O eixo horizontal mostra resíduos; o vertical mostra densidade. As barras se aproximam da curva normal vermelha.
+\item[Gráfico de quantis, à direita.] O eixo horizontal mostra quantis de uma normal; o vertical mostra quantis dos resíduos padronizados. Os pontos ficam próximos da reta, com desvios nas pontas. Shapiro-Wilk não rejeita normalidade ($p$ = \nSWp), mas isso não a comprova. Nenhum resíduo semi-studentizado ultrapassa o limite de $\pm4$ usado para sinalizar extremos.
+\end{description}
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[O $\lambda$ estimado não é 0, e o 0 está fora do IC; por que usar o log?] A apostila recomenda usar um valor de fácil interpretação perto do estimado; o log permite ler os efeitos em \%. Dizemos no slide que a escolha é por interpretabilidade.
-\item[O que é cada termo da equação?] $r$ é o ln da renda centralizado, $g$ é o Gini centralizado, $\mathbf{x}$ são as outras explicativas (desocupação, urbanização, escola e migração), $D$ são as indicadoras de região e $\varepsilon$ é o erro, suposto normal, independente e de variância constante.
-\item[Região ou estado: qual vocês vão usar?] Os slides usam a região, e a escolha ainda está em aberto no grupo (Apêndice E). Com região a história é mais simples: cinco grupos com características comuns. Com estado, cada um é comparado com São Paulo. O estado explica mais ($F$ parcial \nFEstado{} com \nGlEstado{} gl), mas tem \nNumParEstado{} parâmetros, VIF máximo de \nVIFmaxEstado{} e \nNumUFpoucos{} estados com menos de 10 municípios.
+\item[O gráfico observado contra ajustado valida o modelo?] Ele mostra o ajuste nos próprios dados usados para estimar os coeficientes. Não mede desempenho em municípios novos nem comprova os pressupostos. Uma validação externa exigiria dados separados.
+\item[Normalidade não foi rejeitada; então o modelo está adequado?] Esse resultado não comprova normalidade. A variância não constante permanece. Um bom $R^2$ também não elimina essa limitação.
+\item[O que muda quando a variância não é constante?] A variância desigual limita os intervalos e testes clássicos. As conclusões são exploratórias. Os apêndices H e I, slides 22 e 23, mostram resíduos por explicativa. Eles complementam o diagnóstico, sem mudar os coeficientes nem verificar independência espacial.
 \end{description}
-
-\subsection{Transição}
-``Com o modelo montado, o Willian mostra o que ele diz e como checamos as hipóteses.''
+\subsection{Controle da fala e transição}
+A meta da parte é 3 minutos, terminando no marco acumulado de 8min15.
+Interpretar os gráficos antes de citar os testes. Ao concluir: ``Com essas restrições explícitas, o Willian interpreta os resultados do ajuste.''

@@ -1,0 +1,427 @@
+AUDITORIA COMPUTACIONAL; cenários auxiliares sem substituir a especificação principal.
+Todos os cenários usam os mesmos termos; centralização e covariância recalculadas em cada amostra.
+Efeitos do Gini comparados nas mesmas rendas R$ 1383,47 e R$ 2043,102.
+Intervalos clássicos são condicionais às hipóteses; heteroscedasticidade e independência espacial não resolvidas.
+PRESS é leave-one-out condicional à especificação, sem validar seleção de variáveis ou independência espacial.
+R2 e PRESS na escala logarítmica; exp(fit) indica taxa típica, não média aritmética.
+Log escolhido apesar de zero fora do IC de Box-Cox auxiliar e final; sem troca automática.
+PRESS do modelo com estado indefinido: Brasília é a única observação do DF; sua retirada elimina o nível.
+Sem erro aritmético confirmado. Labels taxa/resposta esperada na curva devem dizer taxa típica, pela exponenciação do ajuste log.
+Conclusões: retirar Nova Lima e recolocar Campos preserva os sinais. Campos altera Shapiro p de 0.165 para 0.0011.
+Nos cortes 20/50/100mil, sinais de Gini, frequência e distorção persistem; IC da frequência cruza zero em 100mil.
+Estado reduz magnitudes de Gini/educação; R2 ajustado sobe, mas não justifica troca automática.
+
+         scenario                            metric            value              detail
+      final_30mil                leverage_one_count   0.00000000e+00
+      final_30mil                                 n   1.13300000e+03
+      final_30mil                              rank   1.40000000e+01
+      final_30mil                       df_residual   1.11900000e+03
+      final_30mil                     zero_response   0.00000000e+00
+      final_30mil                    NA_model_frame   0.00000000e+00
+      final_30mil                        all_finite   1.00000000e+00
+      final_30mil                                R2   5.63549256e-01
+      final_30mil                       R2_adjusted   5.58478782e-01
+      final_30mil                          F_global   1.11143323e+02
+      final_30mil                        F_global_p  6.99368734e-191
+      final_30mil                              SW_W   9.97907905e-01
+      final_30mil                              SW_p   1.65233468e-01
+      final_30mil                                BP   4.59683109e+01
+      final_30mil                              BP_p   1.44117370e-05
+      final_30mil         max_GVIF_adjusted_squared   7.61278215e+00
+      final_30mil                           kappa_X   7.36976578e+03
+      final_30mil                           max_hat   1.47975655e-01
+      final_30mil                             PRESS   3.15040615e+02
+      final_30mil                  1_PRESS_over_SST   5.52109109e-01
+      final_30mil                 log_income_center   7.13472020e+00
+      final_30mil                       gini_center   4.62731141e-01
+      final_30mil       gini_0.05_renda_1383.47_pct   1.57835770e+01
+      final_30mil  gini_0.05_renda_1383.47_ci_lower   1.05587969e+01
+      final_30mil  gini_0.05_renda_1383.47_ci_upper   2.12552695e+01
+      final_30mil         gini_0.05_renda_1383.47_p   6.70082157e-10
+      final_30mil      gini_0.05_renda_2043.102_pct   3.37440869e+01
+      final_30mil gini_0.05_renda_2043.102_ci_lower   2.62738183e+01
+      final_30mil gini_0.05_renda_2043.102_ci_upper   4.16562913e+01
+      final_30mil        gini_0.05_renda_2043.102_p   2.60136208e-22
+      final_30mil            freq_15a17_delta_5_pct  -8.63451190e+00
+      final_30mil       freq_15a17_delta_5_ci_lower  -1.18604864e+01
+      final_30mil       freq_15a17_delta_5_ci_upper  -5.29046423e+00
+      final_30mil              freq_15a17_delta_5_p   9.51402028e-07
+      final_30mil         distorcao_em_delta_10_pct   1.55836195e+01
+      final_30mil    distorcao_em_delta_10_ci_lower   1.15378214e+01
+      final_30mil    distorcao_em_delta_10_ci_upper   1.97761702e+01
+      final_30mil           distorcao_em_delta_10_p   3.73842615e-15
+      final_30mil                   income_square_b  -9.98449722e-01
+      final_30mil                   income_square_F   1.18925261e+02
+      final_30mil                     interaction_F   6.45798150e+01
+     verification             rebuild_max_coef_diff   0.00000000e+00
+     verification           manual_coef_CI_max_diff   0.00000000e+00
+     verification        export_effect_pct_max_diff   9.76996262e-15
+     verification        gini_export_row_1_max_diff   1.77635684e-15
+     verification        gini_export_row_2_max_diff   5.32907052e-15
+     verification        gini_export_row_3_max_diff   5.32907052e-15
+     verification        gini_export_row_4_max_diff   7.10542736e-15
+     verification        gini_export_row_5_max_diff   7.10542736e-15
+           record                    Nova_Lima_IBGE   3.14480500e+06        Nova Lima MG
+           record                  Campos_homicides   1.00000000e+00 Campos do Jordão SP
+           record               Campos_undetermined   3.60000000e+01
+    sem_Nova_Lima                leverage_one_count   0.00000000e+00
+    sem_Nova_Lima                                 n   1.13200000e+03
+    sem_Nova_Lima                              rank   1.40000000e+01
+    sem_Nova_Lima                       df_residual   1.11800000e+03
+    sem_Nova_Lima                     zero_response   0.00000000e+00
+    sem_Nova_Lima                    NA_model_frame   0.00000000e+00
+    sem_Nova_Lima                        all_finite   1.00000000e+00
+    sem_Nova_Lima                                R2   5.63397295e-01
+    sem_Nova_Lima                       R2_adjusted   5.58320520e-01
+    sem_Nova_Lima                          F_global   1.10975417e+02
+    sem_Nova_Lima                        F_global_p  1.27787305e-190
+    sem_Nova_Lima                              SW_W   9.97889971e-01
+    sem_Nova_Lima                              SW_p   1.60505872e-01
+    sem_Nova_Lima                                BP   4.53265396e+01
+    sem_Nova_Lima                              BP_p   1.84583919e-05
+    sem_Nova_Lima         max_GVIF_adjusted_squared   7.57805816e+00
+    sem_Nova_Lima                           kappa_X   7.68756288e+03
+    sem_Nova_Lima                           max_hat   7.91555138e-02
+    sem_Nova_Lima                             PRESS   3.14743457e+02
+    sem_Nova_Lima                  1_PRESS_over_SST   5.51884110e-01
+    sem_Nova_Lima                 log_income_center   7.13363219e+00
+    sem_Nova_Lima                       gini_center   4.62564298e-01
+    sem_Nova_Lima       gini_0.05_renda_1383.47_pct   1.59444278e+01
+    sem_Nova_Lima  gini_0.05_renda_1383.47_ci_lower   1.07056663e+01
+    sem_Nova_Lima  gini_0.05_renda_1383.47_ci_upper   2.14310956e+01
+    sem_Nova_Lima         gini_0.05_renda_1383.47_p   4.89648175e-10
+    sem_Nova_Lima      gini_0.05_renda_2043.102_pct   3.47404600e+01
+    sem_Nova_Lima gini_0.05_renda_2043.102_ci_lower   2.70267018e+01
+    sem_Nova_Lima gini_0.05_renda_2043.102_ci_upper   4.29226400e+01
+    sem_Nova_Lima        gini_0.05_renda_2043.102_p   2.64828412e-22
+    sem_Nova_Lima            freq_15a17_delta_5_pct  -8.59684071e+00
+    sem_Nova_Lima       freq_15a17_delta_5_ci_lower  -1.18244789e+01
+    sem_Nova_Lima       freq_15a17_delta_5_ci_upper  -5.25105580e+00
+    sem_Nova_Lima              freq_15a17_delta_5_p   1.06750838e-06
+    sem_Nova_Lima         distorcao_em_delta_10_pct   1.56067053e+01
+    sem_Nova_Lima    distorcao_em_delta_10_ci_lower   1.15603045e+01
+    sem_Nova_Lima    distorcao_em_delta_10_ci_upper   1.97998730e+01
+    sem_Nova_Lima           distorcao_em_delta_10_p   3.42778641e-15
+    sem_Nova_Lima                   income_square_b  -9.82003815e-01
+    sem_Nova_Lima                   income_square_F   1.12116805e+02
+    sem_Nova_Lima                     interaction_F   6.41992811e+01
+       com_Campos                leverage_one_count   0.00000000e+00
+       com_Campos                                 n   1.13400000e+03
+       com_Campos                              rank   1.40000000e+01
+       com_Campos                       df_residual   1.12000000e+03
+       com_Campos                     zero_response   0.00000000e+00
+       com_Campos                    NA_model_frame   0.00000000e+00
+       com_Campos                        all_finite   1.00000000e+00
+       com_Campos                                R2   5.60590020e-01
+       com_Campos                       R2_adjusted   5.55489725e-01
+       com_Campos                          F_global   1.09913267e+02
+       com_Campos                        F_global_p  1.98461541e-189
+       com_Campos                              SW_W   9.95164033e-01
+       com_Campos                              SW_p   1.10367910e-03
+       com_Campos                                BP   4.22947082e+01
+       com_Campos                              BP_p   5.86096571e-05
+       com_Campos         max_GVIF_adjusted_squared   7.61476381e+00
+       com_Campos                           kappa_X   7.37230558e+03
+       com_Campos                           max_hat   1.47957795e-01
+       com_Campos                             PRESS   3.21928091e+02
+       com_Campos                  1_PRESS_over_SST   5.49193579e-01
+       com_Campos                 log_income_center   7.13494926e+00
+       com_Campos                       gini_center   4.62694919e-01
+       com_Campos       gini_0.05_renda_1383.47_pct   1.60739371e+01
+       com_Campos  gini_0.05_renda_1383.47_ci_lower   1.07832276e+01
+       com_Campos  gini_0.05_renda_1383.47_ci_upper   2.16173167e+01
+       com_Campos         gini_0.05_renda_1383.47_p   5.17597692e-10
+       com_Campos      gini_0.05_renda_2043.102_pct   3.42250499e+01
+       com_Campos gini_0.05_renda_2043.102_ci_lower   2.66532867e+01
+       com_Campos gini_0.05_renda_2043.102_ci_upper   4.22494788e+01
+       com_Campos        gini_0.05_renda_2043.102_p   2.14765414e-22
+       com_Campos            freq_15a17_delta_5_pct  -8.36196872e+00
+       com_Campos       freq_15a17_delta_5_ci_lower  -1.16293901e+01
+       com_Campos       freq_15a17_delta_5_ci_upper  -4.97373747e+00
+       com_Campos              freq_15a17_delta_5_p   2.66786062e-06
+       com_Campos         distorcao_em_delta_10_pct   1.55897438e+01
+       com_Campos    distorcao_em_delta_10_ci_lower   1.15017885e+01
+       com_Campos    distorcao_em_delta_10_ci_upper   1.98275745e+01
+       com_Campos           distorcao_em_delta_10_p   6.89887340e-15
+       com_Campos                   income_square_b  -9.97821081e-01
+       com_Campos                   income_square_F   1.16307222e+02
+       com_Campos                     interaction_F   6.42023287e+01
+      corte_20000                leverage_one_count   0.00000000e+00
+      corte_20000                                 n   1.70900000e+03
+      corte_20000                              rank   1.40000000e+01
+      corte_20000                       df_residual   1.69500000e+03
+      corte_20000                     zero_response   0.00000000e+00
+      corte_20000                    NA_model_frame   0.00000000e+00
+      corte_20000                        all_finite   1.00000000e+00
+      corte_20000                                R2   4.77814067e-01
+      corte_20000                       R2_adjusted   4.73809101e-01
+      corte_20000                          F_global   1.19305403e+02
+      corte_20000                        F_global_p  5.63021666e-228
+      corte_20000                              SW_W   9.88987577e-01
+      corte_20000                              SW_p   4.21726779e-10
+      corte_20000                                BP   7.51968551e+01
+      corte_20000                              BP_p   8.74880726e-11
+      corte_20000         max_GVIF_adjusted_squared   7.39215566e+00
+      corte_20000                           kappa_X   6.63346534e+03
+      corte_20000                           max_hat   1.18925590e-01
+      corte_20000                             PRESS   5.95180575e+02
+      corte_20000                  1_PRESS_over_SST   4.67427489e-01
+      corte_20000                 log_income_center   7.06747396e+00
+      corte_20000                       gini_center   4.58052207e-01
+      corte_20000       gini_0.05_renda_1383.47_pct   1.69202649e+01
+      corte_20000  gini_0.05_renda_1383.47_ci_lower   1.22890522e+01
+      corte_20000  gini_0.05_renda_1383.47_ci_upper   2.17424858e+01
+      corte_20000         gini_0.05_renda_1383.47_p   5.39848507e-14
+      corte_20000      gini_0.05_renda_2043.102_pct   3.35520223e+01
+      corte_20000 gini_0.05_renda_2043.102_ci_lower   2.65972050e+01
+      corte_20000 gini_0.05_renda_2043.102_ci_upper   4.08889135e+01
+      corte_20000        gini_0.05_renda_2043.102_p   1.64571375e-25
+      corte_20000            freq_15a17_delta_5_pct  -7.87841860e+00
+      corte_20000       freq_15a17_delta_5_ci_lower  -1.04796725e+01
+      corte_20000       freq_15a17_delta_5_ci_upper  -5.20157831e+00
+      corte_20000              freq_15a17_delta_5_p   2.23963949e-08
+      corte_20000         distorcao_em_delta_10_pct   9.61959109e+00
+      corte_20000    distorcao_em_delta_10_ci_lower   6.33279687e+00
+      corte_20000    distorcao_em_delta_10_ci_upper   1.30079816e+01
+      corte_20000           distorcao_em_delta_10_p   3.94617759e-09
+      corte_20000                   income_square_b  -9.51061979e-01
+      corte_20000                   income_square_F   1.33881677e+02
+      corte_20000                     interaction_F   7.76761365e+01
+      corte_30000                leverage_one_count   0.00000000e+00
+      corte_30000                                 n   1.13300000e+03
+      corte_30000                              rank   1.40000000e+01
+      corte_30000                       df_residual   1.11900000e+03
+      corte_30000                     zero_response   0.00000000e+00
+      corte_30000                    NA_model_frame   0.00000000e+00
+      corte_30000                        all_finite   1.00000000e+00
+      corte_30000                                R2   5.63549256e-01
+      corte_30000                       R2_adjusted   5.58478782e-01
+      corte_30000                          F_global   1.11143323e+02
+      corte_30000                        F_global_p  6.99368734e-191
+      corte_30000                              SW_W   9.97907905e-01
+      corte_30000                              SW_p   1.65233468e-01
+      corte_30000                                BP   4.59683109e+01
+      corte_30000                              BP_p   1.44117370e-05
+      corte_30000         max_GVIF_adjusted_squared   7.61278215e+00
+      corte_30000                           kappa_X   7.36976578e+03
+      corte_30000                           max_hat   1.47975655e-01
+      corte_30000                             PRESS   3.15040615e+02
+      corte_30000                  1_PRESS_over_SST   5.52109109e-01
+      corte_30000                 log_income_center   7.13472020e+00
+      corte_30000                       gini_center   4.62731141e-01
+      corte_30000       gini_0.05_renda_1383.47_pct   1.57835770e+01
+      corte_30000  gini_0.05_renda_1383.47_ci_lower   1.05587969e+01
+      corte_30000  gini_0.05_renda_1383.47_ci_upper   2.12552695e+01
+      corte_30000         gini_0.05_renda_1383.47_p   6.70082157e-10
+      corte_30000      gini_0.05_renda_2043.102_pct   3.37440869e+01
+      corte_30000 gini_0.05_renda_2043.102_ci_lower   2.62738183e+01
+      corte_30000 gini_0.05_renda_2043.102_ci_upper   4.16562913e+01
+      corte_30000        gini_0.05_renda_2043.102_p   2.60136208e-22
+      corte_30000            freq_15a17_delta_5_pct  -8.63451190e+00
+      corte_30000       freq_15a17_delta_5_ci_lower  -1.18604864e+01
+      corte_30000       freq_15a17_delta_5_ci_upper  -5.29046423e+00
+      corte_30000              freq_15a17_delta_5_p   9.51402028e-07
+      corte_30000         distorcao_em_delta_10_pct   1.55836195e+01
+      corte_30000    distorcao_em_delta_10_ci_lower   1.15378214e+01
+      corte_30000    distorcao_em_delta_10_ci_upper   1.97761702e+01
+      corte_30000           distorcao_em_delta_10_p   3.73842615e-15
+      corte_30000                   income_square_b  -9.98449722e-01
+      corte_30000                   income_square_F   1.18925261e+02
+      corte_30000                     interaction_F   6.45798150e+01
+      corte_50000                leverage_one_count   0.00000000e+00
+      corte_50000                                 n   6.57000000e+02
+      corte_50000                              rank   1.40000000e+01
+      corte_50000                       df_residual   6.43000000e+02
+      corte_50000                     zero_response   0.00000000e+00
+      corte_50000                    NA_model_frame   0.00000000e+00
+      corte_50000                        all_finite   1.00000000e+00
+      corte_50000                                R2   6.11397911e-01
+      corte_50000                       R2_adjusted   6.03541259e-01
+      corte_50000                          F_global   7.78191425e+01
+      corte_50000                        F_global_p  1.62060892e-122
+      corte_50000                              SW_W   9.98020516e-01
+      corte_50000                              SW_p   6.51353233e-01
+      corte_50000                                BP   2.57334338e+01
+      corte_50000                              BP_p   1.84568899e-02
+      corte_50000         max_GVIF_adjusted_squared   8.39925398e+00
+      corte_50000                           kappa_X   8.16228995e+03
+      corte_50000                           max_hat   1.92458299e-01
+      corte_50000                             PRESS   1.63056136e+02
+      corte_50000                  1_PRESS_over_SST   5.93470932e-01
+      corte_50000                 log_income_center   7.24161391e+00
+      corte_50000                       gini_center   4.69228670e-01
+      corte_50000       gini_0.05_renda_1383.47_pct   9.50014861e+00
+      corte_50000  gini_0.05_renda_1383.47_ci_lower   2.81537133e+00
+      corte_50000  gini_0.05_renda_1383.47_ci_upper   1.66195520e+01
+      corte_50000         gini_0.05_renda_1383.47_p   4.81216953e-03
+      corte_50000      gini_0.05_renda_2043.102_pct   2.50967313e+01
+      corte_50000 gini_0.05_renda_2043.102_ci_lower   1.60874042e+01
+      corte_50000 gini_0.05_renda_2043.102_ci_upper   3.48052555e+01
+      corte_50000        gini_0.05_renda_2043.102_p   6.49277884e-09
+      corte_50000            freq_15a17_delta_5_pct  -6.94965393e+00
+      corte_50000       freq_15a17_delta_5_ci_lower  -1.16177459e+01
+      corte_50000       freq_15a17_delta_5_ci_upper  -2.03500703e+00
+      corte_50000              freq_15a17_delta_5_p   6.16299015e-03
+      corte_50000         distorcao_em_delta_10_pct   1.88522156e+01
+      corte_50000    distorcao_em_delta_10_ci_lower   1.33300480e+01
+      corte_50000    distorcao_em_delta_10_ci_upper   2.46434587e+01
+      corte_50000           distorcao_em_delta_10_p   2.73701668e-12
+      corte_50000                   income_square_b  -8.11384634e-01
+      corte_50000                   income_square_F   3.74908638e+01
+      corte_50000                     interaction_F   3.09271692e+01
+      corte_1e+05                leverage_one_count   0.00000000e+00
+      corte_1e+05                                 n   3.19000000e+02
+      corte_1e+05                              rank   1.40000000e+01
+      corte_1e+05                       df_residual   3.05000000e+02
+      corte_1e+05                     zero_response   0.00000000e+00
+      corte_1e+05                    NA_model_frame   0.00000000e+00
+      corte_1e+05                        all_finite   1.00000000e+00
+      corte_1e+05                                R2   6.49624146e-01
+      corte_1e+05                       R2_adjusted   6.34690093e-01
+      corte_1e+05                          F_global   4.34995212e+01
+      corte_1e+05                        F_global_p   1.31389669e-61
+      corte_1e+05                              SW_W   9.96550878e-01
+      corte_1e+05                              SW_p   7.24776150e-01
+      corte_1e+05                                BP   2.48737289e+01
+      corte_1e+05                              BP_p   2.39812981e-02
+      corte_1e+05         max_GVIF_adjusted_squared   9.22414724e+00
+      corte_1e+05                           kappa_X   9.87262535e+03
+      corte_1e+05                           max_hat   3.18640706e-01
+      corte_1e+05                             PRESS   7.86980048e+01
+      corte_1e+05                  1_PRESS_over_SST   6.13651025e-01
+      corte_1e+05                 log_income_center   7.36679254e+00
+      corte_1e+05                       gini_center   4.77032993e-01
+      corte_1e+05       gini_0.05_renda_1383.47_pct   1.40814408e+01
+      corte_1e+05  gini_0.05_renda_1383.47_ci_lower   1.66282907e+00
+      corte_1e+05  gini_0.05_renda_1383.47_ci_upper   2.80170468e+01
+      corte_1e+05         gini_0.05_renda_1383.47_p   2.52035973e-02
+      corte_1e+05      gini_0.05_renda_2043.102_pct   2.68555507e+01
+      corte_1e+05 gini_0.05_renda_2043.102_ci_lower   1.39352429e+01
+      corte_1e+05 gini_0.05_renda_2043.102_ci_upper   4.12410271e+01
+      corte_1e+05        gini_0.05_renda_2043.102_p   1.79882117e-05
+      corte_1e+05            freq_15a17_delta_5_pct  -7.10957205e+00
+      corte_1e+05       freq_15a17_delta_5_ci_lower  -1.49390091e+01
+      corte_1e+05       freq_15a17_delta_5_ci_upper   1.44052538e+00
+      corte_1e+05              freq_15a17_delta_5_p   1.00353046e-01
+      corte_1e+05         distorcao_em_delta_10_pct   2.84319626e+01
+      corte_1e+05    distorcao_em_delta_10_ci_lower   1.95469271e+01
+      corte_1e+05    distorcao_em_delta_10_ci_upper   3.79773569e+01
+      corte_1e+05           distorcao_em_delta_10_p   3.65132527e-11
+      corte_1e+05                   income_square_b  -9.13617517e-01
+      corte_1e+05                   income_square_F   1.28131113e+01
+      corte_1e+05                     interaction_F   7.50882752e+00
+     estado_30mil                leverage_one_count   1.00000000e+00            Brasília
+     estado_30mil                                 n   1.13300000e+03
+     estado_30mil                              rank   3.60000000e+01
+     estado_30mil                       df_residual   1.09700000e+03
+     estado_30mil                     zero_response   0.00000000e+00
+     estado_30mil                    NA_model_frame   0.00000000e+00
+     estado_30mil                        all_finite   1.00000000e+00
+     estado_30mil                                R2   6.48997228e-01
+     estado_30mil                       R2_adjusted   6.37798416e-01
+     estado_30mil                          F_global   5.79523270e+01
+     estado_30mil                        F_global_p  7.74210665e-222
+     estado_30mil                              SW_W   9.93368226e-01
+     estado_30mil                              SW_p   6.08798948e-05
+     estado_30mil                                BP   7.57939933e+01
+     estado_30mil                              BP_p   7.77484196e-05
+     estado_30mil         max_GVIF_adjusted_squared   1.05971339e+01
+     estado_30mil                           kappa_X   7.91150022e+03
+     estado_30mil                           max_hat   1.00000000e+00
+     estado_30mil                             PRESS               NA
+     estado_30mil                  1_PRESS_over_SST               NA
+     estado_30mil                 log_income_center   7.13472020e+00
+     estado_30mil                       gini_center   4.62731141e-01
+     estado_30mil       gini_0.05_renda_1383.47_pct   6.39424457e+00
+     estado_30mil  gini_0.05_renda_1383.47_ci_lower   1.69048159e+00
+     estado_30mil  gini_0.05_renda_1383.47_ci_upper   1.13155833e+01
+     estado_30mil         gini_0.05_renda_1383.47_p   7.26348058e-03
+     estado_30mil      gini_0.05_renda_2043.102_pct   1.78062484e+01
+     estado_30mil gini_0.05_renda_2043.102_ci_lower   1.12658126e+01
+     estado_30mil gini_0.05_renda_2043.102_ci_upper   2.47311445e+01
+     estado_30mil        gini_0.05_renda_2043.102_p   2.29817794e-08
+     estado_30mil            freq_15a17_delta_5_pct  -6.91590510e+00
+     estado_30mil       freq_15a17_delta_5_ci_lower  -1.00111890e+01
+     estado_30mil       freq_15a17_delta_5_ci_upper  -3.71415488e+00
+     estado_30mil              freq_15a17_delta_5_p   3.45882881e-05
+     estado_30mil         distorcao_em_delta_10_pct   1.02021006e+01
+     estado_30mil    distorcao_em_delta_10_ci_lower   4.50060532e+00
+     estado_30mil    distorcao_em_delta_10_ci_upper   1.62146663e+01
+     estado_30mil           distorcao_em_delta_10_p   3.47755232e-04
+     estado_30mil                   income_square_b  -7.00815605e-01
+     estado_30mil                   income_square_F   5.84464074e+01
+     estado_30mil                     interaction_F   3.42360266e+01
+     estado_30mil           F_partial_beyond_region   1.21387834e+01
+     estado_30mil                       F_partial_p   8.40926663e-39
+     estado_30mil                  extra_parameters   2.20000000e+01
+     estado_30mil                   states_under_10   5.00000000e+00
+      final_30mil                  F_partial_income   7.44852038e+01
+      final_30mil                F_partial_income_p   6.30432989e-44
+  block_partial_F                                 2   4.10658077e+01
+  block_partial_p                                 2   2.16446688e-10
+  block_partial_F                                 3   6.79760006e+01
+  block_partial_p                                 3   2.20623250e-40
+  block_partial_F                                 4   6.59389166e+01
+  block_partial_p                                 4   4.03332060e-50
+  block_partial_F                                 5   6.45798150e+01
+  block_partial_p                                 5   2.33835647e-15
+     verification        PRESS_direct_leave_one_out   3.15040615e+02
+     verification          PRESS_identity_max_error   7.37743200e-14
+ boxcox_auxiliary                        lambda_max   2.10000000e-01
+ boxcox_auxiliary                          ci_lower   1.50000000e-01
+ boxcox_auxiliary                          ci_upper   2.60000000e-01
+ boxcox_auxiliary                    log_zero_in_ci   0.00000000e+00
+     boxcox_final                        lambda_max   1.74000000e-01
+     boxcox_final                          ci_lower   1.17000000e-01
+     boxcox_final                          ci_upper   2.32000000e-01
+     boxcox_final                    log_zero_in_ci   0.00000000e+00
+     verification                EDA_model_same_ids   1.00000000e+00
+     verification                       EDA_scope_n   1.13300000e+03
+
+Registros reais examinados:
+ cod_ibge municipio uf    pop     taxa rend_pc_media
+  3144805 Nova Lima MG 111697 6.863807       4299.91
+ cod_ibge        municipio uf   pop hom intencao_indeterminada
+  3509700 Campos do Jordão SP 46974   1                     36
+
+Coeficientes finais:
+              termo              b            ep            t              p         ic_inf         ic_sup
+        (Intercept)  3.02127064803 0.33733840355   8.95620130 1.37193779e-18  2.35938361069  3.68315768537
+             rend_c -0.86098214529 0.10133946100  -8.49602057 6.18001488e-17 -1.05981890654 -0.66214538404
+            rend_c2 -0.99844972173 0.09155649194 -10.90528591 2.19012415e-26 -1.17809145406 -0.81880798940
+             gini_c  2.20883042878 0.48103137571   4.59186353 4.89049830e-06  1.26500538904  3.15265546851
+            desocup -0.01825049057 0.00793980143  -2.29860793 2.17108508e-02 -0.03382906566 -0.00267191549
+         pct_urbana  0.01115044621 0.00162054180   6.88069028 9.89530055e-12  0.00797080346  0.01433008897
+         freq_15a17 -0.01806047414 0.00366414827  -4.92896925 9.51402028e-07 -0.02524984902 -0.01087109926
+       distorcao_em  0.01448240601 0.00181595010   7.97511232 3.73842615e-15  0.01091935532  0.01804545670
+    pct_migr_10anos  0.00406238394 0.00277387576   1.46451546 1.43334038e-01 -0.00138019950  0.00950496737
+        regiaoNorte  0.58031352096 0.08184568452   7.09033744 2.36584056e-12  0.41972523017  0.74090181175
+     regiaoNordeste  0.73089221600 0.06105585552  11.97087830 3.68558896e-31  0.61109536247  0.85068906954
+ regiaoCentro-Oeste  0.60349440875 0.07048277275   8.56229665 3.60907476e-17  0.46520113070  0.74178768679
+          regiaoSul  0.51498763900 0.05496702304   9.36902911 3.90401054e-20  0.40713759985  0.62283767816
+      rend_c:gini_c  7.39753314814 0.92053121883   8.03615673 2.33835647e-15  5.59137151696  9.20369477931
+
+F parcial por blocos:
+Analysis of Variance Table
+
+Model 1: ly ~ rend_c + rend_c2 + gini_c + desocup
+Model 2: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana
+Model 3: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos
+Model 4: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao
+Model 5: ly ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 +
+    distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
+  Res.Df    RSS Df Sum of Sq      F    Pr(>F)
+1   1128 464.28
+2   1127 453.02  1    11.266 41.066 2.164e-10 ***
+3   1124 397.07  3    55.947 67.976 < 2.2e-16 ***
+4   1120 324.71  4    72.360 65.939 < 2.2e-16 ***
+5   1119 306.99  1    17.717 64.580 2.338e-15 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Covariância Gini/interação, amostra final:
+                  gini_c rend_c:gini_c
+gini_c         0.2313912    -0.0918418
+rend_c:gini_c -0.0918418     0.8473777

@@ -67,7 +67,7 @@ m_y <- lm(update(f_base, y ~ .), data = d)
 
 # Box-Cox exige resposta positiva: no escopo do modelo não há município com taxa zero
 stopifnot(all(d$y > 0))
-bc <- boxcox(lm(update(f_base, y ~ .), data = d), lambda = seq(-0.5, 1.2, 0.01), plotit = FALSE)
+bc <- boxcox(lm(update(f_base, y ~ .), data = d, y = TRUE, qr = TRUE), lambda = seq(-0.5, 1.2, 0.01), plotit = FALSE)
 lambda <- bc$x[which.max(bc$y)]
 lambda_ic <- range(bc$x[bc$y > max(bc$y) - qchisq(0.95, 1) / 2])     # IC 95% para lambda
 
@@ -94,7 +94,7 @@ d$rend_c  <- d$log_rend - mean(d$log_rend)
 d$rend_c2 <- d$rend_c^2
 cor_quad <- c(sem_centrar = cor(d$log_rend, d$log_rend^2), centrado = cor(d$rend_c, d$rend_c2))
 
-# O Gini também é centralizado, por causa do termo Gini x renda: o coeficiente do Gini vale na renda média,
+# O Gini também é centralizado, por causa do termo Gini x renda: o coeficiente do Gini vale em ln(renda) médio,
 # e os da renda valem no Gini médio
 d$gini_c <- d$gini - mean(d$gini)
 
@@ -136,7 +136,7 @@ coefs <- data.frame(termo = rownames(sf_$coefficients), sf_$coefficients, ic, ro
 names(coefs) <- c("termo", "b", "ep", "t", "p", "ic_inf", "ic_sup")
 write.csv(coefs, "resultados/modelagem/coeficientes.csv", row.names = FALSE)
 
-# Renda em que a taxa esperada é máxima, no Gini médio: derivada b1 + 2 b2 rend_c = 0
+# Renda em que a taxa típica ajustada é máxima, no Gini médio: derivada b1 + 2 b2 rend_c = 0
 b <- coef(final)
 pico_renda <- exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"]))
 
@@ -168,7 +168,7 @@ gini_renda <- data.frame(percentil = c(10, 25, 50, 75, 90),
 write.csv(gini_renda, "resultados/modelagem/efeito_gini_renda.csv", row.names = FALSE)
 renda_gini_zero <- unname(exp(mean(d$log_rend) - b["gini_c"] / b["rend_c:gini_c"]))     # renda em que o efeito do Gini é zero
 
-# Gráfico de efeito da renda: taxa prevista (IC 95%) ao longo da renda, demais variáveis na média (Gini médio).
+# Gráfico de efeito da renda: taxa típica ajustada (IC 95%) ao longo da renda, demais variáveis na média (Gini médio).
 # Uma curva para o Nordeste e outra para o Sudeste, cada uma só na faixa de renda observada na região (sem extrapolar).
 grade <- do.call(rbind, lapply(c("Nordeste", "Sudeste"), function(rg) {
   lr <- d$log_rend[d$regiao == rg]
@@ -194,7 +194,7 @@ com_sem <- data.frame(termo = termos, b_com = b[termos], p_com = sf_$coefficient
 write.csv(com_sem, "resultados/modelagem/com_sem_renda.csv", row.names = FALSE)
 
 # -----------------------------------------------------------------------------
-# 5.2 Região x estado: os dois modelos lado a lado (escolha em aberto; os resultados usam a região)
+# 5.2 Região x estado: região mantida no modelo final; estado como comparação complementar
 # -----------------------------------------------------------------------------
 d$uf <- relevel(factor(d$uf), ref = "SP")
 com_estado <- update(final, . ~ . - regiao + uf)      # estado (26 indicadoras) no lugar da região
@@ -284,7 +284,7 @@ p <- ggplot(d, aes(sample = rstandard(final))) + stat_qq(size = .5, alpha = .3, 
   stat_qq_line(colour = VERMELHO) + labs(x = "Quantis teóricos (dist. normal)", y = "Quantis amostrais") + th
 ggsave("resultados/modelagem/m5b_qq_final.png", p, width = 3.2, height = 2.6, dpi = 220)
 
-# M7. Efeito da renda previsto pelo modelo, no Nordeste e no Sudeste (IC 95% da resposta esperada)
+# M7. Efeito da renda previsto pelo modelo, no Nordeste e no Sudeste (IC 95% da taxa típica ajustada)
 p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = CLARO, alpha = .7) +
   geom_line(aes(colour = regiao), linewidth = 1) +
@@ -293,7 +293,7 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   annotate("text", x = pico_renda * 1.05, y = max(grade$hi), hjust = 0, vjust = 1, size = 3.5, colour = VERMELHO,
            label = paste0("pico: R$ ", milhar(round(pico_renda)))) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Taxa prevista (/100 mil)") + th + theme(legend.position = "bottom")
+  labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada (/100 mil)") + th + theme(legend.position = "bottom")
 ggsave("resultados/modelagem/m7_efeito_renda.png", p, width = 4.8, height = 3.0, dpi = 250)
 
 # M8. Efeito de +0,05 no Gini ao longo da renda (IC 95%)
@@ -332,7 +332,7 @@ cat("\nR² e R² ajustado por bloco:\n"); print(comp, digits = 4, row.names = FA
 cat("\n== 5. Modelo final (E) ==\n"); print(sf_)
 cat("Intervalos de confiança 95%:\n"); print(round(ic, 4))
 cat("\nVIF do modelo final:\n"); print(round(vif_final, 2))
-cat(sprintf("Renda per capita do pico da taxa esperada (no Gini médio): R$ %.0f\n", pico_renda))
+cat(sprintf("Renda per capita do pico da taxa típica ajustada (no Gini médio): R$ %.0f\n", pico_renda))
 cat(sprintf("\nEfeito de +0,05 no Gini conforme a renda (zero em R$ %.0f; %.0f%% dos municípios abaixo):\n",
             renda_gini_zero, 100 * mean(d$rend_pc_media < renda_gini_zero)))
 print(gini_renda, digits = 3, row.names = FALSE)

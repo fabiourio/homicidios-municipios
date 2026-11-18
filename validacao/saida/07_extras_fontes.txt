@@ -1,0 +1,45 @@
+
+ZIP: TDI_2022_MUNICIPIOS.zip
+Notas/cabecalho:
+Taxa de Distorção Idade-Série por Município - 2022
+Taxa de Distorção Idade-Série, por Dependência Administrativa e Localização, nos Níveis de Ensino Fundamental e Médio - Municípios - 2022
+Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira
+Fonte Total/Total: 5570 linhas; chaves duplicadas: 0 ; codigos ausentes: 0
+distorcao_em entrega: n=5570; NA=7; divergencias=0; maior_diff=0
+distorcao_em candidatas: n=5570; NA=7; divergencias=0; maior_diff=0
+                municipio uf  pop valor_bruto
+         Chapada de Areia TO 1501          --
+ Monte Santo do Tocantins TO 2396          --
+                Flexeiras AL 9618          --
+          Jequiá da Praia AL 9470          --
+                  Roteiro AL 6474          --
+         Serra da Saudade MG  833          --
+       São Pedro da Serra RS 3548          --
+
+ZIP: tx_rend_municipios_2022.zip
+Notas/cabecalho:
+Taxas de Rendimento Escolar por município - 2022
+Taxas de Rendimento Escolar (Aprovação, Reprovação e Abandono), segundo a Localização e a Dependência Administrativa, nos Níveis de Ensino Fundamental e Médio por série, segundo os municípios - 2022
+Instituto Nacional de Estudos e Pesquisas Educacionais Anísio Teixeira
+Taxa de Aprovação
+Taxa de Reprovação
+Taxa de Abandono
+Fonte Total/Total: 5570 linhas; chaves duplicadas: 0 ; codigos ausentes: 0
+abandono_em entrega: n=5570; NA=7; divergencias=0; maior_diff=0
+abandono_em candidatas: n=5570; NA=7; divergencias=0; maior_diff=0
+                municipio uf  pop valor_bruto
+         Chapada de Areia TO 1501          --
+ Monte Santo do Tocantins TO 2396          --
+                Flexeiras AL 9618          --
+          Jequiá da Praia AL 9470          --
+                  Roteiro AL 6474          --
+         Serra da Saudade MG  833          --
+       São Pedro da Serra RS 3548          --
+Frequencia grupo 2792 : duplicados 0 ; codigos ausentes 0
+freq 2792: n=5570; NA=0; divergencias=0; maior_diff=0
+Frequencia grupo 100052 : duplicados 0 ; codigos ausentes 0
+freq 100052: n=5570; NA=0; divergencias=0; maior_diff=0
+Migracao: duplicados 0 ; codigos ausentes 0 ; unidades Pessoas
+pct_migr_10anos entrega: n=5570; NA=0; divergencias=0; maior_diff=5.151435e-14
+pct_migr_10anos candidatas: n=5570; NA=0; divergencias=0; maior_diff=5.151435e-14
+FIM: comparacoes validas = 8 x 5570 = 44560 celulas.

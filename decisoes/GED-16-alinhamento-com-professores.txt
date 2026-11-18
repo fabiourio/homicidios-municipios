@@ -1,0 +1,244 @@
+Speaker 1: Não, isso não é isso.
+Speaker 2:  Mas sugestões do Wispr Flow.
+Speaker 1:  Eu peguei algumas delas.
+Speaker 2:  Aquelas... aquelas acabaram sendo boas, então foram de fato decisões tomadas logo em seguida. A gente juntou aqui em um markdown porque foi bastante coisa realmente ali, mas basicamente as decisões tomadas e os efeitos a gente fala depois.
+Speaker 1:  Homicídio.
+Speaker 3:  Violência, homicídio, né?
+Speaker 2:  Isso, homicídio a cada 100.000 habitantes. Então, basicamente, acho que primeiro aqui o que a gente tinha pra falar é: antes de qualquer outra daquelas recomendações, a gente mudou o recorte pra 30.000 habitantes porque a gente tava tendo muito problema com a questão da população naquele desvio padrão que tava muito alto.
+Speaker 1:  Pra mim era a densidade, tava com desvio padrão muito alto, entende? Tinha 8 habitantes por km2 e região com 100.
+Speaker 2:  100, 102.
+Speaker 1:  E aí o recorte de vocês foi...
+Speaker 2:  Aí a gente... a gente tinha cortado em 20.000 habitantes, tá vendo?
+Speaker 1:  A partir de.
+Speaker 2:  A partir de. A gente foi analisando se a gente cortasse com 25, com 30, com 35, com 40, e a gente viu que 30 era um ponto melhor, que era onde tinha... basicamente um pico no R2 onde a gente tava ajustado, ele fazia um pico. A partir dele, né?
+Speaker 2:  Era 0,4, 0,4 e pouco, 0,5. Aí a partir disso, 0,5, 0,5.
+Speaker 1:  Tá. E não limitou superiormente?
+Speaker 2:  Não. Aí a gente limitou em 30.000, e aí depois que a gente limitou em 30.000, a gente viu que a densidade parava de ser significativa. Então aí acabou que a gente resolveu duas em uma só, né?
+Speaker 2:  Tirou a densidade, que tava com problema dos desvios muito altos também. A gente não quis fazer cortar a desigualdade nos dois... nos dois lados, porque ia tirar provavelmente São Paulo, cidades que a gente tem dados muito confiáveis.
+Speaker 3:  A gente entra no plano dos erros que estariam ficando fora da normalidade por isso, porque é muito mais relevante um homicídio em um município com 30.000 habitantes do que um homicídio com 100.000, 200.000. Então isso ajuda também a normalizar os dados, os erros.
+Speaker 2:  E daí teve a questão de que fazer o recorte em 30.000 habitantes também permitiu a gente tirar completamente a densidade. A densidade parou de explicar o... parou de explicar a quantidade de homicídios.
+Speaker 1:  Até porque, de certa forma, sim, não é que uniformizou, né? Mas você tirou aquelas que eram mais esquisitas.
+Speaker 2:  É, mas é o flair pra baixo, inclusive, né? Então, realmente. Daí uma das recomendações que foi colocar região e não estado, que a gente precisa discutir depois, inclusive, né?
+Speaker 2:  Mas vamos.
+Speaker 1:  Pode falar já.
+Speaker 3:  Pode falar.
+Speaker 2:  Ok.
+Speaker 1:  É que a gente tinha feito primeiro com estado. A gente tinha analisado já que entre região, utilizar regiões norte, nordeste, centro-oeste, e utilizar os estados. E por estado tinha ficado muito melhor.
+Speaker 4:  Ah, ficou melhor?
+Speaker 2:  É, por estado tinha ficado melhor.
+Speaker 1:  Apesar de ter 27 mais variáveis explicativas, né?
+Speaker 4:  É só que é muito difícil de fazer as comparações, né? Porque você tava colocando a DAMES e ia ter que fazer a comparação de cada uma com relação ao baseline, que era São Paulo o baseline de vocês, né?
+Speaker 1:  Era São Paulo, né?
+Speaker 2:  Sim, sim, sim.
+Speaker 1:  Mas é, então mantém estado, região.
+Speaker 4:  Não sei, melhorou quanto?
+Speaker 1:  A gente tinha melhorado o último.
+Speaker 3:  A gente já fez outras melhorias no modelo, as análises que a gente fez no começo, mas quando o R tava em tipo 0,4, ele subia pra tipo 0,05, mais de 0,5.
+Speaker 1:  Ah, mas isso ganha muito, porque você vai perder muito na.
+Speaker 4:  Não poder de explicação, né? Assim, o R2.
+Speaker 1:  Ah, 0,80, e se o resto das análises, dos diagnósticos, tivesse ficado bom também, aí a gente não ficaria sem voltar pra estado, né, Denise?
+Speaker 4:  É, porque pensa, é muito... é muito difícil de explicar esse modelo, então às vezes você ganha perdendo.
+Speaker 1:  Ele generaliza mais, né? O que você quer dizer?
+Speaker 4:  É, você consegue contar uma história melhor do que... porque o teu objetivo não é fazer uma previsão no fim das contas, né? E de certa forma, enfim, as regiões, elas são... elas não são uniformes, mas as regiões elas têm características comuns, né? Os estados que estão numa região.
+Speaker 1:  Tem muita observação?
+Speaker 2:  Como assim?
+Speaker 3:  São mil municípios, né?
+Speaker 1:  Mil municípios.
+Speaker 2:  É, o topo de 1.600.
+Speaker 1:  Só tem 1.600 municípios.
+Speaker 4:  É, dá pra deixar o estado, só que assim, aí o baseline é São Paulo.
+Speaker 1:  Então aí dá pra.
+Speaker 4:  Depende, dá pra.
+Speaker 1:  Fica mais.
+Speaker 4:  Em termos de modelagem dá, mas em termos de explicar, depende do que eles querem explicar.
+Speaker 1:  Mas aí também, mas quando eu penso em também deixar em região, aí agora eu vou ficar comparando norte com sul, já também não é tão perto, próximo, tão... não sei.
+Speaker 2:  Acho que é melhor do que comparar Amazonas e Rio Grande do Sul. Acho que faz menos sentido comparar Amazonas e Rio Grande do Sul do que norte com sul.
+Speaker 4:  Norte e nordeste, mas porque é questão de políticas públicas, né? Ok, tem as polícias estaduais.
+Speaker 1:  Estaduais.
+Speaker 4:  Cara, entendeu? É o que vocês querem responder.
+Speaker 1:  Quando você decide, assim, se vai deixar a nível estado ou vai deixar a nível regional, é mais isso: no que eu vou usar o modelo? Eu preciso dele na prática pra mostrar a diferença entre os estados ou a diferença entre regionais?
+Speaker 4:  É diferente pergunta. Por exemplo, essa questão, né, do aumento de... ou migração, né, de organizações criminosas do sudeste pro norte e nordeste, que expandiu muito nos últimos anos. Se você olhar por estado, talvez isso fique mais físico.
+Speaker 4:  Mas por região ele já explica: olha, as regiões norte e nordeste não têm diferença, por exemplo.
+Speaker 2:  É, a gente só não tem esse dado das facções.
+Speaker 1:  Que bom.
+Speaker 2:  No modelo.
+Speaker 1:  Então não vai ser explicado muito nunca.
+Speaker 2:  O senso não faz isso.
+Speaker 4:  Não, então eu tô falando da facção especificamente, mas dá pra ver homicídio, entendeu? Então...
+Speaker 2:  Mas eu digo, a gente não tem nenhuma variável explicativa que remeta a facção.
+Speaker 4:  Não, não, eu tô falando, por exemplo, se fosse, entendeu? Então a escolha entre estado e região vai depender da história que vocês querem contar. Lembra que só assim, tenham em mente que se vocês colocam estado, vocês estão fazendo todas as comparações um a um com São Paulo.
+Speaker 4:  E aí, enfim.
+Speaker 1:  Com São Paulo, fim.
+Speaker 4:  É, é isso. Não tem outra coisa. Mas é, pra vocês pensarem, não tem uma solução certa ou errada.
+Speaker 4:  São diferentes opções de modelagem, são escolhas, né? Mas vamos lá.
+Speaker 2:  Depois a gente vai voltar nesse ponto.
+Speaker 1:  Tá.
+Speaker 3:  Com essas melhorias que a gente fez aí, a gente conseguiu um VIF abaixo de 10 pra renda, que tinha alguns problemas.
+Speaker 2:  É porque os... ah, não, vou pôr aqui.
+Speaker 3:  A gente conseguiu um VIF abaixo de 10 aí pra renda, e também a gente verificou que mesmo com aquele VIF alto de 12,7, ele ainda... ele ainda, tipo, adicionava uns 5% no R2. Então, tipo, mesmo não abaixando o VIF, a gente provavelmente manteria. Mas agora, pra estar abaixo de 10, ainda explicava o modelo, a gente decidiu manter renda.
+Speaker 1:  Uma coisa sobre o modelo, é porque da última vez que a gente, tipo, tinha um VIF muito alto, mesmo com a gente centralizando o termogramático. E aí uma coisa que a gente analisou foi tentar ver quais variáveis estavam muito relacionadas. E acontece que a renda era muito explicada pela região.
+Speaker 1:  E aí uma ideia que a gente teve, que a gente analisou e parece que funciona bem.
+Speaker 4:  Renda por campo, tá?
+Speaker 1:  Isso.
+Speaker 2:  Isso.
+Speaker 1:  É separar o parâmetro da renda de, em vez de um só, a gente usa um pra cada região. Um parâmetro da renda pra cada região, centraliza em cada uma das regiões, e aí a gente meio que desacopla um pouco.
+Speaker 4:  Eu não entendi o que é isso.
+Speaker 1:  O que é um pra cada região? Criar um parâmetro pra cada região?
+Speaker 2:  Isso, um parâmetro pra cada região, e centraliza cada uma dos parâmetros na média da região só. O estado, nordeste, sudeste, é isso?
+Speaker 1:  Mas quando você fala centraliza, você tá criando uma indicadora... não, já não tá na combinação, vocês estão por região, já tem uma variável que é a região.
+Speaker 2:  Sim.
+Speaker 1:  E aí agora você tá vindo com.
+Speaker 4:  Uma outra coluna renda.
+Speaker 1:  Outra coluna renda.
+Speaker 2:  Sim, é, a gente tira a renda, e aí tem um indicador que é a região... ele indica se tá na região sudeste, e é um parâmetro para a região sudeste só.
+Speaker 1:  Então vou ter uma combinação, se eu pegar minha matriz assim: sudeste 1000, porque você tem outra variável pra norte, pra nordeste.
+Speaker 2:  Exatamente.
+Speaker 1:  Mas por que assim? Coloca só a DAME.
+Speaker 4:  É só a DAME, não é?
+Speaker 1:  Como assim?
+Speaker 4:  Quando você coloca região, ele já captura já isso. Ele vai ser codificado quando você for pra matriz, ele vai ser codificado desse jeito. Lembra lá quando a gente coloca DAME, se você coloca região norte-sul, aí ele vai, você vai escolher qual vai ser o nível baseline, e aí quando todo mundo tiver zero, vai estar no baseline.
+Speaker 4:  Quando tiver no... entendeu? Ele já vai... ele já vai... você não precisa codificar isso manualmente.
+Speaker 1:  Vem um coeficiente ali, aí depende do qual quer.
+Speaker 4:  Ele vai ver as combinações, vai fazer 0 ou 1 se tiver nas regiões. Lembra que a gente fez aquela matrizinha que fazia? Então você vai ter, se você tem 5 regiões, você vai ter 4 variáveis DAME que são indicadores.
+Speaker 4:  E aí quando todas são 0, você tá no baseline que é, enfim, a região que você escolher que vai ser o baseline.
+Speaker 1:  Entendi.
+Speaker 4:  Então não precisa codificar isso de maneira hard, né, de maneira explícita. Você cria a DAME, coloca variável região, aí você vai colocar norte, sul, leste, sudeste, nordeste, centro-oeste, nordeste. E aí você vai dizer que isso é um fator pro R tratar como uma variável categórica.
+Speaker 4:  Ele vai fazer toda essa transformação por trás, vai fazer... ele vai codificar desse jeito, entendeu?
+Speaker 1:  É, vai ser factor, né? Não tem que ser porque vai estar lá com letra, né? Só não colocar 0123 ou 12345, coloca com letra.
+Speaker 2:  Acho que é uma formula bem... então. Vamos continuar então.
+Speaker 4:  Porque daí ele captura exatamente o que você tá falando, entendeu? Você tá querendo capturar o efeito da região, né?
+Speaker 2:  Sim. Meio que desacoplar as duas variáveis um pouco. Só que eu pensei que isso seria um jeito bom de fazer isso, mas acho que já é... no próprio modelo ele já faz isso.
+Speaker 4:  Isso.
+Speaker 3:  Perdão, quer falar do GIMP?
+Speaker 2:  Ah, sim, professora. Sobre o índice de desigualdade, da última vez tinha aquela questão de que a gente tinha colocado sobre a mediana, sobre a média. A maior parte dos artigos eles usam o GIMP, e apesar de, como a gente tá fazendo a análise por município, os dados que tem sobre o GIMP é só a nível federal e por estado, né?
+Speaker 2:  Mas a gente conseguiu calcular o GIMP na mão com os dados que a gente tem sobre renda, que basicamente o GIMP ele vê, dado a porcentagem P da população mais pobre, quanto que eles têm, quanto que eles possuem da renda.
+Speaker 2:  Então, sei lá, se 50% da população mais pobre tem só 20% da renda, quer dizer que é uma sociedade mais desigual. E aí a gente conseguia calcular isso com os dados que a gente tem.
+Speaker 2:  A gente não tem.
+Speaker 4:  É, não tinha esse percentual de.
+Speaker 2:  Sim. A gente tem, tipo, a gente tem a população toda, a gente tem as classes que cada pessoa faz parte, então tem a pessoa X que faz parte de quem ganha de 1.000 até 3.000 reais. E aí a gente consegue fazer uma média de toda a população, quanto que cada parcela ganha.
+Speaker 4:  Você tem a proporção, né, de cada faixa, você faz, multiplica o total da população por aquela proporção, acha o número de pessoas, agrupa e faz a conta.
+Speaker 2:  Exato. E aí no final ficou bem próximo do valor que obteve pro GIMP de 2022 a nível de estado, usando essa aproximação.
+Speaker 4:  Então é um índice GIMP-like.
+Speaker 2:  É isso.
+Speaker 4:  Mas pode ser, tá ótimo, é uma boa estratégia. É melhor do que usar aquela média mediana sobre a média.
+Speaker 1:  Tá ótimo. Aqui também era uma estimativa.
+Speaker 4:  É, mas eles criaram, digamos assim, indicador de desigualdade, né? E aí eles estão usando um indicador que já. Mesmo que seja calculado, né, uma aproximação pro índice de GIMP.
+Speaker 2:  Entendi, mais conceituado.
+Speaker 3:  É, Amazônia é legal.
+Speaker 2:  A diferença de Amazônia é legal que era aquela bolhana que caracterizava se ela tava ou não. A gente acabou percebendo que também é muito explicado por estar no norte, né? Então acabou saindo também essa variável.
+Speaker 4:  De centro-oeste, né? Amazônia é legal, não pega muito do.
+Speaker 2:  Pega muito Mato Grosso do Sul.
+Speaker 3:  Ele falou do.
+Speaker 4:  Do norte, né, do Mato Grosso.
+Speaker 2:  Norte, Mato Grosso do Sul e Maranhão.
+Speaker 4:  Tá.
+Speaker 2:  Maior parte.
+Speaker 4:  Não, pega o Mato Grosso, o Mato Grosso do norte, né? O Mato Grosso do sul.
+Speaker 2:  É, o Mato Grosso do sul. Não lembro agora se é o do sul ou do Mato Grosso.
+Speaker 3:  O sul não tem, não.
+Speaker 2:  Não, o sul é Pantanal, o sul é Pantanal, não tem nada a ver.
+Speaker 3:  Não, a gente.
+Speaker 2:  Ah, então é o Mato Grosso.
+Speaker 4:  Já tá aqui perto de São Paulo, né?
+Speaker 1:  Desconhecimento. Por que Amazônia é legal? Os artigos estavam indicando?
+Speaker 2:  Sim, tinha alguns estudos que falavam de relação entre Amazônia legal e.
+Speaker 1:  Onde tem, será que tem bandido? Se esconde? Tem drogas?
+Speaker 4:  Não, é conflito de terra.
+Speaker 1:  Conflito de terra? Por isso.
+Speaker 2:  Na questão do garimpo, né?
+Speaker 4:  Garimpo, madeireira.
+Speaker 2:  É, desmatamento na Amazônia, tem muita Amazônia legal. Mas com as variáveis que a gente já tinha colocado no modelo, não fez muita diferença, principalmente na região norte. Como a gente tem a variável, né, que está na região norte, não explicou muito.
+Speaker 2:  Então a gente acabou não adicionando.
+Speaker 3:  Aí o outlier que a gente resolveu tirar foi só contra o Jordão.
+Speaker 2:  É, tem esse dado engraçado aqui que é.
+Speaker 3:  Tem um dado bem engraçado que ele tem um homicídio por ano, mas 36 causas de morte não explicadas.
+Speaker 1:  É um homicídio em 3 anos.
+Speaker 2:  Em 3 anos.
+Speaker 3:  Em 3 anos, 36 causas de mortes não explicadas aí, não definidas, então.
+Speaker 1:  É porque ele tá perto de Tremembé, aí joga tudo pra Tremembé.
+Speaker 4:  Ou então furar 200 por ali em regiões dessas não explicadas.
+Speaker 3:  O modelo ele, que a gente rodou, esperava tipo 11, né?
+Speaker 2:  Talvez tenha um certo acobertamento ali, porque é uma região turística, né?
+Speaker 3:  É, uma região bem turística, então.
+Speaker 1:  A gente só resolveu tirar esse.
+Speaker 2:  A gente removeu, mas dado a quantidade de observação não fez nenhuma diferença.
+Speaker 4:  Tem mil e pouco.
+Speaker 2:  Mil e poucos municípios, a gente tirou um.
+Speaker 3:  Acho que aqui vai.
+Speaker 4:  É justo.
+Speaker 2:  É, também tinha a questão da fronteira legal, que era outra bolha, né, 150 km pra dentro.
+Speaker 1:  Ela saiu?
+Speaker 2:  Saiu.
+Speaker 1:  Saiu.
+Speaker 2:  Tela, abandono escolar e a porcentagem de homens entre 15 e 29. Deixou de ser significativo.
+Speaker 1:  Abandono escolar, ó.
+Speaker 4:  Saiu ou não saiu?
+Speaker 2:  Provavelmente já é muito explicado pela região, pela renda.
+Speaker 3:  A gente também tirou a porcentagem morte.
+Speaker 4:  Aqui já tem renda, né?
+Speaker 2:  Já tem desigualdade também, então.
+Speaker 3:  Acho que a sua ordem.
+Speaker 2:  Acho que a sua ordem explica muita coisa, né? A pessoa ordem que a gente analisou.
+Speaker 1:  Desigualdade, né?
+Speaker 3:  Isso. A gente tirou também a porcentagem de mortes sem causa definida.
+Speaker 2:  Acho que mais o que tinha mudado era isso, e a gente tem comparação entre as... esse hoje era antes da gente ter feito algumas mudanças hoje mesmo aqui que a gente percebeu que tinha umas inconsistências. Mas aqui é a versão da apresentação parcial que a gente fez, e aqui é o final que tá feito hoje.
+Speaker 4:  Tá ótimo.
+Speaker 2:  Então, por causa daquele corte, a gente perdeu bastante municípios, mas muitos desses municípios cortados não faziam sentido na análise. Então.
+Speaker 4:  E Campos do Odão ficou ainda, teve que ser cortado.
+Speaker 1:  Ah, porque teve uma parada assim.
+Speaker 4:  Tem? Tem? Não, mas tem mais.
+Speaker 2:  É 40 e poucos mil, 46 mil.
+Speaker 4:  Quanto?
+Speaker 2:  46 mil.
+Speaker 4:  Ah, tá perto de 30, mas é mais ainda.
+Speaker 2:  A gente tinha um outro outlier que era Nhá Mundá, no Amazonas, que tinha 26, só que ele acabou saindo no corte dos 30. Aí sobrou só Campos do Jordão.
+Speaker 3:  Outlier do outro lado, né?
+Speaker 1:  Outlier de excesso de morte.
+Speaker 2:  É, eu acho que era muita morte nesse outro.
+Speaker 3:  Mataram muito lá, foi um motivo.
+Speaker 4:  Garimpo.
+Speaker 2:  Provável.
+Speaker 3:  Aí o que é que a gente resultou, né? Como a gente diminuiu de estado pra região, a gente perdeu bastante no R de estado, só que a gente conseguiu recuperar um pouco com as outras alterações. Então ficou um pouco abaixo do que era antes, que foi de 0,59 pra 0,56, mas compensou o nosso VIF, que foi de 12,7 pra 7,6.
+Speaker 3:  Então acho que se pagou aí.
+Speaker 2:  Então desinchado, né? Em relação ao que tava.
+Speaker 4:  Antes de olhar pros indicadores, olhem para o erro de especificação do modelo, o de análise.
+Speaker 3:  Então, a gente, o Ben Shapiro agora ele passa, antes ele reprovava. O Shapiro Wilke.
+Speaker 2:  Shapiro é famoso.
+Speaker 3:  Shapiro Wilke. Agora ele passa, antes ele ficava reprovando por pouco, assim, parecia ser normal, mas.
+Speaker 4:  Mas pode ter sido até por causa desses outliers que vocês removeram, né?
+Speaker 3:  Sim.
+Speaker 1:  É, mas aí faz vem os outros.
+Speaker 4:  Sim, sim, a gente vai
+Speaker 2:  fazer a gente vai fazer a gente vai fazer em 2 minutos, né? Tem mais embaixo.
+Speaker 3:  Não, aqui em cima também tinha uma coisa importante, né?
+Speaker 2:  A gente decidiu tirar a raça também, por causa da discussão que teve aí.
+Speaker 4:  Tá.
+Speaker 2:  Peço desculpa, né? Evitar questões desagradáveis.
+Speaker 1:  Aí vocês chegaram até aqui.
+Speaker 2:  Hm?
+Speaker 1:  Tem mais coisa que vocês chegaram até aqui?
+Speaker 2:  Eu acho que.
+Speaker 3:  Acho que não.
+Speaker 2:  Mas era isso.
+Speaker 3:  Aqui embaixo é só os.
+Speaker 4:  Então, roda diagnóstico, faz hoje no modelo, não VIF. Gente, lembrar que o VIF resolve depois que o modelo tá especificado. Então primeiro vocês vão fazer ajustar o modelo todinho, ver se a especificação tá boa, se as hipóteses são violadas, VIF, multicolinearidade, é depois.
+Speaker 4:  Ela não afeta a qualidade preditiva do modelo, lembra? Ela afeta essa questão de interpretação de coeficiente se os coeficientes estiverem instáveis.
+Speaker 4:  Então às vezes o VIF ele nem... e às vezes você nem olha pro VIF pra olhar pra multicolinearidade. A primeira coisa que levanta a orelha de multicolinearidade é: e esse coeficiente eu esperava que fosse positivo do negativo?
+Speaker 4:  E esse coeficiente, essa variável eu esperava que fosse significativa? Não deu, entendeu?
+Speaker 4:  Então não deem força demais pro VIF, ou mais força do que ele tem, tá?
+Speaker 1:  E aí agora, e aí vocês decidam, tipo assim, não é pra contar a história de tudo que vocês fizeram até agora, tá? Então não é pra mostrar os resultados da primeira apresentação, não, não, não. Vocês vão pegar o final e contar a história.
+Speaker 3:  Ano que vem a gente também curte.
+Speaker 1:  É. E pra escrever o artigo também, né? Isso daqui.
+Speaker 4:  No mesmo artigo não vai toda a história de todas as decisões intermediárias, vai a construção da pergunta científica do modelo final, né, a interpretação do modelo, a discussão dos resultados e pronto.
+Speaker 1:  E chegamos nisso daqui. Ah, chegamos nisso daqui, deu ruim, não explica bem, mas é o resultado que tiver, mas conte a história, tá?
+Speaker 4:  E critica o modelo. Não deu certo porque imagino que se é isso e que fosse isso, isso e isso. Poderia, trabalho futuro, tentarei mostrar o tal povo, entendeu?
+Speaker 4:  Pode ser tentado por outras pessoas, enfim. Recomendamos que.
+Speaker 2:  Ok, tranquilo.
+Speaker 4:  Beleza.
+Speaker 3:  Acho que não mais.
+Speaker 2:  É, espero. Show demais.
+Speaker 3:  Vamos depois só rodar com o estado de novo?
+Speaker 2:  Estado.
+Speaker 4:  Ah, sim.
+Speaker 3:  Em vez de região.
+Speaker 2:  Boa.

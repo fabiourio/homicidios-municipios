@@ -1,22 +1,23 @@
-\section{Sua parte: dados, medida de violência e limitações}
-\textbf{Mensagem principal:} usamos três fontes oficiais, ligadas pelo código do município; a violência é medida pela taxa de homicídios do SIM, a estatística mais confiável e comparável entre municípios; e os próprios dados nos obrigaram a restringir o estudo aos municípios com \nPopMin{} mil habitantes ou mais.
-
-\subsection{O que enfatizar}
+\section{Sua parte: base de dados}
+\textbf{Mensagem principal:} a comparação usa fontes oficiais e uma taxa bem definida, num recorte explícito de municípios.
+\subsection{Preparação e leitura dos slides}
 \begin{itemize}
-\item \textbf{Fontes:} SIM/DATASUS (óbitos), Censo 2022 (características dos municípios; renda e trabalho vêm da amostra do Censo) e INEP 2022 (distorção idade-série no ensino médio; o abandono foi testado e retirado).
-\item \textbf{Por que homicídios:} é o indicador 16.1.1 do ODS 16; é a estatística de violência local mais confiável do país e anda junto com os outros crimes (Murray, Cerqueira e Kahn, 2013); o SIM cobre todos os municípios com a mesma codificação (CID-10).
-\item \textbf{Como medimos:} agressão (X85--Y09) e intervenção legal (Y35--Y36), pela residência da vítima, média de 2021 a 2023, por 100 mil habitantes.
-\item \textbf{Explicativas:} cinco blocos (A a E), os mesmos da construção do modelo; o bloco E é o termo Gini $\times$ renda (o efeito da desigualdade muda com a renda). As variáveis testadas e retiradas estão no Apêndice D. A região entra como \nNumReg{} indicadoras, com o Sudeste como referência.
-\item \textbf{Limitações:} as quatro em linguagem simples. No sub-registro, citar \nForaNome{}, retirado do estudo: \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada em 3 anos. A última (municípios pequenos) define o escopo: nos menores, muitos zeros e oscilação grande só pelo acaso, por isso ficamos com os municípios acima do percentil \nPercCorte{} da população, com \nPopMin{} mil hab. ou mais: são \nMunEsc{} (\nPctPopEsc\% da população), já sem \nForaNome. O escopo vale para \textbf{toda} a análise, exploratória e modelo.
+\item Slide 3, 40 segundos: explicar cada fonte. SIM fornece óbitos; Censo fornece população e características; INEP fornece atraso escolar.
+\item Na fórmula, o numerador conta óbitos em três anos. O denominador usa três vezes a população de 2022.
+\item Dizer ``por residência'' e ``média anual por cem mil habitantes''. Agressões e intervenções legais/operações de guerra compõem a medida.
+\item Slide 4, 50 segundos: apresentar \nMunEsc{} municípios com pelo menos \nPopMin{} mil habitantes, cobrindo \nPctPopEsc\% da população brasileira.
+\item O corte fica próximo do percentil \nPercCorte{} da população municipal. Ele reduz oscilações, mas restringe o alcance das conclusões.
+\item O corte reduz oscilações das taxas, mas não elimina problemas de registro. \nForaNome{} saiu por indício de sub-registro.
+\item Cada observação é um município; a região é uma explicativa.
+\item Mostrar as cinco categorias sem ler todas as variáveis. O Gini aproxima a desigualdade das pessoas de quatorze anos ou mais.
+\item A migração mede residência ininterrupta inferior a dez anos no município. Não representa imigração internacional nem fluxo anual de chegada.
 \end{itemize}
-
 \subsection{Perguntas prováveis}
 \begin{description}[leftmargin=0pt]
-\item[Por que não usar dados da polícia?] O SIM cobre todos os municípios com a mesma codificação (CID-10); o homicídio é a medida de violência local mais confiável do país (Murray et al., 2013).
-\item[Por que município de residência e não de ocorrência?] Porque o denominador é a população residente; assim taxa e população falam das mesmas pessoas.
-\item[Por que \nPopMin{} mil, e não 20 mil ou 50 mil?] Fica perto do percentil \nPercCorte{} da população. Nesse porte a taxa nacional dá pelo menos \nCasosEspCorte{} homicídios esperados em 3 anos, e a oscilação por acaso cai para $\pm$\nPorteOscCorte\%. Com 20 mil, o modelo erra muito nas cidades com 1 a 5 homicídios; com 50 mil, perderíamos metade do país e a migração deixaria de aparecer.
-\item[Como vocês têm o Gini por município, se o IBGE não publica?] Calculamos pelas classes de renda do Censo 2022 (pessoas de 14 anos ou mais em cada faixa de renda domiciliar per capita), pela área sob a curva de Lorenz (método de Gastwirth, 1972). Para conferir, aplicamos o mesmo cálculo aos 27 estados: a correlação com o Gini oficial é \nGiniCorUF{} e o erro médio é \nGiniErroUF. É uma aproximação: ignora a desigualdade dentro de cada faixa.
+\item[Por que usar residência e não ocorrência?] A taxa usa a população residente como denominador. A escolha mantém a população e os óbitos associados à residência.
+\item[Por que retirar cidades pequenas e \nForaNome?] Poucos óbitos tornam as taxas instáveis. \nForaNome{} tem \nForaHom{} homicídio e \nForaIndet{} óbitos indeterminados, um indício específico de sub-registro.
+\item[Como calcularam o Gini municipal?] Usamos classes de renda das pessoas de quatorze anos ou mais e a curva de Lorenz. A comparação nas UFs tem correlação \nGiniCorUF, mas usa uma referência de todos os moradores; não valida o valor exato municipal.
 \end{description}
-
-\subsection{Transição}
-Ao terminar as limitações: ``Com o escopo definido, o Douglas mostra o que os dados revelam antes de qualquer modelo.''
+\subsection{Controle da fala e transição}
+A meta da parte é 1min30, terminando no marco acumulado de 3min15.
+Não discutir variáveis retiradas. Ao concluir: ``O Douglas explica os métodos usados nessa comparação.''

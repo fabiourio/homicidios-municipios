@@ -23,8 +23,9 @@ setwd(atual)
 
 br <- eda$br; d_eda <- eda$d; porte <- as.data.frame(eda$porte); R <- eda$R
 reg_br <- tapply(br$hom, br$regiao, sum) / tapply(br$exposure, br$regiao, sum) * 1e5   # todos os municípios
-# Taxa mundial de homicídios em 2021: UNODC, Global Study on Homicide 2023 (único número externo, com fonte no slide)
-TAXA_MUNDO_UNODC <- 5.8
+contexto <- read.csv("../contexto_homicidios_2021.csv")
+taxa_brasil_ctx <- contexto$taxa_100mil[contexto$local == "Brasil"]
+taxa_mundo_ctx <- contexto$taxa_100mil[contexto$local == "Mundo"]
 cv <- eda$cv
 e <- c(
   municipios_br = nrow(br), hom_br = sum(br$hom), taxa_br = eda$taxa_br, pop_min = eda$POP_MIN,
@@ -33,7 +34,7 @@ e <- c(
   zeros_escopo = sum(d_eda$hom == 0), zeros_br = sum(br$hom == 0),
   taxa_media = mean(d_eda$taxa), taxa_mediana = median(d_eda$taxa),
   assim_taxa = eda$assimetria(d_eda$taxa),
-  hom_ano = sum(br$hom) / 3, taxa_mundo = TAXA_MUNDO_UNODC, razao_mundo = eda$taxa_br / TAXA_MUNDO_UNODC,
+  hom_ano = sum(br$hom) / 3,
   taxa_n_br = reg_br[["N"]], taxa_ne_br = reg_br[["NE"]], taxa_co_br = reg_br[["CO"]],
   taxa_se_br = reg_br[["SE"]], taxa_s_br = reg_br[["S"]],
   cor_renda_pobres = R["ln Renda", "% pobres"], cor_renda_alfabet = R["ln Renda", "Alfabetização"],
@@ -74,6 +75,9 @@ coef <- function(t, col) coefs[coefs$termo == t, col]
 
 # Confere as frases fixas dos slides: se o resultado mudar, para aqui em vez de gerar slide errado
 confere <- function(ok, frase) if (!isTRUE(ok)) stop("O resultado não sustenta mais a frase do slide: ", frase)
+confere(nrow(contexto) == 2 && all(contexto$ano == 2021) && all(contexto$indicador == "homicidio_intencional") &&
+          length(taxa_brasil_ctx) == 1 && length(taxa_mundo_ctx) == 1 && taxa_brasil_ctx > taxa_mundo_ctx && taxa_mundo_ctx > 0,
+        "contexto internacional compara o mesmo indicador e o mesmo ano")
 confere(coef("rend_c2", "b") < 0 && coef("rend_c2", "p") < 0.05, "renda em U invertido")
 confere(m[["lambda"]] < 0.25, "Box-Cox: lambda mais perto de 0 (log) do que de 0,5 (raiz); o log é o valor de fácil interpretação mais próximo")
 confere(m[["lambda_ic_inf"]] > 0, "lambda = 0 fica fora do IC 95% de Box-Cox")
@@ -95,7 +99,7 @@ confere(mod$POP_MIN == eda$POP_MIN && mod$FORA == eda$FORA && setequal(mod$d$cod
 confere(nrow(fora) == 1 && fora$pop >= eda$POP_MIN && fora$intencao_indeterminada > 10 * fora$hom, "o município retirado tem muito mais óbitos de intenção indeterminada do que homicídios")
 confere(all(p_ret(c("dens_z", "faixa_fronteira", "abandono_em", "pct_h1529", "indet_sem_hom")) > 0.05), "densidade, fronteira, abandono, % homens 15–29 e % indeterminada (corrigida) não são significativas")
 al_sem_mt <- summary(update(mod$final, . ~ . + amazonia_legal, data = mod$d[mod$d$uf != "MT", ]))$coefficients["amazonia_legal", 4]
-confere(p_ret("amazonia_legal") < 0.05 && al_sem_mt > 0.05, "a Amazônia Legal só é significativa por causa do Mato Grosso")
+confere(p_ret("amazonia_legal") < 0.05 && al_sem_mt > 0.05, "a evidência da Amazônia Legal é sensível à exclusão de Mato Grosso")
 sig_pos <- function(t) coef(t, "b") > 0 && coef(t, "p") < 0.05
 confere(sig_pos("pct_urbana"), "mais homicídios com mais urbanização")
 confere(sig_pos("gini_c") && sig_pos("rend_c:gini_c") && sig_pos("distorcao_em") &&
@@ -136,7 +140,21 @@ confere(cor(log(mod$d$pop), abs(mod$d$residuo)) < 0, "resíduos maiores nos muni
 r_resp <- R["ln Taxa", colnames(R) != "ln Taxa"]
 var_max <- names(which.max(abs(r_resp)))
 
+bc_final <- MASS::boxcox(lm(update(formula(mod$final), y ~ .), data = mod$d),
+                         lambda = seq(-.5, 1.2, .001), plotit = FALSE)
+bc_lim <- max(bc_final$y) - qchisq(.95, 1) / 2
+bc_ci <- range(bc_final$x[bc_final$y > bc_lim])
+bc_max <- bc_final$x[which.max(bc_final$y)]
+confere(bc_ci[1] > 0, "Box-Cox final também não seleciona log")
+migracao <- read.csv("../../validacao/saida/08_sensibilidade_migracao.csv", row.names = 1)
+confere(abs(migracao["final", "p_migracao"] - coef("pct_migr_10anos", "p")) < 1e-10,
+        "sensibilidade da migração corresponde ao mesmo modelo final")
+
 mac <- c(
+  LambdaFinal = fmt(bc_max, 2), LambdaFinalInf = fmt(bc_ci[1], 2), LambdaFinalSup = fmt(bc_ci[2], 2),
+  PMigrFinal = fp(migracao["final", "p_migracao"]),
+  PMigrAntiga = fp(migracao["com_medida_antiga", "p_migracao"]),
+  PMigrCorrigida = fp(migracao["com_medida_corrigida", "p_migracao"]),
   MunBR = fmt(e[["municipios_br"]], 0), HomBR = fmt(e[["hom_br"]], 0), TaxaBR = fmt(e[["taxa_br"]]),
   PopMin = fmt(e[["pop_min"]] / 1000, 0), MunEsc = fmt(e[["municipios_escopo"]], 0),
   PctPopEsc = fmt(e[["pct_pop_escopo"]], 0), PercCorte = fmt(e[["percentil_corte"]], 0), PctMaiores = fmt(100 - e[["percentil_corte"]], 0),
@@ -149,7 +167,9 @@ mac <- c(
   TaxaMedia = fmt(e[["taxa_media"]]), TaxaMediana = fmt(e[["taxa_mediana"]]),
   TaxaQuartilUm = fmt(unname(quantile(d_eda$taxa, .25))), TaxaQuartilTres = fmt(unname(quantile(d_eda$taxa, .75))),
   AssimTaxa = fmt(e[["assim_taxa"]], 2),
-  HomAno = fmt(e[["hom_ano"]], 0), TaxaMundo = fmt(e[["taxa_mundo"]]), RazaoMundo = fmt(e[["razao_mundo"]]),
+  HomAno = fmt(e[["hom_ano"]], 0),
+  TaxaBrasilContexto = fmt(taxa_brasil_ctx), TaxaMundoContexto = fmt(taxa_mundo_ctx),
+  RazaoContexto = fmt(taxa_brasil_ctx / taxa_mundo_ctx),
   TaxaNbr = fmt(e[["taxa_n_br"]]), TaxaNEbr = fmt(e[["taxa_ne_br"]]), TaxaCObr = fmt(e[["taxa_co_br"]]),
   TaxaSEbr = fmt(e[["taxa_se_br"]]), TaxaSbr = fmt(e[["taxa_s_br"]]),
   CorMax = fmt(abs(r_resp[[var_max]]), 2), CorMaxVar = gsub("%", "\\\\%", var_max),
@@ -174,6 +194,16 @@ mac <- c(
   OutNomes = if (length(out_nomes)) paste(out_nomes, collapse = ", ") else "nenhum")
 mac <- sub("^-", "$-$", mac)
 writeLines(sprintf("\\newcommand{\\n%s}{%s}", names(mac), mac), "numeros.tex")
+
+extra <- c(GiniEfDez = sinal(gr$efeito_pct[gr$percentil == 10]),
+           GiniEfVinteCinco = sinal(gr$efeito_pct[gr$percentil == 25]),
+           RendaDez = fmt(gr$renda[gr$percentil == 10], 0),
+           RendaNoventa = fmt(gr$renda[gr$percentil == 90], 0),
+           EscolaEfeito = sinal(efe$efeito_pct[efe$termo == "freq_15a17"], 1),
+           DistorcaoEfeito = sinal(efe$efeito_pct[efe$termo == "distorcao_em"], 1),
+           UrbanaEfeito = sinal(efe$efeito_pct[efe$termo == "pct_urbana"], 1))
+cat(paste(sprintf("\\newcommand{\\n%s}{%s}", names(extra), extra), collapse = "\n"),
+    "\n", sep = "", file = "numeros.tex", append = TRUE)
 
 # Tabela do corte de população (percentil 80) em cada região
 cr <- as.data.frame(eda$corte_regiao)
@@ -222,7 +252,7 @@ cat(sprintf("\\newcommand{\\nFRenda}{%s}\n\\newcommand{\\nGlRenda}{%s}\n\\newcom
 
 # Tabela dos dois modelos lado a lado: região x estado; em negrito, onde a significância a 5% muda
 re <- mod$regiao_estado
-rot_re <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", rot_cs, `rend_c:gini_c` = "Gini $\\times$ renda")
+rot_re <- c(rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)²", rot_cs, `rend_c:gini_c` = "Gini $\\times$ ln(renda)")
 stopifnot(all(re$termo %in% names(rot_re)))
 muda <- (re$p_regiao < 0.05) != (re$p_estado < 0.05)
 cel <- cbind(rot_re[re$termo], gsub("-", "$-$", fmt(re$b_regiao, 3)), fp(re$p_regiao), gsub("-", "$-$", fmt(re$b_estado, 3)), fp(re$p_estado))
@@ -275,7 +305,7 @@ writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
              lin_gini, lin, "\\bottomrule", "\\end{tabular}"), "tabelas/efeitos.tex")
 
 # Apêndice: coeficientes
-nomes <- c(rend_c = "ln renda (centr.)", rend_c2 = "ln renda²", gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ renda",
+nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)²", gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)",
            desocup = "Desocupação", pct_urbana = "\\% urbana",
            freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
@@ -290,9 +320,9 @@ writeLines(c("\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}lrrrlrrr@{}
              paste0(lin, "\\\\"), "\\bottomrule", "\\end{tabular*}"), "tabelas/coeficientes.tex")
 
 # Apêndice: variáveis testadas e retiradas (F parcial de cada uma somada ao modelo final)
-motivo <- c(dens_z = "Sem efeito", faixa_fronteira = "Sem efeito", abandono_em = "Sem efeito", pct_h1529 = "Sem efeito",
-            amazonia_legal = "O efeito vem só do Mato Grosso",
-            indet_sem_hom = "A medida original tinha os homicídios no divisor; corrigida, não tem efeito")
+motivo <- c(dens_z = "Sem evidência adicional", faixa_fronteira = "Sem evidência adicional", abandono_em = "Sem evidência adicional", pct_h1529 = "Sem evidência adicional",
+            amazonia_legal = "Sem evidência clara ao excluir MT",
+            indet_sem_hom = "A medida original tinha os homicídios no divisor; corrigida, sem evidência adicional")
 stopifnot(all(ret$termo %in% names(motivo)))
 lin <- sprintf("%s & %s & %s & %s\\\\", gsub("%", "\\%", gsub("–", "--", ret$variavel), fixed = TRUE), fmt(ret$F, 2), fp(ret$p), motivo[ret$termo])
 writeLines(c("\\begin{tabular}{@{}p{0.36\\textwidth}rrp{0.40\\textwidth}@{}}", "\\toprule",
@@ -300,3 +330,103 @@ writeLines(c("\\begin{tabular}{@{}p{0.36\\textwidth}rrp{0.40\\textwidth}@{}}", "
              lin, "\\bottomrule", "\\end{tabular}"), "tabelas/retiradas.tex")
 
 cat("numeros.tex e tabelas/ gerados. Variável de maior correlação com ln(taxa):", var_max, "\n")
+
+library(ggplot2)
+dir.create("figuras", showWarnings = FALSE)
+azul <- "#00689D"; vermelho <- "#C8343B"; claro <- "#D6E6F2"
+tema <- theme_minimal(base_size = 16) +
+  theme(panel.grid.minor = element_blank(), plot.background = element_rect(fill = "white", colour = NA))
+plot_d <- mod$d
+p <- ggplot(plot_d, aes(ajustado, residuo)) +
+  geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
+  geom_point(colour = azul, alpha = .3, size = 1.2) +
+  labs(x = "Valor ajustado de ln(taxa)", y = "Resíduo de ln(taxa)") + tema
+ggsave("figuras/residuos_ajustado.png", p, width = 6.3, height = 4.0, dpi = 220)
+p <- ggplot(plot_d, aes(pop, abs(residuo))) +
+  geom_point(colour = azul, alpha = .3, size = 1.2) +
+  scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(x = "População (escala log)", y = "Tamanho do erro: |resíduo|") + tema
+ggsave("figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
+p <- ggplot(plot_d, aes(sample = rstandard(mod$final))) +
+  stat_qq(colour = azul, alpha = .35, size = 1.1) + stat_qq_line(colour = vermelho, linewidth = .8) +
+  labs(x = "Quantis de uma distribuição normal", y = "Quantis dos resíduos padronizados") + tema
+ggsave("figuras/qq_final.png", p, width = 6.3, height = 4.0, dpi = 220)
+p <- ggplot(plot_d, aes(residuo)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = claro, colour = "white") +
+  stat_function(fun = dnorm, args = list(mean = mean(plot_d$residuo), sd = sd(plot_d$residuo)),
+                colour = vermelho, linewidth = .8) +
+  labs(x = "Resíduo de ln(taxa)", y = "Densidade") + tema
+ggsave("figuras/histograma_residuos.png", p, width = 6.3, height = 4.0, dpi = 220)
+ef_plot <- mod$mudancas[mod$mudancas$termo != "desocup", ]
+ef_plot$rotulo <- c("Urbanização: +10 p.p.", "Frequência escolar: +5 p.p.",
+                    "Atraso escolar: +10 p.p.", "Migração recente: +5 p.p.")
+ef_plot$rotulo <- factor(ef_plot$rotulo, levels = rev(ef_plot$rotulo))
+p <- ggplot(ef_plot, aes(efeito_pct, rotulo)) +
+  geom_vline(xintercept = 0, colour = "grey45", linetype = 2) +
+  geom_segment(aes(x = ic_inf_pct, xend = ic_sup_pct, yend = rotulo), colour = azul, linewidth = 1.1) +
+  geom_point(colour = azul, size = 3.5) +
+  labs(x = "Mudança percentual na taxa típica", y = NULL) + tema
+ggsave("figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)
+efeito_grafico <- mod$efeito_gini
+environment(efeito_grafico) <- mod
+gini_plot <- efeito_grafico(exp(seq(quantile(plot_d$log_rend, .02), quantile(plot_d$log_rend, .98), length.out = 200)))
+p <- ggplot(gini_plot, aes(renda, efeito_pct)) +
+  geom_ribbon(aes(ymin = ic_inf_pct, ymax = ic_sup_pct), fill = claro, alpha = .8) +
+  geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
+  geom_line(colour = azul, linewidth = 1) +
+  geom_point(data = gr[gr$percentil %in% c(10, 50, 90), ], colour = vermelho, size = 2.7) +
+  scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(x = "Renda per capita (R$, escala log)", y = "Mudança na taxa típica: +0,05 no Gini (%)") + tema
+ggsave("figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
+p <- ggplot(mod$grade, aes(rend, taxa, group = regiao)) +
+  geom_ribbon(aes(ymin = lo, ymax = hi), fill = claro, alpha = .65) +
+  geom_line(aes(colour = regiao), linewidth = 1) +
+  scale_colour_manual(values = c(Nordeste = azul, Sudeste = "#13294B"), name = NULL) +
+  scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada (/100 mil/ano)") +
+  tema + theme(legend.position = "bottom")
+ggsave("figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
+stopifnot(identical(as.character(ef_plot$termo), as.character(mod$mudancas$termo[mod$mudancas$termo != "desocup"])))
+
+painel_vars <- list(c("log_rend", "gini", "desocup", "pct_urbana"),
+                   c("freq_15a17", "distorcao_em", "pct_migr_10anos", "regiao"))
+nomes_diag <- c(log_rend = "ln(renda per capita)", gini = "Gini calculado",
+                desocup = "Desocupação (%)", pct_urbana = "População urbana (%)",
+                freq_15a17 = "Frequência escolar 15–17 (%)", distorcao_em = "Atraso escolar (%)",
+                pct_migr_10anos = "Migração recente (%)", regiao = "Região")
+for (k in seq_along(painel_vars)) {
+  png(sprintf("figuras/residuos_explicativas_%d.png", k), width = 2200, height = 1400, res = 220)
+  grid::grid.newpage()
+  grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 2)))
+  for (j in seq_along(painel_vars[[k]])) {
+    v <- painel_vars[[k]][j]
+    p <- ggplot(plot_d, aes(x = .data[[v]], y = residuo)) +
+      geom_hline(yintercept = 0, colour = "grey45", linetype = 2)
+    if (v == "regiao") {
+      p <- p + geom_boxplot(fill = claro, colour = azul, outlier.alpha = .25)
+    } else {
+      p <- p + geom_point(colour = azul, alpha = .28, size = .8)
+    }
+    p <- p + labs(x = nomes_diag[[v]], y = "Resíduo de ln(taxa)") + tema +
+      theme(text = element_text(size = 12), axis.text.x = element_text(size = 9))
+    print(p, vp = grid::viewport(layout.pos.row = (j - 1) %/% 2 + 1,
+                                layout.pos.col = (j - 1) %% 2 + 1))
+  }
+  dev.off()
+}
+
+p <- ggplot(plot_d, aes(ajustado, ly)) +
+  geom_abline(intercept = 0, slope = 1, colour = vermelho, linetype = 2) +
+  geom_point(colour = azul, alpha = .35, size = 1.1) + coord_equal() +
+  labs(x = "ln(taxa) ajustado", y = "ln(taxa) observado") + tema
+ggsave("figuras/observado_ajustado.png", p, width = 6.3, height = 4.3, dpi = 220)
+
+p <- ggplot(data.frame(lambda = bc_final$x, perfil = bc_final$y), aes(lambda, perfil)) +
+  geom_line(colour = azul, linewidth = .8) +
+  geom_hline(yintercept = bc_lim, linetype = 2, colour = "grey45") +
+  geom_vline(xintercept = 0, colour = vermelho, linetype = 2) +
+  geom_vline(xintercept = bc_max, colour = azul, linetype = 3) +
+  coord_cartesian(xlim = c(-.05, .4), ylim = c(bc_lim - 20, max(bc_final$y) + 3)) +
+  labs(x = "Potência (zero corresponde ao log)", y = "Log-verossimilhança de perfil",
+       subtitle = "IC 95%: perfil acima da linha cinza") + tema
+ggsave("figuras/boxcox_final.png", p, width = 6.3, height = 4.3, dpi = 220)
