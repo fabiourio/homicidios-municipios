@@ -1,5 +1,7 @@
 # Revisão da narrativa da apresentação
 
+> Registro da revisão anterior. A integração de 18/11 acrescentou um slide de estimativas. A numeração e os tempos atuais estão no [LEIA-ME da apresentação](../apresentacao/LEIA-ME.md). As análises e decisões estatísticas abaixo permanecem válidas.
+
 Pedidos do usuário em 17/11/2026: retirar os apêndices de referências, retirar o rodapé repetido e verificar hipóteses e tempo.
 O usuário também pediu que cada slide cumpra um dos cinco itens das professoras.
 

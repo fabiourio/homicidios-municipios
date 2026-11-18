@@ -1,5 +1,7 @@
 # Decisões para a apresentação final — 17/11/2026
 
+> Registro da revisão anterior. A integração de 18/11 acrescentou um slide de estimativas. A numeração e os tempos atuais estão no [LEIA-ME da apresentação](../apresentacao/LEIA-ME.md). As análises e decisões estatísticas abaixo permanecem válidas.
+
 ## Fontes e aprovação
 
 Este registro resume as mensagens do grupo de 17/11/2026, entre 09h53 e 17h11, fornecidas pelo usuário nesta conversa.

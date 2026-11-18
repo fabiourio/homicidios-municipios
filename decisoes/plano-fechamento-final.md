@@ -1,5 +1,7 @@
 # Fechamento da apresentação final — 18/11/2026
 
+> Registro da revisão anterior. A integração de 18/11 acrescentou um slide de estimativas. A numeração e os tempos atuais estão no [LEIA-ME da apresentação](../apresentacao/LEIA-ME.md). As análises e decisões estatísticas abaixo permanecem válidas.
+
 ## Objetivo aprovado
 
 Finalizar os slides, as falas e os briefings para uma apresentação de até 15 minutos.

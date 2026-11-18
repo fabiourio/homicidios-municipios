@@ -1,7 +1,7 @@
 # Apresentação final — 18/11/2026
 
-**Apresentar os slides 1–14.** Os slides 15–23 são os nove apêndices, de A a I, para perguntas.
-O roteiro planeja 13min30. Os 1min30 restantes acomodam pausas e transições.
+**Apresentar os slides 1–15.** Os slides 16–24 são os nove apêndices, de A a I, para perguntas.
+O roteiro planeja 14min30. Os 30 segundos restantes acomodam pausas e transições.
 O grupo ainda precisa confirmar a duração num ensaio cronometrado.
 O prazo informado para enviar os slides é 18/11/2026, às 10h00.
 
@@ -26,7 +26,7 @@ Notas e briefings são materiais internos do grupo. Os slides fazem parte da ent
 | Fabio | 3–4 | 1min30 | 1min45 | 3min15 | [Abrir](briefings/briefing_fabio.pdf) |
 | Douglas | 5–6 | 2min | 3min15 | 5min15 | [Abrir](briefings/briefing_douglas.pdf) |
 | Luiz Felipe | 7–9 | 3min | 5min15 | 8min15 | [Abrir](briefings/briefing_luiz_felipe.pdf) |
-| Willian | 10–14 | 5min15 | 8min15 | 13min30 | [Abrir](briefings/briefing_willian.pdf) |
+| Willian | 10–15 | 6min15 | 8min15 | 14min30 | [Abrir](briefings/briefing_willian.pdf) |
 
 Cada briefing inclui a parte individual, as falas completas, os slides, as decisões comuns e perguntas respondidas.
 Mantivemos as pessoas e sua ordem; os assuntos foram condensados e redistribuídos para o roteiro docente.
@@ -44,10 +44,11 @@ Não ler os apêndices durante o roteiro principal.
 | 5–6 | Metodologia: modelo, termos e finalidade dos procedimentos de avaliação |
 | 7 | Ajuste do modelo: taxas observadas e ajustadas, escala e alcance |
 | 8–9 | Resíduos, variância dos erros e normalidade, com gráficos interpretados |
-| 10–12 | Escola, urbanização, migração, desigualdade, renda e região |
-| 13–14 | Limitações, resposta à pergunta, literatura e trabalhos futuros |
-| 15–21 | Apêndices A–G: coeficientes, testes, Box-Cox, comparações e variáveis retiradas |
-| 22–23 | Apêndices H–I: resíduos contra cada variável explicativa, conforme a apostila |
+| 10 | Visão geral das estimativas do modelo; introdução aos resultados |
+| 11–13 | Escola, urbanização, migração, desigualdade, renda e região |
+| 14–15 | Limitações, resposta à pergunta, literatura e trabalhos futuros |
+| 16–22 | Apêndices A–G: coeficientes, testes, Box-Cox, comparações e variáveis retiradas |
+| 23–24 | Apêndices H–I: resíduos contra cada variável explicativa, conforme a apostila |
 
 Os dois gráficos exploratórios retirados do corpo permanecem disponíveis no repositório.
 As fontes foram retiradas da projeção e preservadas em [registro de referências](referencias-dos-slides.md).

@@ -1,21 +1,17 @@
 # Verificação da apresentação final
 
-Data: 17/11/2026. Base: `1893e89` (`main`). Branch: `apresentacao-final-15-minutos`.
+## Configuração integrada em 18/11/2026
 
-## Configuração aprovada na revisão da narrativa
+- 24 páginas: 15 principais e nove apêndices, A–I.
+- Mesmo modelo estatístico, dados, região e coeficientes.
+- Slide 10: visão geral das estimativas; gráficos nos slides 11–13.
+- Limitações no slide 14 e resposta final no slide 15.
+- Cinco briefings, notas no PPTX e HTML e roteiro de 870 segundos.
+- Tempos: Kauan 1min45; Fabio 1min30; Douglas 2min; Luiz Felipe 3min; Willian 6min15.
+- Último marco: 14min30; margem de 30 segundos até quinze minutos.
+- A duração real continua dependente do ensaio humano.
 
-- 14 páginas principais e nove apêndices, de A a I.
-- Meta de 23 páginas no PDF, no PowerPoint e no HTML.
-- Cinco briefings, com as mesmas pessoas e ordem da apresentação parcial; conteúdos condensados e redistribuídos.
-- Roteiro de 810 segundos: 105/90/120/180/315 segundos por pessoa.
-- Abertura de 195 segundos; 1min30 de reserva até o limite informado.
-- Marcos finais: 1min45, 3min15, 5min15, 8min15 e 13min30.
-- Último slide: 60 segundos. Rodapé apenas com numeração; fontes retiradas da projeção; legendas técnicas preservadas.
-- As falas são metas de ensaio. A duração de uma apresentação real não foi medida.
-
-O verificador confirmou os critérios acima na geração final de 17/11/2026.
-As evidências nas seções seguintes registram as versões anteriores à [revisão da narrativa](../decisoes/revisao-semantica-apresentacao.md).
-A evidência da geração atual está no encerramento deste registro.
+As seções abaixo preservam o histórico das verificações anteriores à integração. A conferência atual está no encerramento.
 
 ## Reprodução e integridade — registro anterior
 
@@ -293,3 +289,20 @@ Ajuste final de concisão: valores Mundo 5,8 e Brasil 21,3 mantidos no slide de 
 A média anual continua primeiro. O bloco foi renderizado com os três dados em linhas compactas.
 A fala de Kauan cita a razão e tem 151 palavras no total dos dois slides; sua meta permanece 105 segundos.
 Exportações e cinco briefings regenerados; verificador aprovado novamente em 18/11.
+
+## Conferência da integração final — 18/11/2026
+
+Os PRs 12 e 13 foram integrados em sequência invertida. O PR 13 acrescentou o slide de estimativas à branch anterior depois do merge do PR 12. Esta integração leva esse acréscimo à main, preservando todas as contribuições.
+
+- Deck recompilado: 24 páginas, 15 principais e nove apêndices.
+- Cinco briefings recompilados com as notas atuais e os novos marcos de tempo.
+- PDF, PPTX e HTML exportados novamente; notas verificadas contra a fonte.
+- `Rscript verificar_materiais.R`: passou com roteiro de 870 segundos, 14min30.
+- Logs do deck e dos cinco briefings sem `Overfull` ou `Missing character`.
+- Dados, modelo, região e coeficientes preservados nesta integração.
+- Pasta do grupo preparada com 33 arquivos e manifesto de integridade; cópia do Desktop conferida por hashes.
+- Guia pessoal atualizado localmente em oito páginas, com SIM definido, fontes explicadas, exemplos de taxas e interpretação dos testes. Não integra a entrega do grupo.
+
+A duração real continua dependente de ensaio. O artigo e o ZIP acadêmico completo continuam na etapa posterior já combinada.
+
+A contribuição posterior de Douglas na main também foi integrada: fórmula no slide 5. Foram explicitados os termos centralizados e a distinção entre pressupostos e diagnósticos. As referências dos apêndices H/I nos briefings passaram a 23/24.

@@ -1,5 +1,7 @@
 # Análise crítica da apresentação final
 
+> Registro da revisão anterior. A integração de 18/11 acrescentou um slide de estimativas. A numeração e os tempos atuais estão no [LEIA-ME da apresentação](../apresentacao/LEIA-ME.md). As análises e decisões estatísticas abaixo permanecem válidas.
+
 Referência: enunciado da professora reenviado pelo usuário em 17/11/2026.
 Critério: cada slide precisa cumprir uma função e preparar o seguinte, dentro de 10–15 minutos.
 

@@ -105,19 +105,19 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \]}
 \vspace{-0.2em}
 {\small
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.40\linewidth}X@{}}
+\noindent\begin{tabularx}{0.99\linewidth}{@{}>{\raggedright\arraybackslash}p{0.40\linewidth}X@{}}
 \toprule
 \textbf{Método ou termo} & \textbf{Finalidade}\\
 \midrule
 Regressão múltipla de ln(taxa) & Comparar municípios mantendo outras características constantes\\[0.3em]
-ln(renda) e seu quadrado ($r_i$, $r_i^2$) & Representar uma relação curva com a renda\\[0.3em]
+Renda: $r_i$ e $r_i^2$ & Representar uma relação curva com a renda\\[0.3em]
 Gini $\times$ ln(renda) ($g_i r_i$) & Permitir que a associação da desigualdade dependa da renda\\[0.3em]
 Demais explicativas ($\mathbf{x}_i$) & Desocupação, urbanização, escola e migração\\[0.3em]
 Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste como referência\\
 \bottomrule
 \end{tabularx}\par}
 \vspace{0.5em}
-{\small O log permite expressar as comparações como mudanças percentuais na taxa típica.}
+{\footnotesize $r_i$ é ln(renda) centralizado; $g_i$ é Gini centralizado. Erros iid e normais são pressupostos a avaliar.\par O log permite expressar as comparações como mudanças percentuais na taxa típica.}
 \end{frame}
 
 \begin{frame}{Metodologia: como avaliamos o modelo}
@@ -177,6 +177,24 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \end{frame}
 
 \section{Discussão e interpretação}
+\begin{frame}{Estimativas: efeito de cada variável na taxa}
+\begin{columns}[c]
+\column{0.74\textwidth}
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{1.8pt}
+\input{tabelas/efeitos.tex}
+\legenda{Efeito $= 100\,[\exp(b\,\Delta) - 1]\%$, demais variáveis constantes. Gini nos percentis 10, 50 e 90 da renda. H1: desigualdade; H2: exclusão escolar; H3: migração recente. IC 95\% clássico, sem correção de variância.}
+\column{0.24\textwidth}
+\begin{itemize}\footnotesize
+\item Sinais consistentes com H1 (rendas média e alta) e H2
+\item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
+\item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
+\item {\color{black!50}Não significativa (5\%): \nNaoSig{} (H3, $p$ = \nPMigr)}
+\end{itemize}
+\end{columns}
+\end{frame}
+
 \begin{frame}{Discussão: escola, urbanização e migração}
 \begin{columns}[c]
 \column{0.68\textwidth}

@@ -1,13 +1,14 @@
 \section{Sua parte: metodologia}
 \textbf{Mensagem principal:} cada termo e procedimento tem uma finalidade. Um bom ajuste não garante erros adequados.
 \subsection{Slide 5: modelo e finalidade dos termos}
-Reservar 55 segundos. Ler a relação entre cada método, à esquerda, e sua finalidade, à direita.
+Reservar 55 segundos. Usar a fórmula como referência, sem ler cada símbolo. Explicar a finalidade dos termos na tabela.
 \begin{itemize}
 \item A regressão linear múltipla usa ln(taxa), o logaritmo natural da taxa. Ela compara municípios mantendo outras características constantes.
 \item O logaritmo da renda entra com termo linear e quadrático. Esse termo permite representar uma relação curva.
 \item Gini $\times$ ln(renda) é uma interação: permite que a associação da desigualdade mude conforme a renda.
 \item Região entra como categoria, com o Sudeste como referência. As outras regiões são comparadas com essa referência.
 \item O logaritmo permite apresentar comparações como mudanças percentuais na taxa típica. Essa interpretação não transforma associação em causa.
+\item Na fórmula, r e g são logaritmo da renda e Gini após subtrair suas médias. Os erros independentes, de mesma variância e normais são pressupostos do modelo clássico. Os diagnósticos mostram variância desigual; não afirmar que esses pressupostos foram comprovados.
 \end{itemize}
 \subsection{Slide 6: como avaliamos o modelo}
 Reservar 65 segundos. Explicar o que cada procedimento verifica, antes dos resultados apresentados pelo Luiz Felipe.
@@ -22,7 +23,7 @@ Reservar 65 segundos. Explicar o que cada procedimento verifica, antes dos resul
 \begin{description}[leftmargin=0pt]
 \item[Por que usar logaritmo?] Pela interpretação percentual e pela melhora visual dos resíduos. Box-Cox estimou \nLambdaFinal{} com os mesmos termos do modelo final. Zero representa o log e fica fora do intervalo [\nLambdaFinalInf; \nLambdaFinalSup]. Portanto, não afirmar que Box-Cox selecionou o log. O apêndice C apresenta essa comparação.
 \item[O que os testes $F$ demonstram?] Eles avaliam contribuições conjuntas, sem identificar causas. O teste global considera todas as explicativas. O parcial compara conjuntos específicos; os blocos do apêndice B dependem da ordem. No apêndice D, retirar renda também retira seu quadrado e sua interação. Os testes clássicos exigem cautela pela variância não constante.
-\item[Por que avaliar resíduos antes do VIF?] Os resíduos mostram problemas de forma, variância e distribuição dos erros. O VIF trata informação repetida entre explicativas. Um VIF baixo não resolve problemas dos resíduos. Os apêndices H e I, slides 22 e 23, complementam essa leitura.
+\item[Por que avaliar resíduos antes do VIF?] Os resíduos mostram problemas de forma, variância e distribuição dos erros. O VIF trata informação repetida entre explicativas. Um VIF baixo não resolve problemas dos resíduos. Os apêndices H e I, slides 23 e 24, complementam essa leitura.
 \end{description}
 \subsection{Controle da fala e transição}
 A meta da parte é 2 minutos, terminando no marco acumulado de 5min15.
