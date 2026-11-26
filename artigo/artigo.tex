@@ -10,6 +10,7 @@
 \usepackage[table]{xcolor}
 \usepackage[square]{natbib}
 \usepackage{indentfirst}
+\usepackage[section]{placeins}
 
 \renewcommand{\topfraction}{0.9}
 \renewcommand{\textfraction}{0.07}
@@ -88,7 +89,7 @@ A literatura associa a violência letal a condições econômicas e sociais. Em 
 
 No Brasil, um estudo com os 5.570 municípios encontrou risco maior com mais urbanização, mais população e maior índice de Gini \citep{wanzinack2022}, mas estimou um único efeito do Gini para todos os municípios. Uma revisão sistemática aponta a educação como possível fator de proteção \citep{wanzinack2018}, e um estudo com estados estimou que mais gasto em educação reduz a taxa de homicídios no período seguinte \citep{becker2017}. A teoria da desorganização social relaciona a mobilidade residencial e a fragilidade dos laços comunitários ao crime \citep{sampson1989}; no Brasil, a desorganização social associou-se a trajetórias crescentes de homicídio entre 1991 e 2010 \citep{peres2017}. Este trabalho testa, entre municípios brasileiros, se a associação da desigualdade muda com a renda.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
 \includegraphics[width=0.33\textwidth]{mapa_taxa.png}
 \caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023, nos municípios do estudo. Em cinza, os municípios fora do escopo: menos de 30 mil habitantes e Campos do Jordão-SP. \fonte}
@@ -137,7 +138,7 @@ O IBGE não publica o Gini municipal do Censo 2022. O Censo publica, por municí
 
 Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população e \nPctHomEsc\% dos homicídios do país (Tabela~\ref{tab:escopo}). Todos registraram pelo menos \nMinHomEsc{} homicídio no período e não têm dado faltante, de modo que $\ln Y_i$ existe para todos. Os \nMunZeroHom{} municípios sem nenhum homicídio e os \nMunSemEM{} sem ensino médio têm menos de 30 mil habitantes. Os \nMunFora{} municípios fora do estudo têm taxa conjunta de \nTaxaFora{} por 100 mil, próxima da taxa conjunta do estudo (\nTaxaEsc). A Tabela~\ref{tab:descritiva} resume as variáveis; as estatísticas são médias simples entre municípios, por isso a taxa média difere da taxa nacional.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Municípios por região, no total e no estudo, e percentual da população e dos homicídios (2021--2023) da região que fica nos municípios do estudo. \fonte}
 \label{tab:escopo}
@@ -145,7 +146,7 @@ Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população e \nPctHomEsc\% 
 \input{tabelas/escopo_regiao.tex}
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Estatísticas descritivas dos \nMunEsc{} municípios do estudo (médias simples entre municípios). DP: desvio-padrão; Cor.: correlação com ln(taxa), usando ln(renda) para a renda; EM: ensino médio. \fonte}
 \label{tab:descritiva}
@@ -166,7 +167,7 @@ Os métodos seguem a apostila da disciplina \citep{ferrari2023}, e toda a análi
 \end{equation}
 em que $r_i$ é o logaritmo da renda centralizado na média, $g_i$ é o Gini centralizado, $\mathbf{x}_i$ reúne desocupação, urbanização, frequência escolar, distorção idade-série e migração, e $D_{ik}$ são as quatro indicadoras de região. A média de $\ln(\text{renda})$ corresponde a R\$ \nCentroRenda{} (média geométrica da renda), e a média do Gini é \nCentroGini. Assim, $\beta_3$ é a associação do Gini na renda de R\$ \nCentroRenda, e $\beta_1$ e $\beta_2$ descrevem a renda no Gini médio. A Tabela~\ref{tab:metodos} resume a finalidade de cada método.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Métodos estatísticos usados e finalidade de cada um. \fonte}
 \label{tab:metodos}
@@ -181,9 +182,8 @@ Interação Gini $\times$ renda & Permitir que a associação da desigualdade mu
 Variáveis indicadoras de região & Comparar regiões com as demais características iguais\\
 Teste $F$ global, testes $t$ e intervalos de confiança (IC) & Avaliar o modelo como um todo e cada coeficiente\\
 Teste linear geral ($F$ parcial) e critérios de comparação & Testar a contribuição de cada grupo de variáveis e comparar os modelos\\
-Gráficos de resíduos e regra empírica & Procurar curvas, variância não constante, \textit{outliers} e desvios da normal\\
+Gráficos de resíduos, resíduos semi-studentizados e regra empírica & Procurar curvas, variância não constante, \textit{outliers} ($|e_i^*| \geq 4$) e desvios da normal\\
 Testes de Breusch--Pagan e de Shapiro--Wilk & Complementar a avaliação da variância e da normalidade\\
-Resíduos semi-studentizados & Identificar possíveis \textit{outliers} ($|e_i^*| \geq 4$)\\
 Fator de inflação da variância (VIF) & Avaliar a informação repetida entre as explicativas\\
 Mínimos quadrados ponderados & Verificar se a variância não constante muda as estimativas\\
 IC da resposta média e intervalo de previsão & Estimar a taxa de um município de referência, com sua incerteza\\
@@ -205,7 +205,7 @@ IC da resposta média e intervalo de previsão & Estimar a taxa de um município
 
 Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). A região teve o maior ganho em $R^2$ ajustado ($R^2_a$), de \nRdoisAC{} para \nRdoisAD. A migração, que entra no bloco C, não é significativa no modelo final. A interação Gini $\times$ renda foi significativa ($F = \nFInter$). Como o teste sequencial depende da ordem de entrada \citep[cap.~6]{ferrari2023}, calculamos também o $F$ de cada bloco como o último a entrar: os valores vão de \nFUltMin{} a \nFUltMax, todos com $p < 0{,}001$. Entre os cinco modelos, MSE, AIC, BIC e PRESS escolhem o modelo E, e o $C_p$ dos modelos A a D fica muito acima de $p+1$, o que indica viés quando se omitem os blocos seguintes (no modelo completo, $C_p = p+1$ por construção). O modelo final tem $R^2 = \nRdoisE$ e $R^2_a = \nRdoisA$, na escala de $\ln Y$, e o teste $F$ global vale \nFglobal{} com \nGlUm{} e \nGlDois{} graus de liberdade (gl), com $p < 0{,}001$. O PRESS, que mede o erro de previsão de cada município quando ele é deixado fora do ajuste, dá um $R^2$ de previsão de \nPressPred, quase igual ao $R^2_a$; o modelo não está sobreajustado. O desvio-padrão residual é $s = \nSigma$ (MSE $= \nMSE$): $2s = \nDoisS$ na escala do logaritmo, ou seja, a taxa observada fica, na maior parte dos casos, entre a taxa típica dividida e multiplicada por \nFatorDoisS. A Figura~\ref{fig:ajuste}, à esquerda, mostra essa dispersão.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Construção do modelo em blocos. Cada linha acrescenta um bloco ao modelo anterior; $F$ e $p$ do teste linear geral contra o bloco anterior; gl: graus de liberdade do numerador. \fonte}
 \label{tab:blocos}
@@ -216,7 +216,7 @@ Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). A regi�
 
 A Tabela~\ref{tab:espec} mostra os termos adicionais testados. Quatro dos cinco conjuntos são significativos a 5\%, mas cada um aumenta o $R^2_a$ em menos de 0,01. Com todos os conjuntos significativos juntos, o $R^2_a$ vai a \nRdoisATodos, e AIC e PRESS preferem esse modelo maior. O BIC, que penaliza mais os parâmetros, prefere o modelo final ($-$\nBICfinal{} contra $-$\nBICtodos); entre os conjuntos isolados, só a renda ao cubo tem BIC um pouco menor que o do modelo final. Tomando o modelo com todos os termos como completo, o $C_p$ do modelo final é \nCpFinal, acima de $p+1 = \nPmaisUm$: pelo critério da apostila, há algum viés por omissão desses termos. A regra de bolso da apostila para polinômios, subir a ordem enquanto o termo de maior ordem for significativo a 10\%, incluiria a renda ao cubo, mas a própria apostila diz que essa regra não é absoluta. Para descrever associações, a apostila recomenda ``escolher o menor número de variáveis explicativas capazes de explicar satisfatoriamente a variabilidade observada na resposta'' \citep[cap.~8]{ferrari2023}. Escolhemos o modelo mais simples para facilitar a interpretação, e a Seção~\ref{sec:robustez} mostra que as conclusões sobre a desigualdade não mudam com os termos adicionais. A interação da região com a renda, em particular, indica que a curva da renda pode diferir entre regiões.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Termos adicionais somados ao modelo final (teste linear geral). Para AIC, BIC e PRESS, menor é melhor. \fonte}
 \label{tab:espec}
@@ -230,23 +230,23 @@ A Tabela~\ref{tab:espec} mostra os termos adicionais testados. Quatro dos cinco 
 
 \textbf{Linearidade e variância.} Os resíduos contra os valores ajustados não mostram curva (Figura~\ref{fig:diag}, à esquerda). Contra cada explicativa (gráficos não mostrados), a curva suavizada dos resíduos fica perto de zero, com leve curvatura nas pontas de algumas variáveis, coerente com os quadrados significativos da Tabela~\ref{tab:espec}. A dispersão tende a cair nos municípios mais populosos (Figura~\ref{fig:diag}, à direita): a variância dos resíduos no quintil menos populoso é \nRazaoVar{} vez a do quintil mais populoso, sem queda contínua entre os quintis. O teste de Breusch--Pagan rejeita a variância constante ($BP = \nBP$, com \nBPgl{} gl; $p < 0{,}001$); contra o logaritmo da população, isoladamente, também rejeita ($BP = \nBPpop$, $p = \nBPpopP$). Segundo a apostila, a heteroscedasticidade (variância não constante) é uma violação menos grave: ela reduz a eficiência dos estimadores e invalida a estimativa da variância dos erros \citep[cap.~4]{ferrari2023}. Por isso, os intervalos e testes clássicos devem ser lidos com cautela.
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
-\includegraphics[width=0.46\textwidth]{observado_ajustado.png}\hfill
-\includegraphics[width=0.46\textwidth]{qq_final.png}
+\includegraphics[width=0.40\textwidth]{observado_ajustado.png}\hfill
+\includegraphics[width=0.40\textwidth]{qq_final.png}
 \caption{Esquerda: ln(taxa) observado contra ln(taxa) ajustado, nos mesmos dados do ajuste; a diagonal indica observado igual ao ajustado. Direita: quantis dos resíduos padronizados contra quantis da distribuição normal. \fonte}
 \label{fig:ajuste}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
-\includegraphics[width=0.46\textwidth]{residuos_ajustado.png}\hfill
-\includegraphics[width=0.46\textwidth]{residuos_populacao.png}
+\includegraphics[width=0.40\textwidth]{residuos_ajustado.png}\hfill
+\includegraphics[width=0.40\textwidth]{residuos_populacao.png}
 \caption{Esquerda: resíduos contra valores ajustados; a linha tracejada é o resíduo zero. Direita: valor absoluto do resíduo contra a população, em escala log. \fonte}
 \label{fig:diag}
 \end{figure}
 
-\textbf{Medida corretiva.} A apostila indica mínimos quadrados ponderados para a variância não constante, mas não define os pesos. Como escolha do grupo, aproximamos a variância de $\ln Y_i$ por $s_0^2 + 1/\mu_i$, em que $\mu_i = 3 \times \text{população} \times \text{taxa típica ajustada} / 100{.}000$ é o número de homicídios esperado em três anos e $1/\mu_i$ é a parte da variância que vem do acaso da contagem; a parte restante, $s_0^2 = \text{MSE} - \overline{1/\mu}$, vale \nSzeroQ. Com pesos $1/(s_0^2 + 1/\mu_i)$, o coeficiente da interação passa de \nMqoInter{} para \nMqpInter, nenhum coeficiente troca de sinal, e os erros-padrão ficam entre \nEpMin{} e \nEpMax{} vez os do MQO; as estimativas e os seus erros-padrão, portanto, pouco dependem desse ajuste. O ajuste ponderado remove o padrão ligado à população (Breusch--Pagan contra o logaritmo da população: $BP = \nBPmqpPop$, $p = \nBPmqpPopP$), mas o teste contra todas as explicativas ainda rejeita ($BP = \nBPmqp$, $p = \nBPmqpP$): parte da variância não constante se liga a outras características. Mantivemos o MQO como modelo principal, por ser mais simples de interpretar.
+\textbf{Medida corretiva.} A apostila indica mínimos quadrados ponderados para a variância não constante, mas não define os pesos. Como escolha do grupo, aproximamos a variância de $\ln Y_i$ por $s_0^2 + 1/\mu_i$, em que $\mu_i = 3 \times \text{população} \times \text{taxa típica ajustada} / 100{.}000$ é o número de homicídios esperado em três anos e $1/\mu_i$ é a parte da variância que vem do acaso da contagem; a parte restante, $s_0^2 = \text{MSE} - \overline{1/\mu}$, vale \nSzeroQ. Com pesos $1/(s_0^2 + 1/\mu_i)$, o coeficiente da interação passa de \nMqoInter{} para \nMqpInter, nenhum coeficiente troca de sinal, e os erros-padrão ficam entre \nEpMin{} e \nEpMax{} vez os do MQO; as estimativas e os seus erros-padrão, portanto, pouco dependem desse ajuste. O ajuste ponderado remove o padrão ligado à população (Breusch--Pagan contra o logaritmo da população: $BP = \nBPmqpPop$, $p = \nBPmqpPopP$), mas o teste contra todas as explicativas ainda rejeita ($BP = \nBPmqp$, $p = \nBPmqpP$): parte da variância não constante se liga a outras características.
 
 \textbf{\textit{Outliers}, independência e normalidade.} Nenhum resíduo semi-studentizado atinge $\pm 4$; o maior, em valor absoluto, é \nMaxSemi. Os resíduos variam entre UFs: a UF explica \nRdoisResUF\% da variação dos resíduos. Há, portanto, fatores estaduais não medidos, e os erros de municípios da mesma UF não são independentes; com isso, os erros-padrão clássicos tendem a ser subestimados. A Seção~\ref{sec:robustez} avalia o modelo com UF. Por último, no gráfico de quantis dos resíduos padronizados (Figura~\ref{fig:ajuste}, à direita), os pontos ficam próximos da reta. Pela regra empírica, \nRegraUm\%, \nRegraDois\% e \nRegraTres\% dos resíduos semi-studentizados ficam dentro de $\pm 1$, $\pm 1{,}645$ e $\pm 1{,}96$, contra 68\%, 90\% e 95\% esperados na normal. O teste de Shapiro--Wilk não rejeita a normalidade ($W = \nSW$, $p = \nSWp$).
 
@@ -256,7 +256,7 @@ A Tabela~\ref{tab:espec} mostra os termos adicionais testados. Quatro dos cinco 
 
 A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} traduz os principais em mudanças percentuais na taxa típica, com a hipótese de cada um na primeira coluna.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Coeficientes do modelo final. Resposta: $\ln Y$; $n = \nMunEsc$. EP: erro-padrão clássico; centr.: centralizado na média; EM: ensino médio; o Sudeste é a referência das regiões. Variáveis em \%, de 0 a 100; Gini de 0 a 1. \fonte}
 \label{tab:coef}
@@ -265,7 +265,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \input{tabelas/coeficientes.tex}
 \end{table}
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Mudança percentual na taxa típica para o aumento indicado, com as demais variáveis constantes. O efeito do Gini é calculado nos percentis 10, 50 e 90 da renda; o $p$ da renda é o do termo quadrático. IC 95\% clássico; Hip.: hipótese; EM: ensino médio; p.p.: pontos percentuais. \fonte}
 \label{tab:efeitos}
@@ -276,7 +276,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 
 \textbf{Desigualdade (H1).} A associação do Gini depende da renda (Figura~\ref{fig:gini}, à esquerda). Na renda mediana (R\$ \nRendaMediana), um aumento de 0,05 no Gini corresponde a uma taxa típica \nGiniEfMediana\% maior; no percentil 90 (R\$ \nRendaNoventa), a diferença chega a \nGiniEfNoventa\%. O coeficiente do Gini (\nCoefGini) vale na renda de R\$ \nCentroRenda; o efeito é zero perto de R\$ \nGiniZero{} per capita, e \nGiniZeroPct\% dos municípios ficam abaixo desse valor. No percentil 10 da renda (R\$ \nRendaDez), o efeito estimado é negativo, de \nGiniEfDez\% ($p = \nGiniPDez$), e significativo em \nPDezSig{} das \nNEspec{} especificações da Tabela~\ref{tab:robustez} (o modelo final e sete alternativas); ele deixa de ser significativo com a renda ao cubo e com todos os termos adicionais. H1 é, portanto, parcialmente sustentada: a desigualdade associa-se a taxas maiores nos municípios de renda média e alta, e a uma taxa menor, de forma instável, nos mais pobres, o que contraria a hipótese. Não interpretamos essa associação negativa como efeito protetor. Uma explicação possível, não testada, é que, nos municípios mais pobres, o Gini calculado por classes meça pior a desigualdade, porque muitas pessoas ficam nas classes mais baixas. A região não explica o sinal: embora \nPctNEpobres\% dos 10\% de municípios mais pobres estejam no Nordeste, a interação região $\times$ Gini não é significativa ($p = \nPRegGini$, Tabela~\ref{tab:espec}).
 
-\begin{figure}[htbp]
+\begin{figure}[!htb]
 \centering
 \includegraphics[width=0.46\textwidth]{gini_renda.png}\hfill
 \includegraphics[width=0.46\textwidth]{renda_regiao.png}
@@ -284,7 +284,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \label{fig:gini}
 \end{figure}
 
-\textbf{Escola (H2).} As duas medidas escolares têm a direção esperada (Tabela~\ref{tab:efeitos}). Cinco pontos percentuais a mais de frequência escolar de 15 a 17 anos correspondem a uma taxa típica \nEfFreq\% menor. Dez pontos percentuais a mais de distorção idade-série correspondem a uma taxa típica \nEfDist\% maior. H2 é sustentada. Essas medidas descrevem o município, e não o risco de cada jovem.
+\textbf{Escola (H2).} As duas medidas escolares têm a direção esperada (Tabela~\ref{tab:efeitos}). Cinco pontos percentuais a mais de frequência escolar de 15 a 17 anos correspondem a uma taxa típica \nEfFreq\% menor. Dez pontos percentuais a mais de distorção idade-série correspondem a uma taxa típica \nEfDist\% maior. H2 é sustentada.
 
 \textbf{Migração (H3).} Cinco pontos percentuais a mais de migração recente correspondem a uma taxa típica \nEfMigr\% maior, mas o intervalo de confiança inclui o zero ($p = \nPMigr$). H3 não é sustentada.
 
@@ -299,7 +299,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 
 A Tabela~\ref{tab:robustez} repete o efeito de +0,05 no Gini em especificações alternativas. Nos percentis 50 e 90 da renda, o efeito é positivo e significativo em todas elas. Com a UF no lugar da região, o efeito passa a usar só as diferenças de desigualdade dentro de cada estado e cai para \nUFFracMed\% do valor na renda mediana e para \nUFFracNov\% no percentil 90, mas continua positivo e significativo. Esse modelo tem $R^2_a$ de \nRdoisAUF{} e BIC menor ($-$\nBICUF), mas usa \nParUF{} parâmetros, e o teste de Shapiro--Wilk rejeita a normalidade dos seus resíduos ($p < 0{,}001$). Mantivemos a região pelos motivos da Seção~\ref{sec:dados} e registramos que a magnitude do efeito depende dessa escolha. No percentil 10, o efeito estimado é negativo em todas, entre $-$\nPDezMin\% e $-$\nPDezMax\%, e significativo em \nPDezSig{} das \nNEspec; como perde significância com a renda ao cubo e com todos os termos adicionais, tratamos esse resultado como instável. Incluir \nForaNome{} não muda as conclusões (interação de \nInterCJ{}, contra \nMqoInter{} no modelo final), mas o município seria um \textit{outlier} pelo critério da apostila ($e^* =$ \nSemiCJ). A especificação sem os municípios com 30\% ou mais de óbitos indeterminados, muitos deles paulistas, cobre o risco de sub-registro; nela, nenhum coeficiente troca de sinal.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Efeito de +0,05 no Gini na taxa típica (valor $p$ entre parênteses), nos percentis 10, 50 e 90 da renda, em especificações alternativas. \fonte}
 \label{tab:robustez}
@@ -312,7 +312,7 @@ A Tabela~\ref{tab:robustez} repete o efeito de +0,05 no Gini em especificações
 
 A Tabela~\ref{tab:prev} aplica o modelo a um município de referência do Sudeste e a um do Nordeste, com cada explicativa na mediana da própria região; para evitar extrapolação escondida \citep[cap.~5]{ferrari2023}, conferimos a alavancagem desses pontos (no máximo \nHRefMax, abaixo da média de \nHMedia{} dos municípios do estudo). O IC refere-se à taxa típica de todos os municípios com essas características; o intervalo de previsão (IP) refere-se à taxa de um município. O IP é muito mais largo, porque soma a incerteza da estimativa à variação entre municípios. Como a variância não é constante, ele tende a ser largo demais para os municípios grandes e estreito demais para os pequenos. As taxas típicas ficam próximas das medianas observadas nas duas regiões. As previsões valem apenas dentro do escopo: municípios com 30 mil habitantes ou mais e combinações de características parecidas com as observadas.
 
-\begin{table}[htbp]
+\begin{table}[!htb]
 \centering
 \caption{Taxa típica estimada (por 100 mil ao ano) para o município de referência do Sudeste e do Nordeste, com as explicativas na mediana da região. IC: intervalo de confiança; IP: intervalo de previsão. \fonte}
 \label{tab:prev}
@@ -328,15 +328,15 @@ Como pontos positivos, o trabalho usa o Gini municipal calculado com o Censo 202
 
 \section{Considerações Finais}
 
-Este trabalho identificou as características municipais associadas à taxa de homicídios no Brasil, com um modelo de regressão linear múltipla para \nMunEsc{} municípios com 30 mil habitantes ou mais, que reúnem \nPctPopEsc\% da população. O modelo explica \nRdoisPct\% da variação do logaritmo da taxa. A desigualdade associa-se a taxas maiores nos municípios de renda média e alta e, de forma instável, a taxas menores nos mais pobres (H1 parcialmente sustentada). A exclusão escolar associa-se a taxas maiores (H2 sustentada). A migração recente não mostrou associação clara (H3 não sustentada). A renda tem relação em U invertido com a taxa, e as regiões Norte, Nordeste, Centro-Oeste e Sul têm taxas típicas maiores que a do Sudeste. Esses resultados são associações entre municípios: eles não demonstram causa nem descrevem o risco de cada pessoa. Para a meta 16.1 do ODS 16, eles sugerem que políticas de permanência escolar e de redução da desigualdade nos municípios de renda média e alta merecem atenção; essa indicação precisa ser confirmada por estudos causais.
+Este trabalho identificou as características municipais associadas à taxa de homicídios no Brasil, com um modelo de regressão linear múltipla para \nMunEsc{} municípios com 30 mil habitantes ou mais, que reúnem \nPctPopEsc\% da população. O modelo explica \nRdoisPct\% da variação do logaritmo da taxa. A desigualdade associa-se a taxas maiores nos municípios de renda média e alta e, de forma instável, a taxas menores nos mais pobres (H1 parcialmente sustentada). A exclusão escolar associa-se a taxas maiores (H2 sustentada). A migração recente não mostrou associação clara (H3 não sustentada). A renda tem relação em U invertido com a taxa, e as regiões Norte, Nordeste, Centro-Oeste e Sul têm taxas típicas maiores que a do Sudeste. Para a meta 16.1 do ODS 16, eles sugerem que políticas de permanência escolar e de redução da desigualdade nos municípios de renda média e alta merecem atenção; essa indicação precisa ser confirmada por estudos causais.
 
 \subsection{Limitações}
 
 \begin{itemize}
 \item \textbf{Variância não constante.} O teste de Breusch--Pagan rejeita a variância constante. O ajuste ponderado mantém as estimativas, mas os intervalos e testes clássicos devem ser lidos com cautela.
 \item \textbf{Dependência entre municípios.} Os resíduos variam entre UFs, e municípios próximos podem compartilhar fatores não medidos; os erros-padrão clássicos tendem a ser subestimados, e a magnitude do efeito do Gini cai quando a UF substitui a região. O teste baseado em ordem artificial foi retirado a pedido da professora; erros correlacionados exigem modelos que estão fora do escopo da apostila.
-\item \textbf{Medição.} O Gini é uma aproximação pelas classes de renda. O SIM pode omitir ou classificar mortes de forma diferente entre municípios. Os municípios com menos de 30 mil habitantes ficaram fora, e os resultados não se aplicam diretamente a eles.
-\item \textbf{Especificação.} Quatro dos cinco conjuntos de termos adicionais da Tabela~\ref{tab:espec} são significativos, mas ficaram fora por parcimônia. O logaritmo não é a potência ótima do Box-Cox. O coeficiente da desocupação é frágil.
+\item \textbf{Medição.} O Gini é uma aproximação pelas classes de renda. O SIM pode omitir ou classificar mortes de forma diferente entre municípios. Os resultados não se aplicam a municípios com menos de 30 mil habitantes.
+\item \textbf{Especificação.} Quatro dos cinco conjuntos de termos adicionais da Tabela~\ref{tab:espec} são significativos, mas ficaram fora por parcimônia. O logaritmo não é a potência ótima do Box-Cox.
 \item \textbf{Estudo observacional.} Os dados são de um único período, e fatores como policiamento e crime organizado não foram medidos.
 \end{itemize}
 
