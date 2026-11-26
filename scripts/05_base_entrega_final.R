@@ -36,7 +36,7 @@ dic <- data.frame(arquivo = "base_municipios.csv", coluna = names(d), descricao 
   "Região: N, NE, CO, SE ou S",
   "População residente, Censo 2022 (IBGE, SIDRA 4709)",
   "Óbitos por agressão (CID-10 X85-Y09), 2021-2023, por residência (SIM/DATASUS)",
-  "Óbitos por intervenção legal (CID-10 Y35-Y36), 2021-2023, por residência (SIM/DATASUS)",
+  "Óbitos por intervenção legal e operações de guerra (CID-10 Y35-Y36), 2021-2023, por residência (SIM/DATASUS)",
   "Óbitos de intenção indeterminada (CID-10 Y10-Y34), 2021-2023, por residência (SIM/DATASUS)",
   "Total de óbitos por causas externas, 2021-2023, por residência (SIM/DATASUS)",
   "Rendimento domiciliar per capita médio, R$ (Censo 2022, SIDRA 10295)",

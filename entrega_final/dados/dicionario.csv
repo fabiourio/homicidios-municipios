@@ -5,7 +5,7 @@
 "base_municipios.csv","regiao","Região: N, NE, CO, SE ou S"
 "base_municipios.csv","pop","População residente, Censo 2022 (IBGE, SIDRA 4709)"
 "base_municipios.csv","agressao","Óbitos por agressão (CID-10 X85-Y09), 2021-2023, por residência (SIM/DATASUS)"
-"base_municipios.csv","intervencao_legal","Óbitos por intervenção legal (CID-10 Y35-Y36), 2021-2023, por residência (SIM/DATASUS)"
+"base_municipios.csv","intervencao_legal","Óbitos por intervenção legal e operações de guerra (CID-10 Y35-Y36), 2021-2023, por residência (SIM/DATASUS)"
 "base_municipios.csv","intencao_indeterminada","Óbitos de intenção indeterminada (CID-10 Y10-Y34), 2021-2023, por residência (SIM/DATASUS)"
 "base_municipios.csv","total_causas_externas","Total de óbitos por causas externas, 2021-2023, por residência (SIM/DATASUS)"
 "base_municipios.csv","rend_pc_media","Rendimento domiciliar per capita médio, R$ (Censo 2022, SIDRA 10295)"
