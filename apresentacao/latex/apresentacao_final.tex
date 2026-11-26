@@ -44,7 +44,7 @@
 \small
 Brasil, média 2021--2023: \textbf{\nHomAno{} mortes/ano}.
 \par\vspace{0.4em}
-{\footnotesize 2021 (/100 mil): \textbf{Mundo \nTaxaMundoContexto{} · Brasil \nTaxaBrasilContexto}.}
+{\footnotesize Homicídios intencionais, 2021 (/100 mil): \textbf{Mundo \nTaxaMundoContexto{} · Brasil \nTaxaBrasilContexto}.}
 \par\vspace{0.3em}
 Brasil: cerca de \textbf{\nRazaoContexto{} vezes a taxa mundial}.
 \end{block}
@@ -52,7 +52,7 @@ Brasil: cerca de \textbf{\nRazaoContexto{} vezes a taxa mundial}.
 \vspace{0.3em}
 {\small \textbf{Medida do estudo:} mortes por agressões e intervenções legais por 100 mil habitantes ao ano (2021--2023).}
 \begin{block}{Pergunta de pesquisa}
-\small Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
+\small Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros? Em particular, a associação da desigualdade muda conforme a renda do município?
 \end{block}
 \end{frame}
 
@@ -86,7 +86,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \item \nForaNome{} excluído por indício de sub-registro
 \end{itemize}
 \column{0.48\textwidth}
-\textbf{\color{ods}Cinco grupos de variáveis explicativas}
+\textbf{\color{ods}Variáveis explicativas}
 \begin{itemize}
 \item Renda, Gini e desocupação
 \item Urbanização
@@ -151,7 +151,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \item $R^2$ ajustado = \nRdoisA, na escala de ln(taxa)
 \item O modelo acompanha parte da variação observada
 \item Municípios com erros grandes permanecem
-\item Esse ajuste não mede desempenho em dados novos
+\item $R^2$ de previsão (PRESS) = \nPressPred, próximo do $R^2_a$
 \end{itemize}
 \end{columns}
 \legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Não é validação externa.}
@@ -212,7 +212,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \begin{itemize}\small
 \item Maior frequência escolar associada a taxa menor
 \item Maior distorção idade-série associada a taxa maior
-\item Urbanização: associação positiva
+\item Urbanização: associação positiva quando a renda está no modelo
 \item Migração: intervalo cruza zero
 \end{itemize}
 \end{columns}
@@ -229,7 +229,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \item Renda mediana (R\$ \nRendaMediana): \textbf{\nGiniEfMediana\%}
 \item Percentil 90 (R\$ \nRendaNoventa): \textbf{\nGiniEfNoventa\%}
 \item Efeito zero perto de R\$ \nGiniZero; \nGiniZeroPct\% dos municípios abaixo
-\item No percentil 10 da renda, o sinal é negativo; não há efeito positivo geral
+\item Percentil 10: sinal negativo, mas não resiste a outras especificações
 \end{itemize}
 \end{columns}
 \legenda{Faixa: IC 95\% clássico. Pontos vermelhos: percentis 10, 50 e 90 da renda.}
@@ -241,24 +241,25 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \fig{renda_regiao.png}
 \column{0.32\textwidth}
 \begin{itemize}\small
-\item Curva da renda no Gini médio; taxa típica (mediana)
+\item Curvas do Nordeste e do Sudeste, no Gini médio; taxa típica (mediana)
 \item Pico perto de R\$ \nPico; só \nPctAbaixoPico\% dos municípios abaixo
-\item Com as demais características iguais, acima do Sudeste: NE $+$\nEfNE\%, CO $+$\nEfCO\%, N $+$\nEfN\%, S $+$\nEfS\%
+\item Com as demais características iguais, acima do Sudeste: NE $+$\nEfNordeste\%, CO $+$\nEfCentroOeste\%, N $+$\nEfNorte\%, S $+$\nEfSul\%; sem SP na referência, S $+$\nEfSulSemSP\%
 \end{itemize}
 \end{columns}
 \legenda{Curvas no intervalo de renda observado em cada região. Faixas: IC 95\% clássico. Não representam média aritmética.}
 \end{frame}
 
 \begin{frame}{Discussão: limites das conclusões}
-\begin{itemize}
-\setlength{\itemsep}{0.5em}
-\item \textbf{Variância não constante:} o ajuste ponderado mantém as conclusões, mas os testes clássicos exigem cautela
+\begin{itemize}\small
+\setlength{\itemsep}{0.3em}
+\item \textbf{Variância não constante:} o ajuste ponderado mantém as estimativas, mas os testes clássicos exigem cautela
 \item \textbf{Medição:} Gini aproximado e possível sub-registro dos óbitos; municípios com menos de 30 mil habitantes ficam fora do recorte
-\item \textbf{Desocupação:} sem os \nNSensDesoc{} municípios com 30\% ou mais de óbitos indeterminados, $p$ = \nPSensDesoc
+\item \textbf{Desocupação:} sinal negativo frágil; sem os \nNSensDesoc{} municípios com 30\% ou mais de óbitos de intenção indeterminada entre as causas externas, $p$ = \nPSensDesoc
 \item \textbf{Vizinhança:} municípios próximos podem compartilhar fatores; independência espacial não foi verificada, a pedido da professora
-\item \textbf{Estudo observacional:} associação municipal não demonstra causa nem descreve indivíduos
+\item \textbf{Especificação:} o log não é a potência ótima do Box-Cox; termos extras significativos ficaram fora por parcimônia, sem mudar as conclusões sobre a desigualdade
+\item \textbf{Estudo observacional:} um só período; associação municipal não demonstra causa nem descreve indivíduos
 \end{itemize}
-\legenda{VIF máximo: \nVIFrendaFinal{} (renda); entre 5 e 10, indica multicolinearidade pelo critério da apostila.}
+\legenda{VIF máximo: \nVIFrendaFinal{} (renda), acima de 5: multicolinearidade pelo critério da apostila; coeficientes isolados de renda e urbanização ficam menos confiáveis.}
 \end{frame}
 
 \begin{frame}{Resposta à pergunta e próximos passos}
@@ -268,7 +269,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \item \textbf{H2 sustentada:} frequência escolar e distorção idade-série nas direções esperadas
 \item \textbf{H3 não sustentada:} a migração recente não mostrou associação clara
 \item \textbf{Renda e região:} relação curva da renda; diferenças regionais permanecem no ajuste
-\item \textbf{Próximos passos:} dependência espacial; curva da renda por região; políticas estaduais e violência organizada; vários anos
+\item \textbf{Próximos passos:} dependência espacial; interação Gini--renda e curva da renda por região; políticas estaduais e violência organizada; vários anos
 \end{itemize}
 \end{frame}
 

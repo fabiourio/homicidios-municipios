@@ -16,15 +16,23 @@ execute:
 Este caderno reproduz todos os números, tabelas e figuras do artigo.
 Para rodar, mantenha este arquivo ao lado da pasta `dados/` e execute `quarto render analise_final.qmd`.
 A execução grava as figuras, as tabelas e os números do artigo em `resultados/`.
+Pacotes de R necessários: `ggplot2`, `dplyr`, `sf`, `MASS`, `lmtest`, `scales`, `knitr` e `rmarkdown`
+(`install.packages(c("ggplot2", "dplyr", "sf", "MASS", "lmtest", "scales", "knitr", "rmarkdown"))`).
 
-**Pergunta de pesquisa:** quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
+**Pergunta de pesquisa:** quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros? Em particular, a associação da desigualdade com a taxa muda conforme a renda do município?
+
+**Hipóteses (formuladas antes do ajuste):** H1, municípios mais desiguais têm taxas maiores; H2, municípios com mais exclusão escolar de jovens têm taxas maiores; H3, municípios com mais migração recente têm taxas maiores.
 
 | Arquivo em `dados/` | Conteúdo |
 |---|---|
 | `base_municipios.csv` | Uma linha por município (5.570): óbitos (SIM/DATASUS), Censo 2022 (IBGE) e INEP 2022 |
-| `gini_oficial.csv` | Índice de Gini oficial das 27 UFs (IBGE), para conferir o Gini calculado |
+| `gini_oficial.csv` | Índice de Gini oficial do Brasil e das 27 UFs (IBGE), para conferir o Gini calculado |
 | `malha_mun.geojson` | Malha municipal do IBGE, usada só no mapa |
 | `dicionario.csv` | Descrição de cada coluna |
+
+**O que vem de fora da apostila.** Pedidos da revisão da professora: o Gini por município e o corte da população por percentil.
+Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; e os pesos do ajuste por mínimos quadrados ponderados.
+Cada um desses itens está marcado com **(fora da apostila)** no ponto em que aparece.
 
 ## Pacotes e funções auxiliares
 
@@ -33,22 +41,28 @@ A execução grava as figuras, as tabelas e os números do artigo em `resultados
 library(ggplot2)
 library(dplyr)
 library(sf)       # mapa
-library(MASS)     # boxcox
-library(lmtest)   # bptest
+library(lmtest)   # bptest (Breusch-Pagan)
 
 dir.create("resultados/figuras", recursive = TRUE, showWarnings = FALSE)
 dir.create("resultados/tabelas", recursive = TRUE, showWarnings = FALSE)
 
 # Formatação em português (vírgula decimal, ponto de milhar) para as tabelas e números do artigo
-fmt   <- function(x, d = 1) formatC(x, format = "f", digits = d, big.mark = ".", decimal.mark = ",")
-fp    <- function(p) ifelse(p < 0.001, "$<$0,001", fmt(p, 3))
-sinal <- function(x, d = 0) paste0(ifelse(round(x, d) >= 0, "$+$", "$-$"), fmt(abs(x), d))
+fmt    <- function(x, d = 1) formatC(x, format = "f", digits = d, big.mark = ".", decimal.mark = ",")
+fp     <- function(p) ifelse(p < 0.001, "$<$0,001", fmt(p, 3))
+sinal  <- function(x, d = 0) paste0(ifelse(round(x, d) >= 0, "$+$", "$-$"), fmt(abs(x), d))
 milhar <- scales::label_number(big.mark = ".", decimal.mark = ",")
+tabela <- function(colunas, cabecalho, linhas, arquivo) {
+  writeLines(c(sprintf("\\begin{tabular}{@{}%s@{}}", colunas), "\\toprule", cabecalho, "\\midrule",
+               linhas, "\\bottomrule", "\\end{tabular}"), file.path("resultados/tabelas", arquivo))
+}
 
 # Cores e tema dos gráficos
 azul <- "#00689D"; vermelho <- "#C8343B"; claro <- "#D6E6F2"; marinho <- "#13294B"
 tema <- theme_minimal(base_size = 16) +
   theme(panel.grid.minor = element_blank(), plot.background = element_rect(fill = "white", colour = NA))
+
+# Explicativas numéricas além de renda e Gini (usadas em várias seções)
+outras <- c("desocup", "pct_urbana", "freq_15a17", "distorcao_em", "pct_migr_10anos")
 
 # Números do artigo: cada entrada vira um comando \n<Nome> em resultados/numeros.tex
 num <- list()
@@ -58,8 +72,7 @@ num <- list()
 
 A resposta é a taxa anual de homicídios por 100 mil habitantes em 2021–2023: óbitos por agressão (X85–Y09) mais intervenção legal e operações de guerra (Y35–Y36), por município de residência, divididos por três vezes a população de 2022.
 
-O IBGE não publica o Gini municipal do Censo 2022. Calculamos o índice pelas classes de renda das pessoas de 14 anos ou mais (Gastwirth, 1972): cada classe recebe o ponto médio da faixa em salários mínimos, e o Gini é 1 menos o dobro da área sob a curva de Lorenz (regra do trapézio).
-O cálculo do Gini por município veio da revisão da professora; não está na apostila.
+O IBGE não publica o Gini municipal do Censo 2022 **(pedido da professora, fora da apostila)**. Calculamos o índice pelas classes de rendimento domiciliar per capita das pessoas de 14 anos ou mais (Gastwirth, 1972): cada classe recebe o ponto médio da faixa em salários mínimos, e o Gini é 1 menos o dobro da área sob a curva de Lorenz (regra do trapézio). A classe aberta (mais de 20 salários mínimos) recebe 50: com esse valor, o cálculo reproduz o Gini oficial do Brasil. A conferência independente é feita nas 27 UFs.
 
 ```{r}
 #| label: resposta-gini
@@ -69,8 +82,7 @@ br <- read.csv("dados/base_municipios.csv")
 br$hom  <- br$agressao + br$intervencao_legal
 br$taxa <- br$hom / (3 * br$pop) * 1e5
 
-# Ponto médio de cada classe de renda, em salários mínimos. A classe aberta (mais de 20 SM) recebe 50 SM,
-# valor com que o cálculo reproduz o Gini oficial do Brasil
+# Ponto médio de cada classe de renda, em salários mínimos; classe aberta (mais de 20 SM) = 50 SM
 classes <- c(p14_sem_rendimento = 0, p14_ate_1_4sm = 1/8, p14_1_4_a_1_2sm = 3/8, p14_1_2_a_1sm = 3/4,
              p14_1_a_2sm = 1.5, p14_2_a_3sm = 2.5, p14_3_a_5sm = 4, p14_5_a_10sm = 7.5,
              p14_10_a_15sm = 12.5, p14_15_a_20sm = 17.5, p14_mais_20sm = 50)
@@ -82,13 +94,16 @@ gini <- function(n) {
 pc <- as.matrix(br[, names(classes)])
 br$gini <- apply(pc, 1, gini)
 
-# Conferência: Gini calculado das 27 UFs (somando as classes dos municípios) contra o Gini oficial do IBGE
+# Conferência com o Gini oficial do IBGE: Brasil (que fixa a classe aberta) e as 27 UFs (conferência independente)
 go <- read.csv("dados/gini_oficial.csv")
-calc_uf <- apply(rowsum(pc, substr(br$cod_ibge, 1, 2)), 1, gini)
-go$gini_calculado <- calc_uf[as.character(go$codigo)]
-cor_uf <- cor(go$gini_calculado, go$gini_oficial)
-dif_uf <- max(abs(go$gini_calculado - go$gini_oficial))
-knitr::kable(data.frame(correlacao = cor_uf, maior_diferenca = dif_uf), digits = 3)
+gini_brasil <- gini(colSums(pc))
+uf_of <- go[go$nivel == "Unidade da Federação", ]
+uf_of$gini_calculado <- apply(rowsum(pc, substr(br$cod_ibge, 1, 2)), 1, gini)[as.character(uf_of$codigo)]
+cor_uf <- cor(uf_of$gini_calculado, uf_of$gini_oficial)
+dif_uf <- max(abs(uf_of$gini_calculado - uf_of$gini_oficial))
+knitr::kable(data.frame(brasil_calculado = gini_brasil, brasil_oficial = go$gini_oficial[go$nivel == "Brasil"],
+                        correlacao_ufs = cor_uf, maior_diferenca_ufs = dif_uf), digits = 3)
+stopifnot(abs(gini_brasil - go$gini_oficial[go$nivel == "Brasil"]) < 0.001)
 num$GiniCorUF <- fmt(cor_uf, 3)
 num$GiniDifUF <- fmt(dif_uf, 3)
 ```
@@ -96,8 +111,8 @@ num$GiniDifUF <- fmt(dif_uf, 3)
 ## 2. Escopo do estudo
 
 Em municípios pequenos, poucas mortes mudam muito a taxa.
-O estudo usa os municípios com 30 mil habitantes ou mais; o corte por percentil da população veio da revisão da professora.
-Campos do Jordão-SP fica fora por indício de sub-registro: 1 homicídio registrado e 36 óbitos de intenção indeterminada em três anos.
+O estudo usa os municípios com 30 mil habitantes ou mais; o corte por percentil da população veio da revisão da professora **(fora da apostila)**.
+Campos do Jordão-SP fica fora por indício de sub-registro: 1 homicídio registrado e 36 óbitos de intenção indeterminada em três anos (a seção 8 mostra que incluí-lo não muda as conclusões).
 
 ```{r}
 #| label: escopo
@@ -109,27 +124,54 @@ br$escopo <- br$pop >= POP_MIN & br$cod_ibge != FORA
 # Contexto: média anual de homicídios e taxas por região (todos os municípios)
 reg_br <- tapply(br$hom, br$regiao, sum) / tapply(3 * br$pop, br$regiao, sum) * 1e5
 num$HomAno   <- fmt(sum(br$hom) / 3, 0)
-num$TaxaNbr  <- fmt(reg_br[["N"]]); num$TaxaNEbr <- fmt(reg_br[["NE"]]); num$TaxaSEbr <- fmt(reg_br[["SE"]])
-num$TaxaCObr <- fmt(reg_br[["CO"]]); num$TaxaSbr <- fmt(reg_br[["S"]]); num$TaxaBR <- fmt(taxa_br)
+num$TaxaNbr  <- fmt(reg_br[["N"]]);  num$TaxaNEbr <- fmt(reg_br[["NE"]]); num$TaxaSEbr <- fmt(reg_br[["SE"]])
+num$TaxaCObr <- fmt(reg_br[["CO"]]); num$TaxaSbr  <- fmt(reg_br[["S"]]);  num$TaxaBR   <- fmt(taxa_br)
+num$PctIntervencao <- fmt(100 * sum(br$intervencao_legal) / sum(br$hom), 1)
 
 # Comparação internacional de 2021 (UNODC, Global Study on Homicide 2023): dado externo, citado no artigo
-num$TaxaBrasilContexto <- fmt(21.3); num$TaxaMundoContexto <- fmt(5.8); num$RazaoContexto <- fmt(21.3 / 5.8)
+num$TaxaBrasilContexto <- fmt(21.3); num$TaxaMundoContexto <- fmt(5.8)
 
 # Onde o corte fica: percentil da população municipal e homicídios esperados em 3 anos com a taxa nacional
 num$PopMin        <- fmt(POP_MIN / 1000, 0)
 num$PercCorte     <- fmt(100 * mean(br$pop < POP_MIN), 0)
 num$CasosEspCorte <- fmt(POP_MIN * 3 * taxa_br / 1e5, 0)
+num$OscCorte      <- fmt(100 / sqrt(POP_MIN * 3 * taxa_br / 1e5), 0)   # oscilação só pelo acaso: 1/raiz(casos esperados)
 cj <- br[br$cod_ibge == FORA, ]
 num$ForaNome <- "Campos do Jordão-SP"; num$ForaHom <- fmt(cj$hom, 0); num$ForaIndet <- fmt(cj$intencao_indeterminada, 0)
 
 d <- br[br$escopo, ]
 d$regiao <- relevel(factor(d$regiao, levels = c("N", "NE", "CO", "SE", "S"),
                            labels = c("Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul")), ref = "Sudeste")
-stopifnot(nrow(d) == 1133, all(d$taxa > 0), !anyNA(d$distorcao_em))
+stopifnot(nrow(d) == 1133, all(d$hom > 0), !anyNA(d))
 num$MunEsc    <- fmt(nrow(d), 0)
 num$PctPopEsc <- fmt(100 * sum(d$pop) / sum(br$pop), 0)
-knitr::kable(data.frame(municipios = nrow(d), pct_populacao = 100 * sum(d$pop) / sum(br$pop),
-                        percentil_corte = 100 * mean(br$pop < POP_MIN)), digits = 1)
+num$PctHomEsc <- fmt(100 * sum(d$hom) / sum(br$hom), 0)
+
+# Quem fica fora: municípios, população, homicídios, taxa; municípios sem homicídio e sem ensino médio
+fora <- br[!br$escopo, ]
+num$MunFora     <- fmt(nrow(fora), 0)
+num$TaxaFora    <- fmt(sum(fora$hom) / sum(3 * fora$pop) * 1e5)
+num$TaxaEsc     <- fmt(sum(d$hom) / sum(3 * d$pop) * 1e5)
+num$MunZeroHom  <- fmt(sum(br$hom == 0), 0)
+num$MunSemEM    <- fmt(sum(is.na(br$distorcao_em)), 0)
+num$MinHomEsc   <- fmt(min(d$hom), 0)
+stopifnot(all(br$hom[br$escopo] > 0), all(br$pop[br$hom == 0] < POP_MIN), all(br$pop[is.na(br$distorcao_em)] < POP_MIN))
+
+# Escopo por região: municípios, e parte da população e dos homicídios da região que fica no estudo
+nomes_reg <- c(N = "Norte", NE = "Nordeste", CO = "Centro-Oeste", SE = "Sudeste", S = "Sul")
+esc_reg <- do.call(rbind, lapply(names(nomes_reg), function(r) {
+  todos <- br[br$regiao == r, ]; dentro <- todos[todos$escopo, ]
+  data.frame(regiao = nomes_reg[[r]], total = nrow(todos), estudo = nrow(dentro),
+             pct_pop = 100 * sum(dentro$pop) / sum(todos$pop), pct_hom = 100 * sum(dentro$hom) / sum(todos$hom))
+}))
+esc_reg <- rbind(esc_reg, data.frame(regiao = "Brasil", total = nrow(br), estudo = nrow(d),
+                                     pct_pop = 100 * sum(d$pop) / sum(br$pop), pct_hom = 100 * sum(d$hom) / sum(br$hom)))
+knitr::kable(esc_reg, digits = 1)
+tabela("lrrrr",
+       "\\textbf{Região} & \\textbf{Municípios} & \\textbf{No estudo} & \\textbf{\\% da população} & \\textbf{\\% dos homicídios}\\\\",
+       sprintf("%s%s & %s & %s & %s & %s\\\\", ifelse(esc_reg$regiao == "Brasil", "\\midrule ", ""), esc_reg$regiao,
+               fmt(esc_reg$total, 0), fmt(esc_reg$estudo, 0), fmt(esc_reg$pct_pop, 0), fmt(esc_reg$pct_hom, 0)),
+       "escopo_regiao.tex")
 ```
 
 ## 3. Análise exploratória
@@ -142,30 +184,51 @@ g$cod_ibge <- as.integer(g$codarea)
 gd <- inner_join(g, br, by = "cod_ibge")
 gd$classe <- cut(gd$taxa, c(-Inf, 10, 20, 30, 45, 60, Inf), labels = c("até 10", "10–20", "20–30", "30–45", "45–60", "60+"))
 gd$classe <- factor(ifelse(gd$escopo, as.character(gd$classe), "fora do escopo"), levels = c(levels(gd$classe), "fora do escopo"))
-uf <- gd %>% mutate(uf = substr(cod_ibge, 1, 2)) %>% group_by(uf) %>% summarise()
+contorno_uf <- summarise(group_by(mutate(gd, uf = substr(cod_ibge, 1, 2)), uf))
 p <- ggplot(gd) +
   geom_sf(aes(fill = classe), colour = NA) +
-  geom_sf(data = uf, fill = NA, colour = "white", linewidth = .25) +
+  geom_sf(data = contorno_uf, fill = NA, colour = "white", linewidth = .25) +
   scale_fill_manual(values = c("#D6E6F2", "#9EC3DB", "#5E9CC2", azul, "#1F4A7A", marinho, "#E9EBEE"),
                     name = "Homicídios\npor 100 mil/ano") +
   theme_void(base_size = 10) + theme(plot.background = element_rect(fill = "white", colour = NA), legend.position = c(.15, .25))
 ggsave("resultados/figuras/mapa_taxa.png", p, width = 4.2, height = 4.2, dpi = 250)
 p
 
-# Tabela descritiva das variáveis do modelo (municípios do escopo)
+# Explicativas em escala de análise e resposta em log
+d$log_rend <- log(d$rend_pc_media)
+d$ly       <- log(d$taxa)
+expl <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação (%)", pct_urbana = "Urbanização (%)",
+          freq_15a17 = "Frequência escolar 15-17 (%)", distorcao_em = "Distorção idade-série EM (%)",
+          pct_migr_10anos = "Migração recente (%)")
+
+# Tabela descritiva (médias simples entre municípios) com a correlação de cada explicativa com ln(taxa)
 casas  <- c(taxa = 1, rend_pc_media = 0, gini = 3, desocup = 1, pct_urbana = 1, freq_15a17 = 1, distorcao_em = 1, pct_migr_10anos = 1)
-rotulo <- c(taxa = "Taxa de homicídios (/100 mil)", rend_pc_media = "Renda per capita (R\\$)",
-            gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (\\%)", pct_urbana = "Urbana (\\%)",
+rotulo <- c(taxa = "Taxa de homicídios (/100 mil/ano)", rend_pc_media = "Renda per capita (R\\$/mês)",
+            gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (\\%)", pct_urbana = "Urbanização (\\%)",
             freq_15a17 = "Frequência escolar 15--17 (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
 desc <- t(sapply(names(casas), function(v) c(media = mean(d[[v]]), dp = sd(d[[v]]), min = min(d[[v]]),
                                              mediana = median(d[[v]]), max = max(d[[v]]))))
-knitr::kable(desc, digits = 3)
+cors <- sapply(names(casas), function(v) if (v == "taxa") NA else cor(if (v == "rend_pc_media") d$log_rend else d[[v]], d$ly))
+knitr::kable(cbind(desc, cor_ln_taxa = cors), digits = 3)
 cel <- sapply(seq_along(casas), function(i) fmt(desc[i, ], casas[i]))
-lin <- sprintf("%s%s & %s\\\\", ifelse(names(casas) == "taxa", "\\rowcolor{fundo}", ""), rotulo, apply(cel, 2, paste, collapse = " & "))
-writeLines(c("\\begin{tabular}{@{}lrrrrr@{}}", "\\toprule",
-             "\\textbf{Variável} & \\textbf{Média} & \\textbf{DP} & \\textbf{Mín.} & \\textbf{Mediana} & \\textbf{Máx.}\\\\",
-             "\\midrule", lin, "\\bottomrule", "\\end{tabular}"), "resultados/tabelas/descritiva.tex")
+cor_txt <- ifelse(is.na(cors), "---", gsub("^-", "$-$", fmt(cors, 2)))
+tabela("lrrrrrr",
+       "\\textbf{Variável} & \\textbf{Média} & \\textbf{DP} & \\textbf{Mín.} & \\textbf{Mediana} & \\textbf{Máx.} & \\textbf{Cor.}\\\\",
+       sprintf("%s & %s & %s\\\\", rotulo,
+               apply(cel, 2, paste, collapse = " & "), cor_txt),
+       "descritiva.tex")
+num$CorUrbana  <- sinal(cors[["pct_urbana"]], 2)
+num$CorDesocup <- sinal(cors[["desocup"]], 2)
+
+# Matriz de correlação entre as explicativas (apostila, cap. 6): o par mais correlacionado
+R <- cor(d[, names(expl)])
+knitr::kable(round(R, 2))
+R0 <- R; diag(R0) <- 0
+par_max <- which(abs(R0) == max(abs(R0)), arr.ind = TRUE)[1, ]
+stopifnot(setequal(rownames(R0)[par_max], c("log_rend", "pct_urbana")))
+num$CorRendaUrbana <- fmt(R["log_rend", "pct_urbana"], 2)
+num$CorDesocupRenda <- sinal(R["desocup", "log_rend"], 2)
 ```
 
 ## 4. Transformação da resposta (Box-Cox) e preparo das explicativas
@@ -175,46 +238,33 @@ A renda e o Gini entram centralizados na média: isso reduz a correlação entre
 
 ```{r}
 #| label: boxcox
-d$log_rend <- log(d$rend_pc_media)
-d$rend_c   <- d$log_rend - mean(d$log_rend)
-d$rend_c2  <- d$rend_c^2
-d$gini_c   <- d$gini - mean(d$gini)
-d$y  <- d$taxa
-d$ly <- log(d$taxa)
+d$rend_c  <- d$log_rend - mean(d$log_rend)
+d$rend_c2 <- d$rend_c^2
+d$gini_c  <- d$gini - mean(d$gini)
 knitr::kable(data.frame(cor_renda_quadrado_sem_centrar = cor(d$log_rend, d$log_rend^2),
                         cor_renda_quadrado_centrado = cor(d$rend_c, d$rend_c2)), digits = 3)
-num$CorQuadSem <- fmt(cor(d$log_rend, d$log_rend^2), 3)
-
-# Correlação simples de cada explicativa com ln(taxa): comparada depois com o sinal do coeficiente no modelo
-expl_cor <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação", pct_urbana = "Urbana",
-              freq_15a17 = "Freq. escolar", distorcao_em = "Distorção EM", pct_migr_10anos = "Migração")
-cors <- sapply(names(expl_cor), function(v) cor(d[[v]], d$ly))
-knitr::kable(data.frame(variavel = expl_cor, cor_ln_taxa = cors), digits = 2)
-writeLines(c(sprintf("\\begin{tabular}{@{}l%s@{}}", strrep("r", length(cors))), "\\toprule",
-             paste0(" & ", paste(sprintf("\\textbf{%s}", expl_cor), collapse = " & "), "\\\\"), "\\midrule",
-             paste0("Correlação com ln(taxa) & ", paste(gsub("^-", "$-$", fmt(cors, 2)), collapse = " & "), "\\\\"),
-             "\\bottomrule", "\\end{tabular}"), "resultados/tabelas/correlacoes.tex")
-num$CorUrbana <- sinal(cors[["pct_urbana"]], 2)
+num$CorQuadSem   <- fmt(cor(d$log_rend, d$log_rend^2), 3)
+num$CentroRenda  <- fmt(exp(mean(d$log_rend)), 0)    # média geométrica da renda: onde rend_c = 0
+num$CentroGini   <- fmt(mean(d$gini), 3)
 
 termos <- ~ rend_c + rend_c2 + gini_c + desocup + pct_urbana + freq_15a17 + distorcao_em + pct_migr_10anos + regiao + rend_c:gini_c
 
-# Box-Cox com os termos do modelo final: lambda que maximiza a log-verossimilhança e o seu IC 95%
-bc <- boxcox(lm(update(termos, y ~ .), data = d, y = TRUE, qr = TRUE), lambda = seq(-.5, 1.2, .001), plotit = FALSE)
+# Box-Cox com os termos do modelo final: lambda que maximiza a log-verossimilhança e o seu IC 95% (fora da apostila)
+bc <- MASS::boxcox(lm(update(termos, taxa ~ .), data = d, y = TRUE, qr = TRUE), lambda = seq(-.5, 1.2, .001), plotit = FALSE)
 lambda    <- bc$x[which.max(bc$y)]
 lambda_ic <- range(bc$x[bc$y > max(bc$y) - qchisq(.95, 1) / 2])
 knitr::kable(data.frame(lambda = lambda, ic_inferior = lambda_ic[1], ic_superior = lambda_ic[2]), digits = 3)
 num$LambdaFinal <- fmt(lambda, 2); num$LambdaFinalInf <- fmt(lambda_ic[1], 2); num$LambdaFinalSup <- fmt(lambda_ic[2], 2)
 
-# Adotamos ln(Y) (lambda = 0): os coeficientes viram mudanças percentuais na taxa típica.
-# Comparação da normalidade dos resíduos: Y original x ln(Y), com os mesmos termos
-sw_y  <- shapiro.test(rstandard(lm(update(termos, y ~ .), data = d)))$statistic
+# Adotamos ln(Y) (lambda = 0): normalidade dos resíduos com Y original x ln(Y), mesmos termos
+sw_y  <- shapiro.test(rstandard(lm(update(termos, taxa ~ .), data = d)))$statistic
 sw_ln <- shapiro.test(rstandard(lm(update(termos, ly ~ .), data = d)))$statistic
 num$SWy <- fmt(sw_y, 3); num$SWln <- fmt(sw_ln, 3)
 ```
 
-## 5. Construção do modelo em blocos (teste F parcial)
+## 5. Construção do modelo em blocos
 
-Cada bloco é acrescentado ao anterior; o teste F parcial verifica se o bloco acrescenta explicação.
+Cada bloco é acrescentado ao anterior. O teste linear geral (apostila, cap. 6) compara cada bloco, como modelo completo, com o anterior, como modelo reduzido. Como esse teste depende da ordem dos blocos, também calculamos o F de cada bloco como o último a entrar.
 
 ```{r}
 #| label: blocos
@@ -224,98 +274,115 @@ mC <- update(mB, . ~ . + freq_15a17 + distorcao_em + pct_migr_10anos)    # C: + 
 mD <- update(mC, . ~ . + regiao)                                         # D: + região (Sudeste como referência)
 mE <- update(mD, . ~ . + rend_c:gini_c)                                  # E: + interação Gini x renda
 modelos <- list(mA, mB, mC, mD, mE)
+final   <- mE
 
-# Teste linear geral (apostila, cap. 6): cada bloco é o modelo completo e o anterior, o reduzido
 av <- do.call(rbind, lapply(1:4, function(i) anova(modelos[[i]], modelos[[i + 1]])[2, ]))
 av
 r2a <- sapply(modelos, function(m) summary(m)$adj.r.squared)
 
-# Critérios de comparação da apostila (cap. 8): MSE, AIC, BIC e PRESS (validação deixando um município de fora)
+# Critérios de comparação da apostila (cap. 8): MSE, Cp, AIC, BIC e PRESS (validação deixando um município de fora)
 n <- nrow(d)
-criterios <- t(sapply(modelos, function(m) {
+mse_final <- sum(resid(final)^2) / df.residual(final)
+criterio <- function(m) {
   sse <- sum(resid(m)^2); k <- length(coef(m))          # k = p + 1 parâmetros
-  c(mse = sse / df.residual(m),
-    aic = n * log(sse) - n * log(n) + 2 * k,
-    bic = n * log(sse) - n * log(n) + k * log(n),
+  c(mse = sse / df.residual(m), cp = sse / mse_final + 2 * k - n,
+    aic = n * log(sse) - n * log(n) + 2 * k, bic = n * log(sse) - n * log(n) + k * log(n),
     press = sum((resid(m) / (1 - hatvalues(m)))^2))
-}))
+}
+criterios <- t(sapply(modelos, criterio))
 knitr::kable(data.frame(bloco = LETTERS[1:5], R2a = r2a, criterios), digits = 3)
-stopifnot(which.min(criterios[, "aic"]) == 5, which.min(criterios[, "bic"]) == 5, which.min(criterios[, "press"]) == 5)
+stopifnot(apply(criterios[, c("mse", "aic", "bic", "press")], 2, which.min) == 5)
 
 nomes_bloco <- c("A: socioeconômico", "B: + urbanização", "C: + educação e migração", "D: + região", "E: + Gini $\\times$ renda")
-crit <- sprintf("%s & %s & %s & %s & %s", fmt(r2a, 2), fmt(criterios[, "mse"], 3), fmt(criterios[, "aic"], 0),
-                fmt(criterios[, "bic"], 0), fmt(criterios[, "press"], 0))
+crit <- sprintf("%s & %s & %s & %s & %s & %s", fmt(r2a, 2), fmt(criterios[, "mse"], 3), fmt(criterios[, "cp"], 0),
+                fmt(criterios[, "aic"], 0), fmt(criterios[, "bic"], 0), fmt(criterios[, "press"], 0))
 crit <- gsub("(^| )-", "\\1$-$", crit)
-lin <- c(sprintf("%s & --- & --- & --- & %s\\\\", nomes_bloco[1], crit[1]),
-         sprintf("%s & %s & %s & %s & %s\\\\", nomes_bloco[-1], fmt(av$Df, 0), fmt(av$F), fp(av$`Pr(>F)`), crit[-1]))
-writeLines(c("\\begin{tabular}{@{}lrrrrrrrr@{}}", "\\toprule",
-             "\\textbf{Bloco} & \\textbf{gl} & \\textbf{$F$ parcial} & \\textbf{$p$} & \\textbf{$R^2_a$} & \\textbf{MSE} & \\textbf{AIC} & \\textbf{BIC} & \\textbf{PRESS}\\\\", "\\midrule",
-             lin, "\\bottomrule", "\\end{tabular}"), "resultados/tabelas/blocos.tex")
-num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 2)   # R² de previsão = 1 - PRESS/SST
-num$FInter <- fmt(av$F[4])
-num$RdoisAC  <- fmt(r2a[3], 2); num$RdoisAD <- fmt(r2a[4], 2)
+tabela("lrrrrrrrrr",
+       "\\textbf{Bloco} & \\textbf{gl} & \\textbf{$F$} & \\textbf{$p$} & \\textbf{$R^2_a$} & \\textbf{MSE} & \\textbf{$C_p$} & \\textbf{AIC} & \\textbf{BIC} & \\textbf{PRESS}\\\\",
+       c(sprintf("%s & --- & --- & --- & %s\\\\", nomes_bloco[1], crit[1]),
+         sprintf("%s & %s & %s & %s & %s\\\\", nomes_bloco[-1], fmt(av$Df, 0), fmt(av$F), fp(av$`Pr(>F)`), crit[-1])),
+       "blocos.tex")
+num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 2)   # R² de previsão = 1 - PRESS/SST (fora da apostila)
+num$FInter  <- fmt(av$F[4])
+num$RdoisAC <- fmt(r2a[3], 2); num$RdoisAD <- fmt(r2a[4], 2)
+
+# F de cada bloco como o último a entrar (o bloco A leva junto a interação, pelo princípio da hierarquia)
+retira <- list(A = ~ . - rend_c - rend_c2 - gini_c - desocup - rend_c:gini_c, B = ~ . - pct_urbana,
+               C = ~ . - freq_15a17 - distorcao_em - pct_migr_10anos, D = ~ . - regiao, E = ~ . - rend_c:gini_c)
+ultimo <- t(sapply(retira, function(f) unlist(anova(update(final, f), final)[2, c("Df", "F", "Pr(>F)")])))
+knitr::kable(ultimo, digits = 4)
+stopifnot(all(ultimo[, "Pr(>F)"] < 0.001))
+num$FUltMin <- fmt(min(ultimo[, "F"])); num$FUltMax <- fmt(max(ultimo[, "F"]))
 ```
 
 ## 6. Modelo final
 
 $$\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \beta_3 g_i + \beta_4 g_i r_i + \mathbf{x}_i^{\top}\boldsymbol{\delta} + \sum_{k=1}^{4} \gamma_k D_{ik} + \varepsilon_i$$
 
+Aqui $r_i$ é o ln da renda centralizado, $g_i$ é o Gini centralizado, $\mathbf{x}_i$ reúne desocupação, urbanização, frequência escolar, distorção idade-série e migração, e $D_{ik}$ são as indicadoras de região (Sudeste como referência). Todos os municípios têm o mesmo peso.
+
 ```{r}
 #| label: modelo-final
-final <- mE
-sf_ <- summary(final)
-sf_
+resumo <- summary(final)
+resumo
 ic <- confint(final)
 b  <- coef(final)
 stopifnot(final$rank == 14, df.residual(final) == 1119)
 
-num$RdoisE  <- fmt(sf_$r.squared, 2); num$RdoisA <- fmt(sf_$adj.r.squared, 2); num$RdoisPct <- fmt(100 * sf_$r.squared, 0)
-num$Fglobal <- fmt(sf_$fstatistic[["value"]], 0)
-num$GlUm    <- fmt(sf_$fstatistic[["numdf"]], 0); num$GlDois <- fmt(sf_$fstatistic[["dendf"]], 0)
-num$FglobalP <- fp(pf(sf_$fstatistic[["value"]], sf_$fstatistic[["numdf"]], sf_$fstatistic[["dendf"]], lower.tail = FALSE))
+num$RdoisE   <- fmt(resumo$r.squared, 2); num$RdoisA <- fmt(resumo$adj.r.squared, 2); num$RdoisPct <- fmt(100 * resumo$r.squared, 0)
+num$Fglobal  <- fmt(resumo$fstatistic[["value"]], 0)
+num$GlUm     <- fmt(resumo$fstatistic[["numdf"]], 0); num$GlDois <- fmt(resumo$fstatistic[["dendf"]], 0)
+num$FglobalP <- fp(pf(resumo$fstatistic[["value"]], resumo$fstatistic[["numdf"]], resumo$fstatistic[["dendf"]], lower.tail = FALSE))
+num$CoefGini <- fmt(b[["gini_c"]], 3)
 
 # Tabela de coeficientes em duas colunas
 nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)$^2$",
            gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)", desocup = "Desocupação",
-           pct_urbana = "\\% urbana", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
+           pct_urbana = "Urbanização", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
            `regiaoCentro-Oeste` = "Centro-Oeste", regiaoSul = "Sul")
-cc  <- sf_$coefficients[names(nomes), ]
+cc  <- resumo$coefficients[names(nomes), ]
 cel <- sprintf("%s & %s & %s & %s", nomes, gsub("-", "$-$", fmt(cc[, 1], 3)), fmt(cc[, 2], 3), fp(cc[, 4]))
-lin <- paste(cel[1:7], cel[8:14], sep = " & ")
 writeLines(c("\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}lrrrlrrr@{}}", "\\toprule",
              "\\textbf{Termo} & \\textbf{$b$} & \\textbf{EP} & \\textbf{$p$} & \\textbf{Termo} & \\textbf{$b$} & \\textbf{EP} & \\textbf{$p$}\\\\",
-             "\\midrule", paste0(lin, "\\\\"), "\\bottomrule", "\\end{tabular*}"), "resultados/tabelas/coeficientes.tex")
+             "\\midrule", paste0(paste(cel[1:7], cel[8:14], sep = " & "), "\\\\"), "\\bottomrule", "\\end{tabular*}"),
+           "resultados/tabelas/coeficientes.tex")
 ```
 
 ### Efeitos na taxa
 
-Com a resposta em log, uma mudança $\Delta$ em uma explicativa multiplica a taxa típica por $\exp(b\,\Delta)$: o efeito é $100\,[\exp(b\,\Delta) - 1]\%$, com as demais variáveis constantes.
-O efeito do Gini depende da renda: ele é a combinação $b_{\text{Gini}} + b_{\text{Gini}\times\text{renda}}\, r$, com o erro-padrão dessa combinação linear.
+Com a resposta em log, uma mudança $\Delta$ em uma explicativa multiplica a taxa típica por $\exp(b\,\Delta)$: o efeito é $100\,[\exp(b\,\Delta) - 1]\%$, com as demais variáveis constantes **(fora da apostila)**.
+O efeito de +0,05 no Gini, a partir do Gini médio, é calculado pela diferença entre duas previsões do modelo. O erro-padrão vem da combinação linear dos coeficientes **(fora da apostila)**. A mesma função serve para os modelos alternativos da seção 8.
 
 ```{r}
 #| label: efeitos
 mudancas <- data.frame(
-  termo    = c("distorcao_em", "pct_urbana", "freq_15a17", "desocup", "pct_migr_10anos"),
-  variavel = c("Distorção idade-série (EM)", "\\% urbana", "Frequência escolar 15--17", "Desocupação", "Migração recente"),
-  hip      = c("H2", "", "H2", "", "H3"),
-  mudanca  = c("+10 pontos", "+10 pontos", "+5 pontos", "+1 ponto", "+5 pontos"),
-  delta    = c(10, 10, 5, 1, 5))
-mudancas$p   <- sf_$coefficients[mudancas$termo, 4]
+  termo    = c("distorcao_em", "freq_15a17", "pct_migr_10anos", "pct_urbana", "desocup"),
+  variavel = c("Distorção idade-série (EM)", "Frequência escolar 15--17", "Migração recente", "Urbanização", "Desocupação"),
+  hip      = c("H2", "H2", "H3", "", ""),
+  mudanca  = c("+10 p.p.", "+5 p.p.", "+5 p.p.", "+10 p.p.", "+1 p.p."),
+  delta    = c(10, 5, 5, 10, 1))
+mudancas$p   <- resumo$coefficients[mudancas$termo, 4]
 mudancas$ef  <- 100 * (exp(b[mudancas$termo] * mudancas$delta) - 1)
 mudancas$inf <- 100 * (exp(ic[mudancas$termo, 1] * mudancas$delta) - 1)
 mudancas$sup <- 100 * (exp(ic[mudancas$termo, 2] * mudancas$delta) - 1)
 knitr::kable(mudancas[, -2], digits = 3)
 
-# Efeito de +0,05 no Gini conforme a renda per capita
+# Efeito de +0,05 no Gini em cada renda: diferença entre previsões com Gini médio e Gini médio + 0,05,
+# demais variáveis na média, Sudeste. L = linha da matriz do modelo; EP = raiz(L V L')
 efeito_gini <- function(rend, m = final) {
-  bb <- coef(m); V <- vcov(m); gl <- m$df.residual; tc <- qt(.975, gl)
-  rc <- log(rend) - mean(d$log_rend)
-  e  <- bb["gini_c"] + bb["rend_c:gini_c"] * rc
-  ep <- sqrt(V["gini_c", "gini_c"] + rc^2 * V["rend_c:gini_c", "rend_c:gini_c"] + 2 * rc * V["gini_c", "rend_c:gini_c"])
-  data.frame(renda = rend, ef = 100 * (exp(.05 * e) - 1), inf = 100 * (exp(.05 * (e - tc * ep)) - 1),
-             sup = 100 * (exp(.05 * (e + tc * ep)) - 1), p = 2 * pt(-abs(e / ep), gl))
+  base <- data.frame(rend_c = log(rend) - mean(d$log_rend))
+  base$rend_c2 <- base$rend_c^2
+  for (v in c(outras, "ln_pop")) base[[v]] <- mean(d[[v]])
+  base$regiao <- factor("Sudeste", levels = levels(d$regiao))
+  tt <- delete.response(terms(m))
+  L  <- model.matrix(tt, transform(base, gini_c = .05)) - model.matrix(tt, transform(base, gini_c = 0))
+  e  <- drop(L %*% coef(m)); ep <- sqrt(rowSums((L %*% vcov(m)) * L))
+  gl <- df.residual(m); tc <- qt(.975, gl)
+  data.frame(renda = rend, ef = 100 * (exp(e) - 1), inf = 100 * (exp(e - tc * ep) - 1),
+             sup = 100 * (exp(e + tc * ep) - 1), p = 2 * pt(-abs(e / ep), gl))
 }
+d$ln_pop <- log(d$pop)
 gr <- data.frame(percentil = c(10, 50, 90), efeito_gini(quantile(d$rend_pc_media, c(.1, .5, .9))), row.names = NULL)
 knitr::kable(gr, digits = 3)
 renda_zero <- unname(exp(mean(d$log_rend) - b["gini_c"] / b["rend_c:gini_c"]))   # renda em que o efeito do Gini é zero
@@ -325,27 +392,37 @@ lin_gini <- sprintf("H1 & Gini (renda de R\\$ %s) & +0,05 & %s\\%% & [%s; %s] & 
                     sinal(gr$ef, 1), sinal(gr$inf, 1), sinal(gr$sup, 1), fp(gr$p))
 lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", mudancas$hip, mudancas$variavel, mudancas$mudanca,
                sinal(mudancas$ef, 1), sinal(mudancas$inf, 1), sinal(mudancas$sup, 1), fp(mudancas$p))
-writeLines(c("\\begin{tabular}{@{}cllrcr@{}}", "\\toprule",
-             "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Mudança} & \\textbf{Taxa} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\", "\\midrule",
-             sprintf(" & Renda & --- & U invertido & --- & %s\\\\", fp(sf_$coefficients["rend_c2", 4])),
-             lin_gini, lin, "\\bottomrule", "\\end{tabular}"), "resultados/tabelas/efeitos.tex")
+tabela("cllrcr",
+       "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Aumento} & \\textbf{Efeito na taxa} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
+       c(lin_gini, lin, sprintf(" & Renda & --- & U invertido & --- & %s\\\\", fp(resumo$coefficients["rend_c2", 4]))),
+       "efeitos.tex")
 
 ef <- setNames(mudancas$ef, mudancas$termo)
-num$EfFreq <- fmt(abs(ef[["freq_15a17"]]), 1); num$EfDist <- fmt(ef[["distorcao_em"]], 1)
-num$EfUrb  <- fmt(ef[["pct_urbana"]], 1);      num$EfMigr <- fmt(ef[["pct_migr_10anos"]], 1)
-num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);   num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 2)
+num$EfFreq  <- fmt(abs(ef[["freq_15a17"]]), 1); num$EfDist <- fmt(ef[["distorcao_em"]], 1)
+num$EfUrb   <- fmt(ef[["pct_urbana"]], 1);      num$EfMigr <- fmt(ef[["pct_migr_10anos"]], 1)
+num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);    num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 2)
 num$GiniEfMediana <- fmt(gr$ef[2], 0); num$GiniEfNoventa <- fmt(gr$ef[3], 0)
 num$GiniEfDez <- fmt(abs(gr$ef[1]), 0); num$GiniPDez <- fmt(gr$p[1], 3)
-num$RendaDez <- fmt(gr$renda[1], 0); num$RendaMediana <- fmt(gr$renda[2], 0); num$RendaNoventa <- fmt(gr$renda[3], 0)
-num$GiniZero <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc_media < renda_zero), 0)
-num$Pico <- fmt(pico, 0)
-reg <- 100 * (exp(b[c("regiaoNorte", "regiaoNordeste", "regiaoCentro-Oeste", "regiaoSul")]) - 1)
-knitr::kable(data.frame(regiao_vs_sudeste_pct = reg), digits = 1)
-num$EfN <- fmt(reg[[1]], 0); num$EfNE <- fmt(reg[[2]], 0); num$EfCO <- fmt(reg[[3]], 0); num$EfS <- fmt(reg[[4]], 0)
+num$RendaDez  <- fmt(gr$renda[1], 0); num$RendaMediana <- fmt(gr$renda[2], 0); num$RendaNoventa <- fmt(gr$renda[3], 0)
+num$GiniZero  <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc_media < renda_zero), 0)
+num$Pico      <- fmt(pico, 0);       num$PctAbaixoPico <- fmt(100 * mean(d$rend_pc_media < pico), 0)
+num$IqrGini   <- fmt(IQR(d$gini), 3)   # justifica +0,05 no Gini
+num$PctNEpobres <- fmt(100 * mean(d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)] == "Nordeste"), 0)
 
-# Desocupação: correlação simples com ln(taxa) e com ln(renda)
-num$CorDesocup      <- sinal(cor(d$desocup, d$ly), 2)
-num$CorDesocupRenda <- sinal(cor(d$desocup, d$log_rend), 2)
+# Efeitos das regiões contra o Sudeste, com IC 95%
+reg_ic <- 100 * (exp(cbind(b, ic)[c("regiaoNordeste", "regiaoCentro-Oeste", "regiaoNorte", "regiaoSul"), ]) - 1)
+knitr::kable(reg_ic, digits = 0)
+for (r in c("Nordeste", "Centro-Oeste", "Norte", "Sul")) {
+  k <- gsub("-", "", r)
+  num[[paste0("Ef", k)]]    <- fmt(reg_ic[paste0("regiao", r), 1], 0)
+  num[[paste0("IcInf", k)]] <- fmt(reg_ic[paste0("regiao", r), 2], 0)
+  num[[paste0("IcSup", k)]] <- fmt(reg_ic[paste0("regiao", r), 3], 0)
+}
+num$UFpoucos <- fmt(sum(table(d$uf) < 10), 0)   # UFs com menos de 10 municípios: justifica usar a região
+
+# Desocupação: com só a renda (e seu quadrado) no modelo, o coeficiente ainda é positivo
+b_desoc_renda <- coef(lm(ly ~ desocup + rend_c + rend_c2, data = d))[["desocup"]]
+stopifnot(b_desoc_renda > 0, b[["desocup"]] < 0)
 ```
 
 ### Figuras dos efeitos
@@ -353,14 +430,14 @@ num$CorDesocupRenda <- sinal(cor(d$desocup, d$log_rend), 2)
 ```{r}
 #| label: figuras-efeitos
 # Efeito de +0,05 no Gini ao longo da renda (IC 95%); pontos nos percentis 10, 50 e 90
-g8 <- efeito_gini(exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 200)))
-p <- ggplot(g8, aes(renda, ef)) +
+curva_gini <- efeito_gini(exp(seq(quantile(d$log_rend, .02), quantile(d$log_rend, .98), length.out = 200)))
+p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_ribbon(aes(ymin = inf, ymax = sup), fill = claro, alpha = .8) +
   geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
   geom_line(colour = azul, linewidth = 1) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Mudança na taxa típica: +0,05 no Gini (%)") + tema
+  labs(x = "Renda per capita (R$/mês, escala log)", y = "Mudança na taxa\ntípica (%)") + tema
 ggsave("resultados/figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
 p
 
@@ -371,24 +448,24 @@ grade <- do.call(rbind, lapply(c("Nordeste", "Sudeste"), function(rg) {
   data.frame(regiao = rg, rend = exp(seq(quantile(lr, .02), quantile(lr, .98), length.out = 100)))
 }))
 grade$rend_c <- log(grade$rend) - mean(d$log_rend); grade$rend_c2 <- grade$rend_c^2
-for (v in c("desocup", "pct_urbana", "freq_15a17", "distorcao_em", "pct_migr_10anos")) grade[[v]] <- mean(d[[v]])
+for (v in outras) grade[[v]] <- mean(d[[v]])
 grade$gini_c <- 0
 grade$regiao <- factor(grade$regiao, levels = levels(d$regiao))
 pr <- predict(final, newdata = grade, interval = "confidence")
 grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
 p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = claro, alpha = .65) +
-  geom_line(aes(colour = regiao), linewidth = 1) +
-  scale_colour_manual(values = c(Nordeste = azul, Sudeste = marinho), name = NULL) +
+  geom_line(aes(colour = regiao), linewidth = 1.1) +
+  scale_colour_manual(values = c(Nordeste = vermelho, Sudeste = marinho), name = NULL) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada (/100 mil/ano)") +
+  labs(x = "Renda per capita (R$/mês, escala log)", y = "Taxa típica\n(por 100 mil/ano)") +
   tema + theme(legend.position = "bottom")
 ggsave("resultados/figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
 p
 
 # Efeitos de urbanização, escola e migração (IC 95%)
 ef_plot <- mudancas[mudancas$termo != "desocup", ]
-ef_plot$rotulo <- c(distorcao_em = "Atraso escolar: +10 p.p.", pct_urbana = "Urbanização: +10 p.p.",
+ef_plot$rotulo <- c(distorcao_em = "Distorção idade-série: +10 p.p.", pct_urbana = "Urbanização: +10 p.p.",
                     freq_15a17 = "Frequência escolar: +5 p.p.", pct_migr_10anos = "Migração recente: +5 p.p.")[ef_plot$termo]
 ef_plot$rotulo <- factor(ef_plot$rotulo, levels = rev(ef_plot$rotulo))
 p <- ggplot(ef_plot, aes(ef, rotulo)) +
@@ -403,29 +480,42 @@ p
 ### Termos adicionais testados
 
 O Guia Resumido da apostila pede, com menos de dez explicativas, considerar interações e termos de ordem elevada.
-Cada conjunto abaixo é somado ao modelo final e testado pelo F parcial (teste linear geral).
+Cada conjunto abaixo é somado ao modelo final e testado pelo teste linear geral; a última linha soma todos os conjuntos significativos.
 
 ```{r}
 #| label: especificacao
-d$ln_pop <- log(d$pop)
 extras <- list(
   "Quadrados das outras 6 explicativas" = ~ . + I(gini_c^2) + I(desocup^2) + I(pct_urbana^2) + I(freq_15a17^2) + I(distorcao_em^2) + I(pct_migr_10anos^2),
   "Renda ao cubo"                       = ~ . + I(rend_c^3),
   "Região $\\times$ renda"              = ~ . + regiao:rend_c,
   "Região $\\times$ Gini"               = ~ . + regiao:gini_c,
   "ln(população)"                       = ~ . + ln_pop)
-espec <- do.call(rbind, lapply(names(extras), function(nm) {
-  m <- update(final, extras[[nm]])
-  a <- anova(final, m)
-  data.frame(termo = nm, gl = a$Df[2], F = a$F[2], p = a$`Pr(>F)`[2], R2a = summary(m)$adj.r.squared)
+ajustes <- lapply(extras, function(f) update(final, f))
+espec <- do.call(rbind, lapply(names(ajustes), function(nm) {
+  a <- anova(final, ajustes[[nm]])
+  data.frame(termo = nm, gl = a$Df[2], F = a$F[2], p = a$`Pr(>F)`[2], R2a = summary(ajustes[[nm]])$adj.r.squared,
+             t(criterio(ajustes[[nm]])[c("aic", "bic", "press")]))
 }))
+signif <- names(ajustes)[espec$p < 0.05]
+todos  <- update(final, as.formula(paste(". ~ .", paste(sapply(extras[signif], function(f) sub("^\\. \\+ ", "+ ", deparse1(f[[2]]))), collapse = " "))))
+a_todos <- anova(final, todos)
+espec <- rbind(espec, data.frame(termo = "Todos os conjuntos significativos acima", gl = a_todos$Df[2], F = a_todos$F[2],
+                                 p = a_todos$`Pr(>F)`[2], R2a = summary(todos)$adj.r.squared, t(criterio(todos)[c("aic", "bic", "press")])))
 knitr::kable(espec, digits = 4)
-lin <- sprintf("%s & %s & %s & %s & %s\\\\", espec$termo, fmt(espec$gl, 0), fmt(espec$F, 2), fp(espec$p), fmt(espec$R2a, 3))
-writeLines(c("\\begin{tabular}{@{}lrrrr@{}}", "\\toprule",
-             "\\textbf{Termos somados ao modelo final} & \\textbf{gl} & \\textbf{$F$ parcial} & \\textbf{$p$} & \\textbf{$R^2_a$}\\\\", "\\midrule",
-             sprintf("Nenhum (modelo final) & --- & --- & --- & %s\\\\", fmt(sf_$adj.r.squared, 3)),
-             lin, "\\bottomrule", "\\end{tabular}"), "resultados/tabelas/especificacao.tex")
-stopifnot(sum(espec$p < 0.05) == 4, max(espec$R2a) - sf_$adj.r.squared < 0.01)   # frases do artigo
+crit_final <- criterio(final)
+tabela("lrrrrrrr",
+       "\\textbf{Termos somados ao modelo final} & \\textbf{gl} & \\textbf{$F$} & \\textbf{$p$} & \\textbf{$R^2_a$} & \\textbf{AIC} & \\textbf{BIC} & \\textbf{PRESS}\\\\",
+       c(sprintf("Nenhum (modelo final) & --- & --- & --- & %s & $-$%s & $-$%s & %s\\\\", fmt(resumo$adj.r.squared, 3),
+                 fmt(-crit_final[["aic"]], 0), fmt(-crit_final[["bic"]], 0), fmt(crit_final[["press"]], 0)),
+         sprintf("%s & %s & %s & %s & %s & $-$%s & $-$%s & %s\\\\", espec$termo, fmt(espec$gl, 0), fmt(espec$F, 2), fp(espec$p),
+                 fmt(espec$R2a, 3), fmt(-espec$aic, 0), fmt(-espec$bic, 0), fmt(espec$press, 0))),
+       "especificacao.tex")
+# Frases do artigo: 4 dos 5 conjuntos são significativos; ganho em R²a < 0,01 por conjunto;
+# AIC e PRESS preferem o modelo com todos os termos; o BIC fica a menos de 2 pontos do modelo final
+stopifnot(length(signif) == 4, max(espec$R2a[1:5]) - resumo$adj.r.squared < 0.01,
+          espec$aic[6] < crit_final[["aic"]], espec$press[6] < crit_final[["press"]],
+          min(espec$bic) > crit_final[["bic"]] - 2)
+num$RdoisATodos <- fmt(summary(todos)$adj.r.squared, 3)
 ```
 
 ### Multicolinearidade: VIF de cada coluna
@@ -441,8 +531,7 @@ num$VIFrendaFinal <- fmt(max(vif_col))
 num$VIFmedio      <- fmt(mean(vif_col))
 num$VIFsegundo    <- fmt(sort(vif_col, decreasing = TRUE)[2])
 num$VIFquad       <- fmt(vif_col[["rend_c2"]])
-num$RdoisRenda <- fmt(1 - 1 / vif_col[["rend_c"]], 2)   # R² da renda com as demais colunas
-num$CorRendaUrbana <- fmt(cor(d$log_rend, d$pct_urbana), 2)
+num$RdoisRenda    <- fmt(1 - 1 / vif_col[["rend_c"]], 2)   # R² da renda com as demais colunas
 ```
 
 ## 7. Diagnóstico do modelo
@@ -451,9 +540,9 @@ num$CorRendaUrbana <- fmt(cor(d$log_rend, d$pct_urbana), 2)
 #| label: diagnostico
 d$ajustado <- fitted(final)
 d$residuo  <- residuals(final)
-d$res_semi <- d$residuo / sf_$sigma   # resíduo semi-studentizado e* = e / sqrt(MSE)
+d$res_semi <- d$residuo / resumo$sigma   # resíduo semi-studentizado e* = e / raiz(MSE)
 
-bp <- bptest(final)                        # H0: variância constante
+bp <- bptest(final)                        # H0: variância constante (versão studentizada, como na apostila)
 sw <- shapiro.test(rstandard(final))       # H0: normalidade
 bp; sw
 out <- d[abs(d$res_semi) >= 4, c("municipio", "uf", "taxa", "res_semi")]   # possíveis outliers
@@ -462,15 +551,22 @@ if (nrow(out)) knitr::kable(out) else cat("Nenhum resíduo semi-studentizado com
 num$BP <- fmt(bp$statistic, 0); num$BPgl <- fmt(bp$parameter, 0); num$BPp <- fp(bp$p.value)
 num$SW <- fmt(sw$statistic, 3); num$SWp <- fmt(sw$p.value, 3)
 num$MaxSemi <- fmt(max(abs(d$res_semi)), 2)
-num$MSE <- fmt(sf_$sigma^2, 3); num$Sigma <- fmt(sf_$sigma, 3); num$DoisS <- fmt(2 * sf_$sigma, 2)
-num$FatorDoisS <- fmt(exp(2 * sf_$sigma), 2)
+num$MSE <- fmt(resumo$sigma^2, 3); num$Sigma <- fmt(resumo$sigma, 3); num$DoisS <- fmt(2 * resumo$sigma, 2)
+num$FatorDoisS <- fmt(exp(2 * resumo$sigma), 2)
+num$FatorMedia <- fmt(exp(resumo$sigma^2 / 2), 2)   # média condicional = taxa típica x exp(MSE/2), com erros normais e variância constante
+
+# Breusch-Pagan só contra ln(população): a parte da variância ligada ao porte (versão studentizada: n R²)
+bp_aux <- function(e2, z) { r2 <- summary(lm(e2 ~ z))$r.squared; c(bp = n * r2, p = pchisq(n * r2, NCOL(z), lower.tail = FALSE)) }
+stopifnot(abs(bp_aux(d$residuo^2, X)[["bp"]] - bp$statistic) < 1e-6)      # confere a fórmula com o bptest
+bp_pop <- bp_aux(d$residuo^2, d$ln_pop)
+num$BPpop <- fmt(bp_pop[["bp"]], 1); num$BPpopP <- fp(bp_pop[["p"]])
 
 # Regra empírica (apostila, cap. 4): % de resíduos padronizados dentro de 1, 1,645 e 1,96 desvios
 regra <- sapply(c(1, 1.645, 1.96), function(z) 100 * mean(abs(rstandard(final)) <= z))
 knitr::kable(data.frame(limite = c(1, 1.645, 1.96), observado = regra, esperado = c(68.3, 90, 95)), digits = 1)
 num$RegraUm <- fmt(regra[1], 1); num$RegraDois <- fmt(regra[2], 1); num$RegraTres <- fmt(regra[3], 1)
 
-# Variância dos resíduos por quinto da população: razão entre o quinto menor e o maior
+# Variância dos resíduos por quinto da população
 quinto <- cut(d$pop, quantile(d$pop, 0:5 / 5), include.lowest = TRUE, labels = 1:5)
 var_q <- tapply(d$residuo, quinto, var)
 knitr::kable(data.frame(quinto = 1:5, variancia = var_q), digits = 3)
@@ -493,11 +589,11 @@ ggsave("resultados/figuras/residuos_ajustado.png", p, width = 6.3, height = 4.0,
 p
 p <- ggplot(d, aes(sample = rstandard(final))) +
   stat_qq(colour = azul, alpha = .35, size = 1.1) + stat_qq_line(colour = vermelho, linewidth = .8) +
-  labs(x = "Quantis de uma distribuição normal", y = "Quantis dos resíduos padronizados") + tema
+  labs(x = "Quantis da distribuição normal", y = "Quantis dos resíduos\npadronizados") + tema
 ggsave("resultados/figuras/qq_final.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
 
-# Histograma dos resíduos com a curva normal de mesma média e desvio-padrão
+# Histograma dos resíduos com a curva normal de mesma média e desvio-padrão (usado nos slides)
 p <- ggplot(d, aes(residuo)) +
   geom_histogram(aes(y = after_stat(density)), bins = 30, fill = claro, colour = "white") +
   stat_function(fun = dnorm, args = list(mean = mean(d$residuo), sd = sd(d$residuo)), colour = vermelho, linewidth = .8) +
@@ -508,99 +604,142 @@ p
 # Tamanho do resíduo x população: a dispersão diminui nos municípios maiores
 p <- ggplot(d, aes(pop, abs(residuo))) +
   geom_point(colour = azul, alpha = .3, size = 1.2) + scale_x_log10(labels = milhar) +
-  labs(x = "População (escala log)", y = "Tamanho do erro: |resíduo|") + tema
+  labs(x = "População (escala log)", y = "Tamanho do resíduo: |e|") + tema
 ggsave("resultados/figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
-cor_abs_pop <- cor(abs(d$residuo), log(d$pop))
-knitr::kable(data.frame(cor_abs_residuo_ln_pop = cor_abs_pop), digits = 3)
-stopifnot(cor_abs_pop < 0)
+stopifnot(cor(abs(d$residuo), d$ln_pop) < 0)
 
-# Resíduos contra cada explicativa (apostila, seção 4.4)
-expl <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação (%)", pct_urbana = "% urbana",
-          freq_15a17 = "Frequência escolar 15-17 (%)", distorcao_em = "Distorção idade-série EM (%)",
-          pct_migr_10anos = "Migração recente (%)")
+# Resíduos contra cada explicativa e contra a região (apostila, seção 4.4), com curva suavizada
 dl <- do.call(rbind, lapply(names(expl), function(v) data.frame(variavel = expl[[v]], x = d[[v]], residuo = d$residuo)))
 p <- ggplot(dl, aes(x, residuo)) + geom_point(colour = azul, alpha = .25, size = .6) +
-  geom_hline(yintercept = 0, colour = "grey45", linetype = 2) + geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = vermelho, linewidth = .7) +
+  geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
+  geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = vermelho, linewidth = .7) +
   facet_wrap(~variavel, scales = "free_x", ncol = 3) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
 ggsave("resultados/figuras/residuos_explicativas.png", p, width = 9, height = 6, dpi = 150)
 p
 ggplot(d, aes(regiao, residuo)) + geom_boxplot(fill = claro) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
 ```
 
-## 8. Sensibilidade da desocupação
+## 8. Sensibilidade e robustez
+
+### Mínimos quadrados ponderados
+
+A apostila indica mínimos quadrados ponderados (MQP) quando a variância não é constante, mas não define os pesos.
+Os pesos abaixo são escolha do grupo **(fora da apostila)**: a variância de ln(taxa) é aproximada por $s_0^2 + 1/\mu_i$, em que $\mu_i$ é o número de homicídios esperado em três anos pelo modelo e $1/\mu_i$ é a parte que vem do acaso da contagem.
+
+```{r}
+#| label: mqp
+mu  <- 3 * d$pop * exp(fitted(final)) / 1e5                 # homicídios esperados em 3 anos
+s0  <- max(0, resumo$sigma^2 - mean(1 / mu))                # parte da variância que não vem da contagem
+w   <- 1 / (s0 + 1 / mu)
+mqp <- update(final, weights = w)
+knitr::kable(cbind(mqo = b, mqp = coef(mqp), razao_ep = sqrt(diag(vcov(mqp)) / diag(vcov(final)))), digits = 4)
+stopifnot(all(sign(coef(mqp)) == sign(b)))   # o artigo diz que nenhum coeficiente troca de sinal
+razao_ep <- range(sqrt(diag(vcov(mqp)) / diag(vcov(final))))
+
+# Breusch-Pagan nos resíduos ponderados, contra todas as explicativas e só contra ln(população)
+ew2 <- w * resid(mqp)^2
+bp_mqp <- bp_aux(ew2, X); bp_mqp_pop <- bp_aux(ew2, d$ln_pop)
+knitr::kable(rbind(mqo_todas = bp_aux(d$residuo^2, X), mqp_todas = bp_mqp, mqo_pop = bp_pop, mqp_pop = bp_mqp_pop), digits = 4)
+num$SzeroQ  <- fmt(s0, 3)
+num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 2); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 2)
+num$EpMin   <- fmt(razao_ep[1], 2); num$EpMax <- fmt(razao_ep[2], 2)
+num$BPmqp   <- fmt(bp_mqp[["bp"]], 0); num$BPmqpP <- fp(bp_mqp[["p"]])
+num$BPmqpPop <- fmt(bp_mqp_pop[["bp"]], 1); num$BPmqpPopP <- fmt(bp_mqp_pop[["p"]], 2)
+```
+
+### Desocupação, Campos do Jordão e São Paulo
 
 O coeficiente negativo da desocupação contraria a correlação simples.
-Verificamos se ele se mantém sem os municípios com 30% ou mais de óbitos de intenção indeterminada entre as causas externas, onde o registro dos homicídios é menos confiável.
+Verificamos se ele se mantém sem os municípios com 30% ou mais de óbitos de intenção indeterminada entre os óbitos por causas externas, onde o registro dos homicídios é menos confiável.
+Também reajustamos o modelo com Campos do Jordão-SP e testamos uma indicadora de São Paulo, a UF de menor taxa, dentro do Sudeste de referência.
 
 ```{r}
 #| label: sensibilidade
 d$pct_indet <- 100 * d$intencao_indeterminada / d$total_causas_externas
-sens <- update(final, data = d[d$pct_indet < 30, ])
-s_des <- summary(sens)$coefficients["desocup", ]
-knitr::kable(data.frame(municipios_retirados = sum(d$pct_indet >= 30), b = s_des[[1]], p = s_des[[4]]), digits = 4)
+sem_indet <- update(final, data = d[d$pct_indet < 30, ])
+s_des <- summary(sem_indet)$coefficients["desocup", ]
+muda_signif <- (summary(sem_indet)$coefficients[, 4] < .05) != (resumo$coefficients[, 4] < .05)
+knitr::kable(data.frame(municipios_retirados = sum(d$pct_indet >= 30), b_desocup = s_des[[1]], p_desocup = s_des[[4]],
+                        termos_que_mudam_signif = paste(names(which(muda_signif)), collapse = ", ")), digits = 4)
+stopifnot(all(sign(coef(sem_indet)) == sign(b)), names(which(muda_signif)) == "desocup")
 num$NSensDesoc <- fmt(sum(d$pct_indet >= 30), 0)
 num$PSensDesoc <- fmt(s_des[[4]], 2)
+
+# Com Campos do Jordão: mesma centralização do estudo; resíduo semi-studentizado do município
+cj$regiao <- factor("Sudeste", levels = levels(d$regiao))
+cj$log_rend <- log(cj$rend_pc_media); cj$ly <- log(cj$taxa); cj$ln_pop <- log(cj$pop)
+cj$rend_c <- cj$log_rend - mean(d$log_rend); cj$rend_c2 <- cj$rend_c^2; cj$gini_c <- cj$gini - mean(d$gini)
+com_cj <- update(final, data = rbind(d[, names(cj)], cj))
+e_cj <- tail(resid(com_cj), 1) / summary(com_cj)$sigma
+knitr::kable(data.frame(e_semi_campos_do_jordao = e_cj, interacao_com = coef(com_cj)[["rend_c:gini_c"]]), digits = 3)
+stopifnot(e_cj < -4, all(sign(coef(com_cj)) == sign(b)))
+num$SemiCJ <- fmt(e_cj, 1); num$InterCJ <- fmt(coef(com_cj)[["rend_c:gini_c"]], 2)
+
+# Indicadora de São Paulo: o Sul fica acima do Sudeste em parte porque SP tem taxas baixas
+d$sp <- as.numeric(d$uf == "SP")
+com_sp <- update(final, . ~ . + sp)
+efsp <- function(m, termo) 100 * (exp(coef(m)[[termo]]) - 1)
+knitr::kable(data.frame(sp = efsp(com_sp, "sp"), p_sp = summary(com_sp)$coefficients["sp", 4],
+                        sul_sem_sp = efsp(com_sp, "regiaoSul"), p_sul = summary(com_sp)$coefficients["regiaoSul", 4],
+                        sul_original = efsp(final, "regiaoSul")), digits = 4)
+stopifnot(summary(com_sp)$coefficients["sp", 4] < .001, summary(com_sp)$coefficients["regiaoSul", 4] < .05)
+num$EfSP <- fmt(abs(efsp(com_sp, "sp")), 0); num$EfSulSemSP <- fmt(efsp(com_sp, "regiaoSul"), 0)
 ```
 
-### Mínimos quadrados ponderados (variância não constante)
+### Robustez do efeito do Gini
 
-A apostila indica mínimos quadrados ponderados (MQP) quando a variância não é constante, mas não define os pesos.
-Os pesos abaixo são escolha do grupo: a variância de ln(taxa) é aproximada por $s_0^2 + 1/\mu_i$, em que $\mu_i$ é o número de homicídios esperado em três anos e $1/\mu_i$ é a parte que vem do acaso da contagem.
-Se o MQP mantém as conclusões, a variância não constante pesa pouco nas estimativas.
+O efeito de +0,05 no Gini nos percentis 10, 50 e 90 da renda, em especificações alternativas.
 
 ```{r}
-#| label: mqp
-mu <- 3 * d$pop * exp(fitted(final)) / 1e5                 # homicídios esperados em 3 anos
-s0 <- max(0, sf_$sigma^2 - mean(1 / mu))                   # parte da variância que não vem da contagem
-mqp <- update(final, weights = 1 / (s0 + 1 / mu))
-comp_mqp <- data.frame(percentil = c(10, 50, 90), renda = gr$renda,
-                       mqo = gr$ef, mqp = efeito_gini(gr$renda, mqp)$ef)
-knitr::kable(comp_mqp, digits = 1)
-knitr::kable(cbind(mqo = coef(final), mqp = coef(mqp)), digits = 4)
-num$SzeroQ <- fmt(s0, 3)
-num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 2); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 2)
-num$MqpGiniDez <- sinal(comp_mqp$mqp[1]); num$MqpGiniCinq <- sinal(comp_mqp$mqp[2]); num$MqpGiniNov <- sinal(comp_mqp$mqp[3])
-stopifnot(all(sign(coef(mqp)) == sign(b)))   # o artigo diz que nenhum coeficiente troca de sinal
+#| label: robustez
+alternativas <- list("Modelo final (MQO)" = final, "Com renda ao cubo" = ajustes[["Renda ao cubo"]],
+                     "Com região $\\times$ renda" = ajustes[["Região $\\times$ renda"]],
+                     "Com todos os termos significativos" = todos, "Mínimos quadrados ponderados" = mqp,
+                     "Sem os municípios com 30\\% ou mais de indeterminados" = sem_indet, "Com Campos do Jordão-SP" = com_cj)
+rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
+  e <- efeito_gini(gr$renda, alternativas[[nm]])
+  data.frame(modelo = nm, p10 = e$ef[1], p10_p = e$p[1], p50 = e$ef[2], p50_p = e$p[2], p90 = e$ef[3], p90_p = e$p[3])
+}))
+knitr::kable(rob, digits = 3)
+celula <- function(ef, p) sprintf("%s\\%% (%s)", sinal(ef), fp(p))
+tabela("lrrr",
+       sprintf("\\textbf{Especificação} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s}\\\\", fmt(gr$renda[1], 0), fmt(gr$renda[2], 0), fmt(gr$renda[3], 0)),
+       sprintf("%s & %s & %s & %s\\\\", rob$modelo, celula(rob$p10, rob$p10_p), celula(rob$p50, rob$p50_p), celula(rob$p90, rob$p90_p)),
+       "robustez_gini.tex")
+# Frases do artigo: P50 e P90 positivos e significativos em todas; o P10 negativo não resiste a todas
+stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05), any(rob$p10_p > .05))
+stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] > .05,
+          all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] < .05))
+num$PDezMin <- fmt(min(abs(rob$p10)), 0); num$PDezMax <- fmt(max(abs(rob$p10)), 0)
 ```
 
-## 9. Estimação e previsão para um município típico
+## 9. Estimação e previsão para municípios típicos
 
 O Guia Resumido termina com intervalos de confiança para $E[Y|X]$ e intervalos de previsão para $Y|X$.
-O município típico tem cada explicativa na mediana do estudo. A escala de ln é retransformada por exponencial: o intervalo de confiança vira um intervalo para a taxa típica (mediana) e o de previsão vale para a taxa de um município.
+Para evitar extrapolação escondida (apostila, seção 5.12), o município típico de cada região tem cada explicativa na mediana da própria região.
+A escala de ln é retransformada por exponencial: o intervalo de confiança vira um intervalo para a taxa típica (mediana) e o de previsão vale para a taxa de um município.
 
 ```{r}
 #| label: previsao
-tipico <- data.frame(regiao = factor(c("Sudeste", "Nordeste"), levels = levels(d$regiao)))
-med <- sapply(c("rend_pc_media", "gini", "desocup", "pct_urbana", "freq_15a17", "distorcao_em", "pct_migr_10anos"), function(v) median(d[[v]]))
-tipico$rend_c  <- log(med[["rend_pc_media"]]) - mean(d$log_rend); tipico$rend_c2 <- tipico$rend_c^2
-tipico$gini_c  <- med[["gini"]] - mean(d$gini)
-for (v in c("desocup", "pct_urbana", "freq_15a17", "distorcao_em", "pct_migr_10anos")) tipico[[v]] <- med[[v]]
+tipico <- do.call(rbind, lapply(c("Sudeste", "Nordeste"), function(rg) {
+  dr <- d[d$regiao == rg, ]
+  x <- data.frame(regiao = factor(rg, levels = levels(d$regiao)), rend_c = log(median(dr$rend_pc_media)) - mean(d$log_rend),
+                  gini_c = median(dr$gini) - mean(d$gini), observada = median(dr$taxa))
+  for (v in outras) x[[v]] <- median(dr[[v]])
+  x
+}))
+tipico$rend_c2 <- tipico$rend_c^2
 ic_m <- exp(predict(final, tipico, interval = "confidence"))
 ip_m <- exp(predict(final, tipico, interval = "prediction"))
-prev <- data.frame(regiao = tipico$regiao, taxa_tipica = ic_m[, 1], ic_inf = ic_m[, 2], ic_sup = ic_m[, 3], ip_inf = ip_m[, 2], ip_sup = ip_m[, 3])
+prev <- data.frame(regiao = as.character(tipico$regiao), taxa_tipica = ic_m[, 1], ic_inf = ic_m[, 2], ic_sup = ic_m[, 3],
+                   ip_inf = ip_m[, 2], ip_sup = ip_m[, 3], mediana_observada = tipico$observada)
 knitr::kable(prev, digits = 1)
-lin <- sprintf("%s & %s & [%s; %s] & [%s; %s]\\\\", prev$regiao, fmt(prev$taxa_tipica), fmt(prev$ic_inf), fmt(prev$ic_sup), fmt(prev$ip_inf), fmt(prev$ip_sup))
-writeLines(c("\\begin{tabular}{@{}lrcc@{}}", "\\toprule",
-             "\\textbf{Região} & \\textbf{Taxa típica} & \\textbf{IC 95\\% de $E[\\ln Y]$, retransformado} & \\textbf{IP 95\\%}\\\\", "\\midrule",
-             lin, "\\bottomrule", "\\end{tabular}"), "resultados/tabelas/previsao.tex")
-num$FatorMedia <- fmt(exp(sf_$sigma^2 / 2), 2)      # média condicional = taxa típica x exp(MSE/2), se os erros forem normais
-
-# Efeitos das regiões com IC 95%
-reg_ic <- 100 * (exp(cbind(b, ic)[c("regiaoNordeste", "regiaoCentro-Oeste", "regiaoNorte", "regiaoSul"), ]) - 1)
-knitr::kable(reg_ic, digits = 0)
-for (r in c("Nordeste", "Centro-Oeste", "Norte", "Sul")) {
-  k <- gsub("-", "", r)
-  num[[paste0("IcInf", k)]] <- fmt(reg_ic[paste0("regiao", r), 2], 0)
-  num[[paste0("IcSup", k)]] <- fmt(reg_ic[paste0("regiao", r), 3], 0)
-}
-
-# % do Nordeste entre os 10% mais pobres, % abaixo do pico da renda, amplitude interquartil do Gini (justifica +0,05)
-# e UFs com menos de 10 municípios (justifica usar a região)
-num$PctNEpobres <- fmt(100 * mean(d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)] == "Nordeste"), 0)
-num$PctAbaixoPico <- fmt(100 * mean(d$rend_pc_media < pico), 0)
-num$IqrGini <- fmt(IQR(d$gini), 3)
-num$UFpoucos <- fmt(sum(table(d$uf) < 10), 0)
+tabela("lrccr",
+       "\\textbf{Região} & \\textbf{Taxa típica} & \\textbf{IC 95\\%} & \\textbf{IP 95\\%} & \\textbf{Mediana observada}\\\\",
+       sprintf("%s & %s & [%s; %s] & [%s; %s] & %s\\\\", prev$regiao, fmt(prev$taxa_tipica), fmt(prev$ic_inf), fmt(prev$ic_sup),
+               fmt(prev$ip_inf), fmt(prev$ip_sup), fmt(prev$mediana_observada)),
+       "previsao.tex")
 ```
 
 ## 10. Números do artigo

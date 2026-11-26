@@ -1,28 +1,29 @@
-"codigo","local","gini_oficial"
-11,"Rondônia",0.489
-12,"Acre",0.547
-13,"Amazonas",0.572
-14,"Roraima",0.572
-15,"Pará",0.539
-16,"Amapá",0.542
-17,"Tocantins",0.511
-21,"Maranhão",0.525
-22,"Piauí",0.52
-23,"Ceará",0.536
-24,"Rio Grande do Norte",0.555
-25,"Paraíba",0.536
-26,"Pernambuco",0.564
-27,"Alagoas",0.538
-28,"Sergipe",0.557
-29,"Bahia",0.531
-31,"Minas Gerais",0.495
-32,"Espírito Santo",0.505
-33,"Rio de Janeiro",0.574
-35,"São Paulo",0.525
-41,"Paraná",0.482
-42,"Santa Catarina",0.452
-43,"Rio Grande do Sul",0.484
-50,"Mato Grosso do Sul",0.503
-51,"Mato Grosso",0.496
-52,"Goiás",0.501
-53,"Distrito Federal",0.584
+"nivel","codigo","local","gini_oficial"
+"Brasil",1,"Brasil",0.542
+"Unidade da Federação",11,"Rondônia",0.489
+"Unidade da Federação",12,"Acre",0.547
+"Unidade da Federação",13,"Amazonas",0.572
+"Unidade da Federação",14,"Roraima",0.572
+"Unidade da Federação",15,"Pará",0.539
+"Unidade da Federação",16,"Amapá",0.542
+"Unidade da Federação",17,"Tocantins",0.511
+"Unidade da Federação",21,"Maranhão",0.525
+"Unidade da Federação",22,"Piauí",0.52
+"Unidade da Federação",23,"Ceará",0.536
+"Unidade da Federação",24,"Rio Grande do Norte",0.555
+"Unidade da Federação",25,"Paraíba",0.536
+"Unidade da Federação",26,"Pernambuco",0.564
+"Unidade da Federação",27,"Alagoas",0.538
+"Unidade da Federação",28,"Sergipe",0.557
+"Unidade da Federação",29,"Bahia",0.531
+"Unidade da Federação",31,"Minas Gerais",0.495
+"Unidade da Federação",32,"Espírito Santo",0.505
+"Unidade da Federação",33,"Rio de Janeiro",0.574
+"Unidade da Federação",35,"São Paulo",0.525
+"Unidade da Federação",41,"Paraná",0.482
+"Unidade da Federação",42,"Santa Catarina",0.452
+"Unidade da Federação",43,"Rio Grande do Sul",0.484
+"Unidade da Federação",50,"Mato Grosso do Sul",0.503
+"Unidade da Federação",51,"Mato Grosso",0.496
+"Unidade da Federação",52,"Goiás",0.501
+"Unidade da Federação",53,"Distrito Federal",0.584
