@@ -1,5 +1,5 @@
 ---
-name: gerar-entrega
+name: gerar-entrega-final
 description: Gera e confere o .zip da entrega final do trabalho de homicídios de GED-16 (slides, caderno .qmd com os dados e artigo em .tex e .pdf), testando o zip numa pasta vazia. Use sempre que alguém mudar o artigo, o caderno, os dados ou os slides e precisar do .zip atualizado — "gera a entrega", "gera o zip", "atualiza o zip", "preparar a entrega final".
 ---
 
