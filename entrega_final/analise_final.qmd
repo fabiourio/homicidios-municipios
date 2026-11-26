@@ -201,7 +201,7 @@ d$ly       <- log(d$taxa)
 d$ln_pop   <- log(d$pop)
 d$uf       <- relevel(factor(d$uf), ref = "SP")   # usada nas seções 6 e 8
 expl <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação (%)", pct_urbana = "Urbanização (%)",
-          freq_15a17 = "Frequência escolar 15-17 (%)", distorcao_em = "Distorção idade-série EM (%)",
+          freq_15a17 = "Freq. escolar 15-17 (%)", distorcao_em = "Distorção id.-série EM (%)",
           pct_migr_10anos = "Migração recente (%)")
 
 # Tabela descritiva (médias simples entre municípios) com a correlação de cada explicativa com ln(taxa)
@@ -417,6 +417,9 @@ num$GiniZero  <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc
 num$Pico      <- fmt(pico, 0);       num$PctAbaixoPico <- fmt(100 * mean(d$rend_pc_media < pico), 0)
 num$IqrGini   <- fmt(IQR(d$gini), 3)   # justifica +0,05 no Gini
 num$PctNEpobres <- fmt(100 * mean(d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)] == "Nordeste"), 0)
+pobres <- d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)]
+stopifnot(all(pobres %in% c("Norte", "Nordeste")))   # os 10% mais pobres estão só no Norte e no Nordeste
+num$PctNpobres <- fmt(100 * mean(pobres == "Norte"), 0)
 
 # Efeitos das regiões contra o Sudeste, com IC 95%
 reg_ic <- 100 * (exp(cbind(b, ic)[c("regiaoNordeste", "regiaoCentro-Oeste", "regiaoNorte", "regiaoSul"), ]) - 1)
@@ -659,10 +662,10 @@ ew2 <- w * resid(mqp)^2
 bp_mqp <- bp_aux(ew2, X); bp_mqp_pop <- bp_aux(ew2, d$ln_pop)
 knitr::kable(rbind(mqo_todas = bp_aux(d$residuo^2, X), mqp_todas = bp_mqp, mqo_pop = bp_pop, mqp_pop = bp_mqp_pop), digits = 4)
 num$SzeroQ  <- fmt(s0, 3)
-num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 2); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 2)
+num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 3); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 3)
 num$EpMin   <- fmt(razao_ep[1], 2); num$EpMax <- fmt(razao_ep[2], 2)
 num$BPmqp   <- fmt(bp_mqp[["bp"]], 0); num$BPmqpP <- fp(bp_mqp[["p"]])
-num$BPmqpPop <- fmt(bp_mqp_pop[["bp"]], 1); num$BPmqpPopP <- fmt(bp_mqp_pop[["p"]], 2)
+num$BPmqpPop <- fmt(bp_mqp_pop[["bp"]], 1); num$BPmqpPopP <- fmt(bp_mqp_pop[["p"]], 3)
 ```
 
 ### Desocupação, Campos do Jordão e São Paulo
@@ -681,7 +684,7 @@ knitr::kable(data.frame(municipios_retirados = sum(d$pct_indet >= 30), b_desocup
                         termos_que_mudam_signif = paste(names(which(muda_signif)), collapse = ", ")), digits = 4)
 stopifnot(all(sign(coef(sem_indet)) == sign(b)), identical(names(which(muda_signif)), "desocup"))
 num$NSensDesoc <- fmt(sum(d$pct_indet >= 30), 0)
-num$PSensDesoc <- fmt(s_des[[4]], 2)
+num$PSensDesoc <- fmt(s_des[[4]], 3)
 
 # Com Campos do Jordão: mesma centralização do estudo; resíduo semi-studentizado do município
 cj$regiao <- factor("Sudeste", levels = levels(d$regiao))
@@ -691,7 +694,7 @@ com_cj <- update(final, data = rbind(d[, names(cj)], cj))
 e_cj <- tail(resid(com_cj), 1) / summary(com_cj)$sigma
 knitr::kable(data.frame(e_semi_campos_do_jordao = e_cj, interacao_com = coef(com_cj)[["rend_c:gini_c"]]), digits = 3)
 stopifnot(e_cj < -4, all(sign(coef(com_cj)) == sign(b)))
-num$SemiCJ <- fmt(e_cj, 1); num$InterCJ <- fmt(coef(com_cj)[["rend_c:gini_c"]], 2)
+num$SemiCJ <- fmt(e_cj, 1); num$InterCJ <- fmt(coef(com_cj)[["rend_c:gini_c"]], 3)
 
 # Indicadora de São Paulo: o Sul fica acima do Sudeste em parte porque SP tem taxas baixas
 d$sp <- as.numeric(d$uf == "SP")
