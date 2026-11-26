@@ -50,5 +50,7 @@ dic <- data.frame(arquivo = "base_municipios.csv", coluna = names(d), descricao 
           "5 a 10 SM", "10 a 15 SM", "15 a 20 SM", "mais de 20 SM"))))
 dic <- rbind(dic, data.frame(arquivo = "gini_oficial.csv", coluna = c("codigo", "local", "gini_oficial"), descricao = c(
   "Código IBGE da UF", "Nome da UF", "Índice de Gini oficial do rendimento domiciliar per capita, Censo 2022 (SIDRA 10301)")))
+dic <- rbind(dic, data.frame(arquivo = "malha_mun.geojson", coluna = "codarea",
+  descricao = "Código IBGE do município na malha municipal 2022 do IBGE; usada só no mapa"))
 write.csv(dic, "entrega_final/dados/dicionario.csv", row.names = FALSE)
 cat("entrega_final/dados/ gerado:", nrow(d), "municípios,", ncol(d), "colunas\n")

@@ -28,3 +28,4 @@
 "gini_oficial.csv","codigo","Código IBGE da UF"
 "gini_oficial.csv","local","Nome da UF"
 "gini_oficial.csv","gini_oficial","Índice de Gini oficial do rendimento domiciliar per capita, Censo 2022 (SIDRA 10301)"
+"malha_mun.geojson","codarea","Código IBGE do município na malha municipal 2022 do IBGE; usada só no mapa"

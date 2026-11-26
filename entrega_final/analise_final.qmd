@@ -244,7 +244,7 @@ num$GlUm    <- fmt(sf_$fstatistic[["numdf"]], 0); num$GlDois <- fmt(sf_$fstatist
 num$FglobalP <- fp(pf(sf_$fstatistic[["value"]], sf_$fstatistic[["numdf"]], sf_$fstatistic[["dendf"]], lower.tail = FALSE))
 
 # Tabela de coeficientes em duas colunas
-nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)²",
+nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)$^2$",
            gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)", desocup = "Desocupação",
            pct_urbana = "\\% urbana", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
@@ -303,7 +303,7 @@ ef <- setNames(mudancas$ef, mudancas$termo)
 num$EfFreq <- fmt(abs(ef[["freq_15a17"]]), 1); num$EfDist <- fmt(ef[["distorcao_em"]], 1)
 num$EfUrb  <- fmt(ef[["pct_urbana"]], 1);      num$EfMigr <- fmt(ef[["pct_migr_10anos"]], 1)
 num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);   num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 2)
-num$GiniEfMediana <- sinal(gr$ef[2]); num$GiniEfNoventa <- sinal(gr$ef[3])
+num$GiniEfMediana <- fmt(gr$ef[2], 0); num$GiniEfNoventa <- fmt(gr$ef[3], 0)
 num$GiniZero <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc_media < renda_zero), 0)
 num$Pico <- fmt(pico, 0)
 reg <- 100 * (exp(b[c("regiaoNorte", "regiaoNordeste", "regiaoCentro-Oeste", "regiaoSul")]) - 1)
@@ -408,6 +408,14 @@ p <- ggplot(d, aes(sample = rstandard(final))) +
 ggsave("resultados/figuras/qq_final.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
 
+# Histograma dos resíduos com a curva normal de mesma média e desvio-padrão
+p <- ggplot(d, aes(residuo)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = claro, colour = "white") +
+  stat_function(fun = dnorm, args = list(mean = mean(d$residuo), sd = sd(d$residuo)), colour = vermelho, linewidth = .8) +
+  labs(x = "Resíduo de ln(taxa)", y = "Densidade") + tema
+ggsave("resultados/figuras/histograma_residuos.png", p, width = 6.3, height = 4.0, dpi = 220)
+p
+
 # Tamanho do resíduo x população: a dispersão diminui nos municípios maiores
 p <- ggplot(d, aes(pop, abs(residuo))) +
   geom_point(colour = azul, alpha = .3, size = 1.2) + scale_x_log10(labels = milhar) +
@@ -450,7 +458,7 @@ num$PSensDesoc <- fmt(s_des[[4]], 2)
 #| label: numeros
 num <- setNames(vapply(num, function(x) sub("^-", "$-$", unname(x)), ""), names(num))
 writeLines(sprintf("\\newcommand{\\n%s}{%s}", names(num), num), "resultados/numeros.tex")
-knitr::kable(data.frame(comando = paste0("\\n", names(num)), valor = unname(num)))
+knitr::kable(data.frame(comando = paste0("\\n", names(num)), valor = unname(num)), format = "html", escape = TRUE)
 ```
 
 ## Ambiente de execução
