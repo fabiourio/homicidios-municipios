@@ -126,6 +126,7 @@ reg_br <- tapply(br$hom, br$regiao, sum) / tapply(3 * br$pop, br$regiao, sum) * 
 num$HomAno   <- fmt(sum(br$hom) / 3, 0)
 num$TaxaNbr  <- fmt(reg_br[["N"]]);  num$TaxaNEbr <- fmt(reg_br[["NE"]]); num$TaxaSEbr <- fmt(reg_br[["SE"]])
 num$TaxaCObr <- fmt(reg_br[["CO"]]); num$TaxaSbr  <- fmt(reg_br[["S"]]);  num$TaxaBR   <- fmt(taxa_br)
+num$SulSobreSE <- fmt(100 * (reg_br[["S"]] / reg_br[["SE"]] - 1), 0)
 num$PctIntervencao <- fmt(100 * sum(br$intervencao_legal) / sum(br$hom), 1)
 
 # Comparação internacional de 2021 (UNODC, Global Study on Homicide 2023): dado externo, citado no artigo
@@ -427,7 +428,6 @@ for (r in c("Nordeste", "Centro-Oeste", "Norte", "Sul")) {
 }
 num$UFpoucos <- fmt(sum(table(d$uf) < 10), 0)   # UFs com menos de 10 municípios: justifica usar a região
 
-# Desocupação: com só a renda (e seu quadrado) no modelo, o coeficiente ainda é positivo
 # Desocupação: positiva com só a renda; negativa quando o Gini entra. Urbanização: positiva quando a renda entra
 stopifnot(coef(lm(ly ~ desocup + rend_c + rend_c2, data = d))[["desocup"]] > 0,
           coef(lm(ly ~ desocup + rend_c + rend_c2 + gini_c, data = d))[["desocup"]] < 0, b[["desocup"]] < 0,
@@ -746,6 +746,9 @@ stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05)
 stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] > .05,
           all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] < .05))
 num$PDezMin <- fmt(min(abs(rob$p10)), 0); num$PDezMax <- fmt(max(abs(rob$p10)), 0)
+# Com UF no lugar da região: fração do efeito do modelo final que sobra na renda mediana e no percentil 90
+uf_rob <- rob[rob$modelo == "Com UF no lugar da região", ]
+num$UFFracMed <- fmt(100 * uf_rob$p50 / rob$p50[1], 0); num$UFFracNov <- fmt(100 * uf_rob$p90 / rob$p90[1], 0)
 ```
 
 ## 9. Estimação e previsão para municípios típicos
