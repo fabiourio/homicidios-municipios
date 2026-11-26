@@ -37,6 +37,8 @@ validacao/                 validação da qualidade dos dados (validar_dados.R e
 relatorio/                 relatório da exploração (relatorio.qmd; lê dados/tabelas/base_relatorio.csv) e modelo/ com os arquivos do Overleaf
 decisoes/                  INTERNO: transcrição do alinhamento com os professores e guia das decisões do grupo (PDF e fonte em HTML)
 apresentacao/              slides finais (latex/ e exportações) e material interno de fala (notas.json e briefings/)
+entrega_final/             ENTREGA: caderno analise_final.qmd (só o modelo final) e dados/ com as colunas usadas
+artigo/                    artigo final no modelo do Overleaf (artigo.tex e artigo.pdf); números, tabelas e figuras vêm de entrega_final/resultados/
 ```
 
 ## Como rodar
@@ -67,6 +69,17 @@ Rscript gerar_briefings.R                 # um briefing_<nome>.pdf por apresenta
 ```
 
 Os slides em `apresentacao/apresentacao_final.pdf` e `.pptx` são os arquivos da apresentação para enviar à professora.
+
+Artigo e arquivo .zip da entrega final:
+
+```bash
+Rscript scripts/05_base_entrega_final.R          # entrega_final/dados/
+(cd entrega_final && quarto render analise_final.qmd)   # entrega_final/resultados/
+cp entrega_final/resultados/numeros.tex artigo/ && cp entrega_final/resultados/tabelas/*.tex artigo/tabelas/   # e as figuras usadas
+(cd artigo && tectonic -X compile artigo.tex)
+Rscript scripts/04_montar_zip_entrega.R pasta_vazia   # slides 1-15, .qmd com os dados e artigo (.tex e .pdf)
+```
+
 O prazo informado pelo grupo é **18/11/2026, às 10h00**. A apresentação tem limite de 15 minutos.
 As notas e os briefings são material interno do grupo.
 Para atualizar os briefings, use a skill `briefing-apresentacao` (`.claude/skills/`).
