@@ -2,6 +2,7 @@
 \usetheme{Berlin}
 \setbeamertemplate{headline}{}
 \usepackage[no-math]{fontspec}
+\usepackage[brazil]{babel}
 \usepackage{amsmath,amssymb,icomma,bm,booktabs,tabularx,graphicx}
 \definecolor{navy}{rgb}{0.2,0.2,0.7}
 \definecolor{ods}{HTML}{00689D}
@@ -15,11 +16,14 @@
 \setbeamertemplate{footline}{\hfill\scriptsize\color{black!55}\insertframenumber\hspace{1em}\vspace{0.6em}}
 \graphicspath{{figuras/}{../../entrega/resultados/eda/}{../../entrega/resultados/modelagem/}}
 \newcommand{\fig}[1]{\includegraphics[width=\linewidth,height=0.62\textheight,keepaspectratio]{#1}}
-\newcommand{\legenda}[1]{\par\vspace{0.2em}{\tiny\color{black!65}#1\par}}
+\newcommand{\legenda}[1]{\par\vspace{0.2em}{\scriptsize\color{black!75}#1\par}}
 \input{numeros.tex}
+\let\ncOriginal\newcommand\let\newcommand\providecommand
+\input{../../artigo/numeros.tex}
+\let\newcommand\ncOriginal
 \title{Fatores associados aos homicídios nos municípios brasileiros}
 \subtitle{Regressão linear múltipla · ODS 16}
-\author{\footnotesize Douglas Bergamim Fernandes \and Fabio Eiiti Kobayashi Urio \and Kauan Alves Aragão \and Luiz Felipe de Brito Ramos \and Willian Nelton Teleken}
+\author{\footnotesize Douglas~Bergamim~Fernandes \and Fabio~Eiiti~Kobayashi~Urio \and Kauan~Alves~Aragão \and Luiz~Felipe~de~Brito~Ramos \and Willian~Nelton~Teleken}
 \institute{Instituto Tecnológico de Aeronáutica · GED-16 Análise de Regressão}
 \date{Novembro de 2026}
 \begin{document}
@@ -38,7 +42,7 @@
 \column{0.46\textwidth}
 \begin{block}{Por que estudar a violência letal?}
 \small
-Média 2021--2023: \textbf{\nHomAno{} mortes/ano}.
+Brasil, média 2021--2023: \textbf{\nHomAno{} mortes/ano}.
 \par\vspace{0.4em}
 {\footnotesize 2021 (/100 mil): \textbf{Mundo \nTaxaMundoContexto{} · Brasil \nTaxaBrasilContexto}.}
 \par\vspace{0.3em}
@@ -46,7 +50,7 @@ Brasil: cerca de \textbf{\nRazaoContexto{} vezes a taxa mundial}.
 \end{block}
 \end{columns}
 \vspace{0.3em}
-{\small \textbf{Medida do estudo:} mortes por agressões e intervenções legais/100 mil ao ano (2021--2023).}
+{\small \textbf{Medida do estudo:} mortes por agressões e intervenções legais por 100 mil habitantes ao ano (2021--2023).}
 \begin{block}{Pergunta de pesquisa}
 \small Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
 \end{block}
@@ -68,7 +72,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \text{Taxa anual} = \frac{\text{óbitos em 2021--2023}}{3\,\times\,\text{população de 2022}}\,\times\,100\,000
 \]
 {\small Agressões (X85--Y09) + grupo de intervenções legais do SIM (Y35--Y36).}
-\legenda{Medida relacionada à ODS 16; não replica a classificação internacional de homicídio intencional.}
+\legenda{Medida relacionada ao ODS 16; não replica a classificação internacional de homicídio intencional.}
 \end{frame}
 
 \begin{frame}{Base de dados: recorte e variáveis}
@@ -82,17 +86,19 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \item \nForaNome{} excluído por indício de sub-registro
 \end{itemize}
 \column{0.48\textwidth}
-\textbf{\color{ods}Cinco grupos de explicativas}
+\textbf{\color{ods}Cinco grupos de variáveis explicativas}
 \begin{itemize}
 \item Renda, Gini e desocupação
 \item Urbanização
-\item Frequência de 15--17 anos e atraso no ensino médio
+\item Frequência escolar de 15--17 anos e distorção idade-série no ensino médio
 \item Migração recente
 \item Região, com referência no Sudeste
 \end{itemize}
 \end{columns}
 \vspace{0.5em}
-{\small Gini: aproximação pelas classes de renda das pessoas de 14 anos ou mais. Migração: residência inferior a dez anos.}
+{\footnotesize Gini calculado pelas classes de renda (pessoas de 14 anos ou mais). Migração: residência no município há menos de dez anos.\par}
+{\footnotesize\textbf{Hipóteses:} H1 mais desigualdade, taxa maior; H2 mais exclusão escolar, taxa maior; H3 mais migração recente, taxa maior.\par}
+\legenda{Gini municipal e corte por percentil: pedidos da revisão da professora, fora da apostila.}
 \end{frame}
 
 \section{Metodologia}
@@ -113,20 +119,23 @@ Regressão múltipla de ln(taxa) & Comparar municípios mantendo outras caracter
 Renda: $r_i$ e $r_i^2$ & Representar uma relação curva com a renda\\[0.3em]
 Gini $\times$ ln(renda) ($g_i r_i$) & Permitir que a associação da desigualdade dependa da renda\\[0.3em]
 Demais explicativas ($\mathbf{x}_i$) & Desocupação, urbanização, escola e migração\\[0.3em]
-Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste como referência\\
+Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste é a referência\\
 \bottomrule
 \end{tabularx}\par}
 \vspace{0.5em}
-{\footnotesize $r_i$ é ln(renda) centralizado; $g_i$ é Gini centralizado. Erros iid e normais são pressupostos a avaliar.\par O log permite expressar as comparações como mudanças percentuais na taxa típica.}
+{\footnotesize $r_i$ é ln(renda) centralizado; $g_i$ é Gini centralizado. Erros iid e normais são pressupostos a avaliar.\par O log permite expressar as comparações como mudanças percentuais na taxa típica (a mediana da taxa, na escala original).}
 \end{frame}
 
 \begin{frame}{Metodologia: como avaliamos o modelo}
-\begin{itemize}
-\setlength{\itemsep}{0.65em}
+\begin{itemize}\small
+\setlength{\itemsep}{0.3em}
+\item \textbf{Box-Cox:} escolher a transformação da resposta; adotamos ln, de leitura percentual
 \item \textbf{Testes $F$ global e parciais:} avaliar a contribuição das explicativas e dos termos acrescentados
 \item \textbf{Gráficos dos resíduos:} procurar curvas, mudanças de dispersão e desvios da distribuição normal
 \item \textbf{Breusch-Pagan e Shapiro-Wilk:} complementar a avaliação da variância e da normalidade
+\item \textbf{Resíduos semi-studentizados:} identificar possíveis \textit{outliers} ($|e^*| \geq 4$)
 \item \textbf{VIF:} avaliar informação repetida entre explicativas, depois de verificar a especificação e os resíduos
+\item \textbf{Mínimos quadrados ponderados:} verificar se a variância não constante muda as conclusões
 \end{itemize}
 \vspace{0.4em}
 {\small Os testes complementam a leitura dos gráficos. Um bom ajuste não garante que os pressupostos sejam atendidos.}
@@ -158,8 +167,8 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \vspace{0.2em}
 {\small \textbf{Leitura:} procurar uma faixa sem curva e com largura constante. A dispersão diminui com a população.}
 \vspace{0.3em}
-{\small \alert{Breusch-Pagan rejeita variância constante.} Intervalos e testes clássicos exigem cautela.}
-\legenda{Linha tracejada: erro zero. Breusch-Pagan: $p$ \nBPp. Cada ponto representa um município.}
+{\small \alert{Breusch-Pagan rejeita variância constante.} O ajuste ponderado mantém as conclusões; testes clássicos exigem cautela.}
+\legenda{Linha tracejada: erro zero. Breusch-Pagan: $p < 0{,}001$. Cada ponto representa um município.}
 \end{frame}
 
 \begin{frame}{Ajuste: diagnóstico da normalidade dos resíduos}
@@ -183,14 +192,14 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \scriptsize
 \renewcommand{\arraystretch}{1.12}
 \setlength{\tabcolsep}{1.8pt}
-\input{tabelas/efeitos.tex}
+\input{../../artigo/tabelas/efeitos.tex}
 \legenda{Efeito $= 100\,[\exp(b\,\Delta) - 1]\%$, demais variáveis constantes. Gini nos percentis 10, 50 e 90 da renda. H1: desigualdade; H2: exclusão escolar; H3: migração recente. IC 95\% clássico, sem correção de variância.}
 \column{0.24\textwidth}
 \begin{itemize}\footnotesize
-\item Sinais consistentes com H1 (rendas média e alta) e H2
+\item H1 parcialmente sustentada (rendas média e alta); H2 sustentada; H3 não sustentada
 \item $R^2 = \nRdoisE$; $R^2_a = \nRdoisA$
-\item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p$ \nFglobalP
-\item {\color{black!50}Não significativa (5\%): \nNaoSig{} (H3, $p$ = \nPMigr)}
+\item $F = \nFglobal$ (\nGlUm{} e \nGlDois{} gl); $p < 0{,}001$
+\item Desocupação: sinal oposto à correlação simples (\nCorDesocup); não é efeito protetor
 \end{itemize}
 \end{columns}
 \end{frame}
@@ -201,8 +210,8 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \fig{efeitos.png}
 \column{0.29\textwidth}
 \begin{itemize}\small
-\item Maior frequência associada a taxa menor
-\item Maior atraso associado a taxa maior
+\item Maior frequência escolar associada a taxa menor
+\item Maior distorção idade-série associada a taxa maior
 \item Urbanização: associação positiva
 \item Migração: intervalo cruza zero
 \end{itemize}
@@ -216,10 +225,11 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \fig{gini_renda.png}
 \column{0.32\textwidth}
 \begin{itemize}\small
-\item Hipótese: mais desigualdade, maior taxa
-\item Na renda mediana: \textbf{\nGiniEfMediana\%}
-\item No percentil 90 da renda: \textbf{\nGiniEfNoventa\%}
-\item Na baixa renda, o sinal varia; não há um efeito positivo geral
+\item Efeito de +0,05 no Gini na taxa típica
+\item Renda mediana (R\$ \nRendaMediana): \textbf{\nGiniEfMediana\%}
+\item Percentil 90 (R\$ \nRendaNoventa): \textbf{\nGiniEfNoventa\%}
+\item Efeito zero perto de R\$ \nGiniZero; \nGiniZeroPct\% dos municípios abaixo
+\item No percentil 10 da renda, o sinal é negativo; não há efeito positivo geral
 \end{itemize}
 \end{columns}
 \legenda{Faixa: IC 95\% clássico. Pontos vermelhos: percentis 10, 50 e 90 da renda.}
@@ -231,10 +241,9 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \fig{renda_regiao.png}
 \column{0.32\textwidth}
 \begin{itemize}\small
-\item Curva da renda no Gini médio
-\item Pico estimado perto de R\$ \nPico
-\item Nordeste acima do Sudeste com outras características iguais
-\item O gráfico mostra a taxa típica retransformada
+\item Curva da renda no Gini médio; taxa típica (mediana)
+\item Pico perto de R\$ \nPico; só \nPctAbaixoPico\% dos municípios abaixo
+\item Com as demais características iguais, acima do Sudeste: NE $+$\nEfNE\%, CO $+$\nEfCO\%, N $+$\nEfN\%, S $+$\nEfS\%
 \end{itemize}
 \end{columns}
 \legenda{Curvas no intervalo de renda observado em cada região. Faixas: IC 95\% clássico. Não representam média aritmética.}
@@ -243,23 +252,23 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; Sudeste co
 \begin{frame}{Discussão: limites das conclusões}
 \begin{itemize}
 \setlength{\itemsep}{0.5em}
-\item \textbf{Variância não constante:} tratar os intervalos e testes como evidência exploratória
-\item \textbf{Medição:} Gini aproximado e possível sub-registro dos óbitos; cidades pequenas ficam fora do recorte
-\item \textbf{Desocupação:} o sinal negativo perde evidência ao excluir municípios com alta proporção de óbitos indeterminados
-\item \textbf{Vizinhança:} municípios próximos podem compartilhar fatores; independência espacial não foi verificada
+\item \textbf{Variância não constante:} o ajuste ponderado mantém as conclusões, mas os testes clássicos exigem cautela
+\item \textbf{Medição:} Gini aproximado e possível sub-registro dos óbitos; municípios com menos de 30 mil habitantes ficam fora do recorte
+\item \textbf{Desocupação:} sem os \nNSensDesoc{} municípios com 30\% ou mais de óbitos indeterminados, $p$ = \nPSensDesoc
+\item \textbf{Vizinhança:} municípios próximos podem compartilhar fatores; independência espacial não foi verificada, a pedido da professora
 \item \textbf{Estudo observacional:} associação municipal não demonstra causa nem descreve indivíduos
 \end{itemize}
-\legenda{VIF máximo: \nVIFrendaFinal. Esse número não substitui a análise dos resíduos.}
+\legenda{VIF máximo: \nVIFrendaFinal{} (renda); entre 5 e 10, indica multicolinearidade pelo critério da apostila.}
 \end{frame}
 
 \begin{frame}{Resposta à pergunta e próximos passos}
 \begin{itemize}
 \setlength{\itemsep}{0.5em}
-\item \textbf{Desigualdade:} associação depende da renda; positiva nos percentis 50 e 90 avaliados
-\item \textbf{Escola:} frequência e atraso escolar apresentam associações nas direções esperadas
-\item \textbf{Migração:} não encontramos evidência clara no modelo ajustado
+\item \textbf{H1 parcialmente sustentada:} a desigualdade associa-se a taxas maiores nas rendas média e alta
+\item \textbf{H2 sustentada:} frequência escolar e distorção idade-série nas direções esperadas
+\item \textbf{H3 não sustentada:} a migração recente não mostrou associação clara
 \item \textbf{Renda e região:} relação curva da renda; diferenças regionais permanecem no ajuste
-\item \textbf{Próximos passos:} tratar a variância dos erros, investigar dependência espacial e ampliar dados de políticas estaduais
+\item \textbf{Próximos passos:} dependência espacial; curva da renda por região; políticas estaduais e violência organizada; vários anos
 \end{itemize}
 \end{frame}
 
