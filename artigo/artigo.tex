@@ -1,0 +1,289 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{sbpo-template}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[table]{xcolor}
+\usepackage[square]{natbib}
+\usepackage{indentfirst}
+
+\definecolor{fundo}{HTML}{EAF1F7}
+\graphicspath{{figuras/}}
+\input{numeros.tex}
+
+\title{FATORES ASSOCIADOS AOS HOMICÍDIOS NOS MUNICÍPIOS BRASILEIROS}
+
+\begin{document}
+
+\maketitle
+
+\author{
+\name{Douglas Bergamim Fernandes}
+\name{Fabio Eiiti Kobayashi Urio}
+\name{Kauan Alves Aragão}
+\name{Luiz Felipe de Brito Ramos}
+\name{Willian Nelton Teleken}
+\vspace{4pt}
+\institute{Instituto Tecnológico de Aeronáutica (ITA)}
+\iaddress{Praça Marechal Eduardo Gomes, 50, Vila das Acácias, São José dos Campos -- SP}
+}
+
+\vspace{8mm}
+\begin{resumo}
+O Brasil registrou em 2021 uma taxa de homicídios cerca de \nRazaoContexto{} vezes a média mundial. Este trabalho, ligado ao ODS 16, investiga quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios dos municípios brasileiros. Usamos os óbitos por agressão e intervenção legal do SIM (média de 2021--2023), o Censo 2022 e dados do INEP para os \nMunEsc{} municípios com 30 mil habitantes ou mais. Ajustamos uma regressão linear múltipla para o logaritmo da taxa, com renda em forma quadrática, índice de Gini, interação entre Gini e renda, desocupação, urbanização, frequência e atraso escolar, migração recente e região. O modelo explica \nRdoisPct\% da variação. A associação da desigualdade depende da renda: é positiva nos municípios de renda média e alta. Mais frequência escolar e menos atraso escolar acompanham taxas menores. Não encontramos evidência clara para a migração. A variância dos erros não é constante; os resultados são associações exploratórias.
+\end{resumo}
+
+\bigskip
+\begin{palchaves}
+Homicídios. Regressão linear múltipla. Desigualdade.
+\end{palchaves}
+
+\vspace{8mm}
+
+\begin{abstract}
+In 2021, Brazil's homicide rate was about \nRazaoContexto{} times the world average. This work, linked to SDG 16, investigates which socioeconomic, demographic and geographic characteristics are associated with the homicide rate of Brazilian municipalities. We use deaths by assault and legal intervention from the Mortality Information System (2021--2023 average), the 2022 Census and INEP data for the 1,133 municipalities with 30,000 inhabitants or more. We fit a multiple linear regression for the logarithm of the rate, with income in quadratic form, the Gini index, a Gini-by-income interaction, unemployment, urbanization, school attendance and age-grade distortion, recent migration and region. The model explains 56\% of the variation. The association of inequality depends on income: it is positive in middle- and high-income municipalities. Higher school attendance and lower age-grade distortion go with lower rates. We find no clear evidence for migration. The error variance is not constant; the results are exploratory associations.
+\end{abstract}
+
+\bigskip
+\begin{keywords}
+Homicides. Multiple linear regression. Inequality.
+\end{keywords}
+
+\newpage
+
+\section{Introdução}
+
+Os Objetivos de Desenvolvimento Sustentável (ODS) são dezessete objetivos da ONU para a Agenda 2030. O ODS 16, Paz, Justiça e Instituições Eficazes, tem como meta 16.1 reduzir todas as formas de violência e as taxas de mortalidade relacionadas. O indicador 16.1.1 mede as vítimas de homicídio intencional por 100 mil habitantes \citep{onu2025metadados}.
+
+O Brasil está longe dessa meta. Em 2021, a taxa brasileira foi de \nTaxaBrasilContexto{} homicídios intencionais por 100 mil habitantes, contra \nTaxaMundoContexto{} no mundo \citep{unodc2023}. Na base deste trabalho, a média de 2021 a 2023 foi de \nHomAno{} mortes por ano. As taxas também variam muito dentro do país (Figura~\ref{fig:mapa}). Em 2021--2023, considerando todos os municípios, a taxa foi de \nTaxaNEbr{} no Nordeste e \nTaxaNbr{} no Norte, contra \nTaxaSEbr{} no Sudeste.
+
+A literatura associa a violência letal a condições econômicas e sociais. Em estudos com vários países, a desigualdade de renda acompanha taxas maiores de crimes violentos \citep{fajnzylber2002}. Uma meta-análise aponta a desvantagem concentrada entre os preditores mais estáveis do crime \citep{pratt2005}. Outros autores mostram que o efeito da desigualdade pode perder força com controles adicionais \citep{neumayer2003}. No Brasil, um estudo com os 5.570 municípios encontrou risco maior com mais urbanização, mais população e maior índice de Gini \citep{wanzinack2022}. Esse estudo não testou se o efeito da desigualdade muda com a renda do município. Este trabalho testa essa interação.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.52\textwidth]{e2_mapa_taxa.png}
+\caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023, nos municípios do estudo. Em cinza, os municípios com menos de 30 mil habitantes, fora do escopo. Fonte: elaboração própria com dados do SIM e do IBGE.}
+\label{fig:mapa}
+\end{figure}
+
+\subsection{Questão de Pesquisa}
+
+Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros?
+
+Antes da análise, o grupo formulou três hipóteses. H1: municípios mais desiguais têm taxas maiores. H2: municípios com mais exclusão escolar de jovens têm taxas maiores. H3: municípios com mais migração recente têm taxas maiores. As hipóteses são expectativas iniciais, testadas no modelo.
+
+\subsection{Objetivos}
+
+\textbf{Objetivo Geral:} identificar as características municipais associadas à taxa de homicídios, por meio de um modelo de regressão linear múltipla.
+
+\textbf{Objetivos Específicos:}
+\begin{itemize}
+\item montar uma base municipal com dados de mortalidade, do Censo 2022 e de indicadores educacionais;
+\item ajustar e avaliar um modelo de regressão para o logaritmo da taxa de homicídios;
+\item testar se a associação da desigualdade depende da renda do município;
+\item verificar as hipóteses H1, H2 e H3 e discutir as limitações do modelo.
+\end{itemize}
+
+\section{Metodologia}
+
+\subsection{Base de dados}
+
+A unidade de análise é o município. A variável resposta é a taxa anual de homicídios por 100 mil habitantes:
+\[
+Y_i = \frac{\text{óbitos em 2021--2023}}{3 \times \text{população de 2022}} \times 100\,000.
+\]
+Os óbitos vêm do Sistema de Informações sobre Mortalidade (SIM), por município de residência \citep{datasus2025}. Somamos as agressões (CID-10 X85--Y09) e as intervenções legais (Y35--Y36). Essa medida se relaciona ao indicador 16.1.1, mas não replica a sua definição internacional. A média de três anos reduz a oscilação de um ano isolado.
+
+As variáveis explicativas vêm do Censo Demográfico 2022 \citep{ibge2023censo} e dos Indicadores Educacionais 2022 do INEP \citep{inep2023}:
+\begin{itemize}
+\item \textbf{renda}: rendimento domiciliar per capita médio, em logaritmo;
+\item \textbf{desigualdade}: índice de Gini da renda domiciliar per capita das pessoas de 14 anos ou mais;
+\item \textbf{desocupação}: percentual da força de trabalho sem ocupação;
+\item \textbf{urbanização}: percentual da população em situação urbana;
+\item \textbf{frequência escolar}: taxa de frequência escolar bruta de 15 a 17 anos;
+\item \textbf{distorção idade-série}: percentual de alunos do ensino médio com dois anos ou mais de atraso;
+\item \textbf{migração recente}: percentual de moradores que residem no município há menos de dez anos;
+\item \textbf{região}: Norte, Nordeste, Centro-Oeste, Sudeste e Sul, com o Sudeste como referência.
+\end{itemize}
+
+O IBGE não publica o Gini municipal do Censo 2022. Calculamos o índice pelas classes de renda do Censo, pelo método de \citet{gastwirth1972}: cada classe recebe o seu ponto médio, e o Gini é 1 menos o dobro da área sob a curva de Lorenz. Nas 27 UFs, o Gini calculado tem correlação de 0,995 com o oficial, e a maior diferença é de 0,008. O cálculo do Gini por município veio da revisão da professora e não está descrito na apostila.
+
+\textbf{Recorte.} Em municípios pequenos, poucas mortes mudam muito a taxa. Por isso, o estudo usa os municípios com \nPopMin{} mil habitantes ou mais. O corte fica perto do percentil \nPercCorte{} da população municipal; o uso de um percentil como corte também veio da revisão da professora. Com a taxa nacional, esse porte garante pelo menos \nCasosEspCorte{} homicídios esperados em três anos. Excluímos \nForaNome{} por indício de sub-registro: \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada em três anos. Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população do país. A Tabela~\ref{tab:descritiva} resume as variáveis.
+
+\begin{table}[H]
+\centering
+\caption{Estatísticas descritivas dos \nMunEsc{} municípios do estudo.}
+\label{tab:descritiva}
+\small
+\input{tabelas/descritiva.tex}
+\end{table}
+
+\subsection{Métodos estatísticos}
+
+Os métodos seguem a apostila da disciplina \citep{ferrari2026}, e a análise foi feita em R \citep{rcore2025}. O modelo final é uma regressão linear múltipla ajustada por mínimos quadrados ordinários:
+\begin{equation}
+\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \beta_3 g_i + \beta_4 g_i r_i + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{4} \gamma_k D_{ik} + \varepsilon_i,
+\qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2),
+\label{eq:modelo}
+\end{equation}
+em que $r_i$ é o logaritmo da renda centralizado na média, $g_i$ é o Gini centralizado, $\mathbf{x}_i$ reúne desocupação, urbanização, frequência escolar, distorção idade-série e migração, e $D_{ik}$ são as indicadoras de região. A Tabela~\ref{tab:metodos} resume a finalidade de cada método.
+
+\begin{table}[H]
+\centering
+\caption{Métodos estatísticos usados e finalidade de cada um.}
+\label{tab:metodos}
+\small
+\begin{tabular}{@{}p{0.36\textwidth}p{0.56\textwidth}@{}}
+\toprule
+\textbf{Método} & \textbf{Finalidade}\\
+\midrule
+Transformação de Box-Cox & Escolher a transformação da resposta que aproxima os resíduos da normal e estabiliza a variância\\
+Termo quadrático da renda & Representar uma relação curva entre renda e taxa\\
+Interação Gini $\times$ renda & Permitir que a associação da desigualdade mude com a renda\\
+Variáveis indicadoras de região & Comparar regiões com as demais características iguais\\
+Construção em blocos com $F$ parcial & Testar a contribuição de cada grupo de variáveis\\
+Gráficos de resíduos & Procurar curvas, variância não constante e desvios da normal\\
+Breusch-Pagan e Shapiro-Wilk & Complementar a avaliação da variância e da normalidade\\
+Resíduos semi-studentizados & Identificar possíveis \textit{outliers} ($|e_i^*| \geq 4$)\\
+Fator de inflação da variância (VIF) & Avaliar a informação repetida entre explicativas\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A resposta usa o logaritmo. O Box-Cox, com os termos do modelo final, estimou $\lambda = \nLambdaFinal$ (IC 95\%: \nLambdaFinalInf{} a \nLambdaFinalSup). O valor $\lambda = 0$ fica fora do intervalo, mas o logaritmo foi adotado porque permite ler os coeficientes como mudanças percentuais na taxa típica. Com o logaritmo, a estatística de Shapiro-Wilk sobe de \nSWy{} para \nSWln. O efeito de uma mudança $\Delta$ numa explicativa é $100\,[\exp(b\,\Delta) - 1]\%$, com as demais variáveis constantes.
+
+A renda entra centralizada, porque sem centralizar a correlação entre a renda e o seu quadrado é 0,999. O percentual de pobres e a alfabetização saíram do modelo, pois repetiam a informação da renda: com as três juntas, o VIF da renda chegava a \nVIFrenda. O modelo foi montado em cinco blocos, cada um testado pelo $F$ parcial: (A) renda, Gini e desocupação; (B) urbanização; (C) escola e migração; (D) região; (E) Gini $\times$ renda. Outras seis variáveis foram testadas, uma de cada vez, e ficaram fora do modelo (Seção~\ref{sec:retiradas}).
+
+Alguns cálculos não estão na apostila e foram escolhas do grupo: o VIF generalizado para a região, o intervalo de confiança de $\lambda$, o efeito percentual e o intervalo do efeito do Gini em cada renda.
+
+\section{Resultados e Discussão}
+
+\subsection{Ajuste do modelo}
+
+Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). O maior ganho veio da escola e da migração ($F = \nFblocoEd$) e da região. A interação Gini $\times$ renda também foi significativa ($F = \nFInter$). O modelo final tem $R^2 = \nRdoisE$ e $R^2$ ajustado $= \nRdoisA$, na escala de $\ln Y$. O teste $F$ global vale \nFglobal{} com \nGlUm{} e \nGlDois{} graus de liberdade ($p$ \nFglobalP).
+
+\begin{table}[H]
+\centering
+\caption{Construção do modelo em blocos. Cada linha acrescenta um bloco ao modelo anterior.}
+\label{tab:blocos}
+\small
+\input{tabelas/blocos.tex}
+\end{table}
+
+A Figura~\ref{fig:ajuste} compara as taxas observadas e ajustadas. O modelo acompanha a tendência geral, mas alguns municípios têm erros grandes. Esse ajuste usa os mesmos dados da estimação e não mede o desempenho em dados novos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.62\textwidth]{observado_ajustado.png}
+\caption{Taxas observadas e ajustadas pelo modelo, nos mesmos dados do ajuste. A diagonal indica observado igual ao ajustado.}
+\label{fig:ajuste}
+\end{figure}
+
+\subsection{Diagnóstico dos resíduos}
+
+A Figura~\ref{fig:diag} mostra os resíduos. À esquerda, os resíduos não mostram curva, mas a dispersão muda: ela diminui nos municípios mais populosos, cujas taxas oscilam menos. O teste de Breusch-Pagan rejeita a variância constante ($BP = \nBP$, \nBPgl{} gl, $p$ \nBPp). Por isso, os intervalos e testes clássicos devem ser lidos com cautela. À direita, os pontos ficam próximos da reta no gráfico de quantis, e o Shapiro-Wilk não rejeita a normalidade ($W = \nSW$, $p = \nSWp$). Nenhum resíduo semi-studentizado passa de $\pm 4$. O VIF máximo é \nVIFrendaFinal, da renda. Os gráficos dos resíduos contra cada explicativa estão no caderno de análise em \texttt{.qmd}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{residuos_ajustado.png}\hfill
+\includegraphics[width=0.48\textwidth]{qq_final.png}
+\caption{Diagnóstico do modelo final. Esquerda: resíduos contra valores ajustados; a linha tracejada é o erro zero. Direita: quantis dos resíduos contra quantis da normal.}
+\label{fig:diag}
+\end{figure}
+
+\subsection{Estimativas e interpretação}
+
+A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} traduz os principais em mudanças percentuais na taxa típica. As hipóteses estão marcadas na primeira coluna.
+
+\begin{table}[H]
+\centering
+\caption{Coeficientes do modelo final. Resposta: $\ln Y$; $n = \nMunEsc$. Erros-padrão (EP) clássicos.}
+\label{tab:coef}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\input{tabelas/coeficientes.tex}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Mudança percentual na taxa típica, com as demais variáveis constantes. O efeito do Gini está nos percentis 10, 50 e 90 da renda. IC 95\% clássico.}
+\label{tab:efeitos}
+\small
+\input{tabelas/efeitos.tex}
+\end{table}
+
+\textbf{Desigualdade (H1).} A associação do Gini depende da renda (Figura~\ref{fig:gini}). Na renda mediana, um aumento de 0,05 no Gini acompanha uma taxa \nGiniEfMediana\% maior. No percentil 90 da renda, a diferença chega a \nGiniEfNoventa\%. O efeito é zero perto de R\$ \nGiniZero{} per capita, e \nGiniZeroPct\% dos municípios ficam abaixo desse valor. No percentil 10 da renda, o sinal é negativo. Portanto, H1 vale nos municípios de renda média e alta, mas não há um efeito positivo geral. Uma explicação possível é que, nos municípios mais pobres, a desigualdade medida pelo Censo capta menos a distância entre grupos sociais. O modelo não testa essa explicação.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.66\textwidth]{gini_renda.png}
+\caption{Mudança percentual na taxa típica para +0,05 no Gini, conforme a renda per capita. Faixa: IC 95\% clássico. Pontos: percentis 10, 50 e 90 da renda.}
+\label{fig:gini}
+\end{figure}
+
+\textbf{Escola (H2).} As duas medidas escolares têm a direção esperada (Figura~\ref{fig:efeitos}). Cinco pontos a mais de frequência escolar de 15 a 17 anos acompanham uma taxa 8,6\% menor. Dez pontos a mais de distorção idade-série acompanham uma taxa 15,6\% maior. Assim, H2 é consistente com os dados. Essas medidas descrevem o município, não o risco de cada jovem.
+
+\textbf{Migração (H3).} Cinco pontos a mais de migração recente acompanham uma taxa 2,1\% maior, mas o intervalo de confiança inclui o zero ($p = \nPMigr$). Não encontramos evidência clara para H3.
+
+\textbf{Urbanização e desocupação.} Dez pontos a mais de população urbana acompanham uma taxa 11,8\% maior, como em \citet{wanzinack2022}. A desocupação tem sinal negativo ($-1{,}8\%$ por ponto), embora a sua correlação simples com a taxa seja \nCorDesocup. A desocupação tem correlação de \nCorDesocupRenda{} com a renda; o sinal pode refletir essa informação repetida. Não interpretamos esse coeficiente como efeito protetor.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.66\textwidth]{efeitos.png}
+\caption{Mudança percentual na taxa típica para as variáveis de escola, urbanização, desocupação e migração. Barras: IC 95\% clássico; p.p. = pontos percentuais.}
+\label{fig:efeitos}
+\end{figure}
+
+\textbf{Renda e região.} A relação com a renda tem forma de U invertido (Figura~\ref{fig:renda}). No Gini médio, a taxa típica ajustada é máxima perto de R\$ \nPico{} per capita e cai nos municípios mais ricos. Com as demais características iguais, todas as regiões têm taxa típica maior que o Sudeste: cerca de 108\% maior no Nordeste, 83\% no Centro-Oeste, 79\% no Norte e 67\% no Sul. Esse resultado responde à parte geográfica da pergunta. A região resume fatores não medidos no modelo, como políticas estaduais de segurança e a presença de grupos criminosos.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.66\textwidth]{renda_regiao.png}
+\caption{Taxa típica ajustada conforme a renda per capita, no Nordeste e no Sudeste, no Gini médio e com as demais variáveis na média. Curvas no intervalo de renda observado em cada região. Faixas: IC 95\% clássico.}
+\label{fig:renda}
+\end{figure}
+
+\subsection{Variáveis testadas e retiradas}
+\label{sec:retiradas}
+
+Seis variáveis foram testadas, uma de cada vez, pelo $F$ parcial sobre o modelo final (Tabela~\ref{tab:retiradas}). Densidade, faixa de fronteira, abandono escolar e percentual de homens de 15 a 29 anos não acrescentaram explicação. A Amazônia Legal foi significativa, mas o efeito vinha apenas dos municípios do Mato Grosso. O percentual de óbitos de intenção indeterminada saiu porque os homicídios estavam no seu divisor; com a medida corrigida, a variável não foi significativa.
+
+\begin{table}[H]
+\centering
+\caption{Variáveis testadas e retiradas: $F$ parcial de cada uma somada ao modelo final.}
+\label{tab:retiradas}
+\small
+\input{tabelas/retiradas.tex}
+\end{table}
+
+\subsection{Discussão}
+
+Os resultados respondem à pergunta de pesquisa em três partes. Entre os fatores socioeconômicos, a renda tem relação curva com a taxa, e a desigualdade importa sobretudo nos municípios de renda média e alta. Entre os fatores educacionais e demográficos, a frequência e o atraso escolar têm as associações esperadas, e a urbanização acompanha taxas maiores. Entre os fatores geográficos, as diferenças regionais permanecem mesmo com as demais características iguais.
+
+O resultado mais novo é a interação entre Gini e renda. Estudos anteriores no Brasil estimaram um único efeito do Gini para todos os municípios \citep{wanzinack2022}. No nosso modelo, esse efeito médio esconde sinais opostos nos dois extremos da renda. A crítica de \citet{neumayer2003} também aparece aqui: com o estado no lugar da região, o coeficiente do Gini perde significância, embora a interação continue significativa. O grupo manteve a região, que usa 14 parâmetros em vez de 36 e preserva a normalidade dos resíduos.
+
+\section{Considerações Finais}
+
+Este trabalho identificou as características municipais associadas à taxa de homicídios no Brasil, com um modelo de regressão linear múltipla para \nMunEsc{} municípios. O modelo explica \nRdoisPct\% da variação do logaritmo da taxa. A desigualdade acompanha taxas maiores nos municípios de renda média e alta (H1 parcial). A exclusão escolar acompanha taxas maiores (H2). A migração recente não mostrou associação clara (H3 não confirmada). A renda tem relação curva com a taxa, e as regiões Norte, Nordeste, Centro-Oeste e Sul têm taxas típicas maiores que o Sudeste. Esses resultados são associações entre municípios. Eles não demonstram causa nem descrevem o risco de cada pessoa.
+
+\subsection{Limitações}
+
+\begin{itemize}
+\item \textbf{Variância não constante.} O Breusch-Pagan rejeita a variância constante. Os intervalos e testes são, portanto, evidência exploratória.
+\item \textbf{Medição.} O Gini é uma aproximação pelas classes de renda. O SIM pode omitir ou classificar mortes de forma diferente entre municípios. Os municípios com menos de 30 mil habitantes ficaram fora.
+\item \textbf{Desocupação.} Ao excluir os 31 municípios com 30\% ou mais de óbitos de intenção indeterminada, o coeficiente da desocupação deixa de ser significativo ($p = 0{,}07$).
+\item \textbf{Vizinhança.} Municípios próximos podem compartilhar fatores não medidos. A independência dos erros no espaço não foi verificada.
+\item \textbf{Estudo observacional.} Os dados são de um único período, e fatores como policiamento e crime organizado não foram medidos.
+\end{itemize}
+
+\textbf{Trabalhos futuros.} O estudo pode ser ampliado de quatro formas: (1) tratar a variância não constante, por exemplo com mínimos quadrados ponderados pela população; (2) investigar a dependência espacial entre municípios vizinhos; (3) incluir dados de políticas estaduais de segurança e de violência organizada; (4) acompanhar os municípios em vários anos, para separar diferenças permanentes de mudanças no tempo.
+
+\bibliographystyle{sbpo}
+\bibliography{referencias}
+
+\end{document}
