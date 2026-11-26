@@ -31,7 +31,7 @@ Pacotes de R necessários: `ggplot2`, `dplyr`, `sf`, `MASS`, `lmtest`, `scales`,
 | `dicionario.csv` | Descrição de cada coluna |
 
 **O que vem de fora da apostila.** Pedidos da revisão da professora: o Gini por município e o corte da população por percentil.
-Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; o argumento da oscilação $1/\sqrt{\mu}$ no recorte; os pesos do ajuste por mínimos quadrados ponderados; e a alavancagem dos municípios de referência.
+Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; a curva suavizada (loess) dos gráficos de resíduos; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; o argumento da oscilação $1/\sqrt{\mu}$ no recorte; os pesos do ajuste por mínimos quadrados ponderados; e a alavancagem dos municípios de referência.
 Cada um desses itens está marcado com **(fora da apostila)** no ponto em que aparece.
 
 ## Pacotes e funções auxiliares
@@ -310,7 +310,7 @@ tabela("lrrrrrrrrr",
        c(sprintf("%s & --- & --- & --- & %s\\\\", nomes_bloco[1], crit[1]),
          sprintf("%s & %s & %s & %s & %s\\\\", nomes_bloco[-1], fmt(av$Df, 0), fmt(av$F), fp(av$`Pr(>F)`), crit[-1])),
        "blocos.tex")
-num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 2)   # R² de previsão = 1 - PRESS/SST (fora da apostila)
+num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 3)   # R² de previsão = 1 - PRESS/SST (fora da apostila)
 num$FInter  <- fmt(av$F[4])
 num$RdoisAC <- fmt(r2a[3], 3); num$RdoisAD <- fmt(r2a[4], 3)
 
@@ -347,7 +347,7 @@ num$CoefGini <- fmt(b[["gini_c"]], 3)
 # Tabela de coeficientes em duas colunas
 nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)$^2$",
            gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)", desocup = "Desocupação",
-           pct_urbana = "Urbanização", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
+           pct_urbana = "Urbanização", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção idade-série EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
            `regiaoCentro-Oeste` = "Centro-Oeste", regiaoSul = "Sul")
 cc  <- resumo$coefficients[names(nomes), ]
@@ -367,7 +367,7 @@ O efeito de +0,05 no Gini, a partir do Gini médio, é calculado pela diferença
 #| label: efeitos
 mudancas <- data.frame(
   termo    = c("distorcao_em", "freq_15a17", "pct_migr_10anos", "pct_urbana", "desocup"),
-  variavel = c("Distorção idade-série (EM)", "Frequência escolar 15--17", "Migração recente", "Urbanização", "Desocupação"),
+  variavel = c("Distorção idade-série EM", "Frequência escolar 15--17", "Migração recente", "Urbanização", "Desocupação"),
   hip      = c("H2", "H2", "H3", "", ""),
   mudanca  = c("+10 p.p.", "+5 p.p.", "+5 p.p.", "+10 p.p.", "+1 p.p."),
   delta    = c(10, 5, 5, 10, 1))
@@ -410,8 +410,8 @@ ef <- setNames(mudancas$ef, mudancas$termo)
 num$EfFreq  <- fmt(abs(ef[["freq_15a17"]]), 1); num$EfDist <- fmt(ef[["distorcao_em"]], 1)
 num$EfUrb   <- fmt(ef[["pct_urbana"]], 1);      num$EfMigr <- fmt(ef[["pct_migr_10anos"]], 1)
 num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);    num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 3)
-num$GiniEfMediana <- fmt(gr$ef[2], 0); num$GiniEfNoventa <- fmt(gr$ef[3], 0)
-num$GiniEfDez <- fmt(abs(gr$ef[1]), 0); num$GiniPDez <- fmt(gr$p[1], 3)
+num$GiniEfMediana <- fmt(gr$ef[2], 1); num$GiniEfNoventa <- fmt(gr$ef[3], 1)
+num$GiniEfDez <- fmt(abs(gr$ef[1]), 1); num$GiniPDez <- fmt(gr$p[1], 3)
 num$RendaDez  <- fmt(gr$renda[1], 0); num$RendaMediana <- fmt(gr$renda[2], 0); num$RendaNoventa <- fmt(gr$renda[3], 0)
 num$GiniZero  <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc_media < renda_zero), 0)
 num$Pico      <- fmt(pico, 0);       num$PctAbaixoPico <- fmt(100 * mean(d$rend_pc_media < pico), 0)
@@ -632,7 +632,7 @@ p <- ggplot(dl, aes(x, residuo)) + geom_point(colour = azul, alpha = .25, size =
   geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
   geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = vermelho, linewidth = .7) +
   facet_wrap(~variavel, scales = "free_x", ncol = 4) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 12)
-ggsave("resultados/figuras/residuos_explicativas.png", p, width = 10, height = 4.6, dpi = 200)
+ggsave("resultados/figuras/residuos_explicativas.png", p, width = 7.5, height = 4.2, dpi = 250)
 p
 ggplot(d, aes(regiao, residuo)) + geom_boxplot(fill = claro) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
 ```
@@ -720,6 +720,11 @@ knitr::kable(data.frame(r2_residuos_por_uf = r2_uf, r2a_com_uf = summary(com_uf)
 num$RdoisResUF <- fmt(100 * r2_uf, 0)
 num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
 num$ParUF      <- fmt(length(coef(com_uf)), 0)
+# H2 com UF: frequência e distorção seguem significativas; tamanho relativo ao modelo final
+bu <- summary(com_uf)$coefficients
+stopifnot(bu["freq_15a17", 4] < .05, bu["distorcao_em", 4] < .05, bu["freq_15a17", 1] < 0, bu["distorcao_em", 1] > 0)
+num$UFFreq <- fmt(100 * bu["freq_15a17", 1] / b[["freq_15a17"]], 0); num$UFDist <- fmt(100 * bu["distorcao_em", 1] / b[["distorcao_em"]], 0)
+num$PMigrUF <- fmt(bu["pct_migr_10anos", 4], 3)
 ```
 
 ### Robustez do efeito do Gini
