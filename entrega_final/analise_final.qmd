@@ -302,7 +302,7 @@ knitr::kable(data.frame(bloco = LETTERS[1:5], R2a = r2a, criterios), digits = 3)
 stopifnot(apply(criterios[, c("mse", "aic", "bic", "press")], 2, which.min) == 5)
 
 nomes_bloco <- c("A: socioeconômico", "B: + urbanização", "C: + educação e migração", "D: + região", "E: + Gini $\\times$ renda")
-crit <- sprintf("%s & %s & %s & %s & %s & %s", fmt(r2a, 2), fmt(criterios[, "mse"], 3), fmt(criterios[, "cp"], 0),
+crit <- sprintf("%s & %s & %s & %s & %s & %s", fmt(r2a, 3), fmt(criterios[, "mse"], 3), fmt(criterios[, "cp"], 0),
                 fmt(criterios[, "aic"], 0), fmt(criterios[, "bic"], 0), fmt(criterios[, "press"], 0))
 crit <- gsub("(^| )-", "\\1$-$", crit)
 tabela("lrrrrrrrrr",
@@ -312,7 +312,7 @@ tabela("lrrrrrrrrr",
        "blocos.tex")
 num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 2)   # R² de previsão = 1 - PRESS/SST (fora da apostila)
 num$FInter  <- fmt(av$F[4])
-num$RdoisAC <- fmt(r2a[3], 2); num$RdoisAD <- fmt(r2a[4], 2)
+num$RdoisAC <- fmt(r2a[3], 3); num$RdoisAD <- fmt(r2a[4], 3)
 
 # F de cada bloco como o último a entrar (o bloco A leva junto a interação, pelo princípio da hierarquia)
 retira <- list(A = ~ . - rend_c - rend_c2 - gini_c - desocup - rend_c:gini_c, B = ~ . - pct_urbana,
@@ -337,7 +337,8 @@ ic <- confint(final)
 b  <- coef(final)
 stopifnot(final$rank == 14, df.residual(final) == 1119)
 
-num$RdoisE   <- fmt(resumo$r.squared, 2); num$RdoisA <- fmt(resumo$adj.r.squared, 2); num$RdoisPct <- fmt(100 * resumo$r.squared, 0)
+num$RdoisE   <- fmt(resumo$r.squared, 3); num$RdoisA <- fmt(resumo$adj.r.squared, 3); num$RdoisPct <- fmt(100 * resumo$r.squared, 0)
+num$RdoisResto <- fmt(100 * (1 - resumo$r.squared), 0)   # parte da variação de ln(taxa) que o modelo não explica
 num$Fglobal  <- fmt(resumo$fstatistic[["value"]], 0)
 num$GlUm     <- fmt(resumo$fstatistic[["numdf"]], 0); num$GlDois <- fmt(resumo$fstatistic[["dendf"]], 0)
 num$FglobalP <- fp(pf(resumo$fstatistic[["value"]], resumo$fstatistic[["numdf"]], resumo$fstatistic[["dendf"]], lower.tail = FALSE))
@@ -402,13 +403,13 @@ lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", mudancas$hip, mudanc
                sinal(mudancas$ef, 1), sinal(mudancas$inf, 1), sinal(mudancas$sup, 1), fp(mudancas$p))
 tabela("cllrcr",
        "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Aumento} & \\textbf{Mudança na taxa} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
-       c(lin_gini, lin, sprintf(" & Renda & --- & U invertido & --- & %s\\\\", fp(resumo$coefficients["rend_c2", 4]))),
+       c(lin_gini, lin, sprintf(" & Renda & --- & pico em R\\$ %s & --- & %s\\\\", fmt(pico, 0), fp(resumo$coefficients["rend_c2", 4]))),
        "efeitos.tex")
 
 ef <- setNames(mudancas$ef, mudancas$termo)
 num$EfFreq  <- fmt(abs(ef[["freq_15a17"]]), 1); num$EfDist <- fmt(ef[["distorcao_em"]], 1)
 num$EfUrb   <- fmt(ef[["pct_urbana"]], 1);      num$EfMigr <- fmt(ef[["pct_migr_10anos"]], 1)
-num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);    num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 2)
+num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);    num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 3)
 num$GiniEfMediana <- fmt(gr$ef[2], 0); num$GiniEfNoventa <- fmt(gr$ef[3], 0)
 num$GiniEfDez <- fmt(abs(gr$ef[1]), 0); num$GiniPDez <- fmt(gr$p[1], 3)
 num$RendaDez  <- fmt(gr$renda[1], 0); num$RendaMediana <- fmt(gr$renda[2], 0); num$RendaNoventa <- fmt(gr$renda[3], 0)
@@ -447,7 +448,7 @@ p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Mudança na taxa\ntípica (%)") + tema
-ggsave("resultados/figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
+ggsave("resultados/figuras/gini_renda.png", p, width = 6, height = 3.9, dpi = 250)
 p
 
 # Taxa típica ajustada ao longo da renda, no Nordeste e no Sudeste (Gini médio, demais variáveis na média),
@@ -469,7 +470,7 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Taxa típica\n(por 100 mil/ano)") +
   tema + theme(legend.position = "bottom")
-ggsave("resultados/figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
+ggsave("resultados/figuras/renda_regiao.png", p, width = 6, height = 3.9, dpi = 250)
 p
 
 # Efeitos de urbanização, escola e migração (IC 95%)
@@ -525,7 +526,7 @@ stopifnot(length(sig) == 4, max(espec$R2a[1:5]) - resumo$adj.r.squared < 0.01,
           espec$aic[6] < crit_final[["aic"]], espec$press[6] < crit_final[["press"]],
           espec$bic[6] > crit_final[["bic"]])   # o BIC prefere o modelo final ao modelo com todos os termos
 num$RdoisATodos <- fmt(summary(todos)$adj.r.squared, 3)
-num$PRegGini <- fmt(espec$p[espec$termo == "Região $\\times$ Gini"], 2)   # região x Gini não significativa
+num$PRegGini <- fmt(espec$p[espec$termo == "Região $\\times$ Gini"], 3)   # região x Gini não significativa
 num$BICfinal <- fmt(-crit_final[["bic"]], 0); num$BICtodos <- fmt(-espec$bic[6], 0)
 # Cp do modelo final tomando o modelo com todos os termos como completo (apostila, cap. 8)
 cp_final <- sum(resid(final)^2) / (sum(resid(todos)^2) / df.residual(todos)) + 2 * length(coef(final)) - n
@@ -630,7 +631,8 @@ dl <- do.call(rbind, lapply(names(expl), function(v) data.frame(variavel = expl[
 p <- ggplot(dl, aes(x, residuo)) + geom_point(colour = azul, alpha = .25, size = .6) +
   geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
   geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = vermelho, linewidth = .7) +
-  facet_wrap(~variavel, scales = "free_x", ncol = 3) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
+  facet_wrap(~variavel, scales = "free_x", ncol = 4) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 12)
+ggsave("resultados/figuras/residuos_explicativas.png", p, width = 10, height = 4.6, dpi = 200)
 p
 ggplot(d, aes(regiao, residuo)) + geom_boxplot(fill = claro) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
 ```
@@ -716,7 +718,7 @@ sw_uf  <- shapiro.test(rstandard(com_uf))
 knitr::kable(data.frame(r2_residuos_por_uf = r2_uf, r2a_com_uf = summary(com_uf)$adj.r.squared, bic_com_uf = criterio(com_uf)[["bic"]],
                         parametros = length(coef(com_uf)), sw_p_com_uf = sw_uf$p.value), digits = 4)
 num$RdoisResUF <- fmt(100 * r2_uf, 0)
-num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 2); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
+num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
 num$ParUF      <- fmt(length(coef(com_uf)), 0)
 ```
 
