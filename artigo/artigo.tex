@@ -35,7 +35,7 @@
 
 \vspace{8mm}
 \begin{resumo}
-O Brasil registrou em 2021 uma taxa de homicídios cerca de \nRazaoContexto{} vezes a média mundial. Este trabalho, ligado ao ODS 16, investiga quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios dos municípios brasileiros. Usamos os óbitos por agressão e intervenção legal do SIM (média de 2021--2023), o Censo 2022 e dados do INEP para os \nMunEsc{} municípios com 30 mil habitantes ou mais. Ajustamos uma regressão linear múltipla para o logaritmo da taxa, com renda em forma quadrática, índice de Gini, interação entre Gini e renda, desocupação, urbanização, frequência e atraso escolar, migração recente e região. O modelo explica \nRdoisPct\% da variação. A associação da desigualdade depende da renda: é positiva nos municípios de renda média e alta. Mais frequência escolar e menos atraso escolar acompanham taxas menores. Não encontramos evidência clara para a migração. A variância dos erros não é constante; os resultados são associações exploratórias.
+O Brasil registrou em 2021 uma taxa de homicídios \nRazaoContexto{} vezes a média mundial. Este trabalho, ligado ao ODS 16, investiga quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios dos municípios brasileiros. Usamos os óbitos por agressão e intervenção legal do SIM (média de 2021--2023), o Censo 2022 e dados do INEP para os \nMunEsc{} municípios com 30 mil habitantes ou mais. Ajustamos uma regressão linear múltipla para o logaritmo da taxa, com renda em forma quadrática, índice de Gini, interação entre Gini e renda, desocupação, urbanização, frequência e atraso escolar, migração recente e região. O modelo explica \nRdoisPct\% da variação. A associação da desigualdade depende da renda: é positiva nos municípios de renda média e alta. Mais frequência escolar e menos atraso escolar acompanham taxas menores. A migração não mostrou associação clara. A variância dos erros não é constante; os resultados são associações exploratórias.
 \end{resumo}
 
 \bigskip
@@ -165,7 +165,7 @@ Alguns cálculos não estão na apostila e foram escolhas do grupo: o VIF genera
 
 \subsection{Ajuste do modelo}
 
-Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). O maior ganho veio da escola e da migração ($F = \nFblocoEd$) e da região. A interação Gini $\times$ renda também foi significativa ($F = \nFInter$). O modelo final tem $R^2 = \nRdoisE$ e $R^2$ ajustado $= \nRdoisA$, na escala de $\ln Y$. O teste $F$ global vale \nFglobal{} com \nGlUm{} e \nGlDois{} graus de liberdade ($p$ \nFglobalP).
+Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). Os maiores ganhos vieram da região ($R^2_a$ de 0,43 para 0,53) e da escola e migração ($F = \nFblocoEd$). A interação Gini $\times$ renda também foi significativa ($F = \nFInter$). O modelo final tem $R^2 = \nRdoisE$ e $R^2$ ajustado $= \nRdoisA$, na escala de $\ln Y$. O teste $F$ global vale \nFglobal{} com \nGlUm{} e \nGlDois{} graus de liberdade ($p$ \nFglobalP).
 
 \begin{table}[H]
 \centering
@@ -251,7 +251,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \subsection{Variáveis testadas e retiradas}
 \label{sec:retiradas}
 
-Seis variáveis foram testadas, uma de cada vez, pelo $F$ parcial sobre o modelo final (Tabela~\ref{tab:retiradas}). Densidade, faixa de fronteira, abandono escolar e percentual de homens de 15 a 29 anos não acrescentaram explicação. A Amazônia Legal foi significativa, mas o efeito vinha apenas dos municípios do Mato Grosso. O percentual de óbitos de intenção indeterminada saiu porque os homicídios estavam no seu divisor; com a medida corrigida, a variável não foi significativa.
+Seis variáveis foram testadas, uma de cada vez, pelo $F$ parcial sobre o modelo final (Tabela~\ref{tab:retiradas}). Densidade, faixa de fronteira, abandono escolar e percentual de homens de 15 a 29 anos não acrescentaram explicação. A Amazônia Legal foi significativa, mas a evidência perde força ao excluir os municípios do Mato Grosso. O percentual de óbitos de intenção indeterminada saiu porque os homicídios estavam no seu divisor; com a medida corrigida, a variável não foi significativa.
 
 \begin{table}[H]
 \centering
@@ -265,7 +265,7 @@ Seis variáveis foram testadas, uma de cada vez, pelo $F$ parcial sobre o modelo
 
 Os resultados respondem à pergunta de pesquisa em três partes. Entre os fatores socioeconômicos, a renda tem relação curva com a taxa, e a desigualdade importa sobretudo nos municípios de renda média e alta. Entre os fatores educacionais e demográficos, a frequência e o atraso escolar têm as associações esperadas, e a urbanização acompanha taxas maiores. Entre os fatores geográficos, as diferenças regionais permanecem mesmo com as demais características iguais.
 
-O resultado mais novo é a interação entre Gini e renda. Estudos anteriores no Brasil estimaram um único efeito do Gini para todos os municípios \citep{wanzinack2022}. No nosso modelo, esse efeito médio esconde sinais opostos nos dois extremos da renda. A crítica de \citet{neumayer2003} também aparece aqui: com o estado no lugar da região, o coeficiente do Gini perde significância, embora a interação continue significativa. O grupo manteve a região, que usa 14 parâmetros em vez de 36 e preserva a normalidade dos resíduos.
+O resultado mais novo é a interação entre Gini e renda. Estudos anteriores no Brasil estimaram um único efeito do Gini para todos os municípios \citep{wanzinack2022}. No nosso modelo, esse efeito médio esconde sinais opostos nos dois extremos da renda. Em linha com a crítica de \citet{neumayer2003}, com o estado no lugar da região, o coeficiente do Gini perde significância, embora a interação continue significativa. O grupo manteve a região, que usa 14 parâmetros em vez de 36 e preserva a normalidade dos resíduos.
 
 \section{Considerações Finais}
 
