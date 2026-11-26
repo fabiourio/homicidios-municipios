@@ -1,9 +1,4 @@
-# Gera e confere o .zip da entrega final, do caderno ao zip, e testa o zip numa pasta vazia.
-# Uso, na raiz do repositório: Rscript scripts/06_gerar_entrega.R [pasta_de_destino] [--base] [--slides]
-#   pasta_de_destino  onde o .zip é gravado (padrão: entrega_zip/, ignorada pelo git)
-#   --base            refaz entrega_final/dados/ antes (rode só se os dados brutos mudaram)
-#   --slides          recompila os slides e as exportações antes (rode se o .tex dos slides mudou)
-# Precisa de R, quarto e tectonic no PATH.
+# Uso e passos: .claude/skills/gerar-entrega-final/SKILL.md
 
 args    <- commandArgs(trailingOnly = TRUE)
 destino <- normalizePath(c(args[!startsWith(args, "--")], "entrega_zip")[1], mustWork = FALSE)
@@ -17,7 +12,7 @@ roda    <- function(cmd, argumentos, pasta = ".") {
   invisible(saida)
 }
 for (programa in c("quarto", "tectonic")) if (!nzchar(Sys.which(programa))) stop("Programa não encontrado no PATH: ", programa)
-Sys.setenv(PATH = paste(R.home("bin"), Sys.getenv("PATH"), sep = .Platform$path.sep))   # o quarto usa este R
+Sys.setenv(PATH = paste(R.home("bin"), Sys.getenv("PATH"), sep = .Platform$path.sep))
 
 if ("--base" %in% args) {
   passo("Base de dados (scripts/05_base_entrega_final.R)")
@@ -82,5 +77,5 @@ if (!identical(texto_zip, texto)) stop("O artigo compilado do zip difere do arti
 
 cat("\nEntrega pronta:", zip_final,
     sprintf("\n  artigo: %d páginas | resumo: %d palavras | abstract: %d palavras", paginas, n_resumo, n_abstract),
-    sprintf("\n  slides: %d páginas | %d números, tabelas e figuras reproduzidos pelo caderno do zip\n",
+    sprintf("\n  slides: %d páginas | %d arquivos (números, tabelas e figuras) reproduzidos pelo caderno do zip\n",
             pdftools::pdf_info(file.path(base_zip, "slides/apresentacao_final.pdf"))$pages, length(origem)))

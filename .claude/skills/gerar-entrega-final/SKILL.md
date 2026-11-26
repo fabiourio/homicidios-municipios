@@ -11,7 +11,7 @@ Um comando monta e confere tudo. Nenhum número do artigo é digitado à mão: o
 
 ## Pré-requisitos
 
-- R com os pacotes do caderno (`ggplot2`, `dplyr`, `sf`, `MASS`, `lmtest`, `scales`, `knitr`, `rmarkdown`) e `pdftools`.
+- R com os pacotes do projeto: rode uma vez `Rscript scripts/instalar_pacotes.R` (instala os do caderno, `pdftools`, `qpdf` e os das exportações dos slides).
 - `quarto` e `tectonic` no PATH.
 
 ## Comando
@@ -31,8 +31,8 @@ No macOS, se `Rscript` não estiver no PATH: `/Library/Frameworks/R.framework/Re
 
 1. (`--base`) Refaz `entrega_final/dados/` com `scripts/05_base_entrega_final.R`.
 2. Renderiza `entrega_final/analise_final.qmd`. Os `stopifnot` do caderno conferem as frases do artigo que dependem de números.
-3. Copia para `artigo/` o `numeros.tex` e só as tabelas e figuras que o `artigo.tex` usa.
-4. Compila o artigo e confere: sem referência indefinida, no máximo 15 páginas, resumo e abstract com no máximo 150 palavras e na página 1.
+3. Copia para `artigo/` o `numeros.tex` e só as tabelas e figuras que o `artigo.tex` usa. Tabelas e figuras que o artigo não usa são apagadas de `artigo/tabelas/` e `artigo/figuras/`.
+4. Compila o artigo e confere: sem referência indefinida, no máximo 15 páginas, resumo e abstract com no máximo 150 palavras e na página 1. O `artigo.pdf` é recompilado a cada execução e muda em bytes mesmo sem mudança no texto: se nada mudou de verdade, descarte com `git checkout -- artigo/artigo.pdf`.
 5. (`--slides`) Recompila os slides e as exportações.
 6. Monta o zip com `scripts/04_montar_zip_entrega.R` (slides 1 a 15, caderno com os dados, artigo).
 7. Descompacta o zip numa pasta vazia, compila o artigo, roda o caderno e compara byte a byte os números, as tabelas e as figuras.
