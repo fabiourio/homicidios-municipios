@@ -511,11 +511,12 @@ tabela("lrrrrrrr",
                  fmt(espec$R2a, 3), fmt(-espec$aic, 0), fmt(-espec$bic, 0), fmt(espec$press, 0))),
        "especificacao.tex")
 # Frases do artigo: 4 dos 5 conjuntos são significativos; ganho em R²a < 0,01 por conjunto;
-# AIC e PRESS preferem o modelo com todos os termos; o BIC fica a menos de 2 pontos do modelo final
+# AIC e PRESS preferem o modelo com todos os termos; o BIC prefere o modelo final
 stopifnot(length(signif) == 4, max(espec$R2a[1:5]) - resumo$adj.r.squared < 0.01,
           espec$aic[6] < crit_final[["aic"]], espec$press[6] < crit_final[["press"]],
-          min(espec$bic) > crit_final[["bic"]] - 2)
+          espec$bic[6] > crit_final[["bic"]])   # o BIC prefere o modelo final ao modelo com todos os termos
 num$RdoisATodos <- fmt(summary(todos)$adj.r.squared, 3)
+num$BICfinal <- fmt(-crit_final[["bic"]], 0); num$BICtodos <- fmt(-espec$bic[6], 0)
 ```
 
 ### Multicolinearidade: VIF de cada coluna
