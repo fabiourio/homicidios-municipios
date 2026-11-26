@@ -88,7 +88,7 @@ INEP, 2022 & Distorção idade-série no ensino médio\\
 \column{0.48\textwidth}
 \textbf{\color{ods}Variáveis explicativas}
 \begin{itemize}
-\item Renda, Gini e desocupação
+\item Renda (domiciliar per capita, R\$/mês), Gini e desocupação
 \item Urbanização
 \item Frequência escolar de 15--17 anos e distorção idade-série no ensino médio
 \item Migração recente
@@ -149,12 +149,12 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \column{0.33\textwidth}
 \begin{itemize}\small
 \item $R^2$ ajustado = \nRdoisA, na escala de ln(taxa)
-\item O modelo acompanha parte da variação observada
+\item Desvio-padrão residual \nSigma{} em ln: a taxa observada fica, em geral, entre a típica dividida e multiplicada por \nFatorDoisS
 \item Municípios com erros grandes permanecem
 \item $R^2$ de previsão (PRESS) = \nPressPred, próximo do $R^2_a$
 \end{itemize}
 \end{columns}
-\legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Não é validação externa.}
+\legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Fora da apostila (escolhas do grupo): $R^2$ de previsão pelo PRESS, taxa típica (mediana), efeito percentual e pesos do ajuste ponderado.}
 \end{frame}
 
 \begin{frame}{Ajuste: diagnóstico da variância dos erros}
@@ -165,7 +165,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \includegraphics[width=\linewidth]{residuos_populacao.png}
 \end{columns}
 \vspace{0.2em}
-{\small \textbf{Leitura:} procurar uma faixa sem curva e com largura constante. A dispersão diminui com a população.}
+{\small \textbf{Leitura:} procurar uma faixa sem curva e com largura constante. A dispersão tende a ser maior nos municípios menos populosos.}
 \vspace{0.3em}
 {\small \alert{Breusch-Pagan rejeita variância constante.} O ajuste ponderado mantém as conclusões; testes clássicos exigem cautela.}
 \legenda{Linha tracejada: erro zero. Breusch-Pagan: $p < 0{,}001$. Cada ponto representa um município.}
@@ -193,7 +193,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \renewcommand{\arraystretch}{1.12}
 \setlength{\tabcolsep}{1.8pt}
 \input{../../artigo/tabelas/efeitos.tex}
-\legenda{Efeito $= 100\,[\exp(b\,\Delta) - 1]\%$, demais variáveis constantes. Gini nos percentis 10, 50 e 90 da renda. H1: desigualdade; H2: exclusão escolar; H3: migração recente. IC 95\% clássico, sem correção de variância.}
+\legenda{Efeito $= 100\,[\exp(b\,\Delta) - 1]\%$, demais variáveis constantes. Gini nos percentis 10, 50 e 90 da renda. H1: desigualdade; H2: exclusão escolar; H3: migração recente. EM: ensino médio. IC 95\% clássico, sem correção de variância.}
 \column{0.24\textwidth}
 \begin{itemize}\footnotesize
 \item H1 parcialmente sustentada (rendas média e alta); H2 sustentada; H3 não sustentada
@@ -216,7 +216,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \item Migração: intervalo cruza zero
 \end{itemize}
 \end{columns}
-\legenda{p.p. = pontos percentuais. Pontos: estimativas; barras: IC 95\% clássico, sem correção de variância.}
+\legenda{p.p. = pontos percentuais. Pontos: estimativas; barras: EM: ensino médio. IC 95\% clássico, sem correção de variância.}
 \end{frame}
 
 \begin{frame}{Discussão: a desigualdade depende da renda}
@@ -229,7 +229,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \item Renda mediana (R\$ \nRendaMediana): \textbf{\nGiniEfMediana\%}
 \item Percentil 90 (R\$ \nRendaNoventa): \textbf{\nGiniEfNoventa\%}
 \item Efeito zero perto de R\$ \nGiniZero; \nGiniZeroPct\% dos municípios abaixo
-\item Percentil 10: sinal negativo, mas não resiste a outras especificações
+\item Percentil 10 ($-$10\%): deixa de ser significativo em outras especificações; pode refletir a medida do Gini ou a região
 \end{itemize}
 \end{columns}
 \legenda{Faixa: IC 95\% clássico. Pontos vermelhos: percentis 10, 50 e 90 da renda.}
@@ -243,7 +243,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \begin{itemize}\small
 \item Curvas do Nordeste e do Sudeste, no Gini médio; taxa típica (mediana)
 \item Pico perto de R\$ \nPico; só \nPctAbaixoPico\% dos municípios abaixo
-\item Com as demais características iguais, acima do Sudeste: NE $+$\nEfNordeste\%, CO $+$\nEfCentroOeste\%, N $+$\nEfNorte\%, S $+$\nEfSul\%; sem SP na referência, S $+$\nEfSulSemSP\%
+\item Com as demais características iguais, acima do Sudeste: NE $+$\nEfNordeste\%, CO $+$\nEfCentroOeste\%, N $+$\nEfNorte\%, S $+$\nEfSul\%; sem SP na referência, S $+$\nEfSulSemSP\%; a região resume fatores estaduais não medidos
 \end{itemize}
 \end{columns}
 \legenda{Curvas no intervalo de renda observado em cada região. Faixas: IC 95\% clássico. Não representam média aritmética.}
@@ -255,20 +255,21 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais; o Sudeste 
 \item \textbf{Variância não constante:} o ajuste ponderado mantém as estimativas, mas os testes clássicos exigem cautela
 \item \textbf{Medição:} Gini aproximado e possível sub-registro dos óbitos; municípios com menos de 30 mil habitantes ficam fora do recorte
 \item \textbf{Desocupação:} sinal negativo frágil; sem os \nNSensDesoc{} municípios com 30\% ou mais de óbitos de intenção indeterminada entre as causas externas, $p$ = \nPSensDesoc
-\item \textbf{Vizinhança:} municípios próximos podem compartilhar fatores; o teste de ordem artificial foi retirado a pedido da professora; a dependência espacial não foi verificada
+\item \textbf{Dependência:} os resíduos variam entre UFs (erros-padrão subestimados); com UF no lugar da região, o efeito do Gini fica menor, mas segue positivo; o teste de ordem artificial foi retirado a pedido da professora
 \item \textbf{Especificação:} o log não é a potência ótima do Box-Cox; termos extras significativos ficaram fora por parcimônia, sem mudar as conclusões sobre a desigualdade
 \item \textbf{Estudo observacional:} um só período; associação municipal não demonstra causa nem descreve indivíduos
 \end{itemize}
-\legenda{VIF máximo: \nVIFrendaFinal{} (renda), acima de 5: multicolinearidade pelo critério da apostila; coeficientes isolados de renda e urbanização ficam menos confiáveis.}
+\legenda{Multicolinearidade: VIF máximo \nVIFrendaFinal{} (renda), acima de 5 pelo critério da apostila; coeficientes isolados de renda e urbanização ficam menos confiáveis.}
 \end{frame}
 
 \begin{frame}{Resposta à pergunta e próximos passos}
 \begin{itemize}
-\setlength{\itemsep}{0.5em}
+\setlength{\itemsep}{0.4em}
 \item \textbf{H1 parcialmente sustentada:} a desigualdade associa-se a taxas maiores nas rendas média e alta
 \item \textbf{H2 sustentada:} frequência escolar e distorção idade-série nas direções esperadas
 \item \textbf{H3 não sustentada:} a migração recente não mostrou associação clara
 \item \textbf{Renda e região:} relação curva da renda; diferenças regionais permanecem no ajuste
+\item \textbf{Implicação:} permanência escolar e menor desigualdade nos municípios de renda média e alta merecem atenção, a confirmar por estudos causais
 \item \textbf{Próximos passos:} dependência espacial; interação Gini--renda e curva da renda por região; políticas estaduais e violência organizada; vários anos
 \end{itemize}
 \end{frame}
