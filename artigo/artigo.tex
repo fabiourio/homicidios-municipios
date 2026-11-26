@@ -66,7 +66,7 @@ A literatura associa a violência letal a condições econômicas e sociais. Em 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.52\textwidth]{e2_mapa_taxa.png}
+\includegraphics[width=0.52\textwidth]{mapa_taxa.png}
 \caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023, nos municípios do estudo. Em cinza, os municípios com menos de 30 mil habitantes, fora do escopo. Fonte: elaboração própria com dados do SIM e do IBGE.}
 \label{fig:mapa}
 \end{figure}
@@ -111,7 +111,7 @@ As variáveis explicativas vêm do Censo Demográfico 2022 \citep{ibge2023censo}
 \item \textbf{região}: Norte, Nordeste, Centro-Oeste, Sudeste e Sul, com o Sudeste como referência.
 \end{itemize}
 
-O IBGE não publica o Gini municipal do Censo 2022. Calculamos o índice pelas classes de renda do Censo, pelo método de \citet{gastwirth1972}: cada classe recebe o seu ponto médio, e o Gini é 1 menos o dobro da área sob a curva de Lorenz. Nas 27 UFs, o Gini calculado tem correlação de 0,995 com o oficial, e a maior diferença é de 0,008. O cálculo do Gini por município veio da revisão da professora e não está descrito na apostila.
+O IBGE não publica o Gini municipal do Censo 2022. Calculamos o índice pelas classes de renda do Censo, pelo método de \citet{gastwirth1972}: cada classe recebe o seu ponto médio, e o Gini é 1 menos o dobro da área sob a curva de Lorenz. Nas 27 UFs, o Gini calculado tem correlação de \nGiniCorUF{} com o oficial, e a maior diferença é de \nGiniDifUF. O cálculo do Gini por município veio da revisão da professora e não está descrito na apostila.
 
 \textbf{Recorte.} Em municípios pequenos, poucas mortes mudam muito a taxa. Por isso, o estudo usa os municípios com \nPopMin{} mil habitantes ou mais. O corte fica perto do percentil \nPercCorte{} da população municipal; o uso de um percentil como corte também veio da revisão da professora. Com a taxa nacional, esse porte garante pelo menos \nCasosEspCorte{} homicídios esperados em três anos. Excluímos \nForaNome{} por indício de sub-registro: \nForaHom{} homicídio registrado e \nForaIndet{} óbitos de intenção indeterminada em três anos. Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população do país. A Tabela~\ref{tab:descritiva} resume as variáveis.
 
@@ -155,9 +155,9 @@ Fator de inflação da variância (VIF) & Avaliar a informação repetida entre 
 \end{tabular}
 \end{table}
 
-A resposta usa o logaritmo. O Box-Cox, com os termos do modelo final, estimou $\lambda = \nLambdaFinal$ (IC 95\%: \nLambdaFinalInf{} a \nLambdaFinalSup). O valor $\lambda = 0$ fica fora do intervalo, mas o logaritmo foi adotado porque permite ler os coeficientes como mudanças percentuais na taxa típica. Com o logaritmo, a estatística de Shapiro-Wilk sobe de \nSWy{} para \nSWln. O efeito de uma mudança $\Delta$ numa explicativa é $100\,[\exp(b\,\Delta) - 1]\%$, com as demais variáveis constantes.
+A resposta usa o logaritmo. O Box-Cox, com os termos do modelo final, estimou $\lambda = \nLambdaFinal$ (IC 95\%: \nLambdaFinalInf{} a \nLambdaFinalSup). O valor $\lambda = 0$ fica fora do intervalo, mas o logaritmo foi adotado porque permite ler os coeficientes como mudanças percentuais na taxa típica. Com o logaritmo, a estatística de Shapiro-Wilk dos resíduos sobe de \nSWy{} para \nSWln. O efeito de uma mudança $\Delta$ numa explicativa é $100\,[\exp(b\,\Delta) - 1]\%$, com as demais variáveis constantes.
 
-A renda entra centralizada, porque sem centralizar a correlação entre a renda e o seu quadrado é 0,999. O percentual de pobres e a alfabetização saíram do modelo, pois repetiam a informação da renda: com as três juntas, o VIF da renda chegava a \nVIFrenda. O modelo foi montado em cinco blocos, cada um testado pelo $F$ parcial: (A) renda, Gini e desocupação; (B) urbanização; (C) escola e migração; (D) região; (E) Gini $\times$ renda. Outras seis variáveis foram testadas, uma de cada vez, e ficaram fora do modelo (Seção~\ref{sec:retiradas}).
+A renda entra centralizada, porque sem centralizar a correlação entre a renda e o seu quadrado é \nCorQuadSem. O modelo foi montado em cinco blocos, cada um testado pelo $F$ parcial: (A) renda, Gini e desocupação; (B) urbanização; (C) escola e migração; (D) região; (E) Gini $\times$ renda.
 
 Alguns cálculos não estão na apostila e foram escolhas do grupo: o VIF generalizado para a região, o intervalo de confiança de $\lambda$, o efeito percentual e o intervalo do efeito do Gini em cada renda.
 
@@ -165,7 +165,7 @@ Alguns cálculos não estão na apostila e foram escolhas do grupo: o VIF genera
 
 \subsection{Ajuste do modelo}
 
-Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). Os maiores ganhos vieram da região ($R^2_a$ de 0,43 para 0,53) e da escola e migração ($F = \nFblocoEd$). A interação Gini $\times$ renda também foi significativa ($F = \nFInter$). O modelo final tem $R^2 = \nRdoisE$ e $R^2$ ajustado $= \nRdoisA$, na escala de $\ln Y$. O teste $F$ global vale \nFglobal{} com \nGlUm{} e \nGlDois{} graus de liberdade ($p$ \nFglobalP).
+Cada bloco acrescentou explicação ao modelo (Tabela~\ref{tab:blocos}). Os maiores ganhos vieram da região ($R^2_a$ de \nRdoisAC{} para \nRdoisAD) e da escola e migração ($F = \nFblocoEd$). A interação Gini $\times$ renda também foi significativa ($F = \nFInter$). O modelo final tem $R^2 = \nRdoisE$ e $R^2$ ajustado $= \nRdoisA$, na escala de $\ln Y$. O teste $F$ global vale \nFglobal{} com \nGlUm{} e \nGlDois{} graus de liberdade ($p$ \nFglobalP).
 
 \begin{table}[H]
 \centering
@@ -186,7 +186,7 @@ A Figura~\ref{fig:ajuste} compara as taxas observadas e ajustadas. O modelo acom
 
 \subsection{Diagnóstico dos resíduos}
 
-A Figura~\ref{fig:diag} mostra os resíduos. À esquerda, os resíduos não mostram curva, mas a dispersão muda: ela diminui nos municípios mais populosos, cujas taxas oscilam menos. O teste de Breusch-Pagan rejeita a variância constante ($BP = \nBP$, \nBPgl{} gl, $p$ \nBPp). Por isso, os intervalos e testes clássicos devem ser lidos com cautela. À direita, os pontos ficam próximos da reta no gráfico de quantis, e o Shapiro-Wilk não rejeita a normalidade ($W = \nSW$, $p = \nSWp$). Nenhum resíduo semi-studentizado passa de $\pm 4$. O VIF máximo é \nVIFrendaFinal, da renda. Os gráficos dos resíduos contra cada explicativa estão no caderno de análise em \texttt{.qmd}.
+A Figura~\ref{fig:diag} mostra os resíduos. À esquerda, os resíduos não mostram curva, mas a dispersão muda: ela diminui nos municípios mais populosos, cujas taxas oscilam menos. O teste de Breusch-Pagan rejeita a variância constante ($BP = \nBP$, \nBPgl{} gl, $p$ \nBPp). Por isso, os intervalos e testes clássicos devem ser lidos com cautela. À direita, os pontos ficam próximos da reta no gráfico de quantis, e o Shapiro-Wilk não rejeita a normalidade ($W = \nSW$, $p = \nSWp$). Nenhum resíduo semi-studentizado passa de $\pm 4$. O VIF máximo é \nVIFrendaFinal, da renda. O caderno de análise (\texttt{.qmd}) traz também os resíduos contra a população e contra cada explicativa.
 
 \begin{figure}[H]
 \centering
@@ -226,20 +226,20 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \label{fig:gini}
 \end{figure}
 
-\textbf{Escola (H2).} As duas medidas escolares têm a direção esperada (Figura~\ref{fig:efeitos}). Cinco pontos a mais de frequência escolar de 15 a 17 anos acompanham uma taxa 8,6\% menor. Dez pontos a mais de distorção idade-série acompanham uma taxa 15,6\% maior. Assim, H2 é consistente com os dados. Essas medidas descrevem o município, não o risco de cada jovem.
+\textbf{Escola (H2).} As duas medidas escolares têm a direção esperada (Figura~\ref{fig:efeitos}). Cinco pontos a mais de frequência escolar de 15 a 17 anos acompanham uma taxa \nEfFreq\% menor. Dez pontos a mais de distorção idade-série acompanham uma taxa \nEfDist\% maior. Assim, H2 é consistente com os dados. Essas medidas descrevem o município, não o risco de cada jovem.
 
-\textbf{Migração (H3).} Cinco pontos a mais de migração recente acompanham uma taxa 2,1\% maior, mas o intervalo de confiança inclui o zero ($p = \nPMigr$). Não encontramos evidência clara para H3.
+\textbf{Migração (H3).} Cinco pontos a mais de migração recente acompanham uma taxa \nEfMigr\% maior, mas o intervalo de confiança inclui o zero ($p = \nPMigr$). Não encontramos evidência clara para H3.
 
-\textbf{Urbanização e desocupação.} Dez pontos a mais de população urbana acompanham uma taxa 11,8\% maior, como em \citet{wanzinack2022}. A desocupação tem sinal negativo ($-1{,}8\%$ por ponto), embora a sua correlação simples com a taxa seja \nCorDesocup. A desocupação tem correlação de \nCorDesocupRenda{} com a renda; o sinal pode refletir essa informação repetida. Não interpretamos esse coeficiente como efeito protetor.
+\textbf{Urbanização e desocupação.} Dez pontos a mais de população urbana acompanham uma taxa \nEfUrb\% maior, como em \citet{wanzinack2022}. A desocupação tem sinal negativo ($-$\nEfDesoc\% por ponto), embora a sua correlação simples com o logaritmo da taxa seja \nCorDesocup. A desocupação tem correlação de \nCorDesocupRenda{} com a renda; o sinal pode refletir essa informação repetida. Não interpretamos esse coeficiente como efeito protetor.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.66\textwidth]{efeitos.png}
-\caption{Mudança percentual na taxa típica para as variáveis de escola, urbanização, desocupação e migração. Barras: IC 95\% clássico; p.p. = pontos percentuais.}
+\caption{Mudança percentual na taxa típica para as variáveis de escola, urbanização e migração. Barras: IC 95\% clássico; p.p. = pontos percentuais.}
 \label{fig:efeitos}
 \end{figure}
 
-\textbf{Renda e região.} A relação com a renda tem forma de U invertido (Figura~\ref{fig:renda}). No Gini médio, a taxa típica ajustada é máxima perto de R\$ \nPico{} per capita e cai nos municípios mais ricos. Com as demais características iguais, todas as regiões têm taxa típica maior que o Sudeste: cerca de 108\% maior no Nordeste, 83\% no Centro-Oeste, 79\% no Norte e 67\% no Sul. Esse resultado responde à parte geográfica da pergunta. A região resume fatores não medidos no modelo, como políticas estaduais de segurança e a presença de grupos criminosos.
+\textbf{Renda e região.} A relação com a renda tem forma de U invertido (Figura~\ref{fig:renda}). No Gini médio, a taxa típica ajustada é máxima perto de R\$ \nPico{} per capita e cai nos municípios mais ricos. Com as demais características iguais, todas as regiões têm taxa típica maior que o Sudeste: cerca de \nEfNE\% maior no Nordeste, \nEfCO\% no Centro-Oeste, \nEfN\% no Norte e \nEfS\% no Sul. Esse resultado responde à parte geográfica da pergunta. A região resume fatores não medidos no modelo, como políticas estaduais de segurança e a presença de grupos criminosos.
 
 \begin{figure}[H]
 \centering
@@ -248,24 +248,11 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \label{fig:renda}
 \end{figure}
 
-\subsection{Variáveis testadas e retiradas}
-\label{sec:retiradas}
-
-Seis variáveis foram testadas, uma de cada vez, pelo $F$ parcial sobre o modelo final (Tabela~\ref{tab:retiradas}). Densidade, faixa de fronteira, abandono escolar e percentual de homens de 15 a 29 anos não acrescentaram explicação. A Amazônia Legal foi significativa, mas a evidência perde força ao excluir os municípios do Mato Grosso. O percentual de óbitos de intenção indeterminada saiu porque os homicídios estavam no seu divisor; com a medida corrigida, a variável não foi significativa.
-
-\begin{table}[H]
-\centering
-\caption{Variáveis testadas e retiradas: $F$ parcial de cada uma somada ao modelo final.}
-\label{tab:retiradas}
-\small
-\input{tabelas/retiradas.tex}
-\end{table}
-
 \subsection{Discussão}
 
 Os resultados respondem à pergunta de pesquisa em três partes. Entre os fatores socioeconômicos, a renda tem relação curva com a taxa, e a desigualdade importa sobretudo nos municípios de renda média e alta. Entre os fatores educacionais e demográficos, a frequência e o atraso escolar têm as associações esperadas, e a urbanização acompanha taxas maiores. Entre os fatores geográficos, as diferenças regionais permanecem mesmo com as demais características iguais.
 
-O resultado mais novo é a interação entre Gini e renda. Estudos anteriores no Brasil estimaram um único efeito do Gini para todos os municípios \citep{wanzinack2022}. No nosso modelo, esse efeito médio esconde sinais opostos nos dois extremos da renda. Em linha com a crítica de \citet{neumayer2003}, com o estado no lugar da região, o coeficiente do Gini perde significância, embora a interação continue significativa. O grupo manteve a região, que usa 14 parâmetros em vez de 36 e preserva a normalidade dos resíduos.
+O resultado mais novo é a interação entre Gini e renda. Estudos anteriores no Brasil estimaram um único efeito do Gini para todos os municípios \citep{wanzinack2022}. No nosso modelo, esse efeito médio esconde sinais opostos nos dois extremos da renda.
 
 \section{Considerações Finais}
 
@@ -276,7 +263,7 @@ Este trabalho identificou as características municipais associadas à taxa de h
 \begin{itemize}
 \item \textbf{Variância não constante.} O Breusch-Pagan rejeita a variância constante. Os intervalos e testes são, portanto, evidência exploratória.
 \item \textbf{Medição.} O Gini é uma aproximação pelas classes de renda. O SIM pode omitir ou classificar mortes de forma diferente entre municípios. Os municípios com menos de 30 mil habitantes ficaram fora.
-\item \textbf{Desocupação.} Ao excluir os 31 municípios com 30\% ou mais de óbitos de intenção indeterminada, o coeficiente da desocupação deixa de ser significativo ($p = 0{,}07$).
+\item \textbf{Desocupação.} Ao excluir os \nNSensDesoc{} municípios com 30\% ou mais de óbitos de intenção indeterminada, o coeficiente da desocupação deixa de ser significativo a 5\% ($p = \nPSensDesoc$).
 \item \textbf{Vizinhança.} Municípios próximos podem compartilhar fatores não medidos. A independência dos erros no espaço não foi verificada.
 \item \textbf{Estudo observacional.} Os dados são de um único período, e fatores como policiamento e crime organizado não foram medidos.
 \end{itemize}
