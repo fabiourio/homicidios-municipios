@@ -569,7 +569,6 @@ num$SW <- fmt(sw$statistic, 3); num$SWp <- fmt(sw$p.value, 3)
 num$MaxSemi <- fmt(max(abs(d$res_semi)), 2)
 num$MSE <- fmt(resumo$sigma^2, 3); num$Sigma <- fmt(resumo$sigma, 3); num$DoisS <- fmt(2 * resumo$sigma, 2)
 num$FatorDoisS <- fmt(exp(2 * resumo$sigma), 2)
-num$FatorMedia <- fmt(exp(resumo$sigma^2 / 2), 2)   # média condicional = taxa típica x exp(MSE/2), com erros normais e variância constante
 
 # Breusch-Pagan só contra ln(população): a parte da variância ligada ao porte (versão studentizada: n R²)
 bp_aux <- function(e2, z) { r2 <- summary(lm(e2 ~ z))$r.squared; c(bp = n * r2, p = pchisq(n * r2, NCOL(z), lower.tail = FALSE)) }
@@ -717,7 +716,7 @@ knitr::kable(data.frame(r2_residuos_por_uf = r2_uf, r2a_com_uf = summary(com_uf)
                         parametros = length(coef(com_uf)), sw_p_com_uf = sw_uf$p.value), digits = 4)
 num$RdoisResUF <- fmt(100 * r2_uf, 0)
 num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 2); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
-num$ParUF      <- fmt(length(coef(com_uf)), 0); num$SWpUF <- fp(sw_uf$p.value)
+num$ParUF      <- fmt(length(coef(com_uf)), 0)
 ```
 
 ### Robustez do efeito do Gini
@@ -746,6 +745,7 @@ stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05)
 stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] > .05,
           all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] < .05))
 num$PDezMin <- fmt(min(abs(rob$p10)), 0); num$PDezMax <- fmt(max(abs(rob$p10)), 0)
+num$PDezSig <- fmt(sum(rob$p10_p < .05), 0); num$NEspec <- fmt(nrow(rob), 0)
 # Com UF no lugar da região: fração do efeito do modelo final que sobra na renda mediana e no percentil 90
 uf_rob <- rob[rob$modelo == "Com UF no lugar da região", ]
 num$UFFracMed <- fmt(100 * uf_rob$p50 / rob$p50[1], 0); num$UFFracNov <- fmt(100 * uf_rob$p90 / rob$p90[1], 0)
