@@ -415,6 +415,9 @@ num$GiniEfDez <- fmt(abs(gr$ef[1]), 1); num$GiniPDez <- fmt(gr$p[1], 3)
 num$RendaDez  <- fmt(gr$renda[1], 0); num$RendaMediana <- fmt(gr$renda[2], 0); num$RendaNoventa <- fmt(gr$renda[3], 0)
 num$GiniZero  <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc_media < renda_zero), 0)
 num$Pico      <- fmt(pico, 0);       num$PctAbaixoPico <- fmt(100 * mean(d$rend_pc_media < pico), 0)
+abaixo_pico <- d$regiao[d$rend_pc_media < pico]
+stopifnot(mean(abaixo_pico %in% c("Norte", "Nordeste")) > .95)   # o trecho crescente da renda vem quase só do Norte e do Nordeste
+num$NAbaixoPico <- fmt(length(abaixo_pico), 0); num$NAbaixoPicoNNE <- fmt(sum(abaixo_pico %in% c("Norte", "Nordeste")), 0)
 num$IqrGini   <- fmt(IQR(d$gini), 3)   # justifica +0,05 no Gini
 num$PctNEpobres <- fmt(100 * mean(d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)] == "Nordeste"), 0)
 pobres <- d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)]
@@ -472,7 +475,7 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   scale_colour_manual(values = c(Nordeste = vermelho, Sudeste = marinho), name = NULL) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Taxa típica\n(por 100 mil/ano)") +
-  tema + theme(legend.position = "bottom")
+  tema + theme(legend.position = "bottom", plot.margin = margin(5, 18, 5, 5))
 ggsave("resultados/figuras/renda_regiao.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
 
@@ -531,6 +534,9 @@ stopifnot(length(sig) == 4, max(espec$R2a[1:5]) - resumo$adj.r.squared < 0.01,
 num$RdoisATodos <- fmt(summary(todos)$adj.r.squared, 3)
 num$PRegGini <- fmt(espec$p[espec$termo == "Região $\\times$ Gini"], 3)   # região x Gini não significativa
 num$BICfinal <- fmt(-crit_final[["bic"]], 0); num$BICtodos <- fmt(-espec$bic[6], 0)
+bic_cubo <- espec$bic[espec$termo == "Renda ao cubo"]
+stopifnot(abs(bic_cubo - crit_final[["bic"]]) < 2)   # com a renda ao cubo, o BIC fica praticamente empatado com o do modelo final
+num$BICcubo <- fmt(-bic_cubo, 0)
 # Cp do modelo final tomando o modelo com todos os termos como completo (apostila, cap. 8)
 cp_final <- sum(resid(final)^2) / (sum(resid(todos)^2) / df.residual(todos)) + 2 * length(coef(final)) - n
 num$CpFinal <- fmt(cp_final, 0); num$PmaisUm <- fmt(length(coef(final)), 0)
@@ -609,7 +615,7 @@ ggsave("resultados/figuras/residuos_ajustado.png", p, width = 6.3, height = 4.0,
 p
 p <- ggplot(d, aes(sample = rstandard(final))) +
   stat_qq(colour = azul, alpha = .35, size = 1.1) + stat_qq_line(colour = vermelho, linewidth = .8) +
-  labs(x = "Quantis da distribuição normal", y = "Quantis dos resíduos\npadronizados") + tema
+  labs(x = "Quantis da distribuição normal", y = "Quantis dos resíduos\nstudentizados") + tema
 ggsave("resultados/figuras/qq_final.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
 
@@ -684,6 +690,9 @@ knitr::kable(data.frame(municipios_retirados = sum(d$pct_indet >= 30), b_desocup
                         termos_que_mudam_signif = paste(names(which(muda_signif)), collapse = ", ")), digits = 4)
 stopifnot(all(sign(coef(sem_indet)) == sign(b)), identical(names(which(muda_signif)), "desocup"))
 num$NSensDesoc <- fmt(sum(d$pct_indet >= 30), 0)
+razao_indet <- d$intencao_indeterminada / d$hom
+stopifnot(cj$intencao_indeterminada / cj$hom > max(razao_indet))   # Campos do Jordão destoa pela razão indeterminados/homicídios
+num$RazIndetMax <- fmt(max(razao_indet), 0)
 num$PSensDesoc <- fmt(s_des[[4]], 3)
 
 # Com Campos do Jordão: mesma centralização do estudo; resíduo semi-studentizado do município
