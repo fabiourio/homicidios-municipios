@@ -402,7 +402,7 @@ lin_gini <- sprintf("H1 & Gini (renda de R\\$ %s) & +0,05 & %s\\%% & [%s; %s] & 
 lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", mudancas$hip, mudancas$variavel, mudancas$mudanca,
                sinal(mudancas$ef, 1), sinal(mudancas$inf, 1), sinal(mudancas$sup, 1), fp(mudancas$p))
 tabela("cllrcr",
-       "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Aumento} & \\textbf{Mudança na taxa} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
+       "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Diferença} & \\textbf{Diferença na taxa típica} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
        c(lin_gini, lin, sprintf(" & Renda & --- & pico em R\\$ %s & --- & %s\\\\", fmt(pico, 0), fp(resumo$coefficients["rend_c2", 4]))),
        "efeitos.tex")
 
@@ -450,7 +450,7 @@ p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_line(colour = azul, linewidth = 1) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$/mês, escala log)", y = "Mudança na taxa\ntípica (%)") + tema
+  labs(x = "Renda per capita (R$/mês, escala log)", y = "Diferença na taxa\ntípica (%)") + tema
 ggsave("resultados/figuras/gini_renda.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
 
