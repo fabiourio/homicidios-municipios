@@ -181,7 +181,7 @@ Mapa da taxa, estatísticas descritivas e correlações. Aqui também são criad
 
 ```{r}
 #| label: exploratoria
-# Mapa: municípios do escopo coloridos pela taxa; os demais em cinza
+# Mapa: municípios do escopo coloridos pela taxa; os demais em branco
 g <- st_read("dados/malha_mun.geojson", quiet = TRUE)
 g$cod_ibge <- as.integer(g$codarea)
 gd <- inner_join(g, br, by = "cod_ibge")
@@ -763,9 +763,8 @@ num$FResUF <- fmt(f_uf$`F value`[1], 1); num$GlResUFa <- fmt(f_uf$Df[1], 0); num
 gD_uf <- summary(update(mD, . ~ . - regiao + uf))$coefficients["gini_c", ]
 stopifnot(gD_uf[[1]] > 0, gD_uf[[4]] < .05)   # H1 com UF no lugar da região: Gini ainda positivo e significativo
 num$GiniEfDUF <- fmt(100 * (exp(.05 * gD_uf[[1]]) - 1), 1); num$GiniPDUF <- fmt(gD_uf[[4]], 3)
-num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
-stopifnot(criterio(com_uf)[["aic"]] < criterio(final)[["aic"]])   # o AIC também prefere o modelo com UF
-num$AICUF <- fmt(-criterio(com_uf)[["aic"]], 0); num$AICfinalUF <- fmt(-criterio(final)[["aic"]], 0)
+num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3)
+stopifnot(criterio(com_uf)[["aic"]] < criterio(final)[["aic"]], criterio(com_uf)[["bic"]] < criterio(final)[["bic"]])   # AIC e BIC também preferem o modelo com UF
 # H2 com UF: frequência e distorção seguem significativas e com o sinal esperado; guarda o p da migração com UF
 bu <- summary(com_uf)$coefficients
 stopifnot(bu["freq_15a17", 4] < .05, bu["distorcao_em", 4] < .05, bu["freq_15a17", 1] < 0, bu["distorcao_em", 1] > 0)
