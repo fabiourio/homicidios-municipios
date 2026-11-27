@@ -404,15 +404,20 @@ pico <- unname(exp(mean(d$log_rend) - b["rend_c"] / (2 * b["rend_c2"])))        
 
 # H1 é julgada no modelo sem a interação (bloco D); as linhas por renda vêm da interação exploratória
 ic_D <- 100 * (exp(.05 * c(coef(mD)[["gini_c"]], confint(mD)["gini_c", ])) - 1)
-lin_h1 <- sprintf("H1 & Gini (modelo D) & +0,05 & %s\\%% & [%s; %s] & %s\\\\", sinal(ic_D[1], 1), sinal(ic_D[2], 1),
-                  sinal(ic_D[3], 1), fp(summary(mD)$coefficients["gini_c", 4]))
-lin_gini <- sprintf("Expl. & Gini (renda de R\\$ %s) & +0,05 & %s\\%% & [%s; %s] & %s\\\\", fmt(gr$renda, 0),
-                    sinal(gr$ef, 1), sinal(gr$inf, 1), sinal(gr$sup, 1), fp(gr$p))
-lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", mudancas$hip, mudancas$variavel, mudancas$mudanca,
-               sinal(mudancas$ef, 1), sinal(mudancas$inf, 1), sinal(mudancas$sup, 1), fp(mudancas$p))
-tabela("cllrcr",
-       "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Dif. na explicativa} & \\textbf{Dif. na taxa típica} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
-       c(lin_h1, lin_gini, lin, sprintf(" & Renda (pico em R\\$ %s) & --- & --- & --- & %s\\\\", fmt(pico, 0), fp(resumo$coefficients["rend_c2", 4]))),
+grupo  <- function(titulo) sprintf("\\multicolumn{5}{@{}l}{%s}\\\\", titulo)
+linha  <- function(rot, dif, ef, inf, sup, p) sprintf("\\quad %s & %s & %s\\%% & [%s; %s] & %s\\\\", rot, dif, sinal(ef, 1), sinal(inf, 1), sinal(sup, 1), fp(p))
+lin_h1 <- linha("H1: Gini (modelo sem a interação)", "+0,05", ic_D[1], ic_D[2], ic_D[3], summary(mD)$coefficients["gini_c", 4])
+com_h  <- mudancas$hip != ""
+lin_h  <- linha(paste0(mudancas$hip[com_h], ": ", mudancas$variavel[com_h]), mudancas$mudanca[com_h], mudancas$ef[com_h],
+                mudancas$inf[com_h], mudancas$sup[com_h], mudancas$p[com_h])
+lin_gini <- linha(sprintf("Gini na renda de R\\$ %s", fmt(gr$renda, 0)), "+0,05", gr$ef, gr$inf, gr$sup, gr$p)
+lin_dem  <- linha(mudancas$variavel[!com_h], mudancas$mudanca[!com_h], mudancas$ef[!com_h], mudancas$inf[!com_h],
+                  mudancas$sup[!com_h], mudancas$p[!com_h])
+tabela("lrrcr",
+       c(" & \\multicolumn{2}{c}{\\textbf{Diferença}} & & \\\\", "\\cmidrule(lr){2-3}", "\\textbf{Variável} & \\textbf{na explicativa} & \\textbf{na taxa típica} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\"),
+       c(grupo("Hipóteses"), lin_h1, lin_h, "\\addlinespace", grupo("Interação exploratória Gini $\\times$ renda"), lin_gini,
+         "\\addlinespace", grupo("Demais explicativas"), lin_dem),
+
        "efeitos.tex")
 
 ef <- setNames(mudancas$ef, mudancas$termo)

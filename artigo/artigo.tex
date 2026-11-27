@@ -18,6 +18,10 @@
 \graphicspath{{figuras/}}
 \input{numeros.tex}
 \newcommand{\fonte}{Fonte: elaboração própria.}
+\newcommand{\nota}[1]{\par\vspace{2pt}\begin{minipage}{\linewidth}\footnotesize Nota: #1 \fonte\end{minipage}}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{12pt plus 2pt minus 4pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
 
 \title{FATORES ASSOCIADOS AOS HOMICÍDIOS NOS MUNICÍPIOS BRASILEIROS}
 
@@ -107,13 +111,14 @@ Os objetivos específicos são montar uma base municipal com dados de mortalidad
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=0.55\textwidth]{mapa_taxa.png}
-\caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023, nos municípios do estudo. Em branco, os municípios fora do estudo: os que têm menos de 30 mil habitantes e Campos do Jordão-SP. \fonte}
+\caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023}
 \label{fig:mapa}
+\nota{em branco, os municípios fora do estudo: os que têm menos de 30 mil habitantes e Campos do Jordão-SP.}
 \end{figure}
 
 \section{Metodologia}
 
-Esta seção descreve a base de dados e os métodos estatísticos.
+O estudo une três bases públicas por município e ajusta uma regressão linear múltipla ao logaritmo da taxa.
 
 \subsection{Base de Dados}
 \label{sec:dados}
@@ -134,21 +139,21 @@ Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população e \nPctHomEsc\% 
 
 \begin{table}[!htb]
 \centering
-\caption{Municípios por região, no total e no estudo, e, em cada região, percentual da população e dos homicídios (2021--2023) que ficam nos municípios do estudo.}
+\caption{Municípios, população e homicídios no estudo, por região}
 \label{tab:escopo}
 \small
 \input{tabelas/escopo_regiao.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{percentuais da população e dos homicídios (2021--2023) de cada região que ficam nos municípios do estudo.}
 \end{table}
 
 \begin{table}[!htb]
 \centering
-\caption{Estatísticas descritivas dos \nMunEsc{} municípios do estudo (médias simples entre municípios). DP: desvio-padrão; Cor.: correlação com ln(taxa), usando ln(renda) para a renda; EM: ensino médio.}
+\caption{Estatísticas descritivas dos \nMunEsc{} municípios do estudo}
 \label{tab:descritiva}
 \small
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/descritiva.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{médias simples entre municípios. DP: desvio-padrão; Cor.: correlação com ln(taxa), usando ln(renda) para a renda; EM: ensino médio.}
 \end{table}
 
 Os dados, o dicionário das variáveis e o caderno em R que reproduz os números calculados, as tabelas e as figuras acompanham este artigo.
@@ -175,7 +180,7 @@ Além dos dois itens fora da apostila pedidos pela professora e já sinalizados 
 
 \section{Resultados e Discussão}
 
-Os resultados seguem a ordem do método e terminam com a discussão.
+O modelo final explica \nRdoisPct\% da variação do logaritmo da taxa, e os resíduos atendem à normalidade, mas não à variância constante.
 
 \subsection{Construção e Ajuste do Modelo}
 \label{sec:ajuste}
@@ -186,30 +191,31 @@ Cada bloco de B a E aumentou o $R^2$ ajustado ($R^2_a$) e foi significativo no t
 \centering
 \includegraphics[width=0.46\textwidth]{observado_ajustado.png}\hfill
 \includegraphics[width=0.46\textwidth]{qq_final.png}
-\caption{Esquerda: ln(taxa) observado contra ln(taxa) ajustado, nos mesmos dados do ajuste. A diagonal indica valor observado igual ao ajustado. Direita: quantis dos resíduos padronizados contra quantis da distribuição normal. \fonte}
+\caption{Ajuste e normalidade do modelo final}
 \label{fig:ajuste}
+\nota{à esquerda, ln(taxa) observado contra ajustado; a diagonal indica valor observado igual ao ajustado. À direita, quantis dos resíduos padronizados contra quantis da distribuição normal.}
 \end{figure}
 
 \begin{table}[!htb]
 \centering
-\caption{Construção do modelo em blocos. Cada linha acrescenta um bloco ao modelo anterior; $F$ e $p$: teste linear geral contra o modelo anterior; gl: graus de liberdade do numerador; $C_p$ calculado com o MSE do modelo E (para E, $C_p = p+1$ por construção, com $p$ igual ao número de termos explicativos, sem o intercepto).}
+\caption{Construção do modelo em blocos}
 \label{tab:blocos}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \input{tabelas/blocos.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{cada linha acrescenta um bloco ao modelo anterior. $F$ e $p$: teste linear geral contra o modelo anterior; gl: graus de liberdade do numerador; $C_p$ calculado com o MSE do modelo E (em E, $C_p = p+1$ por construção; $p$: número de termos explicativos, sem o intercepto).}
 \end{table}
 
 A Tabela~\ref{tab:espec} mostra os termos adicionais testados. Quatro dos cinco conjuntos são significativos a 5\%, mas cada um aumenta o $R^2_a$ em menos de 0,01. Com todos os termos adicionais significativos juntos, o $R^2_a$ vai a \nRdoisATodos, e AIC e PRESS preferem esse modelo maior. O BIC, que penaliza mais os parâmetros, prefere o modelo final ao modelo com todos os termos adicionais significativos ($-$\nBICfinal{} contra $-$\nBICtodos), mas o modelo final empata com o modelo com renda ao cubo ($-$\nBICcubo). Tomando como completo o modelo com todos os termos adicionais significativos, o $C_p$ do modelo final é \nCpFinal, muito acima de $p+1 = \nPmaisUm$: pelo critério da apostila ($C_p \gg p+1$), o viés por omissão desses termos não é desprezível. A regra prática da apostila para polinômios \citep[cap.~7]{ferrari2023} é subir a ordem até o termo mais alto deixar de ser significativo (por exemplo, a 10\%). Essa regra incluiria a renda ao cubo, mas a apostila diz que a regra não é absoluta. Para descrever associações, a apostila recomenda ``escolher o menor número de variáveis explicativas capazes de explicar satisfatoriamente a variabilidade observada na resposta'' \citep[cap.~8]{ferrari2023}. O modelo mais simples foi escolhido para facilitar a interpretação, e a Seção~\ref{sec:robustez} avalia os termos adicionais.
 
 \begin{table}[!htb]
 \centering
-\caption{Termos adicionais somados ao modelo final (teste linear geral). Para AIC, BIC e PRESS, menor é melhor.}
+\caption{Termos adicionais somados ao modelo final}
 \label{tab:espec}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/especificacao.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{teste linear geral contra o modelo final. Para AIC, BIC e PRESS, menor é melhor.}
 \end{table}
 
 \subsection{Diagnóstico do Modelo}
@@ -222,15 +228,17 @@ Os resíduos contra os valores ajustados não mostram curva (Figura~\ref{fig:dia
 \centering
 \includegraphics[width=0.46\textwidth]{residuos_ajustado.png}\hfill
 \includegraphics[width=0.46\textwidth]{residuos_populacao.png}
-\caption{Esquerda: resíduos contra valores ajustados. A linha tracejada é o resíduo zero. Direita: valor absoluto do resíduo contra a população, em escala logarítmica. \fonte}
+\caption{Resíduos do modelo final}
 \label{fig:diag}
+\nota{à esquerda, resíduos contra valores ajustados; a linha tracejada é o resíduo zero. À direita, valor absoluto do resíduo contra a população, em escala logarítmica.}
 \end{figure}
 
 \begin{figure}[!htb]
 \centering
 \includegraphics[width=0.95\textwidth]{residuos_explicativas.png}
-\caption{Resíduos de ln(taxa) contra cada explicativa quantitativa, com curva suavizada (LOESS, em vermelho); id.: idade; EM: ensino médio. \fonte}
+\caption{Resíduos contra cada explicativa quantitativa}
 \label{fig:resexpl}
+\nota{curva suavizada (LOESS) em vermelho. id.: idade; EM: ensino médio.}
 \end{figure}
 
 A apostila indica mínimos quadrados ponderados para a variância não constante, mas não define os pesos. Como escolha deste trabalho, a variância de $\ln Y_i$ foi aproximada por $s_0^2 + 1/\mu_i$, em que $\mu_i = 3 \times \text{população} \times \text{taxa típica ajustada} / 100{.}000$ é o número de homicídios esperado em três anos, e $1/\mu_i$ é a parte da variância que vem do acaso da contagem (o quadrado do desvio-padrão relativo $1/\sqrt{\mu_i}$). A parte restante, $s_0^2 = \text{MSE} - \overline{1/\mu}$, vale \nSzeroQ. Com pesos $1/(s_0^2 + 1/\mu_i)$, o coeficiente da interação passa de \nMqoInter{} para \nMqpInter, nenhum coeficiente troca de sinal, e os erros-padrão ficam entre \nEpMin{} e \nEpMax{} vezes os do MQO. Com o ajuste ponderado, o teste deixa de detectar o padrão ligado à população (Breusch--Pagan contra o logaritmo da população: $BP = \nBPmqpPop$, $p = \nBPmqpPopP$), mas ainda rejeita contra todas as explicativas ($BP = \nBPmqp$, $p = \nBPmqpP$) e contra o valor ajustado ($BP = \nBPmqpAj$, $p < 0{,}001$). Assim, parte da variância não constante está associada a outras características.
@@ -245,22 +253,22 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 
 \begin{table}[!htb]
 \centering
-\caption{Coeficientes do modelo final. Resposta: $\ln Y$; $n = \nMunEsc$. EP: erro-padrão clássico; centr.: centralizado na média; EM: ensino médio; o Sudeste é a referência das regiões; o coeficiente do Gini vale na renda de R\$ \nCentroRenda{}, e o da renda, no Gini de \nCentroGini. Variáveis em \%, de 0 a 100; Gini de 0 a 1.}
+\caption{Coeficientes do modelo final}
 \label{tab:coef}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \input{tabelas/coeficientes.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{resposta: $\ln Y$; $n = \nMunEsc$. EP: erro-padrão clássico; centr.: centralizado na média; EM: ensino médio. O Sudeste é a referência das regiões. O coeficiente do Gini vale na renda de R\$ \nCentroRenda{}, e o da renda, no Gini de \nCentroGini. Variáveis em \%, de 0 a 100; Gini de 0 a 1.}
 \end{table}
 
 \begin{table}[!htb]
 \centering
-\caption{Diferença percentual na taxa típica associada à diferença indicada na explicativa, com as demais variáveis iguais, calculada com os coeficientes sem arredondamento. H1: Gini no modelo sem a interação (modelo D da Tabela~\ref{tab:blocos}); Expl.: efeito do Gini pela interação exploratória, nos percentis 10, 50 e 90 da renda entre os municípios do estudo. Renda: pico da taxa típica no Gini médio; o $p$ é o do termo quadrático. IC 95\% clássico; Hip.: hipótese; Dif.: diferença; EM: ensino médio; p.p.: pontos percentuais.}
+\caption{Diferenças percentuais na taxa típica}
 \label{tab:efeitos}
 \small
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/efeitos.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{diferença na taxa típica associada à diferença indicada na explicativa, com as demais variáveis iguais, calculada com os coeficientes sem arredondamento. H1 usa o modelo sem a interação (modelo D da Tabela~\ref{tab:blocos}); as demais linhas usam o modelo final. A interação exploratória é avaliada nos percentis 10, 50 e 90 da renda do estudo. IC 95\% clássico; EM: ensino médio; p.p.: pontos percentuais.}
 \end{table}
 
 No modelo sem a interação (modelo D da Tabela~\ref{tab:blocos}), um Gini 0,05 maior corresponde, mantidas as demais variáveis, a uma taxa típica \nGiniEfD\% maior ($p < 0{,}001$; Tabela~\ref{tab:efeitos}): H1 é sustentada. O tamanho depende do controle geográfico: com a UF no lugar da região, a diferença cai para \nGiniEfDUF\% ($p = \nGiniPDUF$; Seção~\ref{sec:robustez}). Com a interação, preferida pelo $C_p$, mas exploratória por ter entrado no modelo depois das hipóteses, a associação do Gini varia com a renda (Figura~\ref{fig:gini}, à esquerda): na renda mediana (R\$ \nRendaMediana), a diferença é de \nGiniEfMediana\%, perto da do modelo sem a interação, e, no percentil 90 (R\$ \nRendaNoventa), de \nGiniEfNoventa\%. A associação estimada muda de sinal perto de R\$ \nGiniZero{} \textit{per capita}, renda abaixo da qual ficam \nGiniZeroPct\% dos municípios; no percentil 10 (R\$ \nRendaDez), o efeito é de \nGiniEfDez\% ($p = \nGiniPDez$), e o IC 95\% só exclui o zero nas rendas mais baixas. Esse sinal negativo não é interpretado como proteção. Três explicações possíveis são a medição, a forma do modelo e a região. Nos municípios mais pobres, o Gini calculado por classes pode medir pior a desigualdade, porque uma parcela maior das pessoas fica nas classes mais baixas. O efeito nas rendas baixas também depende da curva imposta à renda e perde significância com a renda ao cubo (Seção~\ref{sec:robustez}). Os 10\% de municípios mais pobres estão todos no Norte (\nPctNpobres\%) ou no Nordeste (\nPctNEpobres\%), de modo que, nessa faixa, o modelo não separa a associação do Gini na renda baixa de uma associação própria dessas regiões. A interação região $\times$ Gini não é significativa a 5\% ($p = \nPRegGini$; Tabela~\ref{tab:espec}), mas isso não descarta que o sinal venha da região.
@@ -270,8 +278,9 @@ No modelo sem a interação (modelo D da Tabela~\ref{tab:blocos}), um Gini 0,05 
 \centering
 \includegraphics[width=0.46\textwidth]{gini_renda.png}\hfill
 \includegraphics[width=0.46\textwidth]{renda_regiao.png}
-\caption{Esquerda: diferença percentual na taxa típica associada a um Gini 0,05 maior, conforme a renda \textit{per capita} (interação exploratória; curva do percentil 2 ao 98 da renda no estudo), com pontos nos percentis 10, 50 e 90 da renda. Direita: taxa típica ajustada conforme a renda, no Nordeste e no Sudeste, com o Gini e as demais explicativas na média do estudo; cada curva vai do percentil 2 ao 98 da renda na região. Faixas: IC 95\% clássico. \fonte}
+\caption{Desigualdade, renda e região na taxa típica}
 \label{fig:gini}
+\nota{à esquerda, diferença percentual na taxa típica associada a um Gini 0,05 maior, conforme a renda \textit{per capita} (interação exploratória; curva do percentil 2 ao 98 da renda no estudo; pontos nos percentis 10, 50 e 90). À direita, taxa típica conforme a renda, no Nordeste e no Sudeste, com o Gini e as demais explicativas na média do estudo; cada curva vai do percentil 2 ao 98 da renda na região. Faixas: IC 95\% clássico.}
 \end{figure}
 
 As duas medidas escolares, ligadas a H2, têm o sinal esperado (Tabela~\ref{tab:efeitos}). Cinco pontos percentuais a mais de frequência escolar de 15 a 17 anos correspondem a uma taxa típica \nEfFreq\% menor. Dez pontos percentuais a mais de distorção idade-série correspondem a uma taxa típica \nEfDist\% maior. H2 é sustentada como associação, em linha com a revisão de \citet{wanzinack2018}. A direção, porém, não é identificada: a violência também pode reduzir a frequência e o fluxo escolar.
@@ -290,12 +299,12 @@ Com as demais características iguais, todas as outras regiões têm taxa típic
 
 \begin{table}[!htb]
 \centering
-\caption{Efeito de +0,05 no Gini sobre a taxa típica, pela interação exploratória Gini $\times$ renda (valor $p$ entre parênteses), nos percentis 10, 50 e 90 da renda, em especificações alternativas. O efeito compara o Gini médio com o Gini médio mais 0,05.}
+\caption{Efeito de +0,05 no Gini em especificações alternativas}
 \label{tab:robustez}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
 \input{tabelas/robustez_gini.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{diferença na taxa típica entre o Gini médio e o Gini médio mais 0,05, pela interação exploratória Gini $\times$ renda, nos percentis 10, 50 e 90 da renda; valor $p$ entre parênteses.}
 \end{table}
 
 No modelo sem a interação, que sustenta H1, o efeito de +0,05 no Gini continua positivo e significativo com a UF no lugar da região (\nGiniEfDUF\%, $p = \nGiniPDUF$) e nos cortes de 20 a 50 mil habitantes (entre \nGiniDCorteMin\% e \nGiniDCorteMax\%, $p < 0{,}001$). A Tabela~\ref{tab:robustez} repete, em especificações alternativas, o efeito de +0,05 no Gini estimado pelo modelo com a interação. Nos percentis 50 e 90 da renda, o efeito é positivo e significativo em todas elas, mas cai cerca de um terço com todos os termos adicionais significativos (de \nGiniEfMediana\% para \nTodosMed\% na renda mediana). No percentil 10, o efeito estimado é negativo em todas as especificações, entre $-$\nPDezMin\% e $-$\nPDezMax\%, e significativo em \nPDezSig{} das \nNEspec. Como esse efeito perde significância com a renda ao cubo e com todos os termos adicionais significativos, ele é tratado como instável.
@@ -311,11 +320,11 @@ A Tabela~\ref{tab:prev} aplica o modelo a um município de referência do Sudest
 
 \begin{table}[!htb]
 \centering
-\caption{Taxa típica estimada (por 100 mil ao ano) para os municípios de referência do Sudeste e do Nordeste, com as explicativas na mediana da região. IC: intervalo de confiança da taxa típica; IP: intervalo de previsão da taxa de um município; Mediana observada: mediana das taxas dos municípios do estudo na região.}
+\caption{Taxa típica estimada para os municípios de referência}
 \label{tab:prev}
 \small
 \input{tabelas/previsao.tex}
-\par\vspace{1pt}{\footnotesize \fonte}
+\nota{taxas por 100 mil habitantes ao ano, com as explicativas na mediana da região. IC: intervalo de confiança da taxa típica; IP: intervalo de previsão da taxa de um município; Mediana observada: mediana das taxas dos municípios do estudo na região.}
 \end{table}
 
 \subsection{Discussão}
