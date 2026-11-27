@@ -72,6 +72,8 @@ Os slides em `apresentacao/apresentacao_final.pdf` e `.pptx` são os arquivos da
 
 Artigo e arquivo .zip da entrega final:
 
+Um comando gera e testa o .zip (detalhes na skill `.claude/skills/gerar-entrega-final/`): `Rscript scripts/06_gerar_entrega.R`.
+
 ```bash
 Rscript scripts/05_base_entrega_final.R          # entrega_final/dados/
 (cd entrega_final && quarto render analise_final.qmd)   # entrega_final/resultados/
