@@ -639,7 +639,7 @@ p
 p <- ggplot(d, aes(sample = rstandard(final))) +
   stat_qq(colour = azul, alpha = .35, size = 1.1) + stat_qq_line(colour = vermelho, linewidth = .8) +
   labs(x = "Quantis da distribuição normal", y = "Quantis dos resíduos\npadronizados") + tema
-ggsave("resultados/figuras/qq_final.png", p, width = 6.3, height = 4.0, dpi = 220)
+ggsave("resultados/figuras/qq_final.png", p, width = 4.6, height = 4.3, dpi = 220)
 p
 
 # Histograma dos resíduos com a curva normal de mesma média e desvio-padrão
@@ -662,7 +662,7 @@ dl <- do.call(rbind, lapply(names(expl), function(v) data.frame(variavel = expl[
 p <- ggplot(dl, aes(x, residuo)) + geom_point(colour = azul, alpha = .25, size = .6) +
   geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
   geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = vermelho, linewidth = .7) +   # curva suavizada (fora da apostila)
-  facet_wrap(~variavel, scales = "free_x", ncol = 4) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 12)
+  facet_wrap(~variavel, scales = "free_x", ncol = 4) + scale_x_continuous(breaks = scales::breaks_extended(4)) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 12) + theme(panel.spacing.x = grid::unit(1.4, "lines"))
 ggsave("resultados/figuras/residuos_explicativas.png", p, width = 7.5, height = 4.2, dpi = 250)
 p
 ggplot(d, aes(regiao, residuo)) + geom_boxplot(fill = claro) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
