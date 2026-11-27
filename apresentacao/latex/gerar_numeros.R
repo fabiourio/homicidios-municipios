@@ -365,7 +365,7 @@ p <- ggplot(ef_plot, aes(efeito_pct, rotulo)) +
   geom_vline(xintercept = 0, colour = "grey45", linetype = 2) +
   geom_segment(aes(x = ic_inf_pct, xend = ic_sup_pct, yend = rotulo), colour = azul, linewidth = 1.1) +
   geom_point(colour = azul, size = 3.5) +
-  labs(x = "Mudança percentual na taxa típica", y = NULL) + tema
+  labs(x = "Diferença percentual na taxa típica", y = NULL) + tema
 ggsave("figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)
 efeito_grafico <- mod$efeito_gini
 environment(efeito_grafico) <- mod
@@ -376,7 +376,7 @@ p <- ggplot(gini_plot, aes(renda, efeito_pct)) +
   geom_line(colour = azul, linewidth = 1) +
   geom_point(data = gr[gr$percentil %in% c(10, 50, 90), ], colour = vermelho, size = 2.7) +
   scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Mudança na taxa típica: +0,05 no Gini (%)") + tema
+  labs(x = "Renda per capita (R$, escala log)", y = "Diferença na taxa típica: +0,05 no Gini (%)") + tema
 ggsave("figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
 p <- ggplot(mod$grade, aes(rend, taxa, group = regiao)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = claro, alpha = .65) +
