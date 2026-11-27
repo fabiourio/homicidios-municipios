@@ -51,6 +51,7 @@ fmt    <- function(x, d = 1) formatC(x, format = "f", digits = d, big.mark = "."
 fp     <- function(p) ifelse(p < 0.001, "$<$0,001", fmt(p, 3))
 sinal  <- function(x, d = 0) paste0(ifelse(round(x, d) >= 0, "$+$", "$-$"), fmt(abs(x), d))
 milhar <- scales::label_number(big.mark = ".", decimal.mark = ",")
+options(OutDec = ",")   # vírgula decimal também nos eixos dos gráficos
 tabela <- function(colunas, cabecalho, linhas, arquivo) {
   writeLines(c(sprintf("\\begin{tabular}{@{}%s@{}}", colunas), "\\toprule", cabecalho, "\\midrule",
                linhas, "\\bottomrule", "\\end{tabular}"), file.path("resultados/tabelas", arquivo))
@@ -184,7 +185,7 @@ g <- st_read("dados/malha_mun.geojson", quiet = TRUE)
 g$cod_ibge <- as.integer(g$codarea)
 gd <- inner_join(g, br, by = "cod_ibge")
 gd$classe <- cut(gd$taxa, c(-Inf, 10, 20, 30, 45, 60, Inf), labels = c("até 10", "10–20", "20–30", "30–45", "45–60", "60+"))
-gd$classe <- factor(ifelse(gd$escopo, as.character(gd$classe), "fora do escopo"), levels = c(levels(gd$classe), "fora do escopo"))
+gd$classe <- factor(ifelse(gd$escopo, as.character(gd$classe), "fora do estudo"), levels = c(levels(gd$classe), "fora do estudo"))
 contorno_uf <- summarise(group_by(mutate(gd, uf = substr(cod_ibge, 1, 2)), uf))
 p <- ggplot(gd) +
   geom_sf(aes(fill = classe), colour = NA) +
@@ -201,7 +202,7 @@ d$ly       <- log(d$taxa)
 d$ln_pop   <- log(d$pop)
 d$uf       <- relevel(factor(d$uf), ref = "SP")   # usada nas seções 6 e 8
 expl <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação (%)", pct_urbana = "Urbanização (%)",
-          freq_15a17 = "Freq. escolar 15-17 (%)", distorcao_em = "Distorção id.-série EM (%)",
+          freq_15a17 = "Freq. escolar 15–17 (%)", distorcao_em = "Distorção id.-série EM (%)",
           pct_migr_10anos = "Migração recente (%)")
 
 # Tabela descritiva (médias simples entre municípios) com a correlação de cada explicativa com ln(taxa)
@@ -346,7 +347,7 @@ num$CoefGini <- fmt(b[["gini_c"]], 3)
 
 # Tabela de coeficientes em duas colunas
 nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)$^2$",
-           gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)", desocup = "Desocupação",
+           gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini centr. $\\times$ ln(renda) centr.", desocup = "Desocupação",
            pct_urbana = "Urbanização", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção idade-série EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
            `regiaoCentro-Oeste` = "Centro-Oeste", regiaoSul = "Sul")
@@ -630,7 +631,7 @@ p
 # Tamanho do resíduo x população: a dispersão diminui nos municípios maiores
 p <- ggplot(d, aes(pop, abs(residuo))) +
   geom_point(colour = azul, alpha = .3, size = 1.2) + scale_x_log10(labels = milhar) +
-  labs(x = "População (escala log)", y = "Valor absoluto do resíduo: |e|") + tema
+  labs(x = "População (escala log)", y = "Valor absoluto do resíduo") + tema
 ggsave("resultados/figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
 stopifnot(cor(abs(d$residuo), d$ln_pop) < 0)
@@ -756,7 +757,7 @@ rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
   data.frame(modelo = nm, p10 = e$ef[1], p10_p = e$p[1], p50 = e$ef[2], p50_p = e$p[2], p90 = e$ef[3], p90_p = e$p[3])
 }))
 knitr::kable(rob, digits = 3)
-celula <- function(ef, p) sprintf("%s\\%% (%s)", sinal(ef), fp(p))
+celula <- function(ef, p) sprintf("%s\\%% (%s)", sinal(ef, 1), fp(p))
 tabela(">{\\raggedright\\arraybackslash}p{0.40\\textwidth}rrr",
        sprintf("\\textbf{Especificação} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s}\\\\", fmt(gr$renda[1], 0), fmt(gr$renda[2], 0), fmt(gr$renda[3], 0)),
        sprintf("%s & %s & %s & %s\\\\", rob$modelo, celula(rob$p10, rob$p10_p), celula(rob$p50, rob$p50_p), celula(rob$p90, rob$p90_p)),
@@ -765,7 +766,7 @@ tabela(">{\\raggedright\\arraybackslash}p{0.40\\textwidth}rrr",
 stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05))
 stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos adicionais significativos")] > .05,
           all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos adicionais significativos")] < .05))
-num$PDezMin <- fmt(min(abs(rob$p10)), 0); num$PDezMax <- fmt(max(abs(rob$p10)), 0)
+num$PDezMin <- fmt(min(abs(rob$p10)), 1); num$PDezMax <- fmt(max(abs(rob$p10)), 1)
 num$PDezSig <- fmt(sum(rob$p10_p < .05), 0); num$NEspec <- fmt(nrow(rob), 0)
 # Com UF no lugar da região: fração do efeito do modelo final que sobra na renda mediana e no percentil 90
 uf_rob <- rob[rob$modelo == "Com UF no lugar da região", ]
