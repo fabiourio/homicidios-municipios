@@ -451,7 +451,7 @@ p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Mudança na taxa\ntípica (%)") + tema
-ggsave("resultados/figuras/gini_renda.png", p, width = 6, height = 3.9, dpi = 250)
+ggsave("resultados/figuras/gini_renda.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
 
 # Taxa típica ajustada ao longo da renda, no Nordeste e no Sudeste (Gini médio, demais variáveis na média),
@@ -473,7 +473,7 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Taxa típica\n(por 100 mil/ano)") +
   tema + theme(legend.position = "bottom")
-ggsave("resultados/figuras/renda_regiao.png", p, width = 6, height = 3.9, dpi = 250)
+ggsave("resultados/figuras/renda_regiao.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
 
 # Efeitos de urbanização, escola e migração (IC 95%)
@@ -748,7 +748,7 @@ rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
 }))
 knitr::kable(rob, digits = 3)
 celula <- function(ef, p) sprintf("%s\\%% (%s)", sinal(ef), fp(p))
-tabela("lrrr",
+tabela(">{\\raggedright\\arraybackslash}p{0.40\\textwidth}rrr",
        sprintf("\\textbf{Especificação} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s}\\\\", fmt(gr$renda[1], 0), fmt(gr$renda[2], 0), fmt(gr$renda[3], 0)),
        sprintf("%s & %s & %s & %s\\\\", rob$modelo, celula(rob$p10, rob$p10_p), celula(rob$p50, rob$p50_p), celula(rob$p90, rob$p90_p)),
        "robustez_gini.tex")
