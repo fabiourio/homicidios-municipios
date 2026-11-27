@@ -34,8 +34,8 @@ No macOS, se `Rscript` não estiver no PATH: `/Library/Frameworks/R.framework/Re
 3. Copia para `artigo/` o `numeros.tex` e só as tabelas e figuras que o `artigo.tex` usa. Tabelas e figuras que o artigo não usa são apagadas de `artigo/tabelas/` e `artigo/figuras/`.
 4. Compila o artigo e confere: sem referência indefinida, no máximo 15 páginas, resumo e abstract com no máximo 150 palavras e na página 1. O `artigo.pdf` é recompilado a cada execução e muda em bytes mesmo sem mudança no texto: se nada mudou de verdade, descarte com `git checkout -- artigo/artigo.pdf`.
 5. (`--slides`) Recompila os slides e as exportações.
-6. Monta o zip com `scripts/04_montar_zip_entrega.R` (slides 1 a 15, caderno com os dados, artigo).
-7. Descompacta o zip numa pasta vazia, compila o artigo, roda o caderno e compara byte a byte os números, as tabelas e as figuras.
+6. Monta o zip com `scripts/04_montar_zip_entrega.R`: slides 1 a 15 na raiz, caderno com os dados e artigo. No zip, os números e as tabelas entram no próprio `artigo.tex`, e só as figuras ficam em arquivos. Por isso, cada `\input{tabelas/...}` do artigo termina com `%`, para o PDF sair igual nos dois casos.
+7. Descompacta o zip numa pasta vazia, compila o artigo, roda o caderno e compara byte a byte as figuras. Confere também que os números e as tabelas embutidos no `artigo.tex` do zip são os que o caderno do zip gera.
 
 ## Quando falhar
 

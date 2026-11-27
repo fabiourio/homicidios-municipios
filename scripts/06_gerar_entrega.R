@@ -70,12 +70,21 @@ utils::unzip(zip_final, exdir = teste)
 base_zip <- file.path(teste, "GED16_homicidios_municipios")
 roda("tectonic", c("-X", "compile", "artigo.tex"), file.path(base_zip, "artigo"))
 roda("quarto", c("render", "analise_final.qmd"), file.path(base_zip, "codigo"))
-iguais <- tools::md5sum(file.path(base_zip, "codigo/resultados", origem)) == tools::md5sum(file.path(base_zip, "artigo", origem))
-if (!all(iguais)) stop("O caderno do zip não reproduz: ", paste(origem[!iguais], collapse = ", "))
+figs <- origem[startsWith(origem, "figuras/")]
+iguais <- tools::md5sum(file.path(base_zip, "codigo/resultados", figs)) == tools::md5sum(file.path(base_zip, "artigo", figs))
+if (!all(iguais)) stop("O caderno do zip não reproduz: ", paste(figs[!iguais], collapse = ", "))
+tex_rep <- readLines("artigo/artigo.tex", encoding = "UTF-8")
+for (i in grep("^\\\\input\\{", tex_rep)) {
+  arq <- sub("^\\\\input\\{([^}]+)\\}%?$", "\\1", tex_rep[i])
+  tex_rep[i] <- paste(readLines(file.path(base_zip, "codigo/resultados", arq), encoding = "UTF-8"), collapse = "\n")
+}
+tex_zip <- readLines(file.path(base_zip, "artigo/artigo.tex"), encoding = "UTF-8")
+if (!identical(strsplit(paste(tex_rep, collapse = "\n"), "\n")[[1]], tex_zip))
+  stop("Os números ou as tabelas do artigo.tex do zip não batem com o caderno do zip")
 texto_zip <- pdftools::pdf_text(file.path(base_zip, "artigo/artigo.pdf"))
 if (!identical(texto_zip, texto)) stop("O artigo compilado do zip difere do artigo.pdf")
 
 cat("\nEntrega pronta:", zip_final,
     sprintf("\n  artigo: %d páginas | resumo: %d palavras | abstract: %d palavras", paginas, n_resumo, n_abstract),
     sprintf("\n  slides: %d páginas | %d arquivos (números, tabelas e figuras) reproduzidos pelo caderno do zip\n",
-            pdftools::pdf_info(file.path(base_zip, "slides/apresentacao_final.pdf"))$pages, length(origem)))
+            pdftools::pdf_info(file.path(base_zip, "apresentacao_final.pdf"))$pages, length(origem)))
