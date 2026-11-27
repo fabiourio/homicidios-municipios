@@ -345,7 +345,7 @@ ggsave("figuras/residuos_ajustado.png", p, width = 6.3, height = 4.0, dpi = 220)
 p <- ggplot(plot_d, aes(pop, abs(residuo))) +
   geom_point(colour = azul, alpha = .3, size = 1.2) +
   scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
-  labs(x = "População (escala log)", y = "Tamanho do erro: |resíduo|") + tema
+  labs(x = "População (escala log)", y = "|Resíduo|") + tema
 ggsave("figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
 p <- ggplot(plot_d, aes(sample = rstandard(mod$final))) +
   stat_qq(colour = azul, alpha = .35, size = 1.1) + stat_qq_line(colour = vermelho, linewidth = .8) +
@@ -359,7 +359,7 @@ p <- ggplot(plot_d, aes(residuo)) +
 ggsave("figuras/histograma_residuos.png", p, width = 6.3, height = 4.0, dpi = 220)
 ef_plot <- mod$mudancas[mod$mudancas$termo != "desocup", ]
 ef_plot$rotulo <- c("Urbanização: +10 p.p.", "Frequência escolar: +5 p.p.",
-                    "Atraso escolar: +10 p.p.", "Migração recente: +5 p.p.")
+                    "Distorção idade-série: +10 p.p.", "Migração recente: +5 p.p.")
 ef_plot$rotulo <- factor(ef_plot$rotulo, levels = rev(ef_plot$rotulo))
 p <- ggplot(ef_plot, aes(efeito_pct, rotulo)) +
   geom_vline(xintercept = 0, colour = "grey45", linetype = 2) +
@@ -376,14 +376,14 @@ p <- ggplot(gini_plot, aes(renda, efeito_pct)) +
   geom_line(colour = azul, linewidth = 1) +
   geom_point(data = gr[gr$percentil %in% c(10, 50, 90), ], colour = vermelho, size = 2.7) +
   scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Diferença na taxa típica: +0,05 no Gini (%)") + tema
+  labs(x = "Renda per capita (R$, escala log)", y = "Diferença na taxa típica (%)\npor +0,05 no Gini") + tema
 ggsave("figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
 p <- ggplot(mod$grade, aes(rend, taxa, group = regiao)) +
   geom_ribbon(aes(ymin = lo, ymax = hi), fill = claro, alpha = .65) +
   geom_line(aes(colour = regiao), linewidth = 1) +
   scale_colour_manual(values = c(Nordeste = azul, Sudeste = "#13294B"), name = NULL) +
   scale_x_log10(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
-  labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada (/100 mil/ano)") +
+  labs(x = "Renda per capita (R$, escala log)", y = "Taxa típica ajustada\n(/100 mil/ano)") +
   tema + theme(legend.position = "bottom")
 ggsave("figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
 stopifnot(identical(as.character(ef_plot$termo), as.character(mod$mudancas$termo[mod$mudancas$termo != "desocup"])))
@@ -392,7 +392,7 @@ painel_vars <- list(c("log_rend", "gini", "desocup", "pct_urbana"),
                    c("freq_15a17", "distorcao_em", "pct_migr_10anos", "regiao"))
 nomes_diag <- c(log_rend = "ln(renda per capita)", gini = "Gini calculado",
                 desocup = "Desocupação (%)", pct_urbana = "População urbana (%)",
-                freq_15a17 = "Frequência escolar 15–17 (%)", distorcao_em = "Atraso escolar (%)",
+                freq_15a17 = "Frequência escolar 15–17 (%)", distorcao_em = "Distorção idade-série (%)",
                 pct_migr_10anos = "Migração recente (%)", regiao = "Região")
 for (k in seq_along(painel_vars)) {
   png(sprintf("figuras/residuos_explicativas_%d.png", k), width = 2200, height = 1400, res = 220)
