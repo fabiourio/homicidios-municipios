@@ -160,7 +160,7 @@ Os dados, o dicionário das variáveis e o caderno em R que reproduz os números
 
 \subsection{Métodos Estatísticos}
 
-Os métodos seguem a apostila da disciplina \citep{ferrari2023}, e toda a análise foi feita em R \citep{rcore2025}. O modelo final é uma regressão linear múltipla ajustada por mínimos quadrados ordinários (MQO), com o mesmo peso para todos os municípios, qualquer que seja a população:
+Os métodos seguem a apostila da disciplina \citep{ferrari2023}, e toda a análise foi feita em R. O modelo final é uma regressão linear múltipla ajustada por mínimos quadrados ordinários (MQO), com o mesmo peso para todos os municípios, qualquer que seja a população:
 \begin{equation}
 \ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \beta_3 g_i + \beta_4 g_i r_i + \mathbf{x}_i^{\top}\bm{\delta} + \sum_{k=1}^{4} \gamma_k D_{ik} + \varepsilon_i,
 \qquad \varepsilon_i \overset{\text{iid}}{\sim} N(0, \sigma^2),
@@ -333,7 +333,7 @@ A Tabela~\ref{tab:prev} aplica o modelo a um município de referência do Sudest
 
 No modelo sem a interação, a associação positiva do Gini concorda com a relatada por \citet{wanzinack2022} para todos os municípios brasileiros. Aqui, a interação exploratória indica que essa associação muda com a renda. Estudos entre países encontraram que a desigualdade e o nível de desenvolvimento interagem na associação com o homicídio, embora em outra escala e com outro padrão \citep{ouimet2012, aransiola2024}.
 
-Além da desigualdade e da renda, parte das diferenças entre municípios pode vir de fatores estaduais e regionais que o modelo não mede, como políticas de segurança e a presença de facções \citep{feltran2022, cerqueira2025}.
+Além da desigualdade e da renda, parte das diferenças entre municípios pode vir de fatores estaduais e regionais que o modelo não mede, como políticas de segurança e a presença de facções \citep{cerqueira2025}.
 
 Como pontos fortes, o estudo cobre \nPctPopEsc\% da população do país com dados públicos, o código reproduz todos os números calculados, e as conclusões foram conferidas em sete especificações alternativas e em cortes de 20 a 50 mil habitantes.
 
