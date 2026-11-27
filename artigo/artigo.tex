@@ -143,7 +143,7 @@ Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população e \nPctHomEsc\% 
 \caption{Municípios, população e homicídios no estudo, por região}
 \label{tab:escopo}
 \small
-\input{tabelas/escopo_regiao.tex}
+\input{tabelas/escopo_regiao.tex}%
 \nota[\fonteSI]{percentuais da população e dos homicídios (2021--2023) de cada região que ficam nos municípios do estudo.}
 \end{table}
 
@@ -153,7 +153,7 @@ Restam \nMunEsc{} municípios, com \nPctPopEsc\% da população e \nPctHomEsc\% 
 \label{tab:descritiva}
 \small
 \setlength{\tabcolsep}{4pt}
-\input{tabelas/descritiva.tex}
+\input{tabelas/descritiva.tex}%
 \nota{médias simples entre municípios. DP: desvio-padrão; Cor.: correlação com ln(taxa), usando ln(renda) para a renda; EM: ensino médio.}
 \end{table}
 
@@ -202,7 +202,7 @@ Cada bloco de B a E aumentou o $R^2$ ajustado ($R^2_a$) e foi significativo no t
 \label{tab:blocos}
 \small
 \setlength{\tabcolsep}{3pt}
-\input{tabelas/blocos.tex}
+\input{tabelas/blocos.tex}%
 \nota{cada linha acrescenta um bloco ao modelo anterior. $F$ e $p$: teste linear geral contra o modelo anterior; gl: graus de liberdade do numerador; $C_p$ calculado com o MSE do modelo E (em E, $C_p = p+1$ por construção; $p$: número de termos explicativos, sem o intercepto).}
 \end{table}
 
@@ -214,7 +214,7 @@ Quatro dos cinco conjuntos de termos adicionais (Tabela~\ref{tab:espec}) são si
 \label{tab:espec}
 \small
 \setlength{\tabcolsep}{4pt}
-\input{tabelas/especificacao.tex}
+\input{tabelas/especificacao.tex}%
 \nota{teste linear geral contra o modelo final. Para AIC, BIC e PRESS, menor é melhor.}
 \end{table}
 
@@ -257,7 +257,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \label{tab:coef}
 \small
 \setlength{\tabcolsep}{3pt}
-\input{tabelas/coeficientes.tex}
+\input{tabelas/coeficientes.tex}%
 \nota{resposta: $\ln Y$; $n = \nMunEsc$. EP: erro-padrão clássico; centr.: centralizado na média; EM: ensino médio. O Sudeste é a referência das regiões. O coeficiente do Gini vale na renda de R\$ \nCentroRenda{}, e o da renda, no Gini de \nCentroGini. A interação Gini $\times$ renda é exploratória. Variáveis em \%, de 0 a 100; Gini de 0 a 1.}
 \end{table}
 
@@ -267,7 +267,7 @@ A Tabela~\ref{tab:coef} traz os coeficientes, e a Tabela~\ref{tab:efeitos} tradu
 \label{tab:efeitos}
 \small
 \setlength{\tabcolsep}{4pt}
-\input{tabelas/efeitos.tex}
+\input{tabelas/efeitos.tex}%
 \nota{diferença na taxa típica associada à diferença indicada na explicativa, com as demais variáveis iguais, calculada com os coeficientes sem arredondamento. H1 usa o modelo sem a interação (modelo D da Tabela~\ref{tab:blocos}); as demais linhas usam o modelo final. A interação exploratória é avaliada nos percentis 10, 50 e 90 da renda do estudo. IC 95\% clássico; EM: ensino médio; p.p.: pontos percentuais.}
 \end{table}
 
@@ -306,7 +306,7 @@ Com as demais características iguais, todas as outras regiões têm taxa típic
 \label{tab:robustez}
 \small
 \setlength{\tabcolsep}{4pt}
-\input{tabelas/robustez_gini.tex}
+\input{tabelas/robustez_gini.tex}%
 \nota{diferença na taxa típica entre o Gini médio e o Gini médio mais 0,05, pela interação exploratória Gini $\times$ renda, nos percentis 10, 50 e 90 da renda; valor $p$ entre parênteses.}
 \end{table}
 
@@ -326,7 +326,7 @@ A Tabela~\ref{tab:prev} aplica o modelo a um município de referência do Sudest
 \caption{Taxa típica estimada para os municípios de referência}
 \label{tab:prev}
 \small
-\input{tabelas/previsao.tex}
+\input{tabelas/previsao.tex}%
 \nota{taxas por 100 mil habitantes ao ano, com as explicativas na mediana da região. IC: intervalo de confiança da taxa típica; IP: intervalo de previsão da taxa de um município; Mediana observada: mediana das taxas dos municípios do estudo na região.}
 \end{table}
 
