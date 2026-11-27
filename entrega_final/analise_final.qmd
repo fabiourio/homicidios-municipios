@@ -694,6 +694,7 @@ com_cj <- update(final, data = rbind(d[, names(cj)], cj))
 e_cj <- tail(resid(com_cj), 1) / summary(com_cj)$sigma
 knitr::kable(data.frame(e_semi_campos_do_jordao = e_cj, interacao_com = coef(com_cj)[["rend_c:gini_c"]]), digits = 3)
 stopifnot(e_cj < -4, all(sign(coef(com_cj)) == sign(b)))
+stopifnot(shapiro.test(rstandard(com_cj))$p.value < .05)   # o artigo afirma que, com o município, o teste rejeita a normalidade
 num$SemiCJ <- fmt(e_cj, 1); num$InterCJ <- fmt(coef(com_cj)[["rend_c:gini_c"]], 3)
 
 # Indicadora de São Paulo: o Sul fica acima do Sudeste em parte porque SP tem taxas baixas
