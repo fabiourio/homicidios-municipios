@@ -31,7 +31,7 @@ Pacotes de R necessários: `ggplot2`, `dplyr`, `sf`, `MASS`, `lmtest`, `scales`,
 | `dicionario.csv` | Descrição de cada coluna |
 
 **O que vem de fora da apostila.** Pedidos da revisão da professora: o Gini por município e o corte da população por percentil.
-Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; e os pesos do ajuste por mínimos quadrados ponderados.
+Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; a curva suavizada (loess) dos gráficos de resíduos; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; o argumento da oscilação $1/\sqrt{\mu}$ no recorte; os pesos do ajuste por mínimos quadrados ponderados; e a alavancagem dos municípios de referência.
 Cada um desses itens está marcado com **(fora da apostila)** no ponto em que aparece.
 
 ## Pacotes e funções auxiliares
@@ -136,7 +136,7 @@ num$TaxaBrasilContexto <- fmt(21.3); num$TaxaMundoContexto <- fmt(5.8)
 num$PopMin        <- fmt(POP_MIN / 1000, 0)
 num$PercCorte     <- fmt(100 * mean(br$pop < POP_MIN), 0)
 num$CasosEspCorte <- fmt(POP_MIN * 3 * taxa_br / 1e5, 0)
-num$OscCorte      <- fmt(100 / sqrt(POP_MIN * 3 * taxa_br / 1e5), 0)   # oscilação só pelo acaso: 1/raiz(casos esperados)
+num$OscCorte      <- fmt(100 / sqrt(POP_MIN * 3 * taxa_br / 1e5), 0)   # oscilação só pelo acaso: 1/raiz(casos esperados) (fora da apostila)
 cj <- br[br$cod_ibge == FORA, ]
 num$ForaNome <- "Campos do Jordão-SP"; num$ForaHom <- fmt(cj$hom, 0); num$ForaIndet <- fmt(cj$intencao_indeterminada, 0)
 
@@ -199,9 +199,9 @@ p
 d$log_rend <- log(d$rend_pc_media)
 d$ly       <- log(d$taxa)
 d$ln_pop   <- log(d$pop)
-d$uf       <- relevel(factor(d$uf), ref = "SP")   # usada só nas verificações da seção 8
+d$uf       <- relevel(factor(d$uf), ref = "SP")   # usada nas seções 6 e 8
 expl <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação (%)", pct_urbana = "Urbanização (%)",
-          freq_15a17 = "Frequência escolar 15-17 (%)", distorcao_em = "Distorção idade-série EM (%)",
+          freq_15a17 = "Freq. escolar 15-17 (%)", distorcao_em = "Distorção id.-série EM (%)",
           pct_migr_10anos = "Migração recente (%)")
 
 # Tabela descritiva (médias simples entre municípios) com a correlação de cada explicativa com ln(taxa)
@@ -302,7 +302,7 @@ knitr::kable(data.frame(bloco = LETTERS[1:5], R2a = r2a, criterios), digits = 3)
 stopifnot(apply(criterios[, c("mse", "aic", "bic", "press")], 2, which.min) == 5)
 
 nomes_bloco <- c("A: socioeconômico", "B: + urbanização", "C: + educação e migração", "D: + região", "E: + Gini $\\times$ renda")
-crit <- sprintf("%s & %s & %s & %s & %s & %s", fmt(r2a, 2), fmt(criterios[, "mse"], 3), fmt(criterios[, "cp"], 0),
+crit <- sprintf("%s & %s & %s & %s & %s & %s", fmt(r2a, 3), fmt(criterios[, "mse"], 3), fmt(criterios[, "cp"], 0),
                 fmt(criterios[, "aic"], 0), fmt(criterios[, "bic"], 0), fmt(criterios[, "press"], 0))
 crit <- gsub("(^| )-", "\\1$-$", crit)
 tabela("lrrrrrrrrr",
@@ -310,9 +310,9 @@ tabela("lrrrrrrrrr",
        c(sprintf("%s & --- & --- & --- & %s\\\\", nomes_bloco[1], crit[1]),
          sprintf("%s & %s & %s & %s & %s\\\\", nomes_bloco[-1], fmt(av$Df, 0), fmt(av$F), fp(av$`Pr(>F)`), crit[-1])),
        "blocos.tex")
-num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 2)   # R² de previsão = 1 - PRESS/SST (fora da apostila)
+num$PressPred <- fmt(1 - criterios[5, "press"] / sum((d$ly - mean(d$ly))^2), 3)   # R² de previsão = 1 - PRESS/SST (fora da apostila)
 num$FInter  <- fmt(av$F[4])
-num$RdoisAC <- fmt(r2a[3], 2); num$RdoisAD <- fmt(r2a[4], 2)
+num$RdoisAC <- fmt(r2a[3], 3); num$RdoisAD <- fmt(r2a[4], 3)
 
 # F de cada bloco como o último a entrar (o bloco A leva junto a interação, pelo princípio da hierarquia)
 retira <- list(A = ~ . - rend_c - rend_c2 - gini_c - desocup - rend_c:gini_c, B = ~ . - pct_urbana,
@@ -337,16 +337,17 @@ ic <- confint(final)
 b  <- coef(final)
 stopifnot(final$rank == 14, df.residual(final) == 1119)
 
-num$RdoisE   <- fmt(resumo$r.squared, 2); num$RdoisA <- fmt(resumo$adj.r.squared, 2); num$RdoisPct <- fmt(100 * resumo$r.squared, 0)
+num$RdoisE   <- fmt(resumo$r.squared, 3); num$RdoisA <- fmt(resumo$adj.r.squared, 3); num$RdoisPct <- fmt(100 * resumo$r.squared, 0)
+num$RdoisResto <- fmt(100 * (1 - resumo$r.squared), 0)   # parte da variação de ln(taxa) que o modelo não explica
 num$Fglobal  <- fmt(resumo$fstatistic[["value"]], 0)
 num$GlUm     <- fmt(resumo$fstatistic[["numdf"]], 0); num$GlDois <- fmt(resumo$fstatistic[["dendf"]], 0)
-num$FglobalP <- fp(pf(resumo$fstatistic[["value"]], resumo$fstatistic[["numdf"]], resumo$fstatistic[["dendf"]], lower.tail = FALSE))
+stopifnot(pf(resumo$fstatistic[["value"]], resumo$fstatistic[["numdf"]], resumo$fstatistic[["dendf"]], lower.tail = FALSE) < .001)   # o artigo escreve p < 0,001
 num$CoefGini <- fmt(b[["gini_c"]], 3)
 
 # Tabela de coeficientes em duas colunas
 nomes <- c(`(Intercept)` = "Intercepto", rend_c = "ln(renda) centr.", rend_c2 = "(ln(renda) centr.)$^2$",
            gini_c = "Desigualdade (Gini, centr.)", `rend_c:gini_c` = "Gini $\\times$ ln(renda)", desocup = "Desocupação",
-           pct_urbana = "Urbanização", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção EM",
+           pct_urbana = "Urbanização", freq_15a17 = "Freq. escolar 15--17", distorcao_em = "Distorção idade-série EM",
            pct_migr_10anos = "Migração recente", regiaoNorte = "Norte", regiaoNordeste = "Nordeste",
            `regiaoCentro-Oeste` = "Centro-Oeste", regiaoSul = "Sul")
 cc  <- resumo$coefficients[names(nomes), ]
@@ -366,7 +367,7 @@ O efeito de +0,05 no Gini, a partir do Gini médio, é calculado pela diferença
 #| label: efeitos
 mudancas <- data.frame(
   termo    = c("distorcao_em", "freq_15a17", "pct_migr_10anos", "pct_urbana", "desocup"),
-  variavel = c("Distorção idade-série (EM)", "Frequência escolar 15--17", "Migração recente", "Urbanização", "Desocupação"),
+  variavel = c("Distorção idade-série EM", "Frequência escolar 15--17", "Migração recente", "Urbanização", "Desocupação"),
   hip      = c("H2", "H2", "H3", "", ""),
   mudanca  = c("+10 p.p.", "+5 p.p.", "+5 p.p.", "+10 p.p.", "+1 p.p."),
   delta    = c(10, 5, 5, 10, 1))
@@ -402,20 +403,23 @@ lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", mudancas$hip, mudanc
                sinal(mudancas$ef, 1), sinal(mudancas$inf, 1), sinal(mudancas$sup, 1), fp(mudancas$p))
 tabela("cllrcr",
        "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Aumento} & \\textbf{Mudança na taxa} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
-       c(lin_gini, lin, sprintf(" & Renda & --- & U invertido & --- & %s\\\\", fp(resumo$coefficients["rend_c2", 4]))),
+       c(lin_gini, lin, sprintf(" & Renda & --- & pico em R\\$ %s & --- & %s\\\\", fmt(pico, 0), fp(resumo$coefficients["rend_c2", 4]))),
        "efeitos.tex")
 
 ef <- setNames(mudancas$ef, mudancas$termo)
 num$EfFreq  <- fmt(abs(ef[["freq_15a17"]]), 1); num$EfDist <- fmt(ef[["distorcao_em"]], 1)
 num$EfUrb   <- fmt(ef[["pct_urbana"]], 1);      num$EfMigr <- fmt(ef[["pct_migr_10anos"]], 1)
-num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);    num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 2)
-num$GiniEfMediana <- fmt(gr$ef[2], 0); num$GiniEfNoventa <- fmt(gr$ef[3], 0)
-num$GiniEfDez <- fmt(abs(gr$ef[1]), 0); num$GiniPDez <- fmt(gr$p[1], 3)
+num$EfDesoc <- fmt(abs(ef[["desocup"]]), 1);    num$PMigr  <- fmt(mudancas$p[mudancas$termo == "pct_migr_10anos"], 3)
+num$GiniEfMediana <- fmt(gr$ef[2], 1); num$GiniEfNoventa <- fmt(gr$ef[3], 1)
+num$GiniEfDez <- fmt(abs(gr$ef[1]), 1); num$GiniPDez <- fmt(gr$p[1], 3)
 num$RendaDez  <- fmt(gr$renda[1], 0); num$RendaMediana <- fmt(gr$renda[2], 0); num$RendaNoventa <- fmt(gr$renda[3], 0)
 num$GiniZero  <- fmt(renda_zero, 0); num$GiniZeroPct <- fmt(100 * mean(d$rend_pc_media < renda_zero), 0)
 num$Pico      <- fmt(pico, 0);       num$PctAbaixoPico <- fmt(100 * mean(d$rend_pc_media < pico), 0)
 num$IqrGini   <- fmt(IQR(d$gini), 3)   # justifica +0,05 no Gini
 num$PctNEpobres <- fmt(100 * mean(d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)] == "Nordeste"), 0)
+pobres <- d$regiao[d$rend_pc_media <= quantile(d$rend_pc_media, .1)]
+stopifnot(all(pobres %in% c("Norte", "Nordeste")))   # os 10% mais pobres estão só no Norte e no Nordeste
+num$PctNpobres <- fmt(100 * mean(pobres == "Norte"), 0)
 
 # Efeitos das regiões contra o Sudeste, com IC 95%
 reg_ic <- 100 * (exp(cbind(b, ic)[c("regiaoNordeste", "regiaoCentro-Oeste", "regiaoNorte", "regiaoSul"), ]) - 1)
@@ -447,7 +451,7 @@ p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Mudança na taxa\ntípica (%)") + tema
-ggsave("resultados/figuras/gini_renda.png", p, width = 7.2, height = 4.3, dpi = 220)
+ggsave("resultados/figuras/gini_renda.png", p, width = 6, height = 3.9, dpi = 250)
 p
 
 # Taxa típica ajustada ao longo da renda, no Nordeste e no Sudeste (Gini médio, demais variáveis na média),
@@ -469,7 +473,7 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   scale_x_log10(labels = milhar) +
   labs(x = "Renda per capita (R$/mês, escala log)", y = "Taxa típica\n(por 100 mil/ano)") +
   tema + theme(legend.position = "bottom")
-ggsave("resultados/figuras/renda_regiao.png", p, width = 7.2, height = 4.3, dpi = 220)
+ggsave("resultados/figuras/renda_regiao.png", p, width = 6, height = 3.9, dpi = 250)
 p
 
 # Efeitos de urbanização, escola e migração (IC 95%)
@@ -482,7 +486,7 @@ p <- ggplot(ef_plot, aes(ef, rotulo)) +
   geom_segment(aes(x = inf, xend = sup, yend = rotulo), colour = azul, linewidth = 1.1) +
   geom_point(colour = azul, size = 3.5) +
   labs(x = "Mudança percentual na taxa típica", y = NULL) + tema
-ggsave("resultados/figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)
+ggsave("resultados/figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)   # usada nos slides
 p
 ```
 
@@ -525,6 +529,7 @@ stopifnot(length(sig) == 4, max(espec$R2a[1:5]) - resumo$adj.r.squared < 0.01,
           espec$aic[6] < crit_final[["aic"]], espec$press[6] < crit_final[["press"]],
           espec$bic[6] > crit_final[["bic"]])   # o BIC prefere o modelo final ao modelo com todos os termos
 num$RdoisATodos <- fmt(summary(todos)$adj.r.squared, 3)
+num$PRegGini <- fmt(espec$p[espec$termo == "Região $\\times$ Gini"], 3)   # região x Gini não significativa
 num$BICfinal <- fmt(-crit_final[["bic"]], 0); num$BICtodos <- fmt(-espec$bic[6], 0)
 # Cp do modelo final tomando o modelo com todos os termos como completo (apostila, cap. 8)
 cp_final <- sum(resid(final)^2) / (sum(resid(todos)^2) / df.residual(todos)) + 2 * length(coef(final)) - n
@@ -564,7 +569,7 @@ bp; sw
 out <- d[abs(d$res_semi) >= 4, c("municipio", "uf", "taxa", "res_semi")]   # possíveis outliers
 if (nrow(out)) knitr::kable(out) else cat("Nenhum resíduo semi-studentizado com |e*| >= 4\n")
 
-num$BP <- fmt(bp$statistic, 0); num$BPgl <- fmt(bp$parameter, 0); num$BPp <- fp(bp$p.value)
+num$BP <- fmt(bp$statistic, 0); num$BPgl <- fmt(bp$parameter, 0); stopifnot(bp$p.value < .001)   # o artigo escreve p < 0,001
 num$SW <- fmt(sw$statistic, 3); num$SWp <- fmt(sw$p.value, 3)
 num$MaxSemi <- fmt(max(abs(d$res_semi)), 2)
 num$MSE <- fmt(resumo$sigma^2, 3); num$Sigma <- fmt(resumo$sigma, 3); num$DoisS <- fmt(2 * resumo$sigma, 2)
@@ -619,7 +624,7 @@ p
 # Tamanho do resíduo x população: a dispersão diminui nos municípios maiores
 p <- ggplot(d, aes(pop, abs(residuo))) +
   geom_point(colour = azul, alpha = .3, size = 1.2) + scale_x_log10(labels = milhar) +
-  labs(x = "População (escala log)", y = "Tamanho do resíduo: |e|") + tema
+  labs(x = "População (escala log)", y = "Valor absoluto do resíduo: |e|") + tema
 ggsave("resultados/figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
 stopifnot(cor(abs(d$residuo), d$ln_pop) < 0)
@@ -629,7 +634,8 @@ dl <- do.call(rbind, lapply(names(expl), function(v) data.frame(variavel = expl[
 p <- ggplot(dl, aes(x, residuo)) + geom_point(colour = azul, alpha = .25, size = .6) +
   geom_hline(yintercept = 0, colour = "grey45", linetype = 2) +
   geom_smooth(method = "loess", formula = y ~ x, se = FALSE, colour = vermelho, linewidth = .7) +
-  facet_wrap(~variavel, scales = "free_x", ncol = 3) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
+  facet_wrap(~variavel, scales = "free_x", ncol = 4) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 12)
+ggsave("resultados/figuras/residuos_explicativas.png", p, width = 7.5, height = 4.2, dpi = 250)
 p
 ggplot(d, aes(regiao, residuo)) + geom_boxplot(fill = claro) + labs(x = NULL, y = "Resíduo de ln(taxa)") + theme_minimal(base_size = 11)
 ```
@@ -656,10 +662,10 @@ ew2 <- w * resid(mqp)^2
 bp_mqp <- bp_aux(ew2, X); bp_mqp_pop <- bp_aux(ew2, d$ln_pop)
 knitr::kable(rbind(mqo_todas = bp_aux(d$residuo^2, X), mqp_todas = bp_mqp, mqo_pop = bp_pop, mqp_pop = bp_mqp_pop), digits = 4)
 num$SzeroQ  <- fmt(s0, 3)
-num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 2); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 2)
+num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 3); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 3)
 num$EpMin   <- fmt(razao_ep[1], 2); num$EpMax <- fmt(razao_ep[2], 2)
 num$BPmqp   <- fmt(bp_mqp[["bp"]], 0); num$BPmqpP <- fp(bp_mqp[["p"]])
-num$BPmqpPop <- fmt(bp_mqp_pop[["bp"]], 1); num$BPmqpPopP <- fmt(bp_mqp_pop[["p"]], 2)
+num$BPmqpPop <- fmt(bp_mqp_pop[["bp"]], 1); num$BPmqpPopP <- fmt(bp_mqp_pop[["p"]], 3)
 ```
 
 ### Desocupação, Campos do Jordão e São Paulo
@@ -678,7 +684,7 @@ knitr::kable(data.frame(municipios_retirados = sum(d$pct_indet >= 30), b_desocup
                         termos_que_mudam_signif = paste(names(which(muda_signif)), collapse = ", ")), digits = 4)
 stopifnot(all(sign(coef(sem_indet)) == sign(b)), identical(names(which(muda_signif)), "desocup"))
 num$NSensDesoc <- fmt(sum(d$pct_indet >= 30), 0)
-num$PSensDesoc <- fmt(s_des[[4]], 2)
+num$PSensDesoc <- fmt(s_des[[4]], 3)
 
 # Com Campos do Jordão: mesma centralização do estudo; resíduo semi-studentizado do município
 cj$regiao <- factor("Sudeste", levels = levels(d$regiao))
@@ -688,7 +694,7 @@ com_cj <- update(final, data = rbind(d[, names(cj)], cj))
 e_cj <- tail(resid(com_cj), 1) / summary(com_cj)$sigma
 knitr::kable(data.frame(e_semi_campos_do_jordao = e_cj, interacao_com = coef(com_cj)[["rend_c:gini_c"]]), digits = 3)
 stopifnot(e_cj < -4, all(sign(coef(com_cj)) == sign(b)))
-num$SemiCJ <- fmt(e_cj, 1); num$InterCJ <- fmt(coef(com_cj)[["rend_c:gini_c"]], 2)
+num$SemiCJ <- fmt(e_cj, 1); num$InterCJ <- fmt(coef(com_cj)[["rend_c:gini_c"]], 3)
 
 # Indicadora de São Paulo: o Sul fica acima do Sudeste em parte porque SP tem taxas baixas
 d$sp <- as.numeric(d$uf == "SP")
@@ -712,11 +718,16 @@ ggplot(d, aes(reorder(as.character(uf), residuo), residuo)) + geom_boxplot(fill 
 r2_uf <- summary(lm(residuo ~ uf, data = d))$r.squared
 com_uf <- update(final, . ~ . - regiao + uf)
 sw_uf  <- shapiro.test(rstandard(com_uf))
+stopifnot(sw_uf$p.value < .001)   # o artigo escreve p < 0,001
 knitr::kable(data.frame(r2_residuos_por_uf = r2_uf, r2a_com_uf = summary(com_uf)$adj.r.squared, bic_com_uf = criterio(com_uf)[["bic"]],
                         parametros = length(coef(com_uf)), sw_p_com_uf = sw_uf$p.value), digits = 4)
 num$RdoisResUF <- fmt(100 * r2_uf, 0)
-num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 2); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
-num$ParUF      <- fmt(length(coef(com_uf)), 0)
+num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
+# H2 com UF: frequência e distorção seguem significativas; tamanho relativo ao modelo final
+bu <- summary(com_uf)$coefficients
+stopifnot(bu["freq_15a17", 4] < .05, bu["distorcao_em", 4] < .05, bu["freq_15a17", 1] < 0, bu["distorcao_em", 1] > 0)
+num$UFFreq <- fmt(100 * bu["freq_15a17", 1] / b[["freq_15a17"]], 0); num$UFDist <- fmt(100 * bu["distorcao_em", 1] / b[["distorcao_em"]], 0)
+num$PMigrUF <- fmt(bu["pct_migr_10anos", 4], 3)
 ```
 
 ### Robustez do efeito do Gini
@@ -727,8 +738,8 @@ O efeito de +0,05 no Gini nos percentis 10, 50 e 90 da renda, em especificaçõe
 #| label: robustez
 alternativas <- list("Modelo final (MQO)" = final, "Com renda ao cubo" = ajustes[["Renda ao cubo"]],
                      "Com região $\\times$ renda" = ajustes[["Região $\\times$ renda"]],
-                     "Com todos os termos significativos" = todos, "Mínimos quadrados ponderados" = mqp,
-                     "Sem os municípios com 30\\% ou mais de óbitos indeterminados" = sem_indet, "Com Campos do Jordão-SP" = com_cj,
+                     "Com todos os termos adicionais significativos" = todos, "Mínimos quadrados ponderados" = mqp,
+                     "Sem os municípios com 30\\% ou mais de óbitos de intenção indeterminada" = sem_indet, "Com Campos do Jordão-SP" = com_cj,
                      "Com UF no lugar da região" = com_uf)
 rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
   e <- efeito_gini(gr$renda, alternativas[[nm]])
@@ -741,9 +752,9 @@ tabela("lrrr",
        sprintf("%s & %s & %s & %s\\\\", rob$modelo, celula(rob$p10, rob$p10_p), celula(rob$p50, rob$p50_p), celula(rob$p90, rob$p90_p)),
        "robustez_gini.tex")
 # Frases do artigo: P50 e P90 positivos e significativos em todas; o P10 negativo não resiste a todas
-stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05), any(rob$p10_p > .05))
-stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] > .05,
-          all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] < .05))
+stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05))
+stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos adicionais significativos")] > .05,
+          all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos adicionais significativos")] < .05))
 num$PDezMin <- fmt(min(abs(rob$p10)), 0); num$PDezMax <- fmt(max(abs(rob$p10)), 0)
 num$PDezSig <- fmt(sum(rob$p10_p < .05), 0); num$NEspec <- fmt(nrow(rob), 0)
 # Com UF no lugar da região: fração do efeito do modelo final que sobra na renda mediana e no percentil 90
