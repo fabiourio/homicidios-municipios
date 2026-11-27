@@ -92,6 +92,14 @@ Os Objetivos de Desenvolvimento Sustentável (ODS) são dezessete objetivos da O
 
 Em 2021, a taxa brasileira foi de \nTaxaBrasilContexto{} homicídios intencionais por 100 mil habitantes, contra \nTaxaMundoContexto{} no mundo \citep{unodc2023}. Na base deste trabalho, que também conta as intervenções legais (Seção~\ref{sec:dados}), o país registrou em média \nHomAno{} mortes por agressão, intervenção legal ou operação de guerra por ano entre 2021 e 2023. As taxas também variam entre as regiões do país (Figura~\ref{fig:mapa}). Considerando todos os municípios, a taxa anual foi de \nTaxaNEbr{} por 100 mil no Nordeste, \nTaxaNbr{} no Norte, \nTaxaCObr{} no Centro-Oeste, \nTaxaSbr{} no Sul e \nTaxaSEbr{} no Sudeste.
 
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=0.55\textwidth]{mapa_taxa.png}
+\caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023}
+\label{fig:mapa}
+\nota{em branco, os municípios fora do estudo: os que têm menos de 30 mil habitantes e Campos do Jordão-SP.}
+\end{figure}
+
 A literatura associa a violência letal a condições econômicas e sociais. Em painéis de países \citep{fajnzylber2002} e em condados urbanos dos Estados Unidos \citep{kelly2000}, a desigualdade de renda associa-se a taxas maiores de crimes violentos. Essa associação, porém, pode ser espúria quando se controlam diferenças fixas entre países \citep{neumayer2003}. Estudos indicam também relação não linear com a renda: o crime contra o patrimônio e algumas categorias de crime violento acompanham a renda em forma de U invertido \citep{buonanno2017}, e, nos municípios brasileiros, o risco de homicídio de homens de 20 a 39 anos, em 2007--2010, foi maior nas categorias intermediárias de renda \citep{duarte2012}. Há indícios de que a associação da desigualdade depende do nível de desenvolvimento: em países de desenvolvimento humano médio, a desigualdade, e não o desenvolvimento ou a pobreza, prediz o homicídio \citep{ouimet2012}. Em países desenvolvidos, a desigualdade condiciona a associação do produto interno bruto (PIB) com os homicídios \citep{aransiola2024}.
 
 No Brasil, um estudo com os 5.570 municípios encontrou risco maior com mais urbanização, mais população e maior índice de Gini \citep{wanzinack2022}, mas relatou uma única associação do Gini para todos os municípios. Uma revisão sistemática aponta a educação como possível fator de proteção \citep{wanzinack2018}, e um estudo com estados estimou que mais gasto em educação reduz a taxa de homicídios no período seguinte \citep{becker2017}. A teoria da desorganização social relaciona a mobilidade residencial e a fragilidade dos laços comunitários ao crime \citep{sampson1989}. Em 4.491 municípios brasileiros, a desorganização social medida em 1991 associou-se a trajetórias crescentes de homicídio entre 1991 e 2010 \citep{peres2017}. Este trabalho examina essas associações entre municípios brasileiros.
@@ -107,14 +115,6 @@ Com base na literatura, três hipóteses foram formuladas antes do ajuste do mod
 O objetivo geral é identificar características associadas à taxa de homicídios dos municípios brasileiros com 30 mil habitantes ou mais, por meio de um modelo de regressão linear múltipla.
 
 Os objetivos específicos são montar uma base municipal com dados de mortalidade, do Censo 2022 e de indicadores educacionais; ajustar e diagnosticar um modelo de regressão linear múltipla para o logaritmo da taxa de homicídios; examinar, de forma exploratória, se a associação da desigualdade com a taxa varia com a renda do município; e avaliar as hipóteses H1, H2 e H3 e as limitações do modelo.
-
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=0.55\textwidth]{mapa_taxa.png}
-\caption{Taxa de homicídios por 100 mil habitantes ao ano, 2021--2023}
-\label{fig:mapa}
-\nota{em branco, os municípios fora do estudo: os que têm menos de 30 mil habitantes e Campos do Jordão-SP.}
-\end{figure}
 
 \section{Metodologia}
 
