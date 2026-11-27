@@ -341,7 +341,7 @@ num$RdoisE   <- fmt(resumo$r.squared, 3); num$RdoisA <- fmt(resumo$adj.r.squared
 num$RdoisResto <- fmt(100 * (1 - resumo$r.squared), 0)   # parte da variação de ln(taxa) que o modelo não explica
 num$Fglobal  <- fmt(resumo$fstatistic[["value"]], 0)
 num$GlUm     <- fmt(resumo$fstatistic[["numdf"]], 0); num$GlDois <- fmt(resumo$fstatistic[["dendf"]], 0)
-num$FglobalP <- fp(pf(resumo$fstatistic[["value"]], resumo$fstatistic[["numdf"]], resumo$fstatistic[["dendf"]], lower.tail = FALSE))
+stopifnot(pf(resumo$fstatistic[["value"]], resumo$fstatistic[["numdf"]], resumo$fstatistic[["dendf"]], lower.tail = FALSE) < .001)   # o artigo escreve p < 0,001
 num$CoefGini <- fmt(b[["gini_c"]], 3)
 
 # Tabela de coeficientes em duas colunas
@@ -486,7 +486,7 @@ p <- ggplot(ef_plot, aes(ef, rotulo)) +
   geom_segment(aes(x = inf, xend = sup, yend = rotulo), colour = azul, linewidth = 1.1) +
   geom_point(colour = azul, size = 3.5) +
   labs(x = "Mudança percentual na taxa típica", y = NULL) + tema
-ggsave("resultados/figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)
+ggsave("resultados/figuras/efeitos.png", p, width = 8, height = 4.2, dpi = 220)   # usada nos slides
 p
 ```
 
@@ -569,7 +569,7 @@ bp; sw
 out <- d[abs(d$res_semi) >= 4, c("municipio", "uf", "taxa", "res_semi")]   # possíveis outliers
 if (nrow(out)) knitr::kable(out) else cat("Nenhum resíduo semi-studentizado com |e*| >= 4\n")
 
-num$BP <- fmt(bp$statistic, 0); num$BPgl <- fmt(bp$parameter, 0); num$BPp <- fp(bp$p.value)
+num$BP <- fmt(bp$statistic, 0); num$BPgl <- fmt(bp$parameter, 0); stopifnot(bp$p.value < .001)   # o artigo escreve p < 0,001
 num$SW <- fmt(sw$statistic, 3); num$SWp <- fmt(sw$p.value, 3)
 num$MaxSemi <- fmt(max(abs(d$res_semi)), 2)
 num$MSE <- fmt(resumo$sigma^2, 3); num$Sigma <- fmt(resumo$sigma, 3); num$DoisS <- fmt(2 * resumo$sigma, 2)
@@ -624,7 +624,7 @@ p
 # Tamanho do resíduo x população: a dispersão diminui nos municípios maiores
 p <- ggplot(d, aes(pop, abs(residuo))) +
   geom_point(colour = azul, alpha = .3, size = 1.2) + scale_x_log10(labels = milhar) +
-  labs(x = "População (escala log)", y = "Tamanho do resíduo: |e|") + tema
+  labs(x = "População (escala log)", y = "Valor absoluto do resíduo: |e|") + tema
 ggsave("resultados/figuras/residuos_populacao.png", p, width = 6.3, height = 4.0, dpi = 220)
 p
 stopifnot(cor(abs(d$residuo), d$ln_pop) < 0)
@@ -718,11 +718,11 @@ ggplot(d, aes(reorder(as.character(uf), residuo), residuo)) + geom_boxplot(fill 
 r2_uf <- summary(lm(residuo ~ uf, data = d))$r.squared
 com_uf <- update(final, . ~ . - regiao + uf)
 sw_uf  <- shapiro.test(rstandard(com_uf))
+stopifnot(sw_uf$p.value < .001)   # o artigo escreve p < 0,001
 knitr::kable(data.frame(r2_residuos_por_uf = r2_uf, r2a_com_uf = summary(com_uf)$adj.r.squared, bic_com_uf = criterio(com_uf)[["bic"]],
                         parametros = length(coef(com_uf)), sw_p_com_uf = sw_uf$p.value), digits = 4)
 num$RdoisResUF <- fmt(100 * r2_uf, 0)
 num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
-num$ParUF      <- fmt(length(coef(com_uf)), 0)
 # H2 com UF: frequência e distorção seguem significativas; tamanho relativo ao modelo final
 bu <- summary(com_uf)$coefficients
 stopifnot(bu["freq_15a17", 4] < .05, bu["distorcao_em", 4] < .05, bu["freq_15a17", 1] < 0, bu["distorcao_em", 1] > 0)
@@ -738,8 +738,8 @@ O efeito de +0,05 no Gini nos percentis 10, 50 e 90 da renda, em especificaçõe
 #| label: robustez
 alternativas <- list("Modelo final (MQO)" = final, "Com renda ao cubo" = ajustes[["Renda ao cubo"]],
                      "Com região $\\times$ renda" = ajustes[["Região $\\times$ renda"]],
-                     "Com todos os termos significativos" = todos, "Mínimos quadrados ponderados" = mqp,
-                     "Sem os municípios com 30\\% ou mais de óbitos indeterminados" = sem_indet, "Com Campos do Jordão-SP" = com_cj,
+                     "Com todos os termos adicionais significativos" = todos, "Mínimos quadrados ponderados" = mqp,
+                     "Sem os municípios com 30\\% ou mais de óbitos de intenção indeterminada" = sem_indet, "Com Campos do Jordão-SP" = com_cj,
                      "Com UF no lugar da região" = com_uf)
 rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
   e <- efeito_gini(gr$renda, alternativas[[nm]])
@@ -753,8 +753,8 @@ tabela("lrrr",
        "robustez_gini.tex")
 # Frases do artigo: P50 e P90 positivos e significativos em todas; o P10 negativo não resiste a todas
 stopifnot(all(rob$p50 > 0 & rob$p50_p < .05), all(rob$p90 > 0 & rob$p90_p < .05))
-stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] > .05,
-          all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos significativos")] < .05))
+stopifnot(all(rob$p10 < 0), rob$p10_p[rob$modelo %in% c("Com renda ao cubo", "Com todos os termos adicionais significativos")] > .05,
+          all(rob$p10_p[!rob$modelo %in% c("Com renda ao cubo", "Com todos os termos adicionais significativos")] < .05))
 num$PDezMin <- fmt(min(abs(rob$p10)), 0); num$PDezMax <- fmt(max(abs(rob$p10)), 0)
 num$PDezSig <- fmt(sum(rob$p10_p < .05), 0); num$NEspec <- fmt(nrow(rob), 0)
 # Com UF no lugar da região: fração do efeito do modelo final que sobra na renda mediana e no percentil 90
