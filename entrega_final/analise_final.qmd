@@ -207,7 +207,7 @@ expl <- c(log_rend = "ln(renda)", gini = "Gini", desocup = "Desocupação (%)", 
 
 # Tabela descritiva (médias simples entre municípios) com a correlação de cada explicativa com ln(taxa)
 casas  <- c(taxa = 1, rend_pc_media = 0, gini = 3, desocup = 1, pct_urbana = 1, freq_15a17 = 1, distorcao_em = 1, pct_migr_10anos = 1)
-rotulo <- c(taxa = "Taxa de homicídios (/100 mil/ano)", rend_pc_media = "Renda per capita (R\\$/mês)",
+rotulo <- c(taxa = "Taxa de homicídios (/100 mil/ano)", rend_pc_media = "Renda \\textit{per capita} (R\\$/mês)",
             gini = "Desigualdade (índice de Gini)", desocup = "Desocupação (\\%)", pct_urbana = "Urbanização (\\%)",
             freq_15a17 = "Frequência escolar 15--17 (\\%)", distorcao_em = "Distorção idade-série EM (\\%)",
             pct_migr_10anos = "Migração recente (\\%)")
@@ -466,7 +466,7 @@ p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_line(colour = azul, linewidth = 1) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$/mês, escala log)", y = "Dif. na taxa típica\ncom Gini +0,05 (%)") + tema
+  labs(x = expression(paste("Renda ", italic("per capita"), " (R$/mês, escala log)")), y = "Dif. na taxa típica\ncom Gini +0,05 (%)") + tema
 ggsave("resultados/figuras/gini_renda.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
 
@@ -488,7 +488,7 @@ p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
   geom_line(aes(colour = regiao), linewidth = 1.1) +
   scale_colour_manual(values = c(Nordeste = vermelho, Sudeste = marinho), name = NULL) +
   scale_x_log10(breaks = c(500, 700, 1000, 2000, 3000), labels = milhar) +
-  labs(x = "Renda per capita (R$/mês, escala log)", y = "Taxa típica\n(por 100 mil/ano)") +
+  labs(x = expression(paste("Renda ", italic("per capita"), " (R$/mês, escala log)")), y = "Taxa típica\n(por 100 mil/ano)") +
   tema + theme(legend.position = "bottom", plot.margin = margin(5, 18, 5, 5))
 ggsave("resultados/figuras/renda_regiao.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
