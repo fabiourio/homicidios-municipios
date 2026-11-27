@@ -190,7 +190,7 @@ contorno_uf <- summarise(group_by(mutate(gd, uf = substr(cod_ibge, 1, 2)), uf))
 p <- ggplot(gd) +
   geom_sf(aes(fill = classe), colour = NA) +
   geom_sf(data = contorno_uf, fill = NA, colour = "grey55", linewidth = .25) +
-  scale_fill_manual(values = c("#D6E6F2", "#9EC3DB", "#5E9CC2", azul, "#1F4A7A", marinho, "white"),
+  scale_fill_manual(values = c("#BCD5EA", "#9EC3DB", "#5E9CC2", azul, "#1F4A7A", marinho, "white"),
                     name = "Homicídios\npor 100 mil/ano") +
   theme_void(base_size = 10) + theme(plot.background = element_rect(fill = "white", colour = NA), legend.position = c(.15, .25), legend.key = element_rect(colour = "grey70", linewidth = .3))
 ggsave("resultados/figuras/mapa_taxa.png", p, width = 4.2, height = 4.2, dpi = 250)
@@ -268,7 +268,7 @@ num$SWy <- fmt(sw_y, 3); num$SWln <- fmt(sw_ln, 3)
 bp_lambda <- lmtest::bptest(lm(update(termos, I(taxa^lambda) ~ .), data = d))$statistic
 bp_ln     <- lmtest::bptest(lm(update(termos, ly ~ .), data = d))$statistic
 stopifnot(bp_lambda < bp_ln)
-num$BPlambda <- fmt(bp_lambda, 0)
+num$BPlambda <- fmt(bp_lambda, 1)
 ```
 
 ## 5. Construção do modelo em blocos
@@ -412,7 +412,7 @@ lin <- sprintf("%s & %s & %s & %s\\%% & [%s; %s] & %s\\\\", mudancas$hip, mudanc
                sinal(mudancas$ef, 1), sinal(mudancas$inf, 1), sinal(mudancas$sup, 1), fp(mudancas$p))
 tabela("cllrcr",
        "\\textbf{Hip.} & \\textbf{Variável} & \\textbf{Dif. na explicativa} & \\textbf{Dif. na taxa típica} & \\textbf{IC 95\\%} & \\textbf{$p$}\\\\",
-       c(lin_h1, lin_gini, lin, sprintf(" & Renda & --- & pico em R\\$ %s & --- & %s\\\\", fmt(pico, 0), fp(resumo$coefficients["rend_c2", 4]))),
+       c(lin_h1, lin_gini, lin, sprintf(" & Renda (pico em R\\$ %s) & --- & --- & --- & %s\\\\", fmt(pico, 0), fp(resumo$coefficients["rend_c2", 4]))),
        "efeitos.tex")
 
 ef <- setNames(mudancas$ef, mudancas$termo)
@@ -466,7 +466,7 @@ p <- ggplot(curva_gini, aes(renda, ef)) +
   geom_line(colour = azul, linewidth = 1) +
   geom_point(data = gr, colour = vermelho, size = 2.7) +
   scale_x_log10(labels = milhar) +
-  labs(x = "Renda per capita (R$/mês, escala log)", y = "Diferença na taxa\ntípica (%)") + tema
+  labs(x = "Renda per capita (R$/mês, escala log)", y = "Dif. na taxa típica\ncom Gini +0,05 (%)") + tema
 ggsave("resultados/figuras/gini_renda.png", p, width = 4.8, height = 3.2, dpi = 250)
 p
 
@@ -483,7 +483,8 @@ grade$regiao <- factor(grade$regiao, levels = levels(d$regiao))
 pr <- predict(final, newdata = grade, interval = "confidence")
 grade$taxa <- exp(pr[, "fit"]); grade$lo <- exp(pr[, "lwr"]); grade$hi <- exp(pr[, "upr"])
 p <- ggplot(grade, aes(rend, taxa, group = regiao)) +
-  geom_ribbon(aes(ymin = lo, ymax = hi), fill = claro, alpha = .65) +
+  geom_ribbon(aes(ymin = lo, ymax = hi, fill = regiao), alpha = .25) +
+  scale_fill_manual(values = c(Nordeste = vermelho, Sudeste = marinho), guide = "none") +
   geom_line(aes(colour = regiao), linewidth = 1.1) +
   scale_colour_manual(values = c(Nordeste = vermelho, Sudeste = marinho), name = NULL) +
   scale_x_log10(breaks = c(500, 700, 1000, 2000, 3000), labels = milhar) +
@@ -535,7 +536,7 @@ tabela("lrrrrrrr",
        "\\textbf{Termos somados ao modelo final} & \\textbf{gl} & \\textbf{$F$} & \\textbf{$p$} & \\textbf{$R^2_a$} & \\textbf{AIC} & \\textbf{BIC} & \\textbf{PRESS}\\\\",
        c(sprintf("Nenhum (modelo final) & --- & --- & --- & %s & $-$%s & $-$%s & %s\\\\", fmt(resumo$adj.r.squared, 3),
                  fmt(-crit_final[["aic"]], 0), fmt(-crit_final[["bic"]], 0), fmt(crit_final[["press"]], 0)),
-         sprintf("%s & %s & %s & %s & %s & $-$%s & $-$%s & %s\\\\", espec$termo, fmt(espec$gl, 0), fmt(espec$F, 2), fp(espec$p),
+         sprintf("%s & %s & %s & %s & %s & $-$%s & $-$%s & %s\\\\", espec$termo, fmt(espec$gl, 0), fmt(espec$F, 1), fp(espec$p),
                  fmt(espec$R2a, 3), fmt(-espec$aic, 0), fmt(-espec$bic, 0), fmt(espec$press, 0))),
        "especificacao.tex")
 # Frases do artigo: 4 dos 5 conjuntos são significativos; ganho em R²a < 0,01 por conjunto;
@@ -587,7 +588,7 @@ bp; sw
 out <- d[abs(d$res_semi) >= 4, c("municipio", "uf", "taxa", "res_semi")]   # possíveis outliers
 if (nrow(out)) knitr::kable(out) else cat("Nenhum resíduo semi-studentizado com |e*| >= 4\n")
 
-num$BP <- fmt(bp$statistic, 0); num$BPgl <- fmt(bp$parameter, 0); stopifnot(bp$p.value < .001)   # o artigo escreve p < 0,001
+num$BP <- fmt(bp$statistic, 1); num$BPgl <- fmt(bp$parameter, 0); stopifnot(bp$p.value < .001)   # o artigo escreve p < 0,001
 num$SW <- fmt(sw$statistic, 3); num$SWp <- fmt(sw$p.value, 3)
 num$MaxSemi <- fmt(max(abs(d$res_semi)), 1)
 num$Sigma <- fmt(resumo$sigma, 3)
@@ -687,7 +688,7 @@ knitr::kable(rbind(mqo_todas = bp_aux(d$residuo^2, X), mqp_todas = bp_mqp, mqo_p
 num$SzeroQ  <- fmt(s0, 3)
 num$MqpInter <- fmt(coef(mqp)[["rend_c:gini_c"]], 3); num$MqoInter <- fmt(b[["rend_c:gini_c"]], 3)
 num$EpMin   <- fmt(razao_ep[1], 2); num$EpMax <- fmt(razao_ep[2], 2)
-num$BPmqp   <- fmt(bp_mqp[["bp"]], 0); num$BPmqpP <- fp(bp_mqp[["p"]])
+num$BPmqp   <- fmt(bp_mqp[["bp"]], 1); num$BPmqpP <- fp(bp_mqp[["p"]])
 num$BPmqpPop <- fmt(bp_mqp_pop[["bp"]], 1); num$BPmqpPopP <- fmt(bp_mqp_pop[["p"]], 3)
 bp_mqp_aj <- bp_aux(ew2, fitted(mqp))
 stopifnot(bp_mqp_aj[["p"]] < .001)   # com o ajuste ponderado, o padrão contra o valor ajustado continua
@@ -777,7 +778,7 @@ O efeito de +0,05 no Gini nos percentis 10, 50 e 90 da renda, em especificaçõe
 alternativas <- list("Modelo final (MQO)" = final, "Com renda ao cubo" = ajustes[["Renda ao cubo"]],
                      "Com região $\\times$ renda" = ajustes[["Região $\\times$ renda"]],
                      "Com todos os termos adicionais significativos" = todos, "Mínimos quadrados ponderados" = mqp,
-                     "Sem os municípios com 30\\% ou mais de óbitos de intenção indeterminada" = sem_indet, "Com Campos do Jordão-SP" = com_cj,
+                     "Sem os municípios com 30\\% ou mais dos óbitos por causas externas de intenção indeterminada" = sem_indet, "Com Campos do Jordão-SP" = com_cj,
                      "Com UF no lugar da região" = com_uf)
 rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
   e <- efeito_gini(gr$renda, alternativas[[nm]])
@@ -786,7 +787,7 @@ rob <- do.call(rbind, lapply(names(alternativas), function(nm) {
 knitr::kable(rob, digits = 3)
 celula <- function(ef, p) sprintf("%s\\%% (%s)", sinal(ef, 1), fp(p))
 tabela(">{\\raggedright\\arraybackslash}p{0.40\\textwidth}rrr",
-       sprintf("\\textbf{Especificação} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s} & \\textbf{R\\$ %s}\\\\", fmt(gr$renda[1], 0), fmt(gr$renda[2], 0), fmt(gr$renda[3], 0)),
+       sprintf("\\textbf{Especificação} & \\textbf{P10 (R\\$ %s)} & \\textbf{P50 (R\\$ %s)} & \\textbf{P90 (R\\$ %s)}\\\\", fmt(gr$renda[1], 0), fmt(gr$renda[2], 0), fmt(gr$renda[3], 0)),
        sprintf("%s & %s & %s & %s\\\\", rob$modelo, celula(rob$p10, rob$p10_p), celula(rob$p50, rob$p50_p), celula(rob$p90, rob$p90_p)),
        "robustez_gini.tex")
 # Frases do artigo: P50 e P90 positivos e significativos em todas; o P10 negativo não resiste a todas
