@@ -47,6 +47,7 @@ No macOS, se `Rscript` não estiver no PATH: `/Library/Frameworks/R.framework/Re
 | "O abstract passou da página 1" ou "mais de 150 palavras" | Encurte o resumo e o abstract |
 | "referência ou citação indefinida" | Confira `\ref`, `\label` e as chaves em `artigo/referencias.bib` |
 | "O caderno do zip não reproduz" | Rode o script de novo. Se persistir, há algo fora do zip de que o caderno depende |
+| "O artigo compilado do zip difere do artigo.pdf" | Falta no zip algum arquivo que o artigo usa (tabela, figura ou .bib). Confira o `scripts/04_montar_zip_entrega.R` |
 
 ## Depois de gerar
 
