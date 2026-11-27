@@ -282,6 +282,9 @@ mC <- update(mB, . ~ . + freq_15a17 + distorcao_em + pct_migr_10anos)    # C: + 
 mD <- update(mC, . ~ . + regiao)                                         # D: + região (Sudeste como referência)
 mE <- update(mD, . ~ . + rend_c:gini_c)                                  # E: + interação Gini x renda
 modelos <- list(mA, mB, mC, mD, mE)
+gD <- summary(mD)$coefficients["gini_c", ]
+stopifnot(gD[[1]] > 0, gD[[4]] < .001)   # H1 no modelo planejado, sem a interação: Gini positivo e significativo
+num$GiniEfD <- fmt(100 * (exp(.05 * gD[[1]]) - 1), 1)
 final   <- mE
 
 av <- do.call(rbind, lapply(1:4, function(i) anova(modelos[[i]], modelos[[i + 1]])[2, ]))
