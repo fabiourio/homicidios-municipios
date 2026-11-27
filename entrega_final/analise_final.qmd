@@ -31,7 +31,7 @@ Pacotes de R necessários: `ggplot2`, `dplyr`, `sf`, `MASS`, `lmtest`, `scales`,
 | `dicionario.csv` | Descrição de cada coluna |
 
 **O que vem de fora da apostila.** Pedidos da revisão da professora: o Gini por município e a referência ao percentil da população no corte.
-Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; a curva suavizada (loess) dos gráficos de resíduos; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; o argumento da oscilação $1/\sqrt{\mu}$ no recorte; os pesos do ajuste por mínimos quadrados ponderados; o teste de Breusch-Pagan contra uma só variável (população ou valor ajustado); o $R^2$ e o teste $F$ da regressão dos resíduos sobre as indicadoras de UF; o reajuste do modelo com cortes de 20 a 50 mil habitantes; e a comparação da alavancagem dos municípios de referência com a alavancagem média; e o julgamento de H1 no modelo sem a interação, com a interação tratada como exploratória.
+Escolhas do grupo: o intervalo de confiança de $\lambda$ no Box-Cox; a leitura da retransformação $\exp(E[\ln Y])$ como taxa típica (mediana); o efeito percentual $100\,[\exp(b\,\Delta) - 1]\%$; a curva suavizada (LOESS) dos gráficos de resíduos; o intervalo do efeito do Gini em cada renda; o $R^2$ de previsão calculado pelo PRESS; o argumento da oscilação $1/\sqrt{\mu}$ no corte; os pesos do ajuste por mínimos quadrados ponderados; a variância dos resíduos por quinto do valor ajustado; o teste de Breusch-Pagan contra uma só variável (logaritmo da população ou valor ajustado); o $R^2$ e o teste $F$ da regressão dos resíduos sobre as indicadoras de UF; o reajuste do modelo com cortes de 20 a 50 mil habitantes; a comparação da alavancagem dos municípios de referência com a alavancagem média; e o julgamento de H1 no modelo sem a interação, com a interação tratada como exploratória.
 Cada um desses itens está marcado com **(fora da apostila)** no ponto em que aparece.
 
 ## Pacotes e funções auxiliares
@@ -73,7 +73,7 @@ num <- list()
 
 A resposta é a taxa anual de homicídios por 100 mil habitantes em 2021–2023: óbitos por agressão (X85–Y09) mais intervenção legal e operações de guerra (Y35–Y36), por município de residência, divididos por três vezes a população de 2022.
 
-O IBGE não publica o Gini municipal do Censo 2022 **(pedido da professora, fora da apostila)**. Calculamos o índice pelas classes de rendimento domiciliar per capita das pessoas de 14 anos ou mais (Gastwirth, 1972): cada classe recebe o ponto médio da faixa em salários mínimos, e o Gini é 1 menos o dobro da área sob a curva de Lorenz (regra do trapézio). A classe aberta (mais de 20 salários mínimos) recebe 50: com esse valor, o cálculo reproduz o Gini oficial do Brasil. A conferência independente é feita nas 27 UFs.
+O IBGE não publica o Gini municipal do Censo 2022 **(pedido da professora, fora da apostila)**. Calculamos o índice pelas classes de rendimento domiciliar per capita das pessoas de 14 anos ou mais (Gastwirth, 1972): cada classe recebe o ponto médio da faixa em salários mínimos, e o Gini é 1 menos o dobro da área sob a curva de Lorenz (regra do trapézio). A classe aberta (mais de 20 salários mínimos) recebe 50. Com esse valor, o cálculo reproduz o Gini oficial do Brasil. A conferência independente é feita nas 27 UFs.
 
 ```{r}
 #| label: resposta-gini
@@ -238,7 +238,7 @@ num$CorRendaUrbana <- fmt(R["log_rend", "pct_urbana"], 2)
 ## 4. Transformação da resposta (Box-Cox) e preparo das explicativas
 
 A renda entra em logaritmo e com termo quadrático, para representar uma relação curva.
-A renda e o Gini entram centralizados na média: isso reduz a correlação entre a renda e o seu quadrado, e faz o coeficiente do Gini valer na renda média.
+A renda e o Gini entram centralizados na média. Isso reduz a correlação entre a renda e o seu quadrado e faz o coeficiente do Gini valer na média de ln(renda), isto é, na renda de R$ 1.255 (média geométrica).
 
 ```{r}
 #| label: boxcox
@@ -334,7 +334,7 @@ num$FUltMin <- fmt(min(ultimo[, "F"])); num$FUltMax <- fmt(max(ultimo[, "F"]))
 
 $$\ln Y_i = \beta_0 + \beta_1 r_i + \beta_2 r_i^2 + \beta_3 g_i + \beta_4 g_i r_i + \mathbf{x}_i^{\top}\boldsymbol{\delta} + \sum_{k=1}^{4} \gamma_k D_{ik} + \varepsilon_i$$
 
-Aqui $r_i$ é o ln da renda centralizado, $g_i$ é o Gini centralizado, $\mathbf{x}_i$ reúne desocupação, urbanização, frequência escolar, distorção idade-série e migração, e $D_{ik}$ são as indicadoras de região (Sudeste como referência). Todos os municípios têm o mesmo peso. H1 é julgada no modelo D, sem a interação (seção 5). A interação Gini $\times$ renda é exploratória.
+Aqui $r_i$ é o ln da renda centralizado, $g_i$ é o Gini centralizado, $\mathbf{x}_i$ reúne desocupação, urbanização, frequência escolar, distorção idade-série e migração, e $D_{ik}$ são as indicadoras de região (Sudeste como referência). Todos os municípios têm o mesmo peso. H1 é julgada no modelo D, sem a interação (seção 5) **(fora da apostila)**. A interação Gini $\times$ renda é exploratória.
 
 ```{r}
 #| label: modelo-final
@@ -365,7 +365,7 @@ writeLines(c("\\begin{tabular*}{\\textwidth}{@{\\extracolsep{\\fill}}lrrrlrrr@{}
 
 ### Efeitos na taxa
 
-Com a resposta em log, entre municípios que diferem em $\Delta$ em uma explicativa, com as demais variáveis iguais, a razão entre as taxas típicas é $\exp(b\,\Delta)$: o efeito, sem sentido causal, é $100\,[\exp(b\,\Delta) - 1]\%$ **(fora da apostila)**.
+Com a resposta em log, entre municípios que diferem em $\Delta$ em uma explicativa, com as demais variáveis iguais, a razão entre as taxas típicas é $\exp(b\,\Delta)$, e o efeito, sem sentido causal, é $100\,[\exp(b\,\Delta) - 1]\%$ **(fora da apostila)**.
 O efeito de +0,05 no Gini, a partir do Gini médio, é calculado pela diferença entre duas previsões do modelo. O erro-padrão vem da combinação linear dos coeficientes **(fora da apostila)**. A mesma função serve para os modelos alternativos da seção 8.
 
 ```{r}
@@ -557,7 +557,7 @@ num$BICcubo <- fmt(-bic_cubo, 0)
 # Cp do modelo final tomando o modelo com todos os termos como completo (apostila, cap. 8)
 cp_final <- sum(resid(final)^2) / (sum(resid(todos)^2) / df.residual(todos)) + 2 * length(coef(final)) - n
 num$CpFinal <- fmt(cp_final, 0); num$PmaisUm <- fmt(length(coef(final)), 0)
-# Com a interação região x renda, a diferença das regiões vale só na renda média
+# Com a interação região x renda, a diferença das regiões é lida na renda de R$ 1.255 (rend_c = 0)
 rr <- coef(ajustes[["Região $\\times$ renda"]])
 num$EfNordesteRR <- fmt(100 * (exp(rr[["regiaoNordeste"]]) - 1), 0); num$EfSulRR <- fmt(100 * (exp(rr[["regiaoSul"]]) - 1), 0)
 ```
@@ -766,7 +766,7 @@ num$GiniEfDUF <- fmt(100 * (exp(.05 * gD_uf[[1]]) - 1), 1); num$GiniPDUF <- fmt(
 num$RdoisAUF   <- fmt(summary(com_uf)$adj.r.squared, 3); num$BICUF <- fmt(-criterio(com_uf)[["bic"]], 0)
 stopifnot(criterio(com_uf)[["aic"]] < criterio(final)[["aic"]])   # o AIC também prefere o modelo com UF
 num$AICUF <- fmt(-criterio(com_uf)[["aic"]], 0); num$AICfinalUF <- fmt(-criterio(final)[["aic"]], 0)
-# H2 com UF: frequência e distorção seguem significativas; tamanho relativo ao modelo final
+# H2 com UF: frequência e distorção seguem significativas e com o sinal esperado; guarda o p da migração com UF
 bu <- summary(com_uf)$coefficients
 stopifnot(bu["freq_15a17", 4] < .05, bu["distorcao_em", 4] < .05, bu["freq_15a17", 1] < 0, bu["distorcao_em", 1] > 0)
 num$PMigrUF <- fmt(bu["pct_migr_10anos", 4], 3)

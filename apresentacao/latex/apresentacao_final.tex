@@ -50,7 +50,7 @@ Brasil: cerca de \textbf{\nRazaoContexto{} vezes a taxa mundial}.
 \end{block}
 \end{columns}
 \vspace{0.3em}
-{\small \textbf{Medida do estudo:} mortes por agressões e intervenções legais por 100 mil habitantes ao ano (2021--2023).}
+{\small \textbf{Medida do estudo:} mortes por agressões, intervenções legais e operações de guerra por 100 mil habitantes ao ano (2021--2023).}
 \begin{block}{Pergunta de pesquisa}
 \small Quais características socioeconômicas, demográficas e geográficas estão associadas à taxa de homicídios nos municípios brasileiros com 30 mil habitantes ou mais? Como questão exploratória: a associação da desigualdade muda conforme a renda do município?
 \end{block}
@@ -149,12 +149,12 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais, com o Sude
 \column{0.33\textwidth}
 \begin{itemize}\small
 \item $R^2$ ajustado = \nRdoisA, na escala de ln(taxa)
-\item Desvio-padrão residual \nSigma{} em ln: a taxa observada fica, em geral, entre a típica dividida e multiplicada por \nFatorDoisS
+\item Desvio-padrão residual \nSigma{} em ln: em cerca de 95\% dos municípios, a taxa observada fica entre a típica dividida e multiplicada por \nFatorDoisS
 \item Nenhum resíduo extremo: maior |e*| = \nMaxSemi, abaixo de 4
 \item $R^2$ de previsão (PRESS) = \nPressPred, próximo do $R^2_a$
 \end{itemize}
 \end{columns}
-\legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Fora da apostila (escolhas do grupo): $R^2$ de previsão pelo PRESS, taxa típica (mediana), efeito percentual e pesos do ajuste ponderado.}
+\legenda{Mesmos dados usados no ajuste. Diagonal: observado igual ao ajustado. Fora da apostila (escolhas do grupo): $R^2$ de previsão pelo PRESS, taxa típica (mediana), efeito percentual, pesos do ajuste ponderado, intervalo do efeito do Gini em cada renda, reajuste com outros cortes de população e julgamento de H1 no modelo sem a interação.}
 \end{frame}
 
 \begin{frame}{Ajuste: diagnóstico da variância dos erros}
@@ -167,7 +167,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais, com o Sude
 \vspace{0.2em}
 {\small \textbf{Leitura:} procurar uma faixa sem curva e com largura constante. A dispersão tende a ser maior nos municípios menos populosos.}
 \vspace{0.3em}
-{\small \alert{Breusch-Pagan rejeita variância constante.} O ajuste ponderado muda pouco as estimativas, mas não elimina esse padrão.}
+{\small \alert{Breusch-Pagan rejeita variância constante.} O ajuste ponderado muda pouco as estimativas, mas a variância segue não constante em relação ao valor ajustado.}
 \legenda{Linha tracejada: erro zero. Breusch-Pagan: $p < 0{,}001$. Cada ponto representa um município.}
 \end{frame}
 
@@ -241,9 +241,9 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais, com o Sude
 \fig{renda_regiao.png}
 \column{0.32\textwidth}
 \begin{itemize}\small
-\item Curvas do Nordeste e do Sudeste, no Gini médio, em taxa típica (mediana)
-\item Pico perto de R\$~\nPico, com só \nPctAbaixoPico\% dos municípios abaixo
-\item Com as demais características iguais, acima do Sudeste: NE $+$\nEfNordeste\%, CO $+$\nEfCentroOeste\%, N $+$\nEfNorte\%, S $+$\nEfSul\%. Sem SP na referência, S $+$\nEfSulSemSP\%. A região resume fatores estaduais não medidos
+\item Curvas do NE e do SE no Gini médio, em taxa típica
+\item Pico perto de R\$~\nPico{} (\nPctAbaixoPico\% dos municípios abaixo)
+\item Acima do Sudeste, com o resto igual: NE $+$\nEfNordeste\%, CO $+$\nEfCentroOeste\%, N $+$\nEfNorte\%, S $+$\nEfSul\% (S $+$\nEfSulSemSP\% sem SP na referência)
 \end{itemize}
 \end{columns}
 \legenda{Curvas no intervalo de renda observado em cada região. Faixas: IC 95\% clássico. Percentuais do modelo final. Com a interação região $\times$ renda, a diferença entre regiões muda com a renda.}
@@ -252,11 +252,11 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais, com o Sude
 \begin{frame}{Discussão: limites das conclusões}
 \begin{itemize}\small
 \setlength{\itemsep}{0.3em}
-\item \textbf{Variância não constante:} o ajuste ponderado muda pouco as estimativas, mas não elimina o padrão
+\item \textbf{Variância não constante:} o ajuste ponderado muda pouco as estimativas, mas não elimina a variância não constante
 \item \textbf{Medição:} Gini aproximado e possível sub-registro dos óbitos. Municípios com menos de 30 mil habitantes ficam fora do recorte
 \item \textbf{Desocupação:} sinal negativo frágil. Sem os \nNSensDesoc{} municípios com 30\% ou mais de óbitos de intenção indeterminada entre as causas externas, $p$ = \nPSensDesoc
 \item \textbf{Dependência:} os resíduos variam entre UFs (erros-padrão podem estar viesados). Com UF no lugar da região, o efeito do Gini fica menor, mas segue positivo nas rendas média e alta. O teste de ordem artificial foi retirado a pedido da professora
-\item \textbf{Especificação:} o log não é a potência ótima do Box-Cox. Termos extras significativos ficaram fora por parcimônia, e com eles o efeito do Gini nas rendas média e alta cai cerca de um terço
+\item \textbf{Especificação:} o log não é a potência ótima do Box-Cox. Termos adicionais significativos ficaram fora por parcimônia, e com eles o efeito do Gini nas rendas média e alta cai cerca de um terço
 \item \textbf{Estudo observacional:} um só período, e a associação municipal não demonstra causa nem descreve indivíduos
 \end{itemize}
 \legenda{Multicolinearidade: VIF máximo \nVIFrendaFinal{} (renda), acima de 5 pelo critério da apostila. Coeficientes isolados de renda e urbanização ficam menos confiáveis.}
@@ -270,7 +270,7 @@ Região como categoria ($D_{ik}$) & Considerar diferenças regionais, com o Sude
 \item \textbf{H3 não sustentada no corte de 30 mil:} a migração foi significativa nos cortes de 20 e 25 mil
 \item \textbf{Renda e região:} relação curva da renda, e as diferenças regionais permanecem no ajuste
 \item \textbf{Implicação:} políticas de permanência escolar e de redução da desigualdade merecem avaliação por estudos causais
-\item \textbf{Próximos passos:} dependência espacial, interação Gini--renda e curva da renda por região, políticas estaduais e violência organizada, e acompanhamento em vários anos
+\item \textbf{Próximos passos:} dependência espacial, curva da renda e interação por região, dados estaduais de segurança e séries de vários anos
 \end{itemize}
 \end{frame}
 
